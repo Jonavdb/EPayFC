@@ -1,7 +1,9 @@
 /* CONFIG */
 
 :root {
-    --background-gradient: linear-gradient(298deg,rgba(9, 31, 61, 1) 0%, rgba(35, 59, 105, 1) 53%, rgba(16, 36, 74, 1) 100%);
+    --background-gradient: linear-gradient(298deg, 0%, var(--background-primary) 53%, var(--background-secondary) 100%);
+    --background-primary : rgba(9, 31, 61, 1);
+    --background-secondary : rgba(9, 31, 61, 1);
     --text-primary: #2c3e50;
     --text-secondary: #34495e;
     --text-accent: #3498db;
