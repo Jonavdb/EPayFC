@@ -1,0 +1,56 @@
+/* CONFIG */
+
+:root {
+    --background-gradient: linear-gradient(298deg,rgba(9, 31, 61, 1) 0%, rgba(35, 59, 105, 1) 53%, rgba(16, 36, 74, 1) 100%);
+    --text-primary: #2c3e50;
+    --text-secondary: #34495e;
+    --text-accent: #3498db;
+    --text-light: #ecf0f1;
+    --text-dark: #2c3e50;
+    --text-success: #27ae60;
+    --text-warning: #f39c12;
+    --text-danger: #e74c3c;
+    --text-border: #bdc3c7;
+    --text-shadow: rgba(44, 62, 80, 0.1);
+    --text-text: #2c3e50;
+    --text-text-light: #7f8c8d;
+    --text-bg: #f8f9fa;
+    --surface: #ffffff;
+    --surface-muted: #f5f7fb;
+    --shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.08);
+    --radius-lg: 16px;
+    --radius-md: 10px;
+    --radius-sm: 6px;
+    --transition-fast: 150ms ease;
+}
+
+/* Styles généraux */
+* {
+    font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: all 0.2s linear;
+    font-size: 16px;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* box-shadow: 0 0 0 3px red inset; */
+}
+
+html {
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+body {
+  background: var(--background-gradient);
+  min-height: 100vh;
+  margin: 0;
+  padding: 56px 20px;     /* padding global si besoin */
+  color: var(--text-light);
+  background-attachment: fixed;
+}
