@@ -7,10 +7,11 @@
     --text-accent: #3498db;
     --text-light: #ecf0f1;
     --text-dark: #2c3e50;
+    --text-muted: #6c757d;
     --text-success: #27ae60;
     --text-warning: #f39c12;
     --text-danger: #e74c3c;
-    --form-background: #282a35;
+    --form-background: #212529;
     --form-border: #6c6262;
     --border-color: #bdc3c7;
     --shadow-soft: rgba(44, 62, 80, 0.1);
@@ -41,50 +42,35 @@ body {
     font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
     background: var(--background-gradient);
     min-height: 100vh;
-    color: var(--text-light);
-    background-attachment: fixed;
-    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    line-height: 1.6;
+    font-size: 1.6rem;
+    color: var(--text-light);
 }
 
-/* Utilitaires pour l'espacement */
-.mt-1 { margin-top: 0.5rem; }
-.mt-2 { margin-top: 1rem; }
-.mt-3 { margin-top: 1.5rem; }
-.mt-4 { margin-top: 2rem; }
-
-.mb-1 { margin-bottom: 0.5rem; }
-.mb-2 { margin-bottom: 1rem; }
-.mb-3 { margin-bottom: 1.5rem; }
-.mb-4 { margin-bottom: 2rem; }
-
-/* Container principal */
+/* Container */
 main {
     width: 100%;
     max-width: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 /* Formulaire */
-.form-container {
-    flex-direction: column;
-}
-
 form {
     background: var(--form-background);
     border: 1px solid var(--form-border);
     padding: 2.5rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-soft);
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    color: white;
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
+}
+
+form .form-control, .input-group-text {
+    font-size: 1.4rem;
 }
 
 /* Titres */
@@ -104,32 +90,9 @@ h2 {
     font-weight: 600;
 }
 
-/* Labels */
-label {
-    color: var(--text-light);
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-/* Champs de formulaire */
-input, select, textarea {
-    width: 100%;
-    padding: 1rem 1.2rem;
-    border-radius: var(--radius-md);
-    font-size: 1.6rem;
-}
-
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--text-accent);
-    background-color: var(--surface);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-}
-
 /* Boutons */
 button, .btn {
-    padding: 1rem 2rem;
+    padding: .5rem 2rem;
     border: none;
     border-radius: var(--radius-md);
     font-size: 1.6rem;
@@ -137,7 +100,6 @@ button, .btn {
     cursor: pointer;
     transition: all var(--transition-fast);
     text-align: center;
-    display: inline-block;
     text-decoration: none;
 }
 
@@ -158,14 +120,6 @@ p {
     font-size: 1.4rem;
     margin-bottom: 1rem;
     color: var(--text-muted);
-}
-
-.text-center {
-    text-align: center;
-}
-
-.text-muted {
-    color: var(--text-muted) !important;
 }
 
 /* Séparateur */
