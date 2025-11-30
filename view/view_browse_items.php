@@ -36,34 +36,43 @@
   <!-- GRID LAYOUT -->
   <div class="container">
     <div class="card" style="width: 18rem;">
-
-      <!-- TOP PART : 1 column -->
+      <!-- TOP CELL  -->
       <div class="row">
         <div class="col-sm">  
-          <!-- background img --> 
+          <!-- we set background img --> 
           <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Card image"">
+        
 
-          <!-- top left (TODO) --> 
+          <!-- we set an overlay (to place elements on top of the bg image) -->
+          <div class="card-img-overlay" style="height:50%;">
+            <div class="d-flex flex-column h-100">
+              <div class="d-flex justify-content-between">
 
-          <!-- top right (TODO)  --> 
+                <!-- top left -->
+                <div class="p-2 bg-info">TL</div>
 
-          <!-- bottom right (TODO) --> 
+                <!-- top right -->
+                 <div class="p-2 bg-info">
+                    <div class="d-flex flex-column">
+                      <div>TR1</div>
+                      <div>TR2</div>
+                    </div>
+                 </div>
+              </div>
 
+              <!-- bottom right -->
+              <div class="d-flex justify-content-end mt-auto">
+                <div class="p-2 bg-warning">BR</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- BOTTOM PART : 1 column-->
+      <!-- BOTTOM CELL -->
       <div class="row">
         <div class="col-sm">
           <div class="card-body">
-
-            <!-- top left (TODO) --> 
-
-            <!-- left center (TODO)  --> 
-
-            <!-- right center (TODO) --> 
-
-            <!-- bottom left (TODO) --> 
             <h5 class="card-title">Card title</h5>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             <a href="#" class="btn btn-primary">Go somewhere</a>
@@ -73,7 +82,6 @@
   </div>  
 </div>
 
-  
 </body>
 
 </html>
