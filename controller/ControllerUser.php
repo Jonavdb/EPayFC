@@ -3,6 +3,28 @@ require_once 'framework/Controller.php';
 
 class ControllerUser extends Controller {
     public function index(): void {
-        (new View("login"))->show();
+        if ($this->user_logged()) {
+            $this->redirect("member", "profile");
+        } else {
+            (new View("index"))->show();
+        }
+    }
+
+    //gestion de la connexion d'un utilisateur
+    public function login(): void {
+        $email = '';
+        $password = '';
+        $errors = [];
+
+        if (isset($_POST['email']) && isset($_POST['password'])) {
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+
+            $errors = Member::validate_login($email, $password);
+            if (empty($errors)) {
+                $this->log_user(Member::get_member_by_email($email));
+            }
+        }
+        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
     }
 }

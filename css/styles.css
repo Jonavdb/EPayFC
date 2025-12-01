@@ -73,6 +73,14 @@ form .form-control, .input-group-text {
     font-size: 1.4rem;
 }
 
+.form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
 /* Titres */
 h1, h2, h3, h4, h5, h6 {
     color: var(--text-light);
