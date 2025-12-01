@@ -7,30 +7,31 @@
     <base href="<?= $web_root ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
-    <!-- <link rel="stylesheet" href="css/styles.css?v=<?php echo filemtime('css/styles.css'); ?>" rel="stylesheet" type="text/css" /> -->
 </head>
 
 <body>
     <main>
         <form class="form">
             <h2 class="text-center text-white">Sign in</h2>
+            <span class="divider"></span>
 
             <div class="input-group mb-3">
                 <span class="input-group-text bg-dark border-secondary text-light">
-                    Email
+                    <i class="fa-solid fa-user"></i>
                 </span>
                 <input type="email" class="form-control bg-dark border-secondary text-light" placeholder="Mail" aria-label="Mail">
             </div>
 
             <div class="input-group mb-3">
                 <span class="input-group-text bg-dark border-secondary text-light">
-                    Password
+                    <i class="fa-solid fa-key"></i>
                 </span>
                 <input type="password" class="form-control bg-dark border-secondary text-light" placeholder="******" aria-label="Password">
             </div>
 
-            <div class="d-grid gap-4">
+            <div class="d-grid gap-3">
                 <button type="submit" class="btn btn-primary">Login</button>
                 <button type="button" class="btn btn-secondary">Continue as guest</button>
             </div>

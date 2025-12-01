@@ -138,6 +138,12 @@ p {
     display: block;
 }
 
+/* Icônes */
+i {
+    color: white;
+    font-size: 1.6rem;
+}
+
 /* Responsive */
 @media (max-width: 576px) {
     body {
