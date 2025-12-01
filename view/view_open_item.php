@@ -18,17 +18,29 @@
     <div class="main"></div>
 
     <nav class="navbar fixed-top navbar-dark bg-dark">
-  <div class="container-fluid d-flex align-items-center">
+    <div class="container-fluid d-flex align-items-center">
 
     <div class="left-zone">
       <i class="fa-solid fa-arrow-left" style="color: #2D68C4; font-size: 22px;"></i>
     </div>
 
     <div class="flex-grow-1 text-center">
-      <h2 style="color: #2D68C4; margin: 0;">My items</h2>
+      <h2 style="color: #2D68C4; margin: 0;">Open item</h2>
     </div>
   </div>
 </nav>
+
+<div class="container" style="margin-top: 90px;">
+  <div class="card" style="max-width: fit-content;">
+    <div class="card-body">
+      <img src="test.jpg" class="img-fluid" alt="Paysage de montagne avec un lac">
+      <h5 class="card-title">Piano Numérique Yamaha P-45</h5>
+      <p class="card-text">Touche lestée, pédale en plus</p>
+      <p>starts at : 15h</p>
+      <p>ends at : 19h </p>
+    </div>
+  </div>
+</div>
 
     <nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-dark">
     <ul class="navbar-nav mx-auto" id="nav-icons">
@@ -57,9 +69,6 @@
             </div>
         </li>        
     </ul>
-    </nav>
-
-    </div>
     </nav>
   </body>
 
