@@ -15,6 +15,7 @@
     <main>
         <form class="form">
             <h2 class="text-center text-white">Sign up</h2>
+            <span class="divider"></span>
 
             <!-- EMAIL -->
             <div class="input-group mb-3">
