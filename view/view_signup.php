@@ -13,7 +13,7 @@
 
 <body>
     <main>
-        <form class="form">
+        <form id="signupForm" action="main/signup" method="post">
             <h2 class="text-center text-white">Sign up</h2>
             <span class="divider"></span>
 
@@ -22,7 +22,7 @@
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-solid fa-envelope"></i>
                 </span>
-                <input type="email" id="email" class="form-control bg-dark border-secondary text-light" placeholder="Mail" aria-label="Mail">
+                <input type="email" name="email" id="email" class="form-control bg-dark border-secondary text-light" placeholder="Mail">
             </div>
 
             <!-- FULL NAME -->
@@ -30,7 +30,7 @@
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-solid fa-user"></i>
                 </span>
-                <input type="text" id="full_name" class="form-control bg-dark border-secondary text-light" placeholder="Full name" aria-label="Full Name">
+                <input type="text" name="full_name" id="full_name" class="form-control bg-dark border-secondary text-light" placeholder="Full name">
             </div>
 
             <!-- PSEUDO -->
@@ -38,7 +38,7 @@
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-regular fa-face-grin"></i>
                 </span>
-                <input type="text" id="pseudo" class="form-control bg-dark border-secondary text-light" placeholder="Pseudo" aria-label="Pseudo">
+                <input type="text" name="pseudo" id="pseudo" class="form-control bg-dark border-secondary text-light" placeholder="Pseudo">
             </div>
 
             <!-- PASSWORD -->
@@ -46,7 +46,7 @@
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-solid fa-key"></i>
                 </span>
-                <input type="password" id="password" class="form-control bg-dark border-secondary text-light" placeholder="******" aria-label="Password">
+                <input type="password" name="password" id="password" class="form-control bg-dark border-secondary text-light" placeholder="******">
             </div>
 
             <!-- CONFIRM PASSWORD -->
@@ -54,14 +54,27 @@
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-solid fa-key"></i>
                 </span>
-                <input type="password" id="confirm_password" class="form-control bg-dark border-secondary text-light" placeholder="******" aria-label="Confirm_password">
+                <input type="password" name="password_confirm" id="password_confirm" class="form-control bg-dark border-secondary text-light" placeholder="******">
             </div>
 
             <!-- Boutons -->
             <div class="d-grid gap-3">
-                <button type="submit" class="btn btn-primary">Sign Up</button>
+                <input type="submit" class="btn btn-primary" value="Sign Up">
+                <!-- <button type="submit" class="btn btn-primary">Sign Up</button> -->
                 <button type="button" class="btn btn-danger">Cancel</button>
             </div>
+
+            <!-- TODO : gérer ça -->
+            <?php if (count($errors) != 0): ?>
+                <div class='errors'>
+                    <p>Please correct the following error(s) :</p>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= $error ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </form>
     </main>
 </body>
