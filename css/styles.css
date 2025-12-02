@@ -163,7 +163,7 @@ font-size: 1.8rem;
 
 #nav-icons {
     display: flex;
-    gap: 15rem; 
+    /* gap: 15rem;  */
 }
 
 .icon-box {
