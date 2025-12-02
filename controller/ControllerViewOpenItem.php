@@ -1,6 +1,7 @@
 <?php
 
 require_once "framework/Controller.php";
+require_once "utils/AppTime.php";
 
 class ControllerViewOpenItem extends Controller
 {
@@ -18,7 +19,8 @@ class ControllerViewOpenItem extends Controller
             'buy_now_price' => 385.00,
             'start_date' => '10/11/2025 04:16:04',
             'end_date' => '17/11/2025 04:16:04',
-            'seller' => 'Xavier'
+            'seller' => 'Xavier',
+            'status' => 'Member'
         ];
 
         $bids = [

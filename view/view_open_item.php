@@ -15,6 +15,7 @@
     body {
       display: block;
       padding-top: 10px;
+      padding-bottom: 80px;
       height: auto;
       justify-content: unset;
       align-items: unset;
@@ -84,7 +85,10 @@
             <h5>Seller</h5>
             <div class="d-flex align-items-center mt-3">
               <i class="fa-solid fa-circle-user fa-2x me-2 text-secondary"></i>
-              <span><?= $item['seller'] ?></span>
+              <div>
+                <div class="fw-bold"><?= $item['seller'] ?></div>
+                <div class="small text-secondary"><?= $item['status'] ?></div>
+              </div>
             </div>
           </div>
         </div>
@@ -121,35 +125,71 @@
       </div>
     </div>
   </div>
-  <nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-dark">
-    <ul class="navbar-nav mx-auto" id="nav-icons">
-      <li class="nav-item">
-        <div class="icon-box text-center text-white px-3">
-          <i class="fa-solid fa-magnifying-glass"></i><br>
-          <span style="font-size: 12px;">Browse</span>
-        </div>
-      </li>
-      <li class="nav-item">
-        <div class="icon-box text-center text-white px-3">
-          <i class="fa-solid fa-house"></i><br>
-          <span style="font-size: 12px;">My Items</span>
-        </div>
-      </li>
-      <li class="nav-item">
-        <div class="icon-box text-center text-white px-3">
-          <i class="fa-solid fa-plus"></i><br>
-          <span style="font-size: 12px;">Add Offer</span>
-        </div>
-      </li>
-      <li class="nav-item">
-        <div class="icon-box text-center text-white px-3">
-          <i class="fa-solid fa-gear"></i><br>
-          <span style="font-size: 12px;">Profile</span>
-        </div>
-      </li>
-    </ul>
-  </nav>
+  <div class="fixed-bottom">
 
+    <nav class="navbar navbar-dark bg-dark">
+      <ul class="navbar-nav bottom-nav" id="nav-icons">
+        <li class="nav-item text-center">
+          <a href="#" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
+        </li>
+        <li class="nav-item text-center">
+          <a href="#" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
+        </li>
+        <li class="nav-item text-center">
+          <a href="#" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
+        </li>
+        <li class="nav-item text-center">
+          <a href="#" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center px-3" style="
+        background-color: #1e293b; 
+        border-top: 1px solid #334155; 
+        color: #94a3b8;
+        height: 40px;
+        font-size: 11px;
+    ">
+      <span class="fw-bold text-white">
+        <?php
+        $dt = new DateTime(AppTime::get_current_datetime());
+        echo $dt->format('d/m/y H:i');
+        ?>
+      </span>
+
+      <div class="d-flex align-items-center">
+
+        <form method="post" action="time/advance" class="m-0">
+          <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="hour">
+          <button class="btn btn-debug text-debug-orange">
+            <i class="fa-regular fa-clock me-1"></i>+1h
+          </button>
+        </form>
+
+        <form method="post" action="time/advance" class="m-0">
+          <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="day">
+          <button class="btn btn-debug text-debug-orange">
+            <i class="fa-regular fa-calendar me-1"></i>+1d
+          </button>
+        </form>
+
+        <form method="post" action="time/advance" class="m-0">
+          <input type="hidden" name="amount" value="7"><input type="hidden" name="unit" value="day">
+          <button class="btn btn-debug text-debug-orange">
+            <i class="fa-regular fa-calendar-days me-1"></i>+1w
+          </button>
+        </form>
+
+        <form method="post" action="time/reset" class="m-0">
+          <button class="btn btn-debug text-debug-red">
+            <i class="fa-solid fa-rotate-right me-1"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
 </body>
 
 </html>
