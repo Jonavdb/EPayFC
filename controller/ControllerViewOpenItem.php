@@ -2,6 +2,7 @@
 
 require_once "framework/Controller.php";
 require_once "utils/AppTime.php";
+require_once "model/Item.php";
 
 class ControllerViewOpenItem extends Controller
 {
@@ -12,16 +13,7 @@ class ControllerViewOpenItem extends Controller
             $this->redirect();
         }
 
-        $item = [
-            'title' => 'Piano numérique Yamaha P-45',
-            'description' => 'Touches lestées, pédale incluse.',
-            'current_bid' => 229.00,
-            'buy_now_price' => 385.00,
-            'start_date' => '10/11/2025 04:16:04',
-            'end_date' => '17/11/2025 04:16:04',
-            'seller' => 'Xavier',
-            'status' => 'Member'
-        ];
+        $item = Item::get_item_by_id(42);
 
         $bids = [
             ['user' => 'Boris', 'amount' => 229.00, 'time' => '11/11/2025 21:55:03', 'active' => true],

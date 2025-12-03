@@ -199,3 +199,8 @@ font-size: 1.8rem;
     justify-content: space-around;
     margin: 0 auto;
 }
+
+.additionnal-images {
+    width: 120px; 
+    height: 80px;
+}

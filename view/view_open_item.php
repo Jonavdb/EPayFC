@@ -50,15 +50,24 @@
           <img src="test.jpg" class="card-img-top" alt="Piano" style="max-height: 500px; object-fit: cover;">
 
           <div class="card-body">
-            <p class="card-title"><?= $item['title'] ?></p>
-            <p class="card-text text-secondary"><?= $item['description'] ?></p>
+            <p class="card-title"><?= $item->title ?></p>
+            <p class="card-text text-secondary"><?= $item->description ?></p>
 
             <div class="small">
-              <p class="mb-0">starts at : <?= $item['start_date'] ?></p>
-              <p>ends at : <?= $item['end_date'] ?> </p>
+              <p class="mb-2">starts at : <?= $item->created_at->format('d/m/Y H:i') ?></p>
+              <p>ends at : <?= $item->created_at->format('d/m/Y H:i') ?> </p>
             </div>
           </div>
-
+        </div>
+        <h4 class="text-white mt-4 mb-4">Additionals Images</h4>
+        <div class="d-flex gap-4 mb-4">
+          <?php
+          foreach ($item->image_urls as $image):
+          ?>
+            <img src="<?= $image ?>"
+              class="additionnal-images"
+              alt="Vue supplémentaire">
+          <?php endforeach; ?>
         </div>
       </div>
       <div class="col-md-4">
@@ -67,13 +76,13 @@
             <h5>Pricing</h5>
             <div class="d-flex justify-content-between mb-2">
               <span>Current Bid</span>
-              <h3 class="text-success">€ <?= $item['current_bid'] ?></h3>
+              <h3 class="text-success">€ <?= $item->current_bid ?></h3>
             </div>
             <div class="d-flex justify-content-between mb-3">
               <span>Buy Now</span>
-              <h3 class="text-success">€ <?= $item['buy_now_price'] ?></h3>
+              <h3 class="text-success">€ <?= $item->price ?></h3>
             </div>
-            <div class="d-grid gap-2">
+            <div class="d-grid gap-3">
               <button class="btn btn-success" type="button">Place Bid</button>
               <button class="btn btn-outline-primary" type="button">Buy Now</button>
             </div>
@@ -83,11 +92,11 @@
         <div class="card text-bg-dark mb-3 border-light">
           <div class="card-body">
             <h5>Seller</h5>
-            <div class="d-flex align-items-center mt-3">
+            <div class="d-flex align-items-center mt-2">
               <i class="fa-solid fa-circle-user fa-2x me-2 text-secondary"></i>
               <div>
-                <div class="fw-bold"><?= $item['seller'] ?></div>
-                <div class="small text-secondary"><?= $item['status'] ?></div>
+                <div class="fw-bold"><?= $item->owner_name ?></div>
+                <div class="small text-secondary"><?= $item->owner_status ?></div>
               </div>
             </div>
           </div>
@@ -95,9 +104,6 @@
       </div>
     </div>
   </div>
-
-  <p>Additionnal Images</p>
-
   <div class="container-fluid px-4 pb-4 pt-0" style="margin-top: 0px; margin-bottom: 5px;">
     <div class="row">
       <div class="col-md-8">
