@@ -14,10 +14,11 @@ class Item extends Model
         public string $main_image_url,
         public array $image_urls,
         //public int $image_count,
-        public float $but_now_price,
+        public float $buy_now_price,
         public float $starting_bid,
         //public float $current_bid,
         public DateTime $created_at,
+        public DateTime $end_at,
         public int $duration_days,
         // public bool $has_bidder,
         // public bool $is_in_auction,
@@ -46,6 +47,11 @@ class Item extends Model
             ["item_id" => $id]
         );
         $pictures = $query_pics->fetchAll(PDO::FETCH_COLUMN);
+        $created_at_object = new DateTime($data['created_at']);
+        $duration_days = (int) $data['duration_days'];
+
+        $end_date_object = clone $created_at_object;
+        $end_date_object->add(new DateInterval('P' . $duration_days . 'D'));
 
         return new Item(
             $data['title'],
@@ -57,6 +63,7 @@ class Item extends Model
             $data['buy_now_price'] ?? 0.0,
             $data['starting_bid'],
             new DateTime($data['created_at']),
+            $end_date_object,
             $data['duration_days']
         );
     }

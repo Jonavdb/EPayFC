@@ -14,7 +14,7 @@ class ControllerViewOpenItem extends Controller
             $this->redirect();
         }
 
-        $id = 23;
+        $id = 20;
         $item = Item::get_item_by_id($id);
 
         $bids = Bid::get_bid_by_item_id($id);

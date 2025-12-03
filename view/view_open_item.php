@@ -1,3 +1,8 @@
+<?php
+$buy_now = $item->buy_now_price;
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -54,7 +59,7 @@
 
             <div class="small">
               <p class="mb-2">starts at : <?= $item->created_at->format('d/m/Y H:i') ?></p>
-              <p>ends at : <?= $item->created_at->format('d/m/Y H:i') ?> </p>
+              <p>ends at : <?= $item->end_at->format('d/m/Y H:i') ?> </p>
             </div>
           </div>
         </div>
@@ -75,15 +80,19 @@
             <h5>Pricing</h5>
             <div class="d-flex justify-content-between mb-2">
               <span>Current Bid</span>
-              <h3 class="text-success">€ <?= $item->current_bid ?></h3>
+              <h3 class="text-success">€ <?= $bids[0]->amount ?></h3>
             </div>
-            <div class="d-flex justify-content-between mb-3">
-              <span>Buy Now</span>
-              <h3 class="text-success">€ <?= $item->price ?></h3>
-            </div>
+            <?php if ($buy_now != 0) { ?>
+              <div class="d-flex justify-content-between mb-3">
+                <span>Buy Now</span>
+                <h3 class="text-success">€ <?= $item->buy_now_price ?></h3>
+              </div>
+            <?php } ?>
             <div class="d-grid gap-3">
               <button class="btn btn-success" type="button">Place Bid</button>
-              <button class="btn btn-outline-primary" type="button">Buy Now</button>
+              <?php if ($buy_now != 0) { ?>
+                <button class="btn btn-outline-primary" type="button">Buy Now</button>
+              <?php } ?>
             </div>
           </div>
         </div>
