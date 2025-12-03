@@ -47,8 +47,7 @@
       <div class="col-md-8">
         <div class="card text-bg-dark mb-3">
 
-          <img src="test.jpg" class="card-img-top" alt="Piano" style="max-height: 500px; object-fit: cover;">
-
+          <img src="<?= $item->main_image_url ?>" class="card-img-top" alt="Piano" style="max-height: 500px; object-fit: cover;">
           <div class="card-body">
             <p class="card-title"><?= $item->title ?></p>
             <p class="card-text text-secondary"><?= $item->description ?></p>
@@ -96,7 +95,7 @@
               <i class="fa-solid fa-circle-user fa-2x me-2 text-secondary"></i>
               <div>
                 <div class="fw-bold"><?= $item->owner_name ?></div>
-                <div class="small text-secondary"><?= $item->owner_status ?></div>
+                <div class="small text-secondary"><?= $item->owner_role ?></div>
               </div>
             </div>
           </div>

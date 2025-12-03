@@ -10,43 +10,54 @@ class Item extends Model
         public string $title,
         public string $description,
         public string $owner_name,
-        public string $owner_status,
+        public string $owner_role,
         public string $main_image_url,
         public array $image_urls,
-        public int $image_count,
-        public float $price,
-        public float $current_bid,
+        //public int $image_count,
+        public float $but_now_price,
+        public float $starting_bid,
+        //public float $current_bid,
         public DateTime $created_at,
         public int $duration_days,
-        public bool $has_bidder,
-        public bool $is_in_auction,
+        // public bool $has_bidder,
+        // public bool $is_in_auction,
     ) {}
 
     public static function get_item_by_id(int $id)
     {
-        if ($id === 42) {
-            $now = AppTime::get_current_datetime();
-            $created_at_test = new DateTime($now);
-            $image_urls_test = [
-                'test.jpg',
-                'test.jpg'
-            ];
-            return new Item(
-                'Piano numérique Yamaha P-45',
-                'Piano a touches lestées',
-                'Xavier',
-                'Member',
-                'test.jpg',
-                $image_urls_test,
-                count($image_urls_test),
-                355.00,
-                220.00,
-                $created_at_test,
-                15,
-                true,
-                true
-            );
+        $query = self::execute(
+            "SELECT i.*, u.pseudo AS owner_pseudo, u.role AS owner_role
+                                FROM items i 
+                                JOIN users u on i.owner = u.id
+                                WHERE i.id = :item_id",
+            ["item_id" => $id]
+        );
+        $data = $query->fetch();
+
+        if (!$data) {
+            return false;
         }
-        return false;
+
+        $query_pics = self::execute(
+            "SELECT picture_path, priority
+                                FROM item_pictures p
+                                where p.item = :item_id
+                                Order BY priority ASC",
+            ["item_id" => $id]
+        );
+        $pictures = $query_pics->fetchAll(PDO::FETCH_COLUMN);
+
+        return new Item(
+            $data['title'],
+            $data['description'],
+            $data['owner_pseudo'],
+            $data['owner_role'],
+            $pictures[0],
+            $pictures,
+            $data['buy_now_price'] ?? 0.0,
+            $data['starting_bid'],
+            new DateTime($data['created_at']),
+            $data['duration_days']
+        );
     }
 }
