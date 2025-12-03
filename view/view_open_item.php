@@ -116,12 +116,12 @@
             <?php foreach ($bids as $bid): ?>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                  <div class="fw-bold"><?= $bid['user'] ?></div>
-                  <small class="text-secondary"><?= $bid['time'] ?></small>
+                  <div class="fw-bold"><?= $bid->owner_pseudo ?></div>
+                  <small class="text-secondary"><?= $bid->created_at->format('d/m/Y H:i') ?></small>
                 </div>
 
-                <span class="<?= $bid['active'] ? 'text-success fw-bold' : 'text-success' ?>">
-                  € <?= $bid['amount'] ?>
+                <span class="<?= $bid->item ? 'text-success fw-bold' : 'text-success' ?>">
+                  € <?= $bid->amount ?>
                 </span>
 
               </li>
