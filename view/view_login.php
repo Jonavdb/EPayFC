@@ -13,7 +13,7 @@
 
 <body>
     <main>
-        <form class="form">
+        <form id="loginForm" action="user/login" method="post">
             <h2 class="text-center text-white">Sign in</h2>
             <span class="divider"></span>
 
@@ -21,24 +21,23 @@
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-solid fa-user"></i>
                 </span>
-                <input type="email" class="form-control bg-dark border-secondary text-light" placeholder="Mail" aria-label="Mail">
+                <input type="email" name="email" class="form-control bg-dark border-secondary text-light" placeholder="Mail" aria-label="Mail">
             </div>
 
             <div class="input-group mb-3">
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-solid fa-key"></i>
                 </span>
-                <input type="password" class="form-control bg-dark border-secondary text-light" placeholder="******" aria-label="Password">
+                <input type="password" name="password" class="form-control bg-dark border-secondary text-light" placeholder="********" aria-label="Password">
             </div>
 
             <div class="d-grid gap-3">
-                <button type="submit" class="btn btn-primary">Login</button>
-                <button type="button" class="btn btn-secondary">Continue as guest</button>
+                <input type="submit" class="btn btn-primary fw-normal" value="Login">
+                <button type="button" class="btn btn-secondary fw-normal">Continue as guest</button>
             </div>
 
-            <!-- TODO : diriger vers sign up view quand elle sera faite -->
             <div class="text-center mt-3">
-                <span class="small">New here ? <a href="#" class="text-info">Click here to subscribe !</a></span>
+                <span class="small">New here ? <a href="main/signup" class="text-info">Click here to subscribe !</a></span>
             </div>
 
             <span class="divider"></span>
@@ -71,6 +70,17 @@
                     <div><a href="#" class="text-warning">Restore personal data</a></div>
                 </div>
             </div>
+
+            <?php if (count($errors) != 0): ?>
+                <div class='errors'>
+                    <p>Please correct the following error(s) :</p>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= $error ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </form>
     </main>
 </body>

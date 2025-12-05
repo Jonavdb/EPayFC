@@ -1,5 +1,6 @@
 <?php
 require_once 'framework/Controller.php';
+require_once 'model/User.php';
 
 class ControllerUser extends Controller {
     public function index(): void {
@@ -20,9 +21,10 @@ class ControllerUser extends Controller {
             $email = $_POST['email'];
             $password = $_POST['password'];
 
-            $errors = Member::validate_login($email, $password);
+            $errors = User::validate_login($email, $password);
             if (empty($errors)) {
-                $this->log_user(Member::get_member_by_email($email));
+                $this->log_user(User::get_user_by_email($email));
+                var_dump("cest ok mon pote");
             }
         }
         (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
