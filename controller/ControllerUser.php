@@ -5,7 +5,7 @@ require_once 'model/User.php';
 class ControllerUser extends Controller {
     public function index(): void {
         if ($this->user_logged()) {
-            $this->redirect("member", "profile");
+            $this->redirect("user", "profile");
         } else {
             (new View("index"))->show();
         }
@@ -24,7 +24,6 @@ class ControllerUser extends Controller {
             $errors = User::validate_login($email, $password);
             if (empty($errors)) {
                 $this->log_user(User::get_user_by_email($email));
-                var_dump("cest ok mon pote");
             }
         }
         (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
