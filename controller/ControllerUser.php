@@ -28,4 +28,9 @@ class ControllerUser extends Controller {
         }
         (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
     }
+
+    // Gestion du changement de mot de passe
+    public function change_password(): void {
+        (new View("change_password"))->show();
+    }
 }

@@ -49,6 +49,13 @@ body {
     color: var(--text-light);
 }
 
+/* Navigation */
+.nav-header {
+    background-color: #162438;
+    border-bottom: 2px solid #2c3e50;
+    border-radius: 8px 8px 0 0;
+}
+
 /* Messages d'erreur et de succès */
 .errors,
 .success {
@@ -101,7 +108,7 @@ main {
 form {
     background: var(--form-background);
     border: 1px solid var(--form-border);
-    padding: 2.5rem;
+    padding: 1.5rem;
     border-radius: 6px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     color: white;
@@ -122,6 +129,26 @@ form .form-control, .input-group-text {
     justify-content: center;
 }
 
+form .form-text {
+    color: var(--text-muted);
+}
+
+/* Cartes */
+.card-dark-bg {
+    background-color: #212529;
+    border: 1px solid #495057;
+}
+
+.card-header-bg {
+    background-color: #343a40;
+    border-bottom: 1px solid #495057;
+}
+
+.settings-container .card {
+    border: 1px solid var(--form-border);
+    background-color: var(--form-background);
+    margin-bottom: 2rem;
+}
 
 /* Titres */
 h1, h2, h3, h4, h5, h6 {
@@ -151,6 +178,14 @@ button, .btn {
     transition: all var(--transition-fast);
     text-align: center;
     text-decoration: none;
+}
+
+/* Bouton change password */
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
 /* Liens */
