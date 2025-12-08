@@ -1,0 +1,20 @@
+/*
+         * CUSTOM STYLES
+         * 1. .content-box: Adds the visual border/box effect you requested.
+         * 2. main: Adds necessary padding to prevent content from being hidden
+         * behind the fixed header and footer.
+         */
+
+.content-box {
+  border: 1px solid #495057;
+  /* Darker border for visibility */
+  padding: 15px;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  border-radius: 5px;
+  /* Inherit color/background from body or override if necessary */
+}
+
+main {
+  max-width: 80%;
+}
