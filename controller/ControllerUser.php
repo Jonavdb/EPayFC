@@ -10,7 +10,7 @@ class ControllerUser extends Controller {
         // } else {
         //     (new View("index"))->show();
         // }
-        var_dump("mot de passe changé bb")(new View("index"))->show();
+        (new View("index"))->show();
     }
 
     //gestion de la connexion d'un utilisateur
