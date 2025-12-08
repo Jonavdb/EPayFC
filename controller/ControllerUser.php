@@ -3,12 +3,14 @@ require_once 'framework/Controller.php';
 require_once 'model/User.php';
 
 class ControllerUser extends Controller {
+    // TODO
     public function index(): void {
-        if ($this->user_logged()) {
-            $this->redirect("user", "profile");
-        } else {
-            (new View("index"))->show();
-        }
+        // if ($this->user_logged()) {
+        //     $this->redirect("user", "profile");
+        // } else {
+        //     (new View("index"))->show();
+        // }
+        var_dump("mot de passe changé bb")(new View("index"))->show();
     }
 
     //gestion de la connexion d'un utilisateur
@@ -31,6 +33,18 @@ class ControllerUser extends Controller {
 
     // Gestion du changement de mot de passe
     public function change_password(): void {
+        // $errors = [];
+
+        // if (isset($_POST['btnChangedPwd'])) {
+        //     $new_password = $_POST['new_password'];
+        //     $new_password_confirm = $_POST['new_password_confirm'];
+        // }
+
+        // $errors = User::validate_passwords($new_password, $new_password_confirm);
+        // if (empty($errors)) {
+        //     $this->index();
+        // }
+
         (new View("change_password"))->show();
     }
 }

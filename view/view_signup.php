@@ -60,7 +60,6 @@
             <!-- Boutons -->
             <div class="d-grid gap-3">
                 <input type="submit" class="btn btn-primary" value="Sign Up">
-                <!-- <button type="submit" class="btn btn-primary">Sign Up</button> -->
                 <button type="button" class="btn btn-danger">Cancel</button>
             </div>
 

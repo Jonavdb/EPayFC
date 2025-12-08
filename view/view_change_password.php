@@ -15,7 +15,7 @@
     <main class="container">
         <!-- HEADER -->
         <div class="d-flex justify-content-between align-items-center p-3 mb-3 nav-header text-white rounded">
-            <a href="member/profile" class="btn-icon">
+            <a href="user/profile" class="btn-icon">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
 
@@ -23,12 +23,13 @@
                 Change password <i class="fa-solid fa-cart-shopping"></i>
             </h4>
 
+            <!-- BTN SUBMIT -->
             <button type="submit" form="passwordForm" class="btn-icon">
-                <i class="fa-solid fa-floppy-disk"></i>
+                <i class="fa-regular fa-floppy-disk fa-lg"></i>
             </button>
         </div>
 
-        <form id="passwordForm" action="member/change_password" method="post">
+        <form id="passwordForm" action="user/change_password" method="post">
             <!-- CURRENT PASSWORD -->
             <div class="card mb-4 bg-dark border-secondary">
                 <div class="card-header border-secondary text-white fw-semibold card-header-bg">
@@ -59,11 +60,11 @@
 
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="newPassword" class="form-label text-white fw-bold small">New Password *</label>
+                        <label for="new_password" class="form-label text-white fw-bold small">New Password *</label>
                         <input type="password"
                             name="new_password"
                             class="form-control bg-dark border-secondary text-white"
-                            id="newPassword"
+                            id="new_password"
                             placeholder="Enter your new password">
 
                         <div class="form-text text-secondary">
@@ -72,11 +73,11 @@
                     </div>
 
                     <div class="mb-1">
-                        <label for="confirmPassword" class="form-label text-white fw-bold small">Confirm New Password *</label>
+                        <label for="new_password_confirm" class="form-label text-white fw-bold small">Confirm New Password *</label>
                         <input type="password"
-                            name="confirm_password"
+                            name="new_password_confirm"
                             class="form-control bg-dark border-secondary text-white"
-                            id="confirmPassword"
+                            id="new_password_confirm"
                             placeholder="Confirm your new password">
 
                         <div class="form-text text-secondary">
