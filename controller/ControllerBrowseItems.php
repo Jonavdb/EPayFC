@@ -1,14 +1,17 @@
 <?php
 require_once "framework/Controller.php";
-require_once "model/Item.php";
+require_once "model/ItemM.php";
 
-class ControllerBrowseItems extends Controller {
-    
-    public function index(): void {
+class ControllerBrowseItems extends Controller
+{
+
+    public function index(): void
+    {
         $this->show_items();
     }
 
-    public function show_items(): void {
+    public function show_items(): void
+    {
         // static values to test
         $title = "title";
         $owner_name = "owner name";
@@ -21,7 +24,7 @@ class ControllerBrowseItems extends Controller {
         $duration_days = 7;
         $has_bidder = true;
         $is_in_auction = true;
-        $item = new Item(
+        $item = new ItemM(
             $title,
             $owner_name,
             $main_image_url,

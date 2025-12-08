@@ -32,8 +32,10 @@
     <main class="flex-grow-1 content-box">
 
         <div class="d-flex flex-column min-vh-100">
+
             <div class="p-3 border bg-secondary bg-opacity-25 flex-grow-1 mb-5">
                 <div class="text-start"> Items I'm participating in </div>
+
                 <div class="p-3 border bg-primary bg-opacity-25 flex-grow-1 min-vh-100">
                     <div class="container-fluid">
                         <div class="card dark-theme" style="width: 18rem;">
@@ -121,10 +123,11 @@
                                 </div>
                             </div>
                         </div>
+
+
+
                     </div>
                 </div>
-
-
             </div>
 
             <div class="p-3 border bg-secondary bg-opacity-25 flex-grow-1 mt-5">
@@ -132,7 +135,8 @@
                 <div class="p-3 border bg-primary bg-opacity-25 flex-grow-1 min-vh-100">
                 </div>
             </div>
-            <?php /*
+        </div>
+        <?php /*
         --items general layout--
          <!-- GRID LAYOUT -->
         <div class="container-fluid">
