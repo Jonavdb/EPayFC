@@ -30,695 +30,702 @@
 
     <!-- PAGE CONTENT -->
     <main class="flex-grow-1 content-box">
+
+        <!-- CONTAINER 1 direction vertcial -->
         <div class="d-flex flex-column min-vh-100">
-            <div class="p-3 flex-grow-1 mb-5">
-                <div class="fw-bold fs-2" style="color: #2D68C4;">Items I'm participating in</div>
 
-                <div class="p-3 d-flex flex-column justify-content-evenly h-100">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3">
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+            <!-- Text : "Items i'm participating in" -->
+            <div class="fw-bold fs-2" style="color: #2D68C4;">Items I'm participating in</div>
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+            <!-- Vertical container that takes remaining space automatically -->
+            <div class="p-3 d-flex flex-column justify-content-evenly h-100">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                <!-- Item cards wrapping container -->
+                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3 ">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                    <!-- 1 item / col -->
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
 
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
+
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
+
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
                                                 </div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
-                                                    </span>
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
-
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
-
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
                                                 </div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
-                                                    </span>
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
-
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
-
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
                                                 </div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
-                                                    </span>
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
-
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
-
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
                                                 </div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
+
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
                                                 </div>
+                                            </div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
+                                            </div>
 
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
+
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
+
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
                                                     </span>
                                                 </div>
+
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
+
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
 
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
                                             </div>
+
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
+
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
+
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
+
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
+
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
+                                                </div>
+
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
+
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
+
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
+
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
+
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
+
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
+
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
+
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
+                                                </div>
+
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
+
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
+
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
+
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
+
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
+
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
+
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
+
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
+                                                </div>
+
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
+
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
+
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
+
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
+
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
+
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -727,697 +734,704 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
+        <!-- CONTAINER 2 direction vertical "OTHER AVAILABLE ITEMS" -->
         <div class="d-flex flex-column min-vh-100">
-            <div class="p-3 flex-grow-1 mb-5">
-                <div class="fw-bold fs-2" style="color: #2D68C4;">Other Available Items</div>
 
-                <div class="p-3 d-flex flex-column justify-content-evenly h-100">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3">
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+            <!-- Text : "Items i'm participating in" -->
+            <div class="fw-bold fs-2" style="color: #2D68C4;">Other Available Items</div>
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+            <!-- Vertical container that takes remaining space automatically -->
+            <div class="p-3 d-flex flex-column justify-content-evenly h-100">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                <!-- Item cards wrapping container -->
+                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3 ">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                    <!-- 1 item / col -->
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
 
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
+
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
+
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
                                                 </div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
-                                                    </span>
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
-
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
-
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
                                                 </div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
-                                                    </span>
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
-
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
-
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
                                                 </div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
-                                                    </span>
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
-
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
-
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
                                                 </div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
-
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
-
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="card dark-theme w-100 h-100">
-                                <!-- TOP CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
-                                        <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column h-100">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
 
-                                                <!-- Row 1 : Top left & Top right -->
-                                                <div class="d-flex justify-content-between">
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
 
-                                                    <!-- Top left -->
-                                                    <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
-                                                    </div>
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
-                                                    <!-- Top right -->
-                                                    <div class="d-flex flex-column">
-                                                        <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                        </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
-                                                    </div>
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
+
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
                                                 </div>
+                                            </div>
 
-                                                <!-- Spacer between Row 1 and Row 2 -->
-                                                <div class="flex-grow-1"></div>
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
+                                            </div>
 
-                                                <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
+
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
+
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
                                                     </span>
                                                 </div>
+
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
+
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- BOTTOM CELL -->
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <div class="card-body">
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
 
-                                            <!-- Direction : Vertical -->
-                                            <div class="d-flex flex-column">
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
 
-                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
-                                                </div>
-
-                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                    <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
-
-                                                    <!-- Mid right -->
-                                                    <div class="d-flex flex-column text-end bid-info">
-                                                        <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                                <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                                </div>
-
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
                                             </div>
+
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
+
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
+
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
+
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
+
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
+                                                </div>
+
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
+
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
+
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
+
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
+
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
+
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
+
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
+
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
+                                                </div>
+
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
+
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
+
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
+
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
+
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
+
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card dark-theme w-100 h-100">
+                            <!-- TOP CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+
+                                    <!-- Everything that is on top of the item image -->
+                                    <div class="card-img-overlay" style="height:55%;">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column h-100">
+
+                                            <!-- Row 1 : Top left & Top right -->
+                                            <div class="d-flex justify-content-between">
+
+                                                <!-- Top left -->
+                                                <div>
+                                                    <span class="badge rounded-pill bg-dark badge-bidder">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                    </span>
+                                                </div>
+
+                                                <!-- Top right -->
+                                                <div class="d-flex flex-column">
+                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                    </span>
+                                                    <span class="badge rounded-pill bg-primary">
+                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Spacer between Row 1 and Row 2 -->
+                                            <div class="flex-grow-1"></div>
+
+                                            <!-- Row 2 : Bottom right -->
+                                            <div class="d-flex justify-content-end">
+                                                <span class="badge rounded-pill bg-dark">
+                                                    <i class="fa-solid fa-images"></i> 2 images
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTTOM CELL -->
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card-body">
+
+                                        <!-- Direction : Vertical -->
+                                        <div class="d-flex flex-column">
+
+                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                            <div class="card-title">
+                                                <b>Micro Blue Yeti Black</b>
+                                                <div>by Boris</div>
+                                            </div>
+
+                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
+
+                                                <!-- Mid left -->
+                                                <div class="price-left">€ 286,00</div>
+
+                                                <!-- Mid right -->
+                                                <div class="d-flex flex-column text-end bid-info">
+                                                    <div>Current bid</div>
+                                                    <div class="bid-price">€ 162,00</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                            <div class="time-left">
+                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -1426,6 +1440,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </main>
 
