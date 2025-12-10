@@ -38,20 +38,29 @@ class Bid extends Model
             );
         }
 
-        if (empty($bids_array)) {
-            return self::simulate_bids();
-        }
+        // if (empty($bids_array)) {
+        //     return self::simulate_bids();
+        // }
 
         return $bids_array;
     }
 
-
-    private static function simulate_bids()
+    public static function create_bid(string $user_pseudo, int $item_id, float $amount)
     {
-        return [
-            new Bid(99, 42, new DateTime('2025-11-11 21:55:03'), 229.00, 'Boris'),
-            new Bid(98, 42, new DateTime('2025-11-11 10:25:18'), 214.00, 'Marc'),
-            new Bid(97, 42, new DateTime('2025-11-10 20:36:50'), 198.00, 'Marc'),
-        ];
+        $now = AppTime::get_current_datetime();
+
+        $query = "Insert into bids (owner, item, created_at, amount)
+                  Values ((Select ID from Users where pseudo =:pseudo), :item, :created_at, :amount)";
+        try {
+            self::execute($query, [
+                "pseudo" => $user_pseudo,
+                "item" => $item_id,
+                "created_at" => $now,
+                "amount" => $amount
+            ]);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }

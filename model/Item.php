@@ -7,6 +7,7 @@ class Item extends Model
 {
 
     public function __construct(
+        public int $id,
         public string $title,
         public string $description,
         public string $owner_name,
@@ -22,7 +23,9 @@ class Item extends Model
         public int $bid_count,
         public bool $has_bids,
         public bool $is_auction,
-        public bool $is_direct_sale
+        public bool $is_direct_sale,
+        public bool $has_buy_now,
+        public bool $buy_now_reached
     ) {}
 
     public static function get_item_by_id(int $id)
@@ -48,12 +51,13 @@ class Item extends Model
             ["item_id" => $id]
         );
         $pictures = $query_pics->fetchAll(PDO::FETCH_COLUMN);
-        $main_image_url = $pictures[0] ?? 'test.jpg';
+        $main_image_url = $pictures[0] ?? 'test.png';
         $created_at_object = new DateTime($data['created_at']);
         $end_date_object = new DateTime($data['end_at']);
         $current_price = ($data['max_bid'] !== null) ? (float)$data['max_bid'] : (float)$data['starting_bid'];
 
         return new Item(
+            (int)$data['id'],
             $data['title'],
             $data['description'],
             $data['owner_pseudo'],
@@ -69,7 +73,9 @@ class Item extends Model
             $data['bid_count'],
             $data['has_bids'],
             $data['is_auction'],
-            $data['is_direct_sale']
+            $data['is_direct_sale'],
+            $data['has_buy_now'],
+            $data['buy_now_reached']
         );
     }
 }
