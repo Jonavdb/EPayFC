@@ -1,5 +1,13 @@
 <?php
 $buy_now = $item->buy_now_price;
+
+$image_to_display = $item->main_image_url;
+
+if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
+  if (in_array($_GET['selected_image'], $item->image_urls)) {
+    $image_to_display = $_GET['selected_image'];
+  }
+}
 ?>
 
 
@@ -52,7 +60,7 @@ $buy_now = $item->buy_now_price;
       <div class="col-md-8">
         <div class="card text-bg-dark mb-3">
 
-          <img src="<?= $item->main_image_url ?>" class="card-img-top" alt="Piano" style="max-height: 500px; object-fit: cover;">
+          <img src="<?= $image_to_display ?>" class="card-img-top" alt="Piano" style="max-height: 500px; object-fit: cover;">
           <div class="card-body">
             <p class="card-title"><?= $item->title ?></p>
             <p class="card-text text-secondary"><?= $item->description ?></p>
@@ -68,9 +76,11 @@ $buy_now = $item->buy_now_price;
           <?php
           foreach ($item->image_urls as $image):
           ?>
-            <img src="<?= $image ?>"
-              class="additionnal-images"
-              alt="Vue supplémentaire">
+            <a href="index.php?controller=view_open_item&action=index&param1=<?= $item->id ?>&selected_image=<?= $image ?>">
+              <img src="<?= $image ?>"
+                class="additionnal-images"
+                alt="Vue supplémentaire">
+            </a>
           <?php endforeach; ?>
         </div>
       </div>
