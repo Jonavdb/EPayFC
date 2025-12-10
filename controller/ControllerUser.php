@@ -3,17 +3,11 @@ require_once 'framework/Controller.php';
 require_once 'model/User.php';
 
 class ControllerUser extends Controller {
-    // TODO
     public function index(): void {
-        // if ($this->user_logged()) {
-        //     $this->redirect("user", "profile");
-        // } else {
-        //     (new View("index"))->show();
-        // }
         (new View("index"))->show();
     }
 
-    //gestion de la connexion d'un utilisateur
+    // Gestion de la connexion d'un utilisateur
     public function login(): void {
         $email = '';
         $password = '';
@@ -33,18 +27,46 @@ class ControllerUser extends Controller {
 
     // Gestion du changement de mot de passe
     public function change_password(): void {
-        // $errors = [];
+        $session_user = $this->get_user_or_false();
 
-        // if (isset($_POST['btnChangedPwd'])) {
-        //     $new_password = $_POST['new_password'];
-        //     $new_password_confirm = $_POST['new_password_confirm'];
-        // }
+        if (!$session_user) {
+            $this->redirect("user", "login");
+        }
 
-        // $errors = User::validate_passwords($new_password, $new_password_confirm);
-        // if (empty($errors)) {
-        //     $this->index();
-        // }
+        // Recharge depuis la DB pour avoir le hash à jour (évite des bugs)
+        $user = User::get_user_by_email($session_user->email);
 
-        (new View("change_password"))->show();
+        $current_password = $_POST['current_password'] ?? '';
+        $new_password = $_POST['new_password'] ?? '';
+        $confirm_password = $_POST['new_password_confirm'] ?? '';
+        $errors = [];
+
+        if (isset($_POST['current_password']) && isset($_POST['new_password']) && isset($_POST['new_password_confirm'])) {
+            // Vérification current password
+            if (!password_verify($current_password, $user->password)) {
+                $errors[] = "Le mot de passe actuel est incorrect.";
+            }
+
+            // Validation new password
+            $errors = array_merge($errors, User::validate_passwords($new_password, $confirm_password));
+
+            if (empty($errors)) {
+                $user->password = password_hash($new_password, PASSWORD_BCRYPT);
+                $user->persist();
+                $this->redirect("user", "profile");
+            }
+        }
+
+        (new View("change_password"))->show([
+            "errors" => $errors,
+            "current_password" => $current_password,
+            "new_password" => $new_password,
+            "confirm_password" => $confirm_password
+        ]);
+    }
+
+    // Gestion de la page de profil
+    public function profile(): void {
+        (new View("profile"))->show();
     }
 }

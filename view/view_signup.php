@@ -63,7 +63,6 @@
                 <button type="button" class="btn btn-danger">Cancel</button>
             </div>
 
-            <!-- TODO : gérer ça -->
             <?php if (count($errors) != 0): ?>
                 <div class='errors'>
                     <p>Please correct the following error(s) :</p>
