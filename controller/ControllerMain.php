@@ -5,7 +5,7 @@ require_once 'model/User.php';
 class ControllerMain extends Controller {
     public function index(): void {
         if ($this->user_logged()) {
-            $this->redirect("user", "profile");
+            $this->redirect("profile", "index");
         } else {
             (new View("index"))->show();
         }

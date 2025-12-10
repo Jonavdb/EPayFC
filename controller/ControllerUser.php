@@ -53,7 +53,7 @@ class ControllerUser extends Controller {
             if (empty($errors)) {
                 $user->password = password_hash($new_password, PASSWORD_BCRYPT);
                 $user->persist();
-                $this->redirect("user", "profile");
+                $this->redirect("profile", "index");
             }
         }
 
@@ -63,10 +63,5 @@ class ControllerUser extends Controller {
             "new_password" => $new_password,
             "confirm_password" => $confirm_password
         ]);
-    }
-
-    // Gestion de la page de profil
-    public function profile(): void {
-        (new View("profile"))->show();
     }
 }
