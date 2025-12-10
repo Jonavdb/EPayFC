@@ -38,11 +38,11 @@
 
                 <div class="card-body">
                     <div class="mb-1">
-                        <label for="currentPassword" class="form-label text-white fw-bold small">Current Password *</label>
+                        <label for="current_password" class="form-label text-white fw-bold small">Current Password *</label>
                         <input type="password"
                             name="current_password"
                             class="form-control bg-dark border-secondary text-white"
-                            id="currentPassword"
+                            id="current_password"
                             placeholder="Enter your current password">
 
                         <div class="form-text text-secondary">
@@ -86,6 +86,17 @@
                     </div>
                 </div>
             </div>
+
+            <?php if (count($errors) != 0): ?>
+                <div class='errors'>
+                    <p>Please correct the following error(s) :</p>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= $error ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </form>
     </main>
 </body>

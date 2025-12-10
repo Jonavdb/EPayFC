@@ -3,17 +3,12 @@ require_once 'framework/Controller.php';
 require_once 'model/User.php';
 
 class ControllerMain extends Controller {
-    // TODO à checker plus tard :
-    //     public function index() : void {
-    //     if ($this->user_logged()) {
-    //         $this->redirect("user", "profile");
-    //     } else {
-    //         (new View("index"))->show();
-    //     }
-    // }
-
     public function index(): void {
-        $this->signup();
+        if ($this->user_logged()) {
+            $this->redirect("profile", "index");
+        } else {
+            (new View("index"))->show();
+        }
     }
 
     //gestion de l'inscription d'un utilisateur
