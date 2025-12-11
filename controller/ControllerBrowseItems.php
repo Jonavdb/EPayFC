@@ -1,3 +1,4 @@
+controller
 <?php
 require_once "framework/Controller.php";
 require_once "model/ItemM.php";
@@ -13,33 +14,35 @@ class ControllerBrowseItems extends Controller
 
     public function show_items(): void
     {
+
+
         // static values to test
-
-        $title = "title";
-        $owner_name = "owner name";
-        $main_image_url = "uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg";
-        $image_urls = ["uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg", "uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg"];
-        $image_count = count($image_urls) - 1;
-        $price = 100.14;
-        $currentBid = 88.10;
-        $created_at = new DateTime("2025-1-12 14:30:00");
-        $duration_days = 7;
-        $has_bidder = true;
-        $is_in_auction = true;
-        $item = new ItemM(
-            $title,
-            $owner_name,
-            $main_image_url,
-            $image_urls,
-            $image_count,
-            $price,
-            $currentBid,
-            $created_at,
-            $duration_days,
-            $has_bidder,
-            $is_in_auction
-        );
-
+        /*
+            $title = "title";
+            $owner_name = "owner name";
+            $main_image_url = "uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg";
+            $image_urls = ["uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg", "uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg"];
+            $image_count = count($image_urls) - 1;
+            $price = 100.14;
+            $currentBid = 88.10;
+            $created_at = new DateTime("2025-1-12 14:30:00");
+            $duration_days = 7;
+            $has_bidder = true;
+            $is_in_auction = true;
+            $item = new ItemM(
+                $title,
+                $owner_name,
+                $main_image_url,
+                $image_urls,
+                $image_count,
+                $price,
+                $currentBid,
+                $created_at,
+                $duration_days,
+                $has_bidder,
+                $is_in_auction
+            );
+            */
 
 
         /* query to get all items user is participating in
@@ -51,8 +54,7 @@ class ControllerBrowseItems extends Controller
         join items i on i.id = b.item
         where u.pseudo = 'Boris' -- replace user pseudo / full name / id whatever
         ORDER by id; */
-        //$user_pseudo = User::get_user_by_pseudo('Boris');
-        //$user_bid_items = ItemM::get_user_bid_items($user_pseudo);
+        $user_bid_items = ItemM::get_user_bid_items('Boris');
 
         /* 
             query to get all items in auction where user has not place a bid 
@@ -84,7 +86,7 @@ class ControllerBrowseItems extends Controller
         // $other_available_items = [];
 
         (new View("browse_items"))->show([
-            "item" => $item
+            "user_bid_items" => $user_bid_items
         ]);
     }
 }
