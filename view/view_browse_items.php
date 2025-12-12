@@ -109,26 +109,26 @@ view
 
                                                 <!-- Row 1 : Top left (using bootstrap class "card title") -->
                                                 <div class="card-title">
-                                                    <b>Micro Blue Yeti Black</b>
-                                                    <div>by Boris</div>
+                                                    <b><?= $item->title ?></b>
+                                                    <div><?= $item->owner_name  ?></div>
                                                 </div>
 
                                                 <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
                                                 <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
                                                     <!-- Mid left -->
-                                                    <div class="price-left">€ 286,00</div>
+                                                    <div class="price-left">€ <?= number_format($item->price, 2, ',', '') ?></div>
 
                                                     <!-- Mid right -->
                                                     <div class="d-flex flex-column text-end bid-info">
                                                         <div>Current bid</div>
-                                                        <div class="bid-price">€ 162,00</div>
+                                                        <div class="bid-price">€ <?= number_format($item->current_bid, 2, ',', '') ?></div>
                                                     </div>
                                                 </div>
 
                                                 <!-- Row 3 : Bottom left (below boostrap class "card text"-->
                                                 <div class="time-left">
-                                                    <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
+                                                    <i class="fa-solid fa-clock transparent-icon"></i> <?= $item->time_left ?> left
                                                 </div>
 
                                             </div>

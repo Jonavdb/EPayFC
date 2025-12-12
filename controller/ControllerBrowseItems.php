@@ -44,16 +44,7 @@ class ControllerBrowseItems extends Controller
             );
             */
 
-
-        /* query to get all items user is participating in
-        SELECT distinct 
-        i.id as id,
-        i.title as itemName
-        from users u 
-        join bids b on b.owner = u.id
-        join items i on i.id = b.item
-        where u.pseudo = 'Boris' -- replace user pseudo / full name / id whatever
-        ORDER by id; */
+        // test debug
         $user_bid_items = ItemM::get_user_bid_items('Boris');
 
         /* 
