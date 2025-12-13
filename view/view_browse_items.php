@@ -41,25 +41,19 @@ view
 
             <!-- Vertical container that takes remaining space automatically -->
             <div class="p-3 d-flex flex-column justify-content-evenly h-100">
-
                 <!-- Item cards wrapping container -->
                 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3 ">
                     <!-- 1 item / col -->
-                    <!-- TODO checks : 
-                        if user is highest bidder,  
-                        if item has buy now price, 
-                        if item has more than one picture, 
-                        if current bid is greater than buy now price  -->
                     <?php foreach ($user_bid_items as $item) { ?>
                         <div class="col">
                             <div class="card dark-theme w-100 h-100">
                                 <!-- TOP CELL -->
                                 <div class="row">
                                     <div class="col-sm">
-                                        <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+                                        <img class="card-img-top" src=<?= $item->main_image_url ?> alt="Auction Item Image">
 
                                         <!-- Everything that is on top of the item image -->
-                                        <div class="card-img-overlay" style="height:55%;">
+                                        <div class="card-img-overlay" style="height:57%;">
 
                                             <!-- Direction : Vertical -->
                                             <div class="d-flex flex-column h-100">
@@ -69,9 +63,20 @@ view
 
                                                     <!-- Top left -->
                                                     <div>
-                                                        <span class="badge rounded-pill bg-dark badge-bidder">
-                                                            <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                        </span>
+                                                        <?php
+                                                        $highest_bid = $item->current_bid;
+                                                        $user_bid_on_this_item = $item->user_bid;
+                                                        $is_highest_bidder = $user_bid_on_this_item == $highest_bid;
+                                                        ?>
+                                                        <?php if ($is_highest_bidder) { ?>
+                                                            <span class="badge rounded-pill bg-success badge-bidder">
+                                                                <i class="fa-solid fa-trophy"></i> Highest Bidder
+                                                            </span>
+                                                        <?php } else { ?>
+                                                            <span class="badge rounded-pill bg-dark badge-bidder">
+                                                                <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                            </span>
+                                                        <?php } ?>
                                                     </div>
 
                                                     <!-- Top right -->
@@ -79,9 +84,16 @@ view
                                                         <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
                                                             <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
                                                         </span>
-                                                        <span class="badge rounded-pill bg-primary">
-                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                        </span>
+
+                                                        <?php
+                                                        $can_buy_now = $item->has_buy_now;
+                                                        ?>
+
+                                                        <?php if ($can_buy_now) { ?>
+                                                            <span class="badge rounded-pill bg-primary">
+                                                                <i class="fa-solid fa-bag-shopping"></i> Buy now
+                                                            </span>
+                                                        <?php } ?>
                                                     </div>
                                                 </div>
 
@@ -89,11 +101,22 @@ view
                                                 <div class="flex-grow-1"></div>
 
                                                 <!-- Row 2 : Bottom right -->
-                                                <div class="d-flex justify-content-end">
-                                                    <span class="badge rounded-pill bg-dark">
-                                                        <i class="fa-solid fa-images"></i> 2 images
-                                                    </span>
-                                                </div>
+                                                <?php
+                                                // Get the total number of images
+                                                $total_image_count = count($item->image_urls);
+                                                // Calculate the number of extra images (excluding the main one)
+                                                $extra_image_count = $total_image_count - 1;
+                                                ?>
+
+                                                <?php if ($extra_image_count > 0) { ?>
+                                                    <div class="d-flex justify-content-end">
+                                                        <span class="badge rounded-pill bg-dark">
+                                                            <i class="fa-solid fa-images"></i>
+                                                            <?= $extra_image_count ?>
+                                                            <?= ($extra_image_count === 1) ? ' image' : ' images' ?>
+                                                        </span>
+                                                    </div>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
@@ -117,7 +140,13 @@ view
                                                 <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
                                                     <!-- Mid left -->
-                                                    <div class="price-left">€ <?= number_format($item->price, 2, ',', '') ?></div>
+                                                    <?php $can_buy_now = $item->has_buy_now; ?>
+
+                                                    <?php if ($can_buy_now) { ?>
+                                                        <div class="price-left">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                    <?php } else { ?>
+                                                        <div></div>
+                                                    <?php } ?>
 
                                                     <!-- Mid right -->
                                                     <div class="d-flex flex-column text-end bid-info">
@@ -140,7 +169,6 @@ view
                     <?php } ?>
                 </div>
             </div>
-
         </div>
 
         <!-- CONTAINER 2 direction vertical "other available items" -->

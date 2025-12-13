@@ -47,6 +47,7 @@ class ControllerBrowseItems extends Controller
         // test debug
         $user_bid_items = ItemM::get_user_bid_items('Boris');
 
+
         /* 
             query to get all items in auction where user has not place a bid 
             SELECT vis.id from v_items_status vis 
