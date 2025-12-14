@@ -33,7 +33,7 @@ view
     <!-- PAGE CONTENT -->
     <main class="flex-grow-1 content-box">
 
-        <!-- CONTAINER 1 direction vertcial -->
+        <!-- CONTAINER 1 direction vertical" -->
         <div class="d-flex flex-column min-vh-100">
 
             <!-- Text : "Items i'm participating in" -->
@@ -173,7 +173,7 @@ view
 
         </div>
 
-        <!-- CONTAINER 2 direction vertical "other available items" -->
+        <!-- CONTAINER 2 direction vertical  -->
         <div class="d-flex flex-column min-vh-100">
 
             <!-- Text : "Items i'm participating in" -->
@@ -185,92 +185,109 @@ view
                 <!-- Item cards wrapping container -->
                 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3 ">
                     <!-- 1 item / col -->
-                    <div class="col">
-                        <div class="card dark-theme w-100 h-100">
-                            <!-- TOP CELL -->
-                            <div class="row">
-                                <div class="col-sm">
-                                    <img class="card-img-top" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+                    <?php foreach ($user_available_items as $item) { ?>
+                        <div class="col">
+                            <div class="card dark-theme w-100 h-100">
+                                <!-- TOP CELL -->
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <img class="card-img-top" src=<?= $item->main_image_url ?> alt="Auction Item Image">
 
-                                    <!-- Everything that is on top of the item image -->
-                                    <div class="card-img-overlay" style="height:55%;">
+                                        <!-- Everything that is on top of the item image -->
+                                        <div class="card-img-overlay" style="height:57%;">
 
-                                        <!-- Direction : Vertical -->
-                                        <div class="d-flex flex-column h-100">
+                                            <!-- Direction : Vertical -->
+                                            <div class="d-flex flex-column h-100">
 
-                                            <!-- Row 1 : Top left & Top right -->
-                                            <div class="d-flex justify-content-between">
+                                                <!-- Row 1 : Top left & Top right -->
+                                                <div class="d-flex justify-content-between">
 
-                                                <!-- Top left -->
-                                                <div>
-                                                    <span class="badge rounded-pill bg-dark badge-bidder">
-                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
-                                                    </span>
+                                                    <!-- Top left -->
+                                                    <div>
+                                                    </div>
+
+                                                    <!-- Top right -->
+                                                    <div class="d-flex flex-column">
+                                                        <?php if ($item->is_auction) { ?>
+                                                            <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
+                                                                <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                            </span>
+                                                        <?php } ?>
+
+                                                        <span class="badge rounded-pill bg-primary">
+                                                            <i class="fa-solid fa-bag-shopping"></i> Buy now
+                                                        </span>
+                                                    </div>
                                                 </div>
 
-                                                <!-- Top right -->
-                                                <div class="d-flex flex-column">
-                                                    <span class="badge rounded-pill bg-warning text-dark badge-auction mb-1">
-                                                        <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
-                                                    </span>
-                                                    <span class="badge rounded-pill bg-primary">
-                                                        <i class="fa-solid fa-bag-shopping"></i> Buy now
-                                                    </span>
-                                                </div>
-                                            </div>
+                                                <!-- Spacer between Row 1 and Row 2 -->
+                                                <div class="flex-grow-1"></div>
 
-                                            <!-- Spacer between Row 1 and Row 2 -->
-                                            <div class="flex-grow-1"></div>
+                                                <!-- Row 2 : Bottom right -->
+                                                <?php
+                                                // Get the total number of images
+                                                $total_image_count = count($item->image_urls);
+                                                // Calculate the number of extra images (excluding the main one)
+                                                $extra_image_count = $total_image_count - 1;
+                                                ?>
 
-                                            <!-- Row 2 : Bottom right -->
-                                            <div class="d-flex justify-content-end">
-                                                <span class="badge rounded-pill bg-dark">
-                                                    <i class="fa-solid fa-images"></i> 2 images
-                                                </span>
+                                                <?php if ($extra_image_count > 0) { ?>
+                                                    <div class="d-flex justify-content-end">
+                                                        <span class="badge rounded-pill bg-dark">
+                                                            <i class="fa-solid fa-images"></i>
+                                                            <?= $extra_image_count ?>
+                                                            <?= ($extra_image_count === 1) ? ' image' : ' images' ?>
+                                                        </span>
+                                                    </div>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- BOTTOM CELL -->
-                            <div class="row">
-                                <div class="col-sm">
-                                    <div class="card-body">
+                                <!-- BOTTOM CELL -->
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <div class="card-body">
 
-                                        <!-- Direction : Vertical -->
-                                        <div class="d-flex flex-column">
+                                            <!-- Direction : Vertical -->
+                                            <div class="d-flex flex-column">
 
-                                            <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                            <div class="card-title">
-                                                <b>Micro Blue Yeti Black</b>
-                                                <div>by Boris</div>
-                                            </div>
+                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                                <div class="card-title">
+                                                    <b><?= $item->title ?></b>
+                                                    <div><?= $item->owner_name  ?></div>
+                                                </div>
 
-                                            <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                            <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
+                                                <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                                <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
-                                                <!-- Mid left -->
-                                                <div class="price-left">€ 286,00</div>
+                                                    <!-- Mid left -->
+                                                    <div class="price-left">€ <?= number_format($item->price, 2, ',', '.') ?></div>
 
-                                                <!-- Mid right -->
-                                                <div class="d-flex flex-column text-end bid-info">
-                                                    <div>Current bid</div>
-                                                    <div class="bid-price">€ 162,00</div>
+                                                    <!-- Mid right -->
+                                                    <?php if ($item->is_auction) { ?>
+                                                        <div class="d-flex flex-column text-end bid-info">
+                                                            <div>Current bid</div>
+                                                            <div class="bid-price">€ <?= number_format($item->current_bid, 2, ',', '') ?></div>
+                                                        </div>
+                                                    <?php } else { ?>
+
+                                                        <div></div>
+                                                    <?php } ?>
+                                                </div>
+
+                                                <!-- Row 3 : Bottom left (below boostrap class "card text"-->
+                                                <div class="time-left">
+                                                    <i class="fa-solid fa-clock transparent-icon"></i> <?= $item->time_left ?> left
                                                 </div>
                                             </div>
-
-                                            <!-- Row 3 : Bottom left (below boostrap class "card text"-->
-                                            <div class="time-left">
-                                                <i class="fa-solid fa-clock transparent-icon"></i> 1d 4h left
-                                            </div>
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <?php } ?>
                 </div>
             </div>
 
