@@ -17,9 +17,11 @@ class ControllerBrowseItems extends Controller
         $user_bid_items = ItemM::get_user_bid_items('Marc');
         $user_available_items = ItemM::get_user_available_items('Marc');
 
-        (new View("browse_items"))->show([
-            "user_bid_items" => $user_bid_items,
-            "user_available_items" => $user_available_items
-        ]);
+        (new View("browse_items"))->show(
+            [
+                "user_bid_items" => $user_bid_items,
+                "user_available_items" => $user_available_items
+            ]
+        );
     }
 }

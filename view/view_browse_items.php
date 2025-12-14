@@ -33,7 +33,7 @@ view
     <!-- PAGE CONTENT -->
     <main class="flex-grow-1 content-box">
 
-        <!-- CONTAINER 1 direction vertical" -->
+        <!-- CONTAINER "Items I'm participating in"-->
         <div class="d-flex flex-column min-vh-100">
 
             <!-- Text : "Items i'm participating in" -->
@@ -173,7 +173,7 @@ view
 
         </div>
 
-        <!-- CONTAINER 2 direction vertical  -->
+        <!-- CONTAINER 2 "Other available items" -->
         <div class="d-flex flex-column min-vh-100">
 
             <!-- Text : "Items i'm participating in" -->
