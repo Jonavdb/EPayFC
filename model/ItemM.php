@@ -10,6 +10,7 @@ class ItemM extends Model
         public float $user_bid, // bid placed by the connected user on this item
         public bool $is_auction,
         public bool $has_buy_now,
+        public bool $buy_now_reached,
         public array $image_urls,
         public string $main_image_url,
         public string $title,
@@ -56,6 +57,9 @@ class ItemM extends Model
             // we get the info whether or not the item can be purchased directly
             $has_buy_now = $item_data['has_buy_now'];
             $has_buy_now = $has_buy_now == 1 ? true : false;
+
+            // we get the info whether or not the item last bid exceeds the direct sale price
+            $buy_now_reached = $item_data['buy_now_reached'];
 
             // we retrieve item pictures
             $query_image_urls = self::execute(
@@ -116,7 +120,7 @@ class ItemM extends Model
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
-            $user_bid_items[] = new ItemM($user_bid, $is_auction, $has_buy_now, $image_urls, $main_image_url, $title, $owner_name, $price, $current_bid, $time_left);
+            $user_bid_items[] = new ItemM($user_bid, $is_auction, $has_buy_now, $buy_now_reached, $image_urls, $main_image_url, $title, $owner_name, $price, $current_bid, $time_left);
         }
 
         return $user_bid_items;
@@ -202,6 +206,9 @@ class ItemM extends Model
             // available items are always purchasable
             $has_buy_now = true;
 
+            // we get the info whether or not the item last bid exceeds the direct sale price
+            $buy_now_reached = $item_data['buy_now_reached'];
+
             // we retrieve item pictures
             $query_image_urls = self::execute(
                 "SELECT picture_path
@@ -265,7 +272,7 @@ class ItemM extends Model
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
-            $user_available_items[] = new ItemM($user_bid, $is_auction, $has_buy_now, $image_urls, $main_image_url, $title, $owner_name, $price, $current_bid, $time_left);
+            $user_available_items[] = new ItemM($user_bid, $is_auction, $has_buy_now, $buy_now_reached, $image_urls, $main_image_url, $title, $owner_name, $price, $current_bid, $time_left);
         }
 
         return $user_available_items;

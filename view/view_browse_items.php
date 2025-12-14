@@ -87,10 +87,11 @@ view
                                                         </span>
 
                                                         <?php
-                                                        $can_buy_now = $item->has_buy_now;
+                                                        $has_buy_now = $item->has_buy_now;
+                                                        $buy_now_reached = $item->buy_now_reached;
                                                         ?>
 
-                                                        <?php if ($can_buy_now) { ?>
+                                                        <?php if ($has_buy_now && !$buy_now_reached) { ?>
                                                             <span class="badge rounded-pill bg-primary">
                                                                 <i class="fa-solid fa-bag-shopping"></i> Buy now
                                                             </span>
@@ -141,10 +142,19 @@ view
                                                 <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
                                                     <!-- Mid left -->
-                                                    <?php $can_buy_now = $item->has_buy_now; ?>
+                                                    <?php
+                                                    $has_buy_now = $item->has_buy_now;
+                                                    $buy_now_reached = $item->buy_now_reached;
+                                                    ?>
 
-                                                    <?php if ($can_buy_now) { ?>
-                                                        <div class="price-left">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                    <?php if ($has_buy_now) { ?>
+
+                                                        <?php if ($buy_now_reached) { ?>
+                                                            <div class="price-left text-warning">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                        <?php } else { ?>
+                                                            <div class="price-left">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                        <?php } ?>
+
                                                     <?php } else { ?>
                                                         <div></div>
                                                     <?php } ?>
