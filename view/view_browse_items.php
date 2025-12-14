@@ -47,7 +47,7 @@ view
                     <!-- 1 item / col -->
                     <?php foreach ($user_bid_items as $item) { ?>
                         <div class="col">
-                            <div class="card dark-theme w-100 h-100">
+                            <a href='#' class="card dark-theme w-100 h-100 text-decoration-none">
                                 <!-- TOP CELL -->
                                 <div class="row">
                                     <div class="col-sm">
@@ -175,7 +175,7 @@ view
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     <?php } ?>
                 </div>
@@ -197,7 +197,7 @@ view
                     <!-- 1 item / col -->
                     <?php foreach ($user_available_items as $item) { ?>
                         <div class="col">
-                            <div class="card dark-theme w-100 h-100">
+                            <a href='#' class="card dark-theme w-100 h-100 text-decoration-none">
                                 <!-- TOP CELL -->
                                 <div class="row">
                                     <div class="col-sm">
@@ -295,7 +295,7 @@ view
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     <?php } ?>
                 </div>
