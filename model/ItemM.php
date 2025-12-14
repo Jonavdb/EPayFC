@@ -203,8 +203,9 @@ class ItemM extends Model
             // we get info of whether the item is in auction or not
             $is_auction = $item_data['is_auction'];
 
-            // available items are always purchasable
-            $has_buy_now = true;
+            // we get the info whether or not the item can be purchased directly
+            $has_buy_now = $item_data['has_buy_now'];
+            $has_buy_now = $has_buy_now == 1 ? true : false;
 
             // we get the info whether or not the item last bid exceeds the direct sale price
             $buy_now_reached = $item_data['buy_now_reached'];
