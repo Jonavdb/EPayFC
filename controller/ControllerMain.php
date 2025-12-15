@@ -9,7 +9,7 @@ class ControllerMain extends Controller
         if ($this->user_logged()) {
             $this->redirect("profile", "index");
         } else {
-            (new View("index"))->show();
+            (new View("git pull"))->show();
         }
     }
 

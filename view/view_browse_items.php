@@ -150,9 +150,9 @@ view
                                                     <?php if ($has_buy_now) { ?>
 
                                                         <?php if ($buy_now_reached) { ?>
-                                                            <div class="price-left text-warning">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                            <div class="price-left text-warning">€ <?= number_format($item->buy_now_price, 2, ',', '.') ?></div>
                                                         <?php } else { ?>
-                                                            <div class="price-left">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                            <div class="price-left">€ <?= number_format($item->buy_now_price, 2, ',', '.') ?></div>
                                                         <?php } ?>
 
                                                     <?php } else { ?>
@@ -162,7 +162,7 @@ view
                                                     <!-- Mid right -->
                                                     <div class="d-flex flex-column text-end bid-info">
                                                         <div>Current bid</div>
-                                                        <div class="bid-price">€ <?= number_format($item->current_bid, 2, ',', '') ?></div>
+                                                        <div class="bid-price">€ <?= number_format($item->buy_now_price, 2, ',', '') ?></div>
                                                     </div>
                                                 </div>
 
@@ -288,9 +288,9 @@ view
                                                     <?php if ($has_buy_now) { ?>
 
                                                         <?php if ($buy_now_reached) { ?>
-                                                            <div class="price-left text-warning">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                            <div class="price-left text-warning">€ <?= number_format($item->buy_now_price, 2, ',', '.') ?></div>
                                                         <?php } else { ?>
-                                                            <div class="price-left">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                            <div class="price-left">€ <?= number_format($item->buy_now_price, 2, ',', '.') ?></div>
                                                         <?php } ?>
 
                                                     <?php } else { ?>
