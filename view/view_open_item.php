@@ -1,5 +1,13 @@
 <?php
 $buy_now = $item->buy_now_price;
+
+$image_to_display = $item->main_image_url;
+
+if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
+  if (in_array($_GET['selected_image'], $item->image_urls)) {
+    $image_to_display = $_GET['selected_image'];
+  }
+}
 ?>
 
 
@@ -52,7 +60,7 @@ $buy_now = $item->buy_now_price;
       <div class="col-md-8">
         <div class="card text-bg-dark mb-3">
 
-          <img src="<?= $item->main_image_url ?>" class="card-img-top" alt="Piano" style="max-height: 500px; object-fit: cover;">
+          <img src="<?= $image_to_display ?>" class="card-img-top" alt="Piano" style="max-height: 500px; object-fit: cover;">
           <div class="card-body">
             <p class="card-title"><?= $item->title ?></p>
             <p class="card-text text-secondary"><?= $item->description ?></p>
@@ -68,9 +76,11 @@ $buy_now = $item->buy_now_price;
           <?php
           foreach ($item->image_urls as $image):
           ?>
-            <img src="<?= $image ?>"
-              class="additionnal-images"
-              alt="Vue supplémentaire">
+            <a href="index.php?controller=view_open_item&action=index&param1=<?= $item->id ?>&selected_image=<?= $image ?>">
+              <img src="<?= $image ?>"
+                class="additionnal-images"
+                alt="Vue supplémentaire">
+            </a>
           <?php endforeach; ?>
         </div>
       </div>
@@ -78,22 +88,74 @@ $buy_now = $item->buy_now_price;
         <div class="card text-bg-dark mb-3 border-light">
           <div class="card-body">
             <h5>Pricing</h5>
-            <div class="d-flex justify-content-between mb-2">
-              <span>Current Bid</span>
-              <h3 class="text-success">€ <?= $bids[0]->amount ?></h3>
-            </div>
-            <?php if ($buy_now != 0) { ?>
-              <div class="d-flex justify-content-between mb-3">
-                <span>Buy Now</span>
-                <h3 class="text-success">€ <?= $item->buy_now_price ?></h3>
+            <?php if (!$item->is_direct_sale) { ?>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Current Bid</span>
+                <h3 class="text-success">€ <?= $item->current_bid ?></h3>
+              </div>
+              <?php }
+
+            if ($item->buy_now_reached) {
+
+              $winner_pseudo = (!empty($bids) ? $bids[0]->owner_pseudo : '');
+              $current_user_pseudo = "Marc";
+              if ($winner_pseudo === $current_user_pseudo) {
+              ?>
+                <div class="alert alert-dark border-secondary text-secondary mt-3">
+                  Congratulations! You purchased this item for € <?= $item->current_bid ?>.
+                </div>
+
+              <?php } else { ?>
+                <div class="alert alert-warning mt-3">
+                  This item was purchased by <strong><?= $winner_pseudo ?></strong>.
+                </div>
+              <?php } ?>
+
+            <?php } else { ?>
+
+              <?php if ($item->has_buy_now) { ?>
+                <div class="d-flex justify-content-between mb-3">
+                  <span>Buy Now</span>
+                  <h3 class="text-success">€ <?= $item->buy_now_price ?></h3>
+                </div>
+              <?php } ?>
+
+              <?php if (!$item->is_direct_sale) { ?>
+
+                <form action="index.php?controller=view_open_item&action=new_bid" method="POST">
+
+                  <input type="hidden" name="item_id" value="<?= $item->id ?>">
+
+                  <div class="d-grid gap-3">
+
+                    <div>
+                      <label class="form-label small text-muted">Your Max Bid</label>
+                      <div class="input-group">
+                        <span class="input-group-text">€</span>
+
+                        <input type="number"
+                          class="form-control"
+                          name="amount"
+                          value="<?= $item->current_bid + 1 ?>"
+                          min="<?= $item->current_bid + 1 ?>"
+                          step="1"
+                          required>
+
+                        <button class="btn btn-success" type="submit">Place Bid</button>
+                      </div>
+                    </div>
+                </form>
+              <?php } ?>
+              <div class="d-grid gap-3">
+                <!-- <button class="btn btn-success" type="button">Place Bid</button> -->
+                <?php if ($item->has_buy_now) { ?>
+                  <form action="index.php?controller=view_open_item&action=buy_now" method="POST">
+                    <input type="hidden" name="item_id" value="<?= $item->id ?>">
+                    <button class="btn btn-outline-primary w-100" type="submit">Buy Now</button>
+                  </form>
+                <?php } ?>
               </div>
             <?php } ?>
-            <div class="d-grid gap-3">
-              <button class="btn btn-success" type="button">Place Bid</button>
-              <?php if ($buy_now != 0) { ?>
-                <button class="btn btn-outline-primary" type="button">Buy Now</button>
-              <?php } ?>
-            </div>
           </div>
         </div>
 
@@ -117,8 +179,9 @@ $buy_now = $item->buy_now_price;
       <div class="col-md-8">
         <div class="card text-bg-dark mb-3">
           <div class="card-header border-secondary d-flex justify-content-between align-items-center">
-            <span>Bid History</span>
-            <span class="badge bg-light text-dark"><?= count($bids) ?> entries</span>
+            <?php if ($item->has_bids) { ?>
+              <span>Bid History</span>
+              <span class="badge bg-light text-dark"><?= count($bids) ?> entries</span>
           </div>
           <ul class="list-group list-group-flush">
             <?php foreach ($bids as $bid): ?>
@@ -135,6 +198,13 @@ $buy_now = $item->buy_now_price;
               </li>
             <?php endforeach ?>
           </ul>
+        <?php } else { ?>
+          <div class="alert alert-info text-center mt-3">
+            Be the first to bet on this item ! <br>
+            <strong>Starting price : € <?= $item->starting_bid ?></strong>
+          </div>
+        <?php } ?>
+
         </div>
       </div>
     </div>

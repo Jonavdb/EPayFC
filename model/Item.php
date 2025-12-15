@@ -7,30 +7,34 @@ class Item extends Model
 {
 
     public function __construct(
+        public int $id,
         public string $title,
         public string $description,
         public string $owner_name,
         public string $owner_role,
         public string $main_image_url,
         public array $image_urls,
-        //public int $image_count,
         public float $buy_now_price,
         public float $starting_bid,
-        //public float $current_bid,
         public DateTime $created_at,
         public DateTime $end_at,
         public int $duration_days,
-        // public bool $has_bidder,
-        // public bool $is_in_auction,
+        public float $current_bid,
+        public int $bid_count,
+        public bool $has_bids,
+        public bool $is_auction,
+        public bool $is_direct_sale,
+        public bool $has_buy_now,
+        public bool $buy_now_reached
     ) {}
 
     public static function get_item_by_id(int $id)
     {
         $query = self::execute(
-            "SELECT i.*, u.pseudo AS owner_pseudo, u.role AS owner_role
-                                FROM items i 
-                                JOIN users u on i.owner = u.id
-                                WHERE i.id = :item_id",
+            "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role
+             FROM v_items_status v  -- <--- C'est ici que la magie opère
+             JOIN users u on v.owner = u.id
+             WHERE v.id = :item_id",
             ["item_id" => $id]
         );
         $data = $query->fetch();
@@ -40,31 +44,38 @@ class Item extends Model
         }
 
         $query_pics = self::execute(
-            "SELECT picture_path, priority
-                                FROM item_pictures p
-                                where p.item = :item_id
-                                Order BY priority ASC",
+            "SELECT picture_path
+             FROM item_pictures p
+             where p.item = :item_id
+             Order BY priority ASC",
             ["item_id" => $id]
         );
         $pictures = $query_pics->fetchAll(PDO::FETCH_COLUMN);
+        $main_image_url = $pictures[0] ?? 'test.png';
         $created_at_object = new DateTime($data['created_at']);
-        $duration_days = (int) $data['duration_days'];
-
-        $end_date_object = clone $created_at_object;
-        $end_date_object->add(new DateInterval('P' . $duration_days . 'D'));
+        $end_date_object = new DateTime($data['end_at']);
+        $current_price = ($data['max_bid'] !== null) ? (float)$data['max_bid'] : (float)$data['starting_bid'];
 
         return new Item(
+            (int)$data['id'],
             $data['title'],
             $data['description'],
             $data['owner_pseudo'],
             $data['owner_role'],
-            $pictures[0],
+            $main_image_url,
             $pictures,
             $data['buy_now_price'] ?? 0.0,
             $data['starting_bid'],
-            new DateTime($data['created_at']),
+            $created_at_object,
             $end_date_object,
-            $data['duration_days']
+            $data['duration_days'],
+            $current_price,
+            $data['bid_count'],
+            $data['has_bids'],
+            $data['is_auction'],
+            $data['is_direct_sale'],
+            $data['has_buy_now'],
+            $data['buy_now_reached']
         );
     }
 }
