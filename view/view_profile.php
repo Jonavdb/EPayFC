@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <main class>
+    <main>
         <p>Redirection avec changement de mot de passe effectuée ! </p>
     </main>
 </body>
