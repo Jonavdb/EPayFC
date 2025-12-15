@@ -18,8 +18,9 @@ class ControllerBrowseItems extends Controller
         $user = $this->get_user_or_false();
 
         // TODO -> replace 'Boris' with user pseudo OR user id
-        $user_bid_items = Item::get_user_bid_items('Boris');
-        $user_available_items = Item::get_user_available_items('Boris');
+        $pseudo = "Xavier";
+        $user_bid_items = Item::get_user_bid_items($pseudo);
+        $user_available_items = Item::get_user_available_items($pseudo);
 
         (new View("browse_items"))->show(
             [

@@ -227,9 +227,10 @@ class Item extends Model
             WHERE :today BETWEEN vis.created_at AND vis.end_at
             AND 
             (
-                -- CONDITION 1: Active Auctions NOT bid on by user
+                -- CONDITION 1: Active Auctions NOT bid on by user AND Not owned by User
                 (vis.is_auction = 1
-                AND vis.id NOT IN (
+                AND vis.owner != (SELECT id FROM users WHERE pseudo = :pseudo) -- Check: NOT Owned by User
+                AND vis.id NOT IN ( -- Check: NOT Bid on by User
                     SELECT DISTINCT vis_sub.id
                     FROM users u
                     JOIN bids b ON b.owner = u.id
@@ -337,13 +338,15 @@ class Item extends Model
             $description = '';
             $owner_role = '';
             $duration_days = 0;
+
+
             // we retrieve time left 
             $today = new DateTime(AppTime::get_current_datetime());
             $end_at =  new DateTime($item_data['end_at']);
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
-            $user_available_items[] = new Item($user_bid, 0, $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, false, false, $has_buy_now, $buy_now_reached, $time_left);
+            $user_available_items[] = new Item($user_bid, 0, $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left);
         }
 
         return $user_available_items;
