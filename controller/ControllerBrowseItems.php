@@ -1,6 +1,8 @@
+controller
 <?php
 require_once "framework/Controller.php";
 require_once "model/ItemM.php";
+require_once "model/User.php";
 
 class ControllerBrowseItems extends Controller
 {
@@ -12,33 +14,18 @@ class ControllerBrowseItems extends Controller
 
     public function show_items(): void
     {
-        // static values to test
-        $title = "title";
-        $owner_name = "owner name";
-        $main_image_url = "uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg";
-        $image_urls = ["uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg", "uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg"];
-        $image_count = count($image_urls) - 1;
-        $price = 100.14;
-        $currentBid = 88.10;
-        $created_at = new DateTime("2025-1-12 14:30:00");
-        $duration_days = 7;
-        $has_bidder = true;
-        $is_in_auction = true;
-        $item = new ItemM(
-            $title,
-            $owner_name,
-            $main_image_url,
-            $image_urls,
-            $image_count,
-            $price,
-            $currentBid,
-            $created_at,
-            $duration_days,
-            $has_bidder,
-            $is_in_auction
+        // TODO -> use this to get the pseudo or the id once login view is linked to browse items view
+        $user = $this->get_user_or_false();
+
+        // TODO -> replace 'Boris' with user pseudo OR user id
+        $user_bid_items = ItemM::get_user_bid_items('Boris');
+        $user_available_items = ItemM::get_user_available_items('Boris');
+
+        (new View("browse_items"))->show(
+            [
+                "user_bid_items" => $user_bid_items,
+                "user_available_items" => $user_available_items
+            ]
         );
-        (new View("browse_items"))->show([
-            "item" => $item
-        ]);
     }
 }
