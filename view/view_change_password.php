@@ -14,20 +14,27 @@
 <body>
     <main class="container">
         <!-- HEADER -->
-        <div class="d-flex justify-content-between align-items-center p-3 mb-3 nav-header text-white rounded">
-            <a href="user/profile" class="btn-icon">
-                <i class="fa-solid fa-arrow-left"></i>
-            </a>
+        <header class="content-box">
+            <nav class="navbar fixed-top navbar-dark bg-dark border-top shadow-lg">
+                <div class="container-fluid">
+                    <div class="flex-grow-1 text-start" style="max-width: 5%;">
+                        <a href="user/profile" class="btn-icon">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </a>
+                    </div>
 
-            <h4 class="m-0 text-primary fw-bold">
-                Change password <i class="fa-solid fa-cart-shopping"></i>
-            </h4>
+                    <div class="mx-auto">
+                        <div class="fw-bold fs-2 text-primary">
+                            Change password <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                    </div>
 
-            <!-- BTN SUBMIT -->
-            <button type="submit" form="passwordForm" class="btn-icon">
-                <i class="fa-regular fa-floppy-disk fa-lg"></i>
-            </button>
-        </div>
+                    <button type="submit" form="passwordForm" class="btn-icon">
+                        <i class="fa-regular fa-floppy-disk fa-lg"></i>
+                    </button>
+                </div>
+            </nav>
+        </header>
 
         <form id="passwordForm" action="user/change_password" method="post">
             <!-- CURRENT PASSWORD -->
@@ -99,6 +106,36 @@
             <?php endif; ?>
         </form>
     </main>
+    <!-- FOOTER -->
+    <footer class="content-box">
+        <nav class="navbar fixed-bottom navbar-dark bg-dark border-top shadow-lg">
+            <div class="container-fluid">
+
+                <div class="d-flex justify-content-around w-100 py-1">
+
+                    <a class="nav-link text-center text-secondary" href="main/index">
+                        <i class="fa-solid fa-magnifying-glass-plus fs-5 mb-1 d-block"></i>
+                        <span>Browse</span>
+                    </a>
+
+                    <a class="nav-link text-center text-secondary" href="member/items">
+                        <i class="fas fa-home fs-5 mb-1 d-block"></i>
+                        <span>My Items</span>
+                    </a>
+
+                    <a class="nav-link text-center text-secondary" href="member/add_offer">
+                        <i class="fa-solid fa-plus fs-5 mb-1 d-block"></i>
+                        <span>Add Offer</span>
+                    </a>
+
+                    <a class="nav-link text-center text-secondary" href="user/profile">
+                        <i class="fa-solid fa-gear fs-5 mb-1 d-block"></i>
+                        <span>Profile</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </footer>
 </body>
 
 </html>
