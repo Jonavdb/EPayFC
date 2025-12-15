@@ -49,6 +49,13 @@ body {
     color: var(--text-light);
 }
 
+/* Navigation */
+.nav-header {
+    background-color: #162438;
+    border-bottom: 2px solid #2c3e50;
+    border-radius: 8px 8px 0 0;
+}
+
 /* Messages d'erreur et de succès */
 .errors,
 .success {
@@ -101,7 +108,7 @@ main {
 form {
     background: var(--form-background);
     border: 1px solid var(--form-border);
-    padding: 2.5rem;
+    padding: 1.5rem;
     border-radius: 6px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     color: white;
@@ -122,6 +129,26 @@ form .form-control, .input-group-text {
     justify-content: center;
 }
 
+form .form-text {
+    color: var(--text-muted);
+}
+
+/* Cartes */
+.card-dark-bg {
+    background-color: #212529;
+    border: 1px solid #495057;
+}
+
+.card-header-bg {
+    background-color: #343a40;
+    border-bottom: 1px solid #495057;
+}
+
+.settings-container .card {
+    border: 1px solid var(--form-border);
+    background-color: var(--form-background);
+    margin-bottom: 2rem;
+}
 
 /* Titres */
 h1, h2, h3, h4, h5, h6 {
@@ -153,6 +180,14 @@ button, .btn {
     text-decoration: none;
 }
 
+/* Bouton change password */
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 2.2rem;
+    cursor: pointer;
+}
+
 /* Liens */
 a {
     color: var(--text-accent);
@@ -180,7 +215,8 @@ p {
     display: block;
 }
 
-/* Icônes */
+/* Icones */
+
 i {
     color: white;
     font-size: 1.6rem;
@@ -188,19 +224,60 @@ i {
 
 /* Responsive */
 @media (max-width: 576px) {
-    body {
-        padding: 10px;
-    }
-    
-    form {
-        padding: 2rem;
-    }
-    
-    h1 {
-        font-size: 2rem;
-    }
-    
-    h2 {
-        font-size: 1.8rem;
-    }
+body {
+padding: 10px;
+}
+form {
+padding: 2rem;
+}
+h1 {
+font-size: 2rem;
+}
+h2 {
+font-size: 1.8rem;
+}
+}
+
+#nav-icons {
+    display: flex;
+    /* gap: 15rem;  */
+}
+
+.icon-box {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;    
+    color: white;
+    font-size: 1.2rem;      
+}
+
+#nav-icons i {
+    font-size: 2.5rem; 
+}
+
+.btn-debug {
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: none;
+    background: none;
+}
+
+.text-debug-orange {
+    color: #f39c12 !important;
+}
+
+.text-debug-red {
+    color: #e74c3c o !important;
+}
+
+.bottom-nav {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 0 auto;
+}
+
+.additionnal-images {
+    width: 120px;
+    height: 80px;
 }
