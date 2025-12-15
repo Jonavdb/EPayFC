@@ -1,0 +1,10 @@
+.content-box {
+  padding: 15px;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  border-radius: 5px;
+}
+
+main {
+  max-width: 80%;
+}
