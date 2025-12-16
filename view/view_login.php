@@ -48,7 +48,7 @@
                 <div class="debug-emails small">
                     <?php foreach ($users ?? [] as $user): ?>
                         <div class="text-light">
-                            <a href="user/login?email=<?= $user->email; ?>" class="font-weight-bold">
+                            <a href="user/login?email=<?= urldecode($user->email); ?>" class="font-weight-bold">
                                 Login as <?= $user->email ?>
                             </a>
                         </div>
