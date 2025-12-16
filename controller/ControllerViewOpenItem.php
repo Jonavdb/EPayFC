@@ -66,4 +66,12 @@ class ControllerViewOpenItem extends Controller
         }
         $this->redirect("view_open_item", "show_details", $item_id);
     }
+
+    public function edit()
+    {
+        $item_id = isset($_GET['item_id']) ? (int)$_GET['item_id'] : 0;
+        (new View("edit_item"))->show([
+            "id" => $item_id
+        ]);
+    }
 }

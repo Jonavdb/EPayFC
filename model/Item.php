@@ -333,6 +333,10 @@ class Item extends Model
 
             // we retrieve the price
             $price = $item_data['buy_now_price'];
+            if ($price == null) {
+                $price = 0;
+            }
+
 
             // we retrieve the current bid -> max bid for this item
             $has_bids = $item_data['has_bids'];
