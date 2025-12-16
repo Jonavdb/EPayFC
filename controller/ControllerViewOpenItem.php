@@ -15,7 +15,10 @@ class ControllerViewOpenItem extends Controller
         }
 
         $args = func_get_args();
+    }
 
+    public function show_details(): void
+    {
         // 2. On regarde si le premier argument (l'ID) existe
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1']; // On récupère le 8 de l'URL ".../index/8"
@@ -25,10 +28,12 @@ class ControllerViewOpenItem extends Controller
         $item = Item::get_item_by_id($id);
 
         $bids = Bid::get_bid_by_item_id($id);
+        $current_user_pseudo = 'Boris';
 
         (new View("open_item"))->show([
             "item" => $item,
-            "bids" => $bids
+            "bids" => $bids,
+            "current_user" => $current_user_pseudo
         ]);
     }
 
@@ -44,7 +49,7 @@ class ControllerViewOpenItem extends Controller
             Bid::create_bid($current_user_pseudo, $item_id, $amount);
         }
 
-        $this->redirect("view_open_item", "index", $item_id);
+        $this->redirect("view_open_item", "show_details", $item_id);
     }
 
     public function buy_now()
@@ -53,20 +58,12 @@ class ControllerViewOpenItem extends Controller
         $current_user_pseudo = "Boris";
         if ($item_id > 0) {
 
-            // 2. On charge l'article pour vérifier son prix et son statut
             $item = Item::get_item_by_id($item_id);
 
-            // 3. VÉRIFICATIONS DE SÉCURITÉ
-            // - L'item existe ?
-            // - L'option Buy Now est activée ?
-            // - L'item n'est pas DÉJÀ vendu ? (Important pour éviter les doublons)
             if ($item && $item->has_buy_now && !$item->buy_now_reached) {
-
-                // 4. INSERTION DE L'ENCHÈRE GAGNANTE
-                // On force le montant à être le prix d'achat immédiat
                 Bid::create_bid($current_user_pseudo, $item_id, $item->buy_now_price);
             }
         }
-        $this->redirect("view_open_item", "index", $item_id);
+        $this->redirect("view_open_item", "show_details", $item_id);
     }
 }

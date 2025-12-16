@@ -76,7 +76,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
           <?php
           foreach ($item->image_urls as $image):
           ?>
-            <a href="index.php?controller=view_open_item&action=index&param1=<?= $item->id ?>&selected_image=<?= $image ?>">
+            <a href="index.php?controller=view_open_item&action=show_details&param1=<?= $item->id ?>&selected_image=<?= $image ?>">
               <img src="<?= $image ?>"
                 class="additionnal-images"
                 alt="Vue supplémentaire">
@@ -147,7 +147,6 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
                 </form>
               <?php } ?>
               <div class="d-grid gap-3">
-                <!-- <button class="btn btn-success" type="button">Place Bid</button> -->
                 <?php if ($item->has_buy_now) { ?>
                   <form action="index.php?controller=view_open_item&action=buy_now" method="POST">
                     <input type="hidden" name="item_id" value="<?= $item->id ?>">
@@ -158,21 +157,58 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
             <?php } ?>
           </div>
         </div>
+      </div>
+      <div class="card text-bg-dark mb-3 border-light">
+        <div class="card-body">
+          <h5>Seller</h5>
+          <div class="d-flex align-items-center mt-2">
 
-        <div class="card text-bg-dark mb-3 border-light">
-          <div class="card-body">
-            <h5>Seller</h5>
-            <div class="d-flex align-items-center mt-2">
-              <i class="fa-solid fa-circle-user fa-2x me-2 text-secondary"></i>
-              <div>
-                <div class="fw-bold"><?= $item->owner_name ?></div>
-                <div class="small text-secondary"><?= $item->owner_role ?></div>
+            <img src="<?= $item->owner_picture ?>"
+              alt="Avatar"
+              class="rounded-circle me-2 border border-secondary"
+              style="width: 40px; height: 40px; object-fit: cover;">
+
+            <div class="d-flex flex-column justify-content-center">
+
+              <div class="fw-bold">
+                <?= $item->owner_name ?>
               </div>
+
+              <div class="small text-secondary">
+                <?= $item->owner_role ?>
+              </div>
+
             </div>
+
           </div>
         </div>
       </div>
+      <?php if ($current_user === $item->owner_name) { ?>
+        <div class="card text-bg-dark mb-3 border light">
+          <div class="card-body">
+            <h5>Manage your Item</h5>
+            <div class="d-grid gap-2">
+              <a href="index.php?controller=ViewOpenItem&action=edit&param1=<?= $item->id ?>"
+                class="btn btn-outline-secondary text-start">
+                <i class="fa-solid fa-pen me-2"></i> Edit Item Details
+              </a>
+
+              <a href="index.php?controller=ViewOpenItem&action=manage_images&param1=<?= $item->id ?>"
+                class="btn btn-outline-info text-start">
+                <i class="fa-solid fa-image me-2"></i> Manage Images
+              </a>
+
+              <a href="index.php?controller=ViewOpenItem&action=delete_item&param1=<?= $item->id ?>"
+                class="btn btn-outline-danger text-start">
+                <i class="fa-solid fa-trash me-2"></i> Delete Item
+              </a>
+            </div>
+          </div>
+        </div>
+      <?php } ?>
     </div>
+  </div>
+  </div>
   </div>
   <div class="container-fluid px-4 pb-4 pt-0" style="margin-top: 0px; margin-bottom: 5px;">
     <div class="row">
@@ -214,7 +250,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
     <nav class="navbar navbar-dark bg-dark">
       <ul class="navbar-nav bottom-nav" id="nav-icons">
         <li class="nav-item text-center">
-          <a href="#" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
+          <a href="index.php?controller=BrowseItems&action=show_items" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
         </li>
         <li class="nav-item text-center">
           <a href="#" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
