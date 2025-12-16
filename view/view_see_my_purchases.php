@@ -45,7 +45,54 @@
 
     <!-- PAGE CONTENT -->
     <main class="flex-grow-1 content-box">
-        Page content soon..
+
+        <!-- Top level container that aligns sub-element at the start vertically -->
+        <div class="p-3 d-flex flex-column justify-content-start h-100">
+
+            <!-- Top container with global infos -->
+            <div class="p-3 d-flex flex-column h-100 gap-3">
+
+                <!-- .. -->
+                <div class="d-flex flex-row w-100 align-items-center">
+                    <!--  takes up 5% of row width for centering -->
+                    <!-- left : vertical container with 2 texts -->
+                    <div class="d-flex flex-grow-1" style="max-width: 15%;">
+                        <div class="d-flex flex-column lh-sm">
+                            <span class="fw-bold small">My Purchases</span>
+                            <span class="fw-bold small">Track the gear you've succesfully secured.</span>
+                        </div>
+                    </div>
+
+                    <!-- mx-auto is margin-left: auto; margin-right: auto; for centering -->
+                    <!-- middle : gap -->
+                    <div class="mx-auto text-center">
+                        <div class="fw-bold fs-4"></div>
+                    </div>
+
+
+                    <!--  takes up 5% of row width for centering -->
+                    <!-- right : placeholder to make page title perfectly centered  -->
+                    <div class="flex-grow-1 text-end" style="max-width: 15%;">
+                        <span class="badge rounded-pill bg-primary">New</span>
+                    </div>
+                </div>
+
+                <!-- .. -->
+                <div class="flex-grow-1 ">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                        <div class="col">
+                            <div class="p-3 border bg-dark h-100">Content</div>
+                        </div>
+                        <div class="col">
+                            <div class="p-3 border bg-dark h-100">Content</div>
+                        </div>
+                        <div class="col">
+                            <div class="p-3 border bg-dark h-100">Content</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <!-- FOOTER -->
