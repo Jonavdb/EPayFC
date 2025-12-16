@@ -13,6 +13,7 @@
 
 <body>
     <main>
+        <?php var_dump($_SESSION['user']); ?>
         <p>Redirection avec changement de mot de passe effectuée ! </p>
     </main>
 </body>

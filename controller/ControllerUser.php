@@ -17,17 +17,33 @@ class ControllerUser extends Controller {
         $password = '';
         $errors = [];
 
+        // GESTION DU LOGIN AUTOMATIQUE VIA LIEN DE DEBUG
+        if (isset($_GET['email'])) {
+            // Si l'URL contient ?email=..., on connecte direct
+            $user = User::get_user_by_email($_GET['email']);
+
+            if ($user) {
+                $this->log_user($user);
+                $this->redirect("profile", "index");
+            }
+        }
+
+        // GESTION DU LOGIN CLASSIQUE (POST)
         if (isset($_POST['email']) && isset($_POST['password'])) {
             $email = $_POST['email'];
             $password = $_POST['password'];
-
             $errors = User::validate_login($email, $password);
+
             if (empty($errors)) {
                 $this->log_user(User::get_user_by_email($email));
-                $this->redirect("profile", "index"); // redirection après connexion
+                $this->redirect("profile", "index");
             }
         }
-        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
+
+        // RÉCUPÉRATION DE LA LISTE DES "Debug Users"
+        $users = User::get_debug_users();
+
+        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors, "users" => $users]);
     }
 
     // Gestion du changement de mot de passe

@@ -46,21 +46,13 @@
                 <h3 class="text-warning mt-3 text-bold">For Debug Purpose</h3>
 
                 <div class="debug-emails small">
-                    <div class="text-light">
-                        <a href="user/login?email=boverhaegen@epfc.eu" class="font-weight-bold">Login as boverhaegen@epfc.eu</a>
-                    </div>
-
-                    <div>
-                        <a href="user/login?email=mamichel@epfc.eu" class="font-weight-bold">Login as mamichel@epfc.eu</a>
-                    </div>
-
-                    <div>
-                        <a href="user/login?email=quhouben@epfc.eu" class="font-weight-bold">Login as quhouben@epfc.eu</a>
-                    </div>
-
-                    <div>
-                        <a href="user/login?email=xapigeolet@epfc.eu" class="font-weight-bold">Login as xapigeolet@epfc.eu</a>
-                    </div>
+                    <?php foreach ($users ?? [] as $user): ?>
+                        <div class="text-light">
+                            <a href="user/login?email=<?= $user->email; ?>" class="font-weight-bold">
+                                Login as <?= $user->email ?>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
                 <!-- TODO : attribuer ce qu'il faut -->
