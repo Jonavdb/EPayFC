@@ -1,5 +1,14 @@
 <?php
 $buy_now = $item->buy_now_price;
+$now = new DateTime(AppTime::get_current_datetime());
+$is_time_expired = $now > $item->end_at;
+
+$auction_finished = $is_time_expired || $item->buy_now_reached;
+
+$winner = null;
+if (!empty($bids)) {
+  $winner = $bids[0]->owner_pseudo;
+}
 
 $image_to_display = $item->main_image_url;
 
@@ -76,7 +85,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
           <?php
           foreach ($item->image_urls as $image):
           ?>
-            <a href="index.php?controller=view_open_item&action=index&param1=<?= $item->id ?>&selected_image=<?= $image ?>">
+            <a href="index.php?controller=view_open_item&action=show_details&param1=<?= $item->id ?>&selected_image=<?= $image ?>">
               <img src="<?= $image ?>"
                 class="additionnal-images"
                 alt="Vue supplémentaire">
@@ -95,19 +104,25 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
               </div>
               <?php }
 
-            if ($item->buy_now_reached) {
+            if ($auction_finished) {
 
-              $winner_pseudo = (!empty($bids) ? $bids[0]->owner_pseudo : '');
-              $current_user_pseudo = "Marc";
-              if ($winner_pseudo === $current_user_pseudo) {
+              if ($winner) {
+                $current_user_pseudo = "Marc";
+                if ($winner === $current_user_pseudo) {
               ?>
-                <div class="alert alert-dark border-secondary text-secondary mt-3">
-                  Congratulations! You purchased this item for € <?= $item->current_bid ?>.
-                </div>
+                  <div class="alert alert-dark border-secondary text-secondary mt-3">
+                    Congratulations! You purchased this item for € <?= $item->current_bid ?>.
+                  </div>
 
+                <?php } else { ?>
+                  <div class="alert alert-warning mt-3">
+                    This item was purchased by <strong><?= $winner ?></strong>.
+                  </div>
+                <?php } ?>
               <?php } else { ?>
-                <div class="alert alert-warning mt-3">
-                  This item was purchased by <strong><?= $winner_pseudo ?></strong>.
+                <div class="alert alert-secondary mt-3">
+                  <i class="fa-regular fa-clock me-2"></i>
+                  This auction has ended. <strong>No bids were placed.</strong>
                 </div>
               <?php } ?>
 
@@ -122,7 +137,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
 
               <?php if (!$item->is_direct_sale) { ?>
 
-                <form action="index.php?controller=view_open_item&action=new_bid" method="POST">
+                <form action="index.php?controller=view_open_item&action=new_bid" method="POST" class="mb-3">
 
                   <input type="hidden" name="item_id" value="<?= $item->id ?>">
 
@@ -139,40 +154,86 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
                           value="<?= $item->current_bid + 1 ?>"
                           min="<?= $item->current_bid + 1 ?>"
                           step="1"
-                          required>
+                          required
+                          <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
 
-                        <button class="btn btn-success" type="submit">Place Bid</button>
+                        <button class="btn btn-success" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>Place Bid</button>
                       </div>
                     </div>
+                  </div>
                 </form>
               <?php } ?>
-              <div class="d-grid gap-3">
-                <!-- <button class="btn btn-success" type="button">Place Bid</button> -->
+              <div class="d-grid gap-3 mb-2">
                 <?php if ($item->has_buy_now) { ?>
                   <form action="index.php?controller=view_open_item&action=buy_now" method="POST">
-                    <input type="hidden" name="item_id" value="<?= $item->id ?>">
-                    <button class="btn btn-outline-primary w-100" type="submit">Buy Now</button>
+                    <input type="hidden" name="item_id" value="<?= $item->id ?>" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
+                    <button class="btn btn-outline-primary w-100" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>Buy Now</button>
                   </form>
                 <?php } ?>
               </div>
             <?php } ?>
+            <?php if ($current_user === $item->owner_name) { ?>
+              <h5>Vous ne pouvez pas enchérir sur un objet vous appartenant</h5>
+            <?php } ?>
           </div>
         </div>
-
         <div class="card text-bg-dark mb-3 border-light">
           <div class="card-body">
             <h5>Seller</h5>
             <div class="d-flex align-items-center mt-2">
-              <i class="fa-solid fa-circle-user fa-2x me-2 text-secondary"></i>
-              <div>
-                <div class="fw-bold"><?= $item->owner_name ?></div>
-                <div class="small text-secondary"><?= $item->owner_role ?></div>
+
+              <img src="<?= $item->owner_picture ?>"
+                alt="Avatar"
+                class="rounded-circle me-2 border border-secondary"
+                style="width: 40px; height: 40px; object-fit: cover;">
+
+              <div class="d-flex flex-column justify-content-center">
+
+                <div class="fw-bold">
+                  <?= $item->owner_name ?>
+                </div>
+
+                <div class="small text-secondary">
+                  <?= $item->owner_role ?>
+                </div>
+
               </div>
+
             </div>
           </div>
         </div>
+        <?php if ($current_user === $item->owner_name && (!$item->has_bids)) { ?>
+          <div class="card text-bg-dark mb-3 border light">
+            <div class="card-body">
+              <h5>Manage your Item</h5>
+              <div class="d-grid gap-2">
+                <a href="index.php?controller=ViewOpenItem&action=edit&param1=<?= $item->id ?>"
+                  class="btn btn-outline-secondary text-start">
+                  <i class="fa-solid fa-pen me-2"></i> Edit Item Details
+                </a>
+
+                <a href="index.php?controller=ViewOpenItem&action=manage_images&param1=<?= $item->id ?>"
+                  class="btn btn-outline-info text-start">
+                  <i class="fa-solid fa-image me-2"></i> Manage Images
+                </a>
+
+                <a href="index.php?controller=ViewOpenItem&action=delete_item&param1=<?= $item->id ?>"
+                  class="btn btn-outline-danger text-start">
+                  <i class="fa-solid fa-trash me-2"></i> Delete Item
+                </a>
+              </div>
+            </div>
+          </div>
+        <?php } elseif ($current_user === $item->owner_name && ($item->has_bids)) { ?>
+          <div class="card text-bg-dark mb-3 border-light">
+            <div class="card-body">
+              <h5>Vous ne pouvez plus modifier les paramètres de votre objet car il existe des enchères dessus</h5>
+            </div>
+          </div>
+        <?php } ?>
       </div>
     </div>
+  </div>
   </div>
   <div class="container-fluid px-4 pb-4 pt-0" style="margin-top: 0px; margin-bottom: 5px;">
     <div class="row">
@@ -214,16 +275,16 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
     <nav class="navbar navbar-dark bg-dark">
       <ul class="navbar-nav bottom-nav" id="nav-icons">
         <li class="nav-item text-center">
-          <a href="#" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
+          <a href="index.php?controller=BrowseItems&action=show_items" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
         </li>
         <li class="nav-item text-center">
-          <a href="#" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
+          <a href="index.php?controller=ViewOpenItem&action=show_my_items" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
         </li>
         <li class="nav-item text-center">
-          <a href="#" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
+          <a href="index.php?controller=ViewOpenItem&action=add_offer" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
         </li>
         <li class="nav-item text-center">
-          <a href="#" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
+          <a href="index.php?controller=User&action=see_profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
         </li>
       </ul>
     </nav>
