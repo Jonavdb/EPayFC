@@ -19,11 +19,11 @@ class ControllerViewOpenItem extends Controller
 
     public function show_details(): void
     {
-        // 2. On regarde si le premier argument (l'ID) existe
+
         if (isset($_GET['param1'])) {
-            $id = (int)$_GET['param1']; // On récupère le 8 de l'URL ".../index/8"
+            $id = (int)$_GET['param1'];
         } else {
-            $id = 3; // Valeur par défaut si l'URL est juste ".../index"
+            $id = 3;
         }
         $item = Item::get_item_by_id($id);
 
@@ -34,6 +34,35 @@ class ControllerViewOpenItem extends Controller
             "item" => $item,
             "bids" => $bids,
             "current_user" => $current_user_pseudo
+        ]);
+    }
+
+    public function manage_images(): void
+    {
+
+        if (isset($_GET['param1'])) {
+            $id = (int)$_GET['param1'];
+        } else {
+            $this->redirect("BrowseItems", "show_items");
+            return;
+        }
+
+        $item = Item::get_item_by_id($id);
+
+        $current_user = "Boris";
+
+        if (!$item) {
+            $this->redirect("BrowseItems", "show_items");
+            return;
+        }
+
+        if ($item->owner_name !== $current_user) {
+            $this->redirect("ViewOpenItem", "show_details", $id);
+            return;
+        }
+
+        (new View("manage_images"))->show([
+            "item" => $item
         ]);
     }
 
