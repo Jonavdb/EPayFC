@@ -17,6 +17,24 @@ class User extends Model {
         $this->id = $id;
     }
 
+    // Récupère les utilisateurs pour la liste de debug
+    public static function get_debug_users(): array {
+        $query = self::execute("SELECT * FROM users WHERE pseudo IN ('quentin', 'boris', 'xavier', 'marc')", []);
+        $data = $query->fetchAll();
+        $users = [];
+
+        foreach ($data as $row) {
+            $users[] = new User(
+                $row['email'],
+                $row['full_name'],
+                $row['pseudo'],
+                $row['password'],
+                $row['id']
+            );
+        }
+        return $users;
+    }
+
     // récupère le user par email
     public static function get_user_by_email(string $email): User|false {
         $query = self::execute("SELECT * FROM Users where email = :email", ["email" => $email]);
