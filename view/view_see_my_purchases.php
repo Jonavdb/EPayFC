@@ -46,7 +46,7 @@
     <!-- PAGE CONTENT -->
     <main class="flex-grow-1 content-box">
 
-        <!-- Top level container that aligns sub-element at the start vertically -->
+        <!-- All container -->
         <div class="p-3 d-flex flex-column justify-content-start h-100">
 
             <!-- Top container with global infos -->
@@ -105,7 +105,7 @@
                 </div>
             </div>
 
-            <!-- Bottom container with items -->
+            <!-- Bottom container with items cards -->
             <div class="p-3 d-flex flex-column justify-content-evenly h-100">
 
                 <!-- Item cards wrapping container -->
@@ -115,16 +115,19 @@
                     <div class="col">
                         <a href="#" class="card bg-dark w-100 h-100 text-decoration-none">
 
+                            <!-- we wrap the card inside a container to adjust height taken by top cell and bottom cell-->
                             <div class="d-flex flex-column h-100">
 
                                 <!-- TOP CELL (50%) -->
                                 <div class="row flex-fill" style="height:50%;">
 
+                                    <!-- card image (above card body) -->
                                     <div class="col-sm h-100">
                                         <img class="card-img-top h-100" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
                                         <!-- Everything that is on top of the item image -->
                                         <div class="card-img-overlay" style="height:50%;">
+
                                             <!-- Direction : Vertical -->
                                             <div class="d-flex flex-column h-100">
 
@@ -164,9 +167,11 @@
                                     </div>
                                 </div>
 
-                                <!-- BOTTOM CELL -->
+                                <!-- BOTTOM CELL (50%) -->
                                 <div class="row flex-fill" style="height:50%;">
                                     <div class="col-sm h-100">
+
+                                        <!-- Card body (below card image) -->
                                         <div class="card-body h-100 bg-dark text-white">
 
                                             <!-- Direction : Vertical -->
@@ -178,6 +183,7 @@
                                                     <div>owner name</div>
                                                 </div>
 
+                                                <!-- Container center the remaining card info -->
                                                 <div class="d-flex flex-column justify-content-around flex-grow-1">
 
                                                     <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
