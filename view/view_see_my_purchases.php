@@ -52,7 +52,7 @@
             <!-- Top container with global infos -->
             <div class="p-3 d-flex flex-column h-100 gap-3">
 
-                <!-- .. -->
+                <!-- Description section (title, number of purchases) -->
                 <div class="d-flex flex-row w-100 align-items-center">
                     <!--  takes up 5% of row width for centering -->
                     <!-- left : vertical container with 2 texts -->
@@ -77,17 +77,29 @@
                     </div>
                 </div>
 
-                <!-- .. -->
-                <div class="flex-grow-1 ">
+                <!-- Purchases info (total spent, average spent, top seller) -->
+                <div class="flex-grow-1">
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                         <div class="col">
-                            <div class="p-3 border bg-dark h-100">Content</div>
+                            <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
+                                <div class="flex-grow-1 text-start">TOTAL SPENT</div>
+                                <div class="flex-grow-1 text-start">€ 1.688,00</div>
+                                <div class="flex-grow-1 text-start">Across 4 purchases</div>
+                            </div>
                         </div>
                         <div class="col">
-                            <div class="p-3 border bg-dark h-100">Content</div>
+                            <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
+                                <div class="flex-grow-1 text-start">AVERAGE SPENT</div>
+                                <div class="flex-grow-1 text-start">€ 422,00</div>
+                                <div class="flex-grow-1 text-start">Helps you plan future bids</div>
+                            </div>
                         </div>
                         <div class="col">
-                            <div class="p-3 border bg-dark h-100">Content</div>
+                            <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
+                                <div class="flex-grow-1 text-start">TOP SELLER</div>
+                                <div class="flex-grow-1 text-start">Quentin</div>
+                                <div class="flex-grow-1 text-start">Who you've bought from the most</div>
+                            </div>
                         </div>
                     </div>
                 </div>
