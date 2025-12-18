@@ -46,198 +46,195 @@
     <!-- PAGE CONTENT -->
     <main class="flex-grow-1 content-box">
 
-        <!-- All container -->
-        <div class="p-3 d-flex flex-column justify-content-start h-100">
+        <!-- Top container with global infos -->
+        <div class="p-3 d-flex flex-column h-100 gap-3">
 
-            <!-- Top container with global infos -->
-            <div class="p-3 d-flex flex-column h-100 gap-3">
-
-                <!-- Description section (title, number of purchases) -->
-                <div class="d-flex flex-row w-100 align-items-center">
-                    <!--  takes up 5% of row width for centering -->
-                    <!-- left : vertical container with 2 texts -->
-                    <div class="d-flex flex-grow-1" style="max-width: 15%;">
-                        <div class="d-flex flex-column lh-sm">
-                            <span class="fs-1">My Purchases</span>
-                            <span class="fs-6 fw-bold text-secondary">Track the gear you've succesfully secured.</span>
-                        </div>
-                    </div>
-
-                    <!-- mx-auto is margin-left: auto; margin-right: auto; for centering -->
-                    <!-- middle : gap -->
-                    <div class="mx-auto text-center">
-                        <div class="fw-bold fs-4"></div>
-                    </div>
-
-
-                    <!--  takes up 5% of row width for centering -->
-                    <!-- right : placeholder to make page title perfectly centered  -->
-                    <div class="flex-grow-1 text-end" style="max-width: 15%;">
-                        <span class="badge rounded-pill bg-primary px-4 py-2">4 purchases</span>
+            <!-- Description section (title, number of purchases) -->
+            <div class="d-flex flex-row w-100 align-items-center">
+                <!--  takes up 5% of row width for centering -->
+                <!-- left : vertical container with 2 texts -->
+                <div class="d-flex flex-grow-1" style="max-width: 15%;">
+                    <div class="d-flex flex-column lh-sm">
+                        <span class="fs-1">My Purchases</span>
+                        <span class="fs-6 fw-bold text-secondary">Track the gear you've succesfully secured.</span>
                     </div>
                 </div>
 
-                <!-- Purchases info (total spent, average spent, top seller) -->
-                <div class="flex-grow-1">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-                        <div class="col">
-                            <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                                <div class="text-start fs-5 fw-bold text-secondary">TOTAL SPENT</div>
-                                <div class="text-start fs-1">€ 1.688,00</div>
-                                <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Across 4 purchases</div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                                <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">AVERAGE SPENT</div>
-                                <div class="flex-grow-1 text-start fs-1">€ 422,00</div>
-                                <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Helps you plan future bids</div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                                <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">TOP SELLER</div>
-                                <div class="flex-grow-1 text-start fs-3">Quentin</div>
-                                <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Who you've bought from the most</div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- mx-auto is margin-left: auto; margin-right: auto; for centering -->
+                <!-- middle : gap -->
+                <div class="mx-auto text-center">
+                    <div class="fw-bold fs-4"></div>
+                </div>
+
+
+                <!--  takes up 5% of row width for centering -->
+                <!-- right : placeholder to make page title perfectly centered  -->
+                <div class="flex-grow-1 text-end" style="max-width: 15%;">
+                    <span class="badge rounded-pill bg-primary px-4 py-2">4 purchases</span>
                 </div>
             </div>
 
-            <!-- Bottom container with items cards -->
-            <div class="p-3 d-flex flex-column justify-content-evenly h-100">
-
-                <!-- Item cards wrapping container -->
-                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 gx-4 gy-5">
-
-                    <!-- GRID CELL = 1 item card (top) + item purchase data (bottom) -->
-                    <!-- GRID CELL -->
-                    <div class="d-flex flex-column h-100 gap-3">
-
-                        <!-- item card -->
-                        <div class="col">
-                            <a href="#" class="card bg-dark w-100 h-100 text-decoration-none">
-                                <!-- we wrap the card inside a container to adjust height taken by top cell and bottom cell-->
-                                <div class="d-flex flex-column h-100">
-
-                                    <!-- TOP CELL (50%) -->
-                                    <div class="row flex-fill" style="height:50%;">
-
-                                        <!-- card image (above card body) -->
-                                        <div class="col-sm h-100">
-                                            <img class="card-img-top h-100" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
-
-                                            <!-- Everything that is on top of the item image -->
-                                            <div class="card-img-overlay" style="height:58%;">
-
-                                                <!-- Direction : Vertical -->
-                                                <div class="d-flex flex-column h-100">
-
-                                                    <!-- Row 1 : Top left & Top right -->
-                                                    <div class="d-flex justify-content-between">
-                                                        <!-- Top left -->
-                                                        <div>
-                                                            <span class="badge rounded-pill bg-dark d-inline-flex align-items-center justify-content-center px-3 py-2">
-                                                                <i class="fa-solid fa-gavel flipped-horizontal me-2"></i> Bidder
-                                                            </span>
-                                                        </div>
-
-                                                        <!-- Top right -->
-                                                        <div class="d-flex flex-column">
-                                                            <span class="badge rounded-pill bg-warning d-inline-flex align-items-center justify-content-center px-3 py-2 mb-2">
-                                                                <i class="fa-solid fa-gavel flipped-horizontal me-2"></i> Auction
-                                                            </span>
-
-                                                            <span class="badge rounded-pill bg-primary d-inline-flex align-items-center justify-content-center px-3 py-2">
-                                                                <i class="fa-solid fa-bag-shopping me-2"></i> Buy now
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Spacer between Row 1 and Row 2 -->
-                                                    <div class="flex-grow-1"></div>
-
-                                                    <!-- Row 2 : Bottom right -->
-                                                    <div class="d-flex justify-content-end">
-                                                        <span class="badge rounded-pill bg-dark d-inline-flex align-items-center justify-content-center px-3 py-2">
-                                                            <i class="fa-solid fa-images me-2"></i>
-                                                            2 images
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- BOTTOM CELL (50%) -->
-                                    <div class="row flex-fill" style="height:50%;">
-                                        <div class="col-sm h-100">
-
-                                            <!-- Card body (below card image) -->
-                                            <div class="card-body h-100 bg-dark text-white">
-
-                                                <!-- Direction : Vertical -->
-                                                <div class="d-flex flex-column h-100">
-
-                                                    <!-- Row 1 : Top left (using bootstrap class "card title") -->
-                                                    <div class="card-title">
-                                                        <b>Iphone 18</b>
-                                                        <div class="fs-5 fw-bold text-secondary">by Manu</div>
-                                                    </div>
-
-                                                    <!-- Container center the remaining card info -->
-                                                    <div class="d-flex flex-column justify-content-around flex-grow-1">
-
-                                                        <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
-                                                        <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
-
-                                                            <!-- Mid left -->
-                                                            <div class="price-left d-flex align-items-center fs-3 text-primary fw-bold">€ 361,00</div>
-
-                                                            <!-- Mid right -->
-                                                            <div class="d-flex flex-column text-end bid-info">
-                                                                <div class="fs-5 fw-bold text-secondary">Current bid</div>
-                                                                <div class="bid-price fs-4 text-success fw-bold">€ 328,00</div>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Row 3 : Bottom left (below bootstrap class "card text") -->
-                                                        <div class="time-left fs-5 text-secondary fw-bold">
-                                                            <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold text-secondary"></i>
-                                                            Closed
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
+            <!-- Purchases info (total spent, average spent, top seller) -->
+            <div class="flex-grow-1">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                    <div class="col">
+                        <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
+                            <div class="text-start fs-5 fw-bold text-secondary">TOTAL SPENT</div>
+                            <div class="text-start fs-1">€ 1.688,00</div>
+                            <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Across 4 purchases</div>
                         </div>
-
-
-                        <!-- item purchase data -->
-                        <div class="d-flex flex-column h-100 justify-content-around">
-                            <div class="d-flex align-items-center fs-5 text-secondary fw-bold">
-                                <div style="width: 5%;" class="text-atart">
-                                    <i class="fa-solid fa-tag fs-5 text-secondary"></i>
-                                </div>
-                                <div class="ms-2">Paid € 561,00</div>
-                            </div>
-
-                            <div class="d-flex align-items-center fs-5 text-secondary fw-bold">
-                                <div style="width: 5%;" class="text-start">
-                                    <i class="fa-solid fa-clock fs-5 text-secondary"></i>
-                                </div>
-                                <div class="ms-2">Closed on 12/11/2025 09:42:29</div>
-                            </div>
-
+                    </div>
+                    <div class="col">
+                        <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
+                            <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">AVERAGE SPENT</div>
+                            <div class="flex-grow-1 text-start fs-1">€ 422,00</div>
+                            <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Helps you plan future bids</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
+                            <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">TOP SELLER</div>
+                            <div class="flex-grow-1 text-start fs-3">Quentin</div>
+                            <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Who you've bought from the most</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Bottom container with items cards -->
+        <div class="p-3 d-flex flex-column justify-content-evenly h-100">
+
+            <!-- Item cards wrapping container -->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 gx-4 gy-5">
+
+                <!-- GRID CELL = 1 item card (top) + item purchase data (bottom) -->
+                <!-- GRID CELL -->
+                <div class="d-flex flex-column h-100 gap-3">
+
+                    <!-- item card -->
+                    <div class="col">
+                        <a href="#" class="card bg-dark w-100 h-100 text-decoration-none">
+                            <!-- we wrap the card inside a container to adjust height taken by top cell and bottom cell-->
+                            <div class="d-flex flex-column h-100">
+
+                                <!-- TOP CELL (50%) -->
+                                <div class="row flex-fill" style="height:50%;">
+
+                                    <!-- card image (above card body) -->
+                                    <div class="col-sm h-100">
+                                        <img class="card-img-top h-100" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
+
+                                        <!-- Everything that is on top of the item image -->
+                                        <div class="card-img-overlay" style="height:61%;">
+
+                                            <!-- Direction : Vertical -->
+                                            <div class="d-flex flex-column h-100">
+
+                                                <!-- Row 1 : Top left & Top right -->
+                                                <div class="d-flex justify-content-between">
+                                                    <!-- Top left -->
+                                                    <div>
+                                                        <span class="badge rounded-pill bg-dark d-inline-flex align-items-center justify-content-center px-3 py-2">
+                                                            <i class="fa-solid fa-gavel flipped-horizontal me-2"></i> Bidder
+                                                        </span>
+                                                    </div>
+
+                                                    <!-- Top right -->
+                                                    <div class="d-flex flex-column">
+                                                        <span class="badge rounded-pill bg-warning d-inline-flex align-items-center justify-content-center px-3 py-2 mb-2">
+                                                            <i class="fa-solid fa-gavel flipped-horizontal me-2"></i> Auction
+                                                        </span>
+
+                                                        <span class="badge rounded-pill bg-primary d-inline-flex align-items-center justify-content-center px-3 py-2">
+                                                            <i class="fa-solid fa-bag-shopping me-2"></i> Buy now
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Spacer between Row 1 and Row 2 -->
+                                                <div class="flex-grow-1"></div>
+
+                                                <!-- Row 2 : Bottom right -->
+                                                <div class="d-flex justify-content-end">
+                                                    <span class="badge rounded-pill bg-dark d-inline-flex align-items-center justify-content-center px-3 py-2">
+                                                        <i class="fa-solid fa-images me-2"></i>
+                                                        2 images
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- BOTTOM CELL (50%) -->
+                                <div class="row flex-fill" style="height:50%;">
+                                    <div class="col-sm h-100">
+
+                                        <!-- Card body (below card image) -->
+                                        <div class="card-body h-100 bg-dark text-white">
+
+                                            <!-- Direction : Vertical -->
+                                            <div class="d-flex flex-column h-100">
+
+                                                <!-- Row 1 : Top left (using bootstrap class "card title") -->
+                                                <div class="card-title">
+                                                    <b>Iphone 18</b>
+                                                    <div class="fs-5 fw-bold text-secondary">by Manu</div>
+                                                </div>
+
+                                                <!-- Container center the remaining card info -->
+                                                <div class="d-flex flex-column justify-content-around flex-grow-1">
+
+                                                    <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
+                                                    <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
+
+                                                        <!-- Mid left -->
+                                                        <div class="price-left d-flex align-items-center fs-3 text-primary fw-bold">€ 361,00</div>
+
+                                                        <!-- Mid right -->
+                                                        <div class="d-flex flex-column text-end bid-info">
+                                                            <div class="fs-5 fw-bold text-secondary">Current bid</div>
+                                                            <div class="bid-price fs-4 text-success fw-bold">€ 328,00</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Row 3 : Bottom left (below bootstrap class "card text") -->
+                                                    <div class="time-left fs-5 text-secondary fw-bold">
+                                                        <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold text-secondary"></i>
+                                                        Closed
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+
+                    <!-- item purchase data -->
+                    <div class="d-flex flex-column h-100 justify-content-around">
+                        <div class="d-flex align-items-center fs-5 text-secondary fw-bold">
+                            <div style="width: 5%;" class="text-atart">
+                                <i class="fa-solid fa-tag fs-5 text-secondary"></i>
+                            </div>
+                            <div class="ms-2">Paid € 561,00</div>
+                        </div>
+
+                        <div class="d-flex align-items-center fs-5 text-secondary fw-bold">
+                            <div style="width: 5%;" class="text-start">
+                                <i class="fa-solid fa-clock fs-5 text-secondary"></i>
+                            </div>
+                            <div class="ms-2">Closed on 12/11/2025 09:42:29</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <!-- FOOTER -->
