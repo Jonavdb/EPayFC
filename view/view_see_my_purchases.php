@@ -44,10 +44,10 @@
     </header>
 
     <!-- PAGE CONTENT -->
-    <main class="flex-grow-1 content-box">
+    <main class="flex-grow-1 content-box py-3 mt-5">
 
         <!-- Top container with global infos -->
-        <div class="p-3 d-flex flex-column h-100 gap-3">
+        <div class="p-3 d-flex flex-column h-100 gap-4">
 
             <!-- Description section (title, number of purchases) -->
             <div class="d-flex flex-row w-100 align-items-center">
@@ -103,10 +103,10 @@
         </div>
 
         <!-- Bottom container with items cards -->
-        <div class="p-3 d-flex flex-column justify-content-evenly h-100">
+        <div class="p-3 d-flex flex-column justify-content-evenly h-100 mb-5">
 
             <!-- Item cards wrapping container -->
-            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 gx-4 gy-5">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 gx-4 gy-5 mb-5">
 
                 <!-- GRID CELL = 1 item card (top) + item purchase data (bottom) -->
                 <!-- GRID CELL -->
@@ -217,7 +217,7 @@
                     <!-- item purchase data -->
                     <div class="d-flex flex-column h-100 justify-content-around">
                         <div class="d-flex align-items-center fs-5 text-secondary fw-bold">
-                            <div style="width: 5%;" class="text-atart">
+                            <div style="width: 5%;" class="text-start">
                                 <i class="fa-solid fa-tag fs-5 text-secondary"></i>
                             </div>
                             <div class="ms-2">Paid € 561,00</div>
@@ -232,6 +232,7 @@
 
                     </div>
                 </div>
+
             </div>
         </div>
 
