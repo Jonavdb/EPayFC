@@ -33,7 +33,7 @@
 
             <div class="d-grid gap-3">
                 <input type="submit" class="btn btn-primary fw-normal" value="Login">
-                <button type="button" class="btn btn-secondary fw-normal">Continue as guest</button>
+                <a href="user/guest_login" class="btn btn-secondary fw-normal text-decoration-none">Continue as guest</a>
             </div>
 
             <div class="text-center mt-3">
@@ -55,9 +55,9 @@
                     <?php endforeach; ?>
                 </div>
 
-                <!-- TODO : attribuer ce qu'il faut -->
+                <!-- TODO : liens restants -->
                 <div class="debug-actions small fw-bold">
-                    <div class="mb-1 mt-1"><a href="#" class="text-success">Restore original data</a></div>
+                    <div class="mb-1 mt-1"><a href="setup/install" class="text-success">Restore original data</a></div>
                     <div class="mb-1"><a href="#" class="text-warning">Backup personal data</a></div>
                     <div><a href="#" class="text-warning">Restore personal data</a></div>
                 </div>

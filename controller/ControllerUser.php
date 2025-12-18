@@ -85,4 +85,12 @@ class ControllerUser extends Controller {
             "confirm_password" => $confirm_password
         ]);
     }
+
+    // Connexion en tant qu'invité
+    public function guest_login(): void {
+        session_destroy(); // kill la session active
+
+        $_SESSION['guest'] = true;
+        $this->redirect("browse_items", "index");
+    }
 }
