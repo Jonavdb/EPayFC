@@ -59,7 +59,7 @@
                     <div class="d-flex flex-grow-1" style="max-width: 15%;">
                         <div class="d-flex flex-column lh-sm">
                             <span class="fs-1">My Purchases</span>
-                            <span class="fs-6">Track the gear you've succesfully secured.</span>
+                            <span class="fs-6 fw-bold text-secondary">Track the gear you've succesfully secured.</span>
                         </div>
                     </div>
 
@@ -82,23 +82,23 @@
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                         <div class="col">
                             <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                                <div class="text-start fs-5">TOTAL SPENT</div>
+                                <div class="text-start fs-5 fw-bold text-secondary">TOTAL SPENT</div>
                                 <div class="text-start fs-1">€ 1.688,00</div>
-                                <div class="flex-grow-1 text-start fs-6">Across 4 purchases</div>
+                                <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Across 4 purchases</div>
                             </div>
                         </div>
                         <div class="col">
                             <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                                <div class="flex-grow-1 text-start fs-5">AVERAGE SPENT</div>
+                                <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">AVERAGE SPENT</div>
                                 <div class="flex-grow-1 text-start fs-1">€ 422,00</div>
-                                <div class="flex-grow-1 text-start fs-6">Helps you plan future bids</div>
+                                <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Helps you plan future bids</div>
                             </div>
                         </div>
                         <div class="col">
                             <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                                <div class="flex-grow-1 text-start fs-5">TOP SELLER</div>
+                                <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">TOP SELLER</div>
                                 <div class="flex-grow-1 text-start fs-3">Quentin</div>
-                                <div class="flex-grow-1 text-start fs-6">Who you've bought from the most</div>
+                                <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Who you've bought from the most</div>
                             </div>
                         </div>
                     </div>
@@ -182,8 +182,8 @@
 
                                                     <!-- Row 1 : Top left (using bootstrap class "card title") -->
                                                     <div class="card-title">
-                                                        <b>item title</b>
-                                                        <div>owner name</div>
+                                                        <b>Iphone 18</b>
+                                                        <div class="fs-5 fw-bold text-secondary">by Manu</div>
                                                     </div>
 
                                                     <!-- Container center the remaining card info -->
@@ -193,18 +193,19 @@
                                                         <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
                                                             <!-- Mid left -->
-                                                            <div class="price-left">€ 361,00</div>
+                                                            <div class="price-left d-flex align-items-center fs-3 text-primary fw-bold">€ 361,00</div>
 
                                                             <!-- Mid right -->
                                                             <div class="d-flex flex-column text-end bid-info">
-                                                                <div>Current bid</div>
-                                                                <div class="bid-price">€ 328,00</div>
+                                                                <div class="fs-5 fw-bold text-secondary">Current bid</div>
+                                                                <div class="bid-price fs-4 text-success fw-bold">€ 328,00</div>
                                                             </div>
                                                         </div>
 
                                                         <!-- Row 3 : Bottom left (below bootstrap class "card text") -->
-                                                        <div class="time-left">
-                                                            <i class="fa-solid fa-clock transparent-icon"></i> Closed
+                                                        <div class="time-left fs-5 text-secondary fw-bold">
+                                                            <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold text-secondary"></i>
+                                                            Closed
                                                         </div>
                                                     </div>
                                                 </div>
@@ -218,17 +219,25 @@
 
                         <!-- item purchase data -->
                         <div class="d-flex flex-column h-100 justify-content-around">
-                            <div class="flex-grow-1 text-start">
-                                <i class="fa-solid fa-tag"></i> Paid € 561,00
+                            <div class="d-flex align-items-center fs-5 text-secondary fw-bold">
+                                <div style="width: 5%;" class="text-atart">
+                                    <i class="fa-solid fa-tag fs-5 text-secondary"></i>
+                                </div>
+                                <div class="ms-2">Paid € 561,00</div>
                             </div>
-                            <div class="flex-grow-1 text-start">
-                                <i class="fa-solid fa-clock transparent-icon"></i>
-                                Closed on 12/11/2025 09:42:29
+
+                            <div class="d-flex align-items-center fs-5 text-secondary fw-bold">
+                                <div style="width: 5%;" class="text-start">
+                                    <i class="fa-solid fa-clock fs-5 text-secondary"></i>
+                                </div>
+                                <div class="ms-2">Closed on 12/11/2025 09:42:29</div>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </main>
 
     <!-- FOOTER -->
