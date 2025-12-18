@@ -33,7 +33,7 @@
 
             <div class="d-grid gap-3">
                 <input type="submit" class="btn btn-primary fw-normal" value="Login">
-                <button type="button" class="btn btn-secondary fw-normal">Continue as guest</button>
+                <a href="user/guest_login" class="btn btn-secondary fw-normal text-decoration-none">Continue as guest</a>
             </div>
 
             <div class="text-center mt-3">

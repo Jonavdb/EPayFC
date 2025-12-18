@@ -328,44 +328,39 @@ view
 
     <!-- FOOTER -->
     <footer class="content-box">
-        <nav class="navbar fixed-bottom navbar-dark bg-dark">
-            <!-- Use the 'container-fluid' or 'w-100' for full width in the footer -->
+        <nav class="navbar fixed-bottom navbar-dark bg-dark border-top shadow-lg">
             <div class="container-fluid">
 
-                <div class="d-flex justify-content-around w-100">
-                    <!-- Browse Link -->
-                    <a class="bottom-nav-link text-decoration-none" href="#">
-                        <div class="d-flex flex-column">
-                            <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
-                            <div>Browse</div>
-                        </div>
+                <div class="d-flex justify-content-around w-100 py-1">
+
+                    <a class="nav-link text-center text-secondary" href="main/index">
+                        <i class="fa-solid fa-magnifying-glass-plus fs-5 mb-1 d-block"></i>
+                        <span>Browse</span>
                     </a>
 
-
-                    <!-- My Items Link -->
-                    <a class="bottom-nav-link text-decoration-none" href="#">
-                        <div class="d-flex flex-column">
-                            <div class="d-flex justify-content-center w-100"><i class="fas fa-home"></i></div>
-                            <div>My Items</div>
-                        </div>
+                    <a class="nav-link text-center text-secondary" href="member/items">
+                        <i class="fas fa-home fs-5 mb-1 d-block"></i>
+                        <span>My Items</span>
                     </a>
 
-                    <!-- Add Offer Link -->
-                    <a class="bottom-nav-link text-decoration-none" href="#">
-                        <div class="d-flex flex-column">
-                            <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-plus"></i></div>
-                            <div>Add Offer</div>
-                        </div>
-                    </a>
+                    <?php
+                    // On récupère le user connecté (s'il existe)
+                    $is_real_user = isset($_SESSION['user']) && !empty($_SESSION['user']);
+                    ?>
 
+                    <?php if ($is_real_user): ?>
 
-                    <!-- Profile Link -->
-                    <a class="bottom-nav-link text-decoration-none" href="#">
-                        <div class="d-flex flex-column">
-                            <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-gear"></i></div>
-                            <div>Profile</div>
-                        </div>
-                    </a>
+                        <a class="nav-link text-center text-secondary" href="member/add_offer">
+                            <i class="fa-solid fa-plus fs-5 mb-1 d-block"></i>
+                            <span>Add Offer</span>
+                        </a>
+
+                        <a class="nav-link text-center text-secondary" href="user/profile">
+                            <i class="fa-solid fa-gear fs-5 mb-1 d-block"></i>
+                            <span>Profile</span>
+                        </a>
+
+                    <?php endif; ?>
                 </div>
             </div>
         </nav>
