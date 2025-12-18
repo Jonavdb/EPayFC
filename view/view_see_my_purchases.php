@@ -58,8 +58,8 @@
                     <!-- left : vertical container with 2 texts -->
                     <div class="d-flex flex-grow-1" style="max-width: 15%;">
                         <div class="d-flex flex-column lh-sm">
-                            <span class="fw-bold small">My Purchases</span>
-                            <span class="fw-bold small">Track the gear you've succesfully secured.</span>
+                            <span class="fs-1">My Purchases</span>
+                            <span class="fs-6">Track the gear you've succesfully secured.</span>
                         </div>
                     </div>
 
@@ -73,7 +73,7 @@
                     <!--  takes up 5% of row width for centering -->
                     <!-- right : placeholder to make page title perfectly centered  -->
                     <div class="flex-grow-1 text-end" style="max-width: 15%;">
-                        <span class="badge rounded-pill bg-primary">4 purchases</span>
+                        <span class="badge rounded-pill bg-primary px-4 py-2">4 purchases</span>
                     </div>
                 </div>
 
@@ -82,23 +82,23 @@
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                         <div class="col">
                             <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                                <div class="flex-grow-1 text-start">TOTAL SPENT</div>
-                                <div class="flex-grow-1 text-start">€ 1.688,00</div>
-                                <div class="flex-grow-1 text-start">Across 4 purchases</div>
+                                <div class="text-start fs-5">TOTAL SPENT</div>
+                                <div class="text-start fs-1">€ 1.688,00</div>
+                                <div class="flex-grow-1 text-start fs-6">Across 4 purchases</div>
                             </div>
                         </div>
                         <div class="col">
                             <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                                <div class="flex-grow-1 text-start">AVERAGE SPENT</div>
-                                <div class="flex-grow-1 text-start">€ 422,00</div>
-                                <div class="flex-grow-1 text-start">Helps you plan future bids</div>
+                                <div class="flex-grow-1 text-start fs-5">AVERAGE SPENT</div>
+                                <div class="flex-grow-1 text-start fs-1">€ 422,00</div>
+                                <div class="flex-grow-1 text-start fs-6">Helps you plan future bids</div>
                             </div>
                         </div>
                         <div class="col">
                             <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                                <div class="flex-grow-1 text-start">TOP SELLER</div>
-                                <div class="flex-grow-1 text-start">Quentin</div>
-                                <div class="flex-grow-1 text-start">Who you've bought from the most</div>
+                                <div class="flex-grow-1 text-start fs-5">TOP SELLER</div>
+                                <div class="flex-grow-1 text-start fs-3">Quentin</div>
+                                <div class="flex-grow-1 text-start fs-6">Who you've bought from the most</div>
                             </div>
                         </div>
                     </div>
@@ -122,14 +122,14 @@
                                 <div class="d-flex flex-column h-100">
 
                                     <!-- TOP CELL (50%) -->
-                                    <div class="row flex-fill" style="height:45%;">
+                                    <div class="row flex-fill" style="height:50%;">
 
                                         <!-- card image (above card body) -->
                                         <div class="col-sm h-100">
                                             <img class="card-img-top h-100" src="uploads/items/1/25cdaf4224c6841a_1762786661_thumbnail.jpg" alt="Auction Item Image">
 
                                             <!-- Everything that is on top of the item image -->
-                                            <div class="card-img-overlay" style="height:50%;">
+                                            <div class="card-img-overlay" style="height:58%;">
 
                                                 <!-- Direction : Vertical -->
                                                 <div class="d-flex flex-column h-100">
@@ -138,19 +138,19 @@
                                                     <div class="d-flex justify-content-between">
                                                         <!-- Top left -->
                                                         <div>
-                                                            <span class="badge rounded-pill bg-dark badge-bidder">
-                                                                <i class="fa-solid fa-gavel flipped-horizontal"></i> Bidder
+                                                            <span class="badge rounded-pill bg-dark d-inline-flex align-items-center justify-content-center px-3 py-2">
+                                                                <i class="fa-solid fa-gavel flipped-horizontal me-2"></i> Bidder
                                                             </span>
                                                         </div>
 
                                                         <!-- Top right -->
                                                         <div class="d-flex flex-column">
-                                                            <span class="badge rounded-pill bg-warning text-white badge-auction mb-1">
-                                                                <i class="fa-solid fa-gavel flipped-horizontal"></i> Auction
+                                                            <span class="badge rounded-pill bg-warning d-inline-flex align-items-center justify-content-center px-3 py-2 mb-2">
+                                                                <i class="fa-solid fa-gavel flipped-horizontal me-2"></i> Auction
                                                             </span>
 
-                                                            <span class="badge rounded-pill bg-primary">
-                                                                <i class="fa-solid fa-bag-shopping"></i> Buy now
+                                                            <span class="badge rounded-pill bg-primary d-inline-flex align-items-center justify-content-center px-3 py-2">
+                                                                <i class="fa-solid fa-bag-shopping me-2"></i> Buy now
                                                             </span>
                                                         </div>
                                                     </div>
@@ -160,8 +160,8 @@
 
                                                     <!-- Row 2 : Bottom right -->
                                                     <div class="d-flex justify-content-end">
-                                                        <span class="badge rounded-pill bg-dark">
-                                                            <i class="fa-solid fa-images"></i>
+                                                        <span class="badge rounded-pill bg-dark d-inline-flex align-items-center justify-content-center px-3 py-2">
+                                                            <i class="fa-solid fa-images me-2"></i>
                                                             2 images
                                                         </span>
                                                     </div>
@@ -171,7 +171,7 @@
                                     </div>
 
                                     <!-- BOTTOM CELL (50%) -->
-                                    <div class="row flex-fill" style="height:45%;">
+                                    <div class="row flex-fill" style="height:50%;">
                                         <div class="col-sm h-100">
 
                                             <!-- Card body (below card image) -->
