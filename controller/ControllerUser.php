@@ -4,7 +4,11 @@ require_once 'model/User.php';
 
 class ControllerUser extends Controller {
     public function index(): void {
-        (new View("index"))->show();
+        if ($this->user_logged()) {
+            $this->redirect("profile", "index");
+        } else {
+            $this->redirect("user", "login");
+        }
     }
 
     // Gestion de la connexion d'un utilisateur
@@ -13,16 +17,33 @@ class ControllerUser extends Controller {
         $password = '';
         $errors = [];
 
+        // GESTION DU LOGIN AUTOMATIQUE VIA LIEN DE DEBUG
+        if (isset($_GET['email'])) {
+            // Si l'URL contient ?email=..., on connecte direct
+            $user = User::get_user_by_email($_GET['email']);
+
+            if ($user) {
+                $this->log_user($user);
+                $this->redirect("profile", "index");
+            }
+        }
+
+        // GESTION DU LOGIN CLASSIQUE (POST)
         if (isset($_POST['email']) && isset($_POST['password'])) {
             $email = $_POST['email'];
             $password = $_POST['password'];
-
             $errors = User::validate_login($email, $password);
+
             if (empty($errors)) {
                 $this->log_user(User::get_user_by_email($email));
+                $this->redirect("profile", "index");
             }
         }
-        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors]);
+
+        // RÉCUPÉRATION DE LA LISTE DES "Debug Users"
+        $users = User::get_debug_users();
+
+        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors, "users" => $users]);
     }
 
     // Gestion du changement de mot de passe
@@ -63,5 +84,13 @@ class ControllerUser extends Controller {
             "new_password" => $new_password,
             "confirm_password" => $confirm_password
         ]);
+    }
+
+    // Connexion en tant qu'invité
+    public function guest_login(): void {
+        session_destroy(); // kill la session active
+
+        $_SESSION['guest'] = true;
+        $this->redirect("browse_items", "index");
     }
 }

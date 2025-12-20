@@ -33,7 +33,7 @@
 
             <div class="d-grid gap-3">
                 <input type="submit" class="btn btn-primary fw-normal" value="Login">
-                <button type="button" class="btn btn-secondary fw-normal">Continue as guest</button>
+                <a href="user/guest_login" class="btn btn-secondary fw-normal text-decoration-none">Continue as guest</a>
             </div>
 
             <div class="text-center mt-3">
@@ -46,26 +46,18 @@
                 <h3 class="text-warning mt-3 text-bold">For Debug Purpose</h3>
 
                 <div class="debug-emails small">
-                    <div class="text-light">
-                        <a href="user/login?email=boverhaegen@epfc.eu" class="font-weight-bold">Login as boverhaegen@epfc.eu</a>
-                    </div>
-
-                    <div>
-                        <a href="user/login?email=mamichel@epfc.eu" class="font-weight-bold">Login as mamichel@epfc.eu</a>
-                    </div>
-
-                    <div>
-                        <a href="user/login?email=quhouben@epfc.eu" class="font-weight-bold">Login as quhouben@epfc.eu</a>
-                    </div>
-
-                    <div>
-                        <a href="user/login?email=xapigeolet@epfc.eu" class="font-weight-bold">Login as xapigeolet@epfc.eu</a>
-                    </div>
+                    <?php foreach ($users ?? [] as $user): ?>
+                        <div class="text-light">
+                            <a href="user/login?email=<?= urldecode($user->email); ?>" class="font-weight-bold">
+                                Login as <?= $user->email ?>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
-                <!-- TODO : attribuer ce qu'il faut -->
+                <!-- TODO : liens restants -->
                 <div class="debug-actions small fw-bold">
-                    <div class="mb-1 mt-1"><a href="#" class="text-success">Restore original data</a></div>
+                    <div class="mb-1 mt-1"><a href="setup/install" class="text-success">Restore original data</a></div>
                     <div class="mb-1"><a href="#" class="text-warning">Backup personal data</a></div>
                     <div><a href="#" class="text-warning">Restore personal data</a></div>
                 </div>
