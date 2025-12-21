@@ -199,18 +199,24 @@
 
                                                     <!-- Row 2 : Bottom right -->
                                                     <?php
-                                                    // Get the total number of images
+                                                    // Get the total number of images, to see whether or not it is necessary to display a badge
                                                     $total_image_count = count($purchased_item->image_urls);
-                                                    // Calculate the number of extra images (excluding the main one)
-                                                    $extra_image_count = $total_image_count - 1;
                                                     ?>
-                                                    <div class="d-flex justify-content-end">
-                                                        <span class="badge rounded-pill bg-dark d-inline-flex align-items-center justify-content-center px-3 py-2">
-                                                            <i class="fa-solid fa-images me-2"></i>
-                                                            <?= $extra_image_count ?>
-                                                            <?= ($extra_image_count === 1) ? ' image' : ' images' ?>
-                                                        </span>
-                                                    </div>
+
+
+                                                    <?php if ($total_image_count > 1): ?>
+                                                        <?php
+                                                        $extra_image_count = $total_image_count - 1;
+                                                        ?>
+
+                                                        <div class="d-flex justify-content-end">
+                                                            <span class="badge rounded-pill bg-dark d-inline-flex align-items-center justify-content-center px-3 py-2">
+                                                                <i class="fa-solid fa-images me-2"></i>
+                                                                <?= $extra_image_count ?>
+                                                                <?= ($extra_image_count === 1) ? ' image' : ' images' ?>
+                                                            </span>
+                                                        </div>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                         </div>
