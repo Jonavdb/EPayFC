@@ -80,13 +80,16 @@
                     <div class="col">
                         <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
                             <div class="text-start fs-5 fw-bold text-secondary">TOTAL SPENT</div>
-                            <div class="text-start fs-1">€ 1.688,00</div>
-                            <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Across 4 purchases</div>
+                            <div class="text-start fs-1">
+                                <!-- Sums 'buy_now_price' from the array, then formats as currency (e.g. 1.234,56) -->
+                                € <?= number_format(array_sum(array_column($purchases, 'buy_now_price')), 2, ',', '.') ?>
+                            </div>
+                            <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary"><?= count($purchases) ?></div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                            <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">AVERAGE SPENT</div>
+                            <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">AVERAGE TICKET</div>
                             <div class="flex-grow-1 text-start fs-1">€ 422,00</div>
                             <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Helps you plan future bids</div>
                         </div>
