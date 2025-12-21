@@ -107,7 +107,25 @@
                     <div class="col">
                         <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
                             <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">TOP SELLER</div>
-                            <div class="flex-grow-1 text-start fs-3">Quentin</div>
+                            <div class="flex-grow-1 text-start fs-3">
+                                <?php
+                                // 1. we map by owner name and sum prices (key:name value:sum)
+                                $sums = [];
+                                foreach ($purchases as $purchase) {
+                                    $name = $purchase->owner_name;
+                                    // if name doesn't exist in sums yet, initialize it at 0, then add buy now price
+                                    $sums[$name] = ($sums[$name] ?? 0) + $purchase->buy_now_price;
+                                }
+
+                                // 2. we find the top seller
+                                // arsort sorts the array by value (sum) in descending order, keeping keys
+                                arsort($sums);
+
+                                // 3. we get he top seller (first key)
+                                $top_seller = array_key_first($sums);
+                                echo $top_seller;
+                                ?>
+                            </div>
                             <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Who you've bought from the most</div>
                         </div>
                     </div>

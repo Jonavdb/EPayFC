@@ -13,14 +13,42 @@ class Profile extends Model
         $purchases = [];
 
         $query = self::execute(
-            "SELECT * 
-            from v_items_status vis
-            join bids b on b.item = vis.id
-            join users u on u.id = b.owner -- any item purchased / bid on
-            where :today > vis.end_at  -- no longer available
-            and u.pseudo = :pseudo --  bid on by user 
-            and b.amount = vis.max_bid -- where user is either the highest bidder or the one who purchased it
-            order by vis.id",
+            // query to get the items where the specified user got the winning 
+            // OR the items that he purchased directly
+            "SELECT 
+            /* Item Data */
+            vis.id AS item_id,
+            vis.title,
+            vis.buy_now_price,
+            vis.is_auction,
+            vis.has_buy_now,
+            vis.buy_now_reached,
+            vis.end_at,
+            vis.max_bid,
+
+            /* Seller Data (The person who owns the item) */
+            seller.id AS seller_id,         -- id of the person who owns the item (seller is the custom name of users table ie check next query lines)
+            seller.pseudo AS seller_name,   -- name of the person who owns the item
+
+            /* Bidder Data (The person who placed the winning bid) */
+            u.id AS bidder_id,
+            u.pseudo AS bidder_name,        -- name of the person of placed the bid 
+            b.amount AS winning_bid_amount  -- bid placed by the person 
+
+            FROM v_items_status vis
+            /* Join for the bid details */
+            JOIN bids b ON b.item = vis.id
+
+            /* Join for the person who placed the bid (Bidder / Buyer) */
+            JOIN users u ON u.id = b.owner
+
+            /* Join for the person who created the item (Seller) */
+            JOIN users seller ON seller.id = vis.owner 
+
+            WHERE :today > vis.end_at   
+            AND u.pseudo = :pseudo          -- we specifiy the target user
+            AND b.amount = vis.max_bid      -- we keep only the user the winning bids or what he purchased directly
+            ORDER BY vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
                 "pseudo" => $pseudo
@@ -34,7 +62,7 @@ class Profile extends Model
 
         foreach ($data as $item_data) {
             // available items have no user bid on them
-            $user_bid = Item::get_user_bid($item_data['0'], 4);
+            $user_bid = Item::get_user_bid($item_data['item_id'], 4);
 
             // we get info of whether the item is in auction or not
             $is_auction = $item_data['is_auction'];
@@ -52,7 +80,7 @@ class Profile extends Model
                                 FROM item_pictures p
                                 where p.item = :item_id
                                 Order BY priority ASC",
-                ["item_id" => $item_data['0']]
+                ["item_id" => $item_data['item_id']]
             );
 
             $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
@@ -79,7 +107,7 @@ class Profile extends Model
                                 from users u
                                 join v_items_status i on i.owner = u.id
                                 where i.owner = :owner_id",
-                ["owner_id" => $item_data['owner']]
+                ["owner_id" => $item_data['seller_id']]
             );
 
             $data_owner_name = $query_owner_name->fetch();
