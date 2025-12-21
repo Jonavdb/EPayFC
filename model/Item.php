@@ -198,11 +198,8 @@ class Item extends Model
         $query = self::execute(
             "SELECT b.amount as bid
                                 from bids b 
-                                join users u on u.id = b.owner
-                                join v_items_status vis on vis.id = b.item
-                                where b.amount = vis.max_bid
-                                and u.id = :user_id
-                                and vis.id = :item_id;",
+                                where b.owner = :user_id
+                                and b.item = :item_id;",
             [
                 "item_id" => $item_id,
                 "user_id" => $user_id

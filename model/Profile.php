@@ -62,7 +62,7 @@ class Profile extends Model
 
         foreach ($data as $item_data) {
             // available items have no user bid on them
-            $user_bid = Item::get_user_bid($item_data['item_id'], 4);
+            $user_bid = Item::get_user_bid($item_data['item_id'], 4); // for debug, for is boris id
 
             // we get info of whether the item is in auction or not
             $is_auction = $item_data['is_auction'];
@@ -143,7 +143,7 @@ class Profile extends Model
             $time_left_datetime = $end_at->diff($today);
             $time_left_debug = $time_left_datetime->invert;
 
-            $purchases[] = new Item($user_bid, $item_data['0'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
+            $purchases[] = new Item($user_bid, $item_data['item_id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
 
         return $purchases;
