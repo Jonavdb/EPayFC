@@ -70,7 +70,7 @@
                 <!--  takes up 5% of row width for centering -->
                 <!-- right : placeholder to make page title perfectly centered  -->
                 <div class="flex-grow-1 text-end" style="max-width: 15%;">
-                    <span class="badge rounded-pill bg-primary px-4 py-2">4 purchases</span>
+                    <span class="badge rounded-pill bg-primary px-4 py-2"><?= count($purchases) ?> purchases</span>
                 </div>
             </div>
 
