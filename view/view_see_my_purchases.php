@@ -53,10 +53,10 @@
             <div class="d-flex flex-row w-100 align-items-center">
                 <!--  takes up 5% of row width for centering -->
                 <!-- left : vertical container with 2 texts -->
-                <div class="d-flex flex-grow-1" style="max-width: 15%;">
+                <div class="d-flex flex-grow-1" style="max-width: 25%;">
                     <div class="d-flex flex-column lh-sm">
-                        <span class="fs-1">My Purchases</span>
-                        <span class="fs-6 fw-bold text-secondary">Track the gear you've succesfully secured.</span>
+                        <span class="display-4 fw-bold">My Purchases</span>
+                        <span class="fs-5 fw-bold text-secondary">Track the gear you've succesfully secured.</span>
                     </div>
                 </div>
 
@@ -69,7 +69,7 @@
 
                 <!--  takes up 5% of row width for centering -->
                 <!-- right : placeholder to make page title perfectly centered  -->
-                <div class="flex-grow-1 text-end" style="max-width: 15%;">
+                <div class="flex-grow-1 text-end" style="max-width: 25%;">
                     <span class="badge rounded-pill bg-primary px-4 py-2"><?= count($purchases) ?> purchases</span>
                 </div>
             </div>
@@ -79,17 +79,17 @@
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
                     <div class="col">
                         <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                            <div class="text-start fs-5 fw-bold text-secondary">TOTAL SPENT</div>
+                            <div class="text-start fs-4 fw-bold text-secondary">TOTAL SPENT</div>
                             <div class="text-start fs-1">
                                 <!-- Sums 'buy_now_price' from the array, then formats as currency (e.g. 1.234,56) -->
                                 € <?= number_format(array_sum(array_column($purchases, 'user_bid')), 2, ',', '.') ?>
                             </div>
-                            <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Across <?= count($purchases) ?> purchases</div>
+                            <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">Across <?= count($purchases) ?> purchases</div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                            <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">AVERAGE TICKET</div>
+                            <div class="flex-grow-1 text-start fs-4 fw-bold text-secondary">AVERAGE TICKET</div>
                             <div class="flex-grow-1 text-start fs-1">
                                 <!-- Calculates average buy_now_price: (Sum / Count) or 0,00 if empty -->
                                 <?php
@@ -101,13 +101,13 @@
                                 }
                                 ?>
                             </div>
-                            <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Helps you plan future bids</div>
+                            <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">Helps you plan future bids</div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
-                            <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">TOP SELLER</div>
-                            <div class="flex-grow-1 text-start fs-3">
+                            <div class="flex-grow-1 text-start fs-4 fw-bold text-secondary">TOP SELLER</div>
+                            <div class="flex-grow-1 text-start fs-2">
                                 <?php
                                 // 1. we map by owner name and sum user bids
                                 $sums = [];
@@ -126,7 +126,7 @@
                                 echo $top_seller;
                                 ?>
                             </div>
-                            <div class="flex-grow-1 text-start fs-6 fw-bold text-secondary">Who you've bought from the most</div>
+                            <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">Who you've bought from the most</div>
                         </div>
                     </div>
                 </div>
@@ -157,7 +157,7 @@
                                             <img class="card-img-top h-100" src=<?= $purchased_item->main_image_url ?> alt="Auction Item Image">
 
                                             <!-- Everything that is on top of the item image -->
-                                            <div class="card-img-overlay" style="height:61%;">
+                                            <div class="card-img-overlay" style="height:58%;">
 
                                                 <!-- Direction : Vertical -->
                                                 <div class="d-flex flex-column h-100">
