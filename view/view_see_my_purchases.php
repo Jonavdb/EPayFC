@@ -283,16 +283,17 @@
                                 <div style="width: 5%;" class="text-start">
                                     <i class="fa-solid fa-tag fs-5 text-secondary"></i>
                                 </div>
-                                <div class="ms-2">Paid € 561,00</div>
+                                <div class="ms-2">
+                                    Paid € <?= number_format($purchased_item->user_bid, 2, ',', '.'); ?>
+                                </div>
                             </div>
 
                             <div class="d-flex align-items-center fs-5 text-secondary fw-bold">
                                 <div style="width: 5%;" class="text-start">
                                     <i class="fa-solid fa-clock fs-5 text-secondary"></i>
                                 </div>
-                                <div class="ms-2">Closed on 12/11/2025 09:42:29</div>
+                                <div class="ms-2">Closed on <?= $purchased_item->end_at->format('d/m/Y H:i:s'); ?></div>
                             </div>
-
                         </div>
                     </div>
                 <?php endforeach ?>
