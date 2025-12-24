@@ -19,7 +19,6 @@
     --bg-light: #f8f9fa;
     --surface: #ffffff;
     --surface-muted: #f5f7fb;
-    --shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.08);
     --radius-lg: 16px;
     --radius-md: 10px;
     --radius-sm: 6px;
@@ -144,10 +143,29 @@ form .form-text {
     border-bottom: 1px solid #495057;
 }
 
+.card-profile-header-text {
+    color: #a4b5c6;
+}
+
+.card-profile-header-bg {
+    background-color: #37526d;
+    border-bottom: 1px solid #495057;
+}
+
 .settings-container .card {
     border: 1px solid var(--form-border);
     background-color: var(--form-background);
     margin-bottom: 2rem;
+}
+
+.hover-effect:hover {
+    background-color: rgba(13, 110, 253, 0.1);
+    transition: background-color 0.2s;
+}
+
+.hover-effect-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+    transition: background-color 0.2s;
 }
 
 /* Titres */

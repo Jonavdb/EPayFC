@@ -8,13 +8,25 @@ class User extends Model {
     public string $full_name;
     public string $pseudo;
     public string $password;
+    public ?string $picture_path;
+    public string $role;
 
-    public function __construct(string $email, string $full_name, string $pseudo, string $password, ?int $id = null) {
+    public function __construct(
+        string $email,
+        string $full_name,
+        string $pseudo,
+        string $password,
+        ?int $id = null,
+        ?string $picture_path = null,
+        string $role = "user"
+    ) {
         $this->email = $email;
         $this->full_name = $full_name;
         $this->pseudo = $pseudo;
         $this->password = $password;
         $this->id = $id;
+        $this->picture_path = $picture_path;
+        $this->role = $role;
     }
 
     // Récupère les utilisateurs pour la liste de debug
@@ -47,7 +59,9 @@ class User extends Model {
                 $data["full_name"],
                 $data["pseudo"],
                 $data["password"], // On passe le hash de la DB dans la propriété password
-                $data["id"] ?? null
+                $data["id"] ?? null,
+                $data["picture_path"],
+                $data["role"]
             );
         }
     }

@@ -4,6 +4,8 @@ require_once 'model/User.php';
 
 class ControllerProfile extends Controller {
     public function index(): void {
-        (new View("profile"))->show();
+        $user = $this->get_user_or_redirect();
+        $user = User::get_user_by_email($user->email);
+        (new View("profile"))->show(["user" => $user]);
     }
 }
