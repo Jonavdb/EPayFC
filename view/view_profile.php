@@ -12,11 +12,11 @@
 </head>
 
 <body>
-    <main class="container" style="padding-top: 100px; padding-bottom: 100px;">
+    <main class="container" style="padding-top: 80px; padding-bottom: 100px;">
         <!-- HEADER -->
-        <header class=" content-box">
+        <header class="content-box">
             <nav class="navbar fixed-top navbar-dark bg-dark border-bottom shadow-lg">
-                <div class="container-fluid p-3">
+                <div class="container-fluid p-2">
                     <div class="flex-grow-1 text-start" style="max-width: 5%;">
                         <a href="user/profile" class="btn-icon">
                             <i class="fa-solid fa-arrow-left"></i>
@@ -34,7 +34,7 @@
 
         <!-- PROFILE HEADER -->
         <div class="card mb-4 bg-dark shadow-soft">
-            <div class="card-body text-center py-4">
+            <div class="card-body text-center py-2">
                 <div class="mb-3">
                     <!-- Setup d'une image par défaut si l'user n'a pas d'avatar -->
                     <?php
@@ -65,31 +65,31 @@
         </div>
 
         <!-- MY ACTIVITIES -->
-        <div class="card bg-dark border-secondary">
+        <div class="card bg-dark border-secondary mb-4">
             <div class="card-header border-secondary text-white fw-semibold card-profile-header-bg">
                 My Activities
             </div>
 
             <div class="card-body p-4">
                 <a href="item/sales" class="text-decoration-none">
-                    <div class="d-flex align-items-center p-3 mb-3 border border-primary rounded hover-effect">
-                        <div class="me-4 p-2">
-                            <i class="fa-solid fa-file-invoice fa-2x text-primary"></i>
+                    <div class="d-flex align-items-center p-2 mb-3 border border-primary rounded hover-effect">
+                        <div class="me-3 p-2">
+                            <i class="fa-solid fa-file-invoice fa-lg text-primary"></i>
                         </div>
                         <div class="text-lg-start ms-3">
-                            <p class="m-0 fs-3 text-md text-primary fw-bold">Sales</p>
+                            <p class="m-0 fs-4 text-md text-primary fw-bold">Sales</p>
                             <p class="m-0 border-color">Items you have sold</p>
                         </div>
                     </div>
                 </a>
 
                 <a href="item/purchases" class="text-decoration-none">
-                    <div class="d-flex align-items-center p-3 border border-primary rounded hover-effect">
+                    <div class="d-flex align-items-center p-2 border border-primary rounded hover-effect">
                         <div class="me-4 p-2">
-                            <i class="fa-solid fa-cart-shopping fa-2x text-primary"></i>
+                            <i class="fa-solid fa-cart-shopping fa-lg text-primary"></i>
                         </div>
                         <div class="text-lg-start">
-                            <p class="m-0 fs-3 text-md text-primary fw-bold">Purchases</p>
+                            <p class="m-0 fs-4 text-md text-primary fw-bold">Purchases</p>
                             <p class="m-0 border-color">Items you have purchased</p>
                         </div>
                     </div>
@@ -105,48 +105,48 @@
 
             <div class="card-body p-4">
                 <a href="user/edit_profile" class="text-decoration-none">
-                    <div class="d-flex align-items-center p-3 mb-3 border border-primary rounded hover-effect">
+                    <div class="d-flex align-items-center p-2 mb-3 border border-primary rounded hover-effect">
                         <div class="me-1 p-2">
-                            <i class="fa-solid fa-user-pen fa-2x text-primary"></i>
+                            <i class="fa-solid fa-user-pen fa-lg text-primary"></i>
                         </div>
                         <div class="text-lg-start ms-3">
-                            <p class="m-0 fs-3 text-md text-primary fw-bold">Edit Profile</p>
+                            <p class="m-0 fs-4 text-md text-primary fw-bold">Edit Profile</p>
                             <p class="m-0 border-color">Update your personal information</p>
                         </div>
                     </div>
                 </a>
 
                 <a href="user/change_password" class="text-decoration-none">
-                    <div class="d-flex align-items-center p-3 mb-3 border border-primary rounded hover-effect">
-                        <div class="me-4 p-2">
-                            <i class="fa-solid fa-lock fa-2x text-primary"></i>
+                    <div class="d-flex align-items-center p-2 mb-3 border border-primary rounded hover-effect">
+                        <div class="me-3 p-2">
+                            <i class="fa-solid fa-lock fa-lg text-primary"></i>
                         </div>
                         <div class="text-lg-start ms-3">
-                            <p class="m-0 fs-3 text-md text-primary fw-bold">Change Password</p>
+                            <p class="m-0 fs-4 text-md text-primary fw-bold">Change Password</p>
                             <p class="m-0 border-color">Update your account security</p>
                         </div>
                     </div>
                 </a>
 
                 <a href="user/profile_picture" class="text-decoration-none">
-                    <div class="d-flex align-items-center p-3 mb-3 border border-primary rounded hover-effect">
+                    <div class="d-flex align-items-center p-2 mb-3 border border-primary rounded hover-effect">
                         <div class="me-3 p-2">
-                            <i class="fa-solid fa-circle-user fa-2x text-primary"></i>
+                            <i class="fa-solid fa-circle-user fa-lg text-primary"></i>
                         </div>
                         <div class="text-lg-start ms-3">
-                            <p class="m-0 fs-3 text-md text-primary fw-bold">Profile Picture</p>
+                            <p class="m-0 fs-4 text-md text-primary fw-bold">Profile Picture</p>
                             <p class="m-0 border-color">Upload or change your profile picture</p>
                         </div>
                     </div>
                 </a>
 
                 <a href="user/logout" class="text-decoration-none">
-                    <div class="d-flex align-items-center p-3 border border-danger rounded hover-effect-danger">
+                    <div class="d-flex align-items-center p-2 border border-danger rounded hover-effect-danger">
                         <div class="me-3 p-2">
-                            <i class="fa-solid fa-right-from-bracket fa-2x text-danger"></i>
+                            <i class="fa-solid fa-right-from-bracket fa-lg text-danger"></i>
                         </div>
                         <div class="text-lg-start ms-3">
-                            <p class="m-0 fs-3 text-md text-danger fw-bold">Logout</p>
+                            <p class="m-0 fs-4 text-md text-danger fw-bold">Logout</p>
                             <p class="m-0 border-color">Sign out of your account</p>
                         </div>
                     </div>
@@ -163,22 +163,22 @@
                 <div class="d-flex justify-content-around w-100 py-3">
 
                     <a class="nav-link text-center text-secondary" href="main/index">
-                        <i class="fa-solid fa-magnifying-glass-plus fs-5 mb-1 d-block"></i>
+                        <i class="fa-solid fa-magnifying-glass-plus fs-4 mb-1 d-block"></i>
                         <span>Browse</span>
                     </a>
 
                     <a class="nav-link text-center text-secondary" href="member/items">
-                        <i class="fas fa-home fs-5 mb-1 d-block"></i>
+                        <i class="fas fa-home fs-4 mb-1 d-block"></i>
                         <span>My Items</span>
                     </a>
 
                     <a class="nav-link text-center text-secondary" href="member/add_offer">
-                        <i class="fa-solid fa-plus fs-5 mb-1 d-block"></i>
+                        <i class="fa-solid fa-plus fs-4 mb-1 d-block"></i>
                         <span>Add Offer</span>
                     </a>
 
                     <a class="nav-link text-center text-secondary" href="user/profile">
-                        <i class="fa-solid fa-gear fs-5 mb-1 d-block"></i>
+                        <i class="fa-solid fa-gear fs-4 mb-1 d-block"></i>
                         <span>Profile</span>
                     </a>
                 </div>
