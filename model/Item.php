@@ -3,8 +3,7 @@
 require_once "framework/Model.php";
 require_once "utils/AppTime.php";
 
-class Item extends Model
-{
+class Item extends Model {
 
     public function __construct(
         public float $user_bid,
@@ -29,10 +28,74 @@ class Item extends Model
         public bool $buy_now_reached,
         public string $time_left,
         public string $owner_picture
-    ) {}
+    ) {
+    }
 
-    public static function get_item_by_id(int $id)
-    {
+    public static function get_items_by_owner(int $owner_id): array {
+        // Récupère les items du propriétaire, triés par date de fin calculée
+        $sql = "SELECT * FROM items WHERE owner = :owner ORDER BY DATE_ADD(created_at, INTERVAL duration_days DAY) DESC;";
+        $query = self::execute($sql, ["owner" => $owner_id]);
+        $data = $query->fetchAll();
+
+        $items = [];
+
+        // unused variables
+        $user_bid = 0.0;
+        $owner_role = '';
+        $main_image_url = '';
+        $image_urls = [];
+        // $end_at = null;
+        $current_bid = 0.0;
+        $bid_count = 0;
+        $has_bids = false;
+        $is_auction = false;
+        $is_direct_sale = false;
+        $has_buy_now = false;
+        $buy_now_reached = false;
+        $time_left = '';
+        $owner_picture = '';
+
+        foreach ($data as $row) {
+            $items[] = new Item(
+                $user_bid,
+                $row['id'],
+                $row['title'],
+                $row['description'],
+                $row['owner'],
+                $owner_role,
+                $main_image_url,
+                $image_urls,
+                (float)$row['buy_now_price'],
+                (float)$row['starting_bid'],
+                $row['created_at'],
+                new DateTime($row['end_at']),
+                (int)$row['duration_days'],
+                $current_bid,
+                $bid_count,
+                $has_bids,
+                $is_auction,
+                $is_direct_sale,
+                $has_buy_now,
+                $buy_now_reached,
+                $time_left,
+                $owner_picture
+            );
+        }
+
+        return $items;
+    }
+
+    public function get_finish_date(): DateTime {
+        $date = clone $this->created_at;
+        $date->modify("+{$this->duration_days} days");
+        return $date;
+    }
+
+    public function is_sold(): bool {
+        return false;
+    }
+
+    public static function get_item_by_id(int $id) {
         $query = self::execute(
             "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
              FROM v_items_status v  -- <--- C'est ici que la magie opère
@@ -92,8 +155,7 @@ class Item extends Model
         );
     }
 
-    public static function get_user_bid_items(string $pseudo)
-    {
+    public static function get_user_bid_items(string $pseudo) {
         $user_bid_items = [];
 
         $query = self::execute(
@@ -202,8 +264,7 @@ class Item extends Model
         return $user_bid_items;
     }
 
-    public static function get_user_bid(int $item_id, int $user_id)
-    {
+    public static function get_user_bid(int $item_id, int $user_id) {
         $query = self::execute(
             "SELECT b.amount as bid
                                 from bids b 
@@ -226,8 +287,7 @@ class Item extends Model
         return $data['bid'];
     }
 
-    public static function get_user_available_items(string $pseudo)
-    {
+    public static function get_user_available_items(string $pseudo) {
         $user_available_items = [];
 
         $query = self::execute(
