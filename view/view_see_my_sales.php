@@ -79,7 +79,7 @@
           <div class="col">
             <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
               <div class="text-start fs-4 fw-bold text-secondary">TOTAL REVENUE</div>
-              <div class="text-start fs-1">€ 1.688,00</div>
+              <div class="text-start fs-1">€ <?= number_format(array_sum(array_column($sales, 'current_bid')), 2, ",", ".") ?></div>
               <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">Across 2 sales</div>
             </div>
           </div>
