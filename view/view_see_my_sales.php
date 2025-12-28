@@ -80,7 +80,7 @@
             <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
               <div class="text-start fs-4 fw-bold text-secondary">TOTAL REVENUE</div>
               <div class="text-start fs-1">€ <?= number_format(array_sum(array_column($sales, 'current_bid')), 2, ",", ".") ?></div>
-              <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">Across 2 sales</div>
+              <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">Across <?= count($sales) ?> sales</div>
             </div>
           </div>
           <div class="col">
@@ -116,7 +116,7 @@
                 arsort($sells);
 
 
-                // we display his name
+                // 3. we display his name
                 $top_buyer = array_key_first($sells);
                 echo $top_buyer;
                 ?>
