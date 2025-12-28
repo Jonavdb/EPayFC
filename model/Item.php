@@ -27,14 +27,13 @@ class Item extends Model
         public bool $is_direct_sale,
         public bool $has_buy_now,
         public bool $buy_now_reached,
-        public string $time_left,
-        public string $owner_picture
+        public string $time_left
     ) {}
 
     public static function get_item_by_id(int $id)
     {
         $query = self::execute(
-            "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
+            "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role
              FROM v_items_status v  -- <--- C'est ici que la magie opère
              JOIN users u on v.owner = u.id
              WHERE v.id = :item_id",
@@ -45,13 +44,6 @@ class Item extends Model
         if (!$data) {
             return false;
         }
-
-        if (empty($data['owner_picture'])) {
-            $owner_picture = 'test.png';
-        } else {
-            $owner_picture = $data['owner_picture'];
-        }
-
 
         $query_pics = self::execute(
             "SELECT picture_path
@@ -87,8 +79,7 @@ class Item extends Model
             $data['is_direct_sale'],
             $data['has_buy_now'],
             $data['buy_now_reached'],
-            '',
-            $owner_picture
+            ''
         );
     }
 
@@ -196,7 +187,7 @@ class Item extends Model
             $owner_role = '';
             $duration_days = 0;
 
-            $user_bid_items[] = new Item($user_bid, 0, $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, false, false, $has_buy_now, $buy_now_reached, $time_left, '');
+            $user_bid_items[] = new Item($user_bid, 0, $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, false, false, $has_buy_now, $buy_now_reached, $time_left);
         }
 
         return $user_bid_items;
@@ -207,11 +198,8 @@ class Item extends Model
         $query = self::execute(
             "SELECT b.amount as bid
                                 from bids b 
-                                join users u on u.id = b.owner
-                                join v_items_status vis on vis.id = b.item
-                                where b.amount = vis.max_bid
-                                and u.id = :user_id
-                                and vis.id = :item_id;",
+                                where b.owner = :user_id
+                                and b.item = :item_id;",
             [
                 "item_id" => $item_id,
                 "user_id" => $user_id
@@ -333,10 +321,6 @@ class Item extends Model
 
             // we retrieve the price
             $price = $item_data['buy_now_price'];
-            if ($price == null) {
-                $price = 0;
-            }
-
 
             // we retrieve the current bid -> max bid for this item
             $has_bids = $item_data['has_bids'];
@@ -359,7 +343,7 @@ class Item extends Model
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
-            $user_available_items[] = new Item($user_bid, 0, $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
+            $user_available_items[] = new Item($user_bid, 0, $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left);
         }
 
         return $user_available_items;

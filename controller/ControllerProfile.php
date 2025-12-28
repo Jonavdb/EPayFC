@@ -1,6 +1,7 @@
 <?php
 require_once 'framework/Controller.php';
 require_once 'model/User.php';
+require_once 'model/Profile.php';
 
 class ControllerProfile extends Controller
 {
@@ -12,6 +13,11 @@ class ControllerProfile extends Controller
 
     public function see_my_sales(): void
     {
-        (new View("see_my_sales"))->show();
+        $sales = Profile::get_sales("Boris");
+        (new View("see_my_sales"))->show(
+            [
+                "sales" => $sales
+            ]
+        );
     }
 }
