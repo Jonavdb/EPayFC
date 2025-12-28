@@ -143,7 +143,7 @@ class Profile extends Model
             $time_left_datetime = $end_at->diff($today);
             $time_left_debug = $time_left_datetime->invert;
 
-            $purchases[] = new Item($user_bid, $item_data['item_id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
+            $purchases[] = new Item($user_bid, "", $item_data['item_id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
 
         return $purchases;
@@ -203,6 +203,9 @@ class Profile extends Model
         foreach ($data as $item_data) {
             // should be 0/null because user is the owner
             $user_bid = Item::get_user_bid($item_data['item_id'], 4);
+
+            // we retrieve name of bidder
+            $bidder_name = $item_data['bidder_name'];
 
             // we get info of whether the item is in auction or not
             $is_auction = $item_data['is_auction'];
@@ -283,7 +286,7 @@ class Profile extends Model
             $time_left_datetime = $end_at->diff($today);
             $time_left_debug = $time_left_datetime->invert;
 
-            $sales[] = new Item($user_bid, $item_data['item_id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
+            $sales[] = new Item($user_bid, $bidder_name, $item_data['item_id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
 
         return $sales;

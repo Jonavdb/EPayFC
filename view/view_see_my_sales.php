@@ -94,7 +94,6 @@
                   $average_ticket = array_sum(array_column($sales, 'current_bid')) / count($sales);
                   echo number_format($average_ticket, "2", ",", ".");
                 }
-
                 ?>
               </div>
               <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">Median buyer appetite indicator</div>
@@ -103,7 +102,26 @@
           <div class="col">
             <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
               <div class="flex-grow-1 text-start fs-4 fw-bold text-secondary">LOYAL BIDDER</div>
-              <div class="flex-grow-1 text-start fs-2">Quentin</div>
+              <div class="flex-grow-1 text-start fs-2">
+                <?php
+
+                // 1. we map buyer name with the total money he spent to purchase items of user (key:buyer, value:sum_bids)
+                $sells = [];
+                foreach ($sales as $sold_item) {
+                  $bidder_name = $sold_item->bidder_name;
+                  $sells[$bidder_name] = ($sells[$bidder_name] ?? 0) + $sold_item->current_bid;
+                }
+
+                // 2. we sort in descending order to find the name of the best buyer
+                arsort($sells);
+
+
+                // we display his name
+                $top_buyer = array_key_first($sells);
+                echo $top_buyer;
+                ?>
+
+              </div>
               <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">Most reccuring winning bidder</div>
             </div>
           </div>

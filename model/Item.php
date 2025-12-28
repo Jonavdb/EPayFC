@@ -8,6 +8,7 @@ class Item extends Model
 
     public function __construct(
         public float $user_bid,
+        public string $bidder_name,
         public int $id,
         public string $title,
         public string $description,
@@ -60,6 +61,7 @@ class Item extends Model
 
         return new Item(
             0,
+            "",
             (int)$data['id'],
             $data['title'],
             $data['description'],
@@ -186,8 +188,9 @@ class Item extends Model
             $description = '';
             $owner_role = '';
             $duration_days = 0;
+            $bidder_name = "";
 
-            $user_bid_items[] = new Item($user_bid, 0, $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, false, false, $has_buy_now, $buy_now_reached, $time_left);
+            $user_bid_items[] = new Item($user_bid, $bidder_name, 0, $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, false, false, $has_buy_now, $buy_now_reached, $time_left);
         }
 
         return $user_bid_items;
@@ -343,7 +346,7 @@ class Item extends Model
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
-            $user_available_items[] = new Item($user_bid, 0, $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left);
+            $user_available_items[] = new Item($user_bid, "", 0, $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left);
         }
 
         return $user_available_items;
