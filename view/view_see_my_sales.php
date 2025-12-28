@@ -86,7 +86,17 @@
           <div class="col">
             <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
               <div class="flex-grow-1 text-start fs-4 fw-bold text-secondary">AVERAGE TICKET</div>
-              <div class="flex-grow-1 text-start fs-1">€ 422,00</div>
+              <div class="flex-grow-1 text-start fs-1">€
+                <?php
+                if (empty($sales)) {
+                  echo "€ 0,00";
+                } else {
+                  $average_ticket = array_sum(array_column($sales, 'current_bid')) / count($sales);
+                  echo number_format($average_ticket, "2", ",", ".");
+                }
+
+                ?>
+              </div>
               <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">Median buyer appetite indicator</div>
             </div>
           </div>
