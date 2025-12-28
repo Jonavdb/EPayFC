@@ -43,11 +43,9 @@
   </header>
 
   <!-- PAGE CONTENT -->
-
   <main class="flex-grow-1 content-box py-3 mt-5" style="max-width:80%">
 
     <!-- Top container with global infos -->
-
     <div class="p-3 d-flex flex-column h-100 gap-4">
 
       <!-- Description section (title, number of purchases) -->
@@ -71,7 +69,7 @@
         <!--  takes up 5% of row width for centering -->
         <!-- right : placeholder to make page title perfectly centered  -->
         <div class="flex-grow-1 text-end" style="max-width: 30%;">
-          <span class="badge rounded-pill bg-success px-4 py-2">2 sales</span>
+          <span class="badge rounded-pill bg-success px-4 py-2"><?= count($sales) ?> sales</span>
         </div>
       </div>
 
@@ -104,11 +102,9 @@
     </div>
 
     <!-- Bottom container with items cards -->
-
     <div class="p-3 d-flex flex-column justify-content-evenly h-100 mb-5">
 
       <!-- Item cards wrapping container -->
-
       <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 gx-4 gy-5 mb-5">
 
         <!-- GRID CELL = 1 item card (top) + item purchase data (bottom) -->
