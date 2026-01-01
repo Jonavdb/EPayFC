@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -13,7 +13,7 @@
 
 <body class="bg-body-tertiary d-flex align-items-center justify-content-center min-vh-100">
 
-    <main class="container" style="max-width: 500px;">
+    <main class="container" style="max-width: 450px;">
         <div class="card border-danger shadow-lg">
             <div class="card-body text-center p-5">
 
@@ -21,18 +21,19 @@
                     <i class="fa-solid fa-trash-can fa-4x text-danger"></i>
                 </div>
 
-                <h3 class="fw-bold mb-3 text-danger">Are you sure?</h3>
+                <h1 class="fw-bold mb-5 text-danger">Are you sure?</h1>
+                <span class="divider mb-3"></span>
 
-                <p class="text-secondary mb-4">
-                    Do you really want to delete item <strong class="text-white">"<?= htmlspecialchars($item->title) ?>"</strong>
+                <p class="text-light mb-4">
+                    Do you really want to delete item <span class="fw-bold">"<?= htmlspecialchars($item->title) ?>"</span>
                     by <?= htmlspecialchars($user->full_name) ?> and all of its dependencies?
-                    <br><br>
-                    <span class="text-danger fw-bold">This process cannot be undone.</span>
+                    <br>
+                    <br>
+                    This process cannot be undone.
                 </p>
 
-                <form action="item/delete/<?= $item->id ?>" method="post" class="d-flex gap-3 justify-content-center">
-
-                    <a href="item/open/<?= $item->id ?>/from-items" class="btn btn-secondary px-4">
+                <form action="item/delete/<?= $item->id ?>" method="post">
+                    <a href="item/open/<?= $item->id ?>" class="btn btn-secondary px-4">
                         Cancel
                     </a>
 
@@ -40,7 +41,6 @@
                         Delete
                     </button>
                 </form>
-
             </div>
         </div>
     </main>
