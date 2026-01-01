@@ -167,7 +167,7 @@
                         <span>Browse</span>
                     </a>
 
-                    <a class="nav-link text-center text-secondary" href="member/items">
+                    <a class="nav-link text-center text-secondary" href="item/list">
                         <i class="fas fa-home fs-4 mb-1 d-block"></i>
                         <span>My Items</span>
                     </a>

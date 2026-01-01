@@ -3,8 +3,7 @@
 require_once "framework/Model.php";
 require_once "utils/AppTime.php";
 
-class Item extends Model
-{
+class Item extends Model {
 
     public function __construct(
         public float $user_bid,
@@ -29,10 +28,96 @@ class Item extends Model
         public bool $buy_now_reached,
         public string $time_left,
         public string $owner_picture
-    ) {}
+    ) {
+    }
 
-    public static function get_item_by_id(int $id)
-    {
+    public static function get_items_by_owner(int $owner_id): array {
+        // Récupère les items du propriétaire, triés par date de fin calculée
+        $sql = "SELECT * FROM v_items_status WHERE owner = :owner ORDER BY end_at DESC";
+        $query = self::execute($sql, ["owner" => $owner_id]);
+        $data = $query->fetchAll();
+
+        $items = [];
+
+        // unused variables
+        $user_bid = 0.0;
+        $owner_role = '';
+        $main_image_url = '';
+        $image_urls = [];
+        $owner_picture = '';
+        $time_left = '';
+
+        foreach ($data as $row) {
+            // GESTION DES IMAGES
+            $query_image_urls = self::execute(
+                "SELECT picture_path FROM item_pictures p WHERE p.item = :item_id ORDER BY priority ASC",
+                ["item_id" => $row['id']]
+            );
+
+            // On récupère un tableau simple de chaînes (chemins)
+            $image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
+
+            // Image par défaut (Placeholder)
+            $main_image_url = "uploads/items/item_placeholder.png";
+
+            // Si on a trouvé des images en base de données
+            if (!empty($image_urls)) {
+                $first_image = $image_urls[0];
+
+                // On génère le chemin vers la miniature (_thumbnail)
+                $path_parts = pathinfo($first_image);
+
+                // Sécurité : on vérifie que pathinfo a réussi
+                if (isset($path_parts['dirname'], $path_parts['filename'], $path_parts['extension'])) {
+                    $main_image_url = $path_parts['dirname'] . '/' .
+                        $path_parts['filename'] .
+                        '_thumbnail.' .
+                        $path_parts['extension'];
+                } else {
+                    // Si le chemin est bizarre, on garde l'original
+                    $main_image_url = $first_image;
+                }
+            } else {
+                // Si pas d'image, on initialise un tableau vide pour éviter les erreurs plus tard
+                $image_urls = [];
+            }
+
+            // PRÉPARATION DES DONNÉES (Dates & Prix)
+            $created_at_object = new DateTime($row['created_at']);
+            $end_at_object = new DateTime($row['end_at']);
+            $current_bid = isset($row['max_bid']) ? (float)$row['max_bid'] : 0.0;
+
+            // CRÉATION DE L'OBJET ITEM
+            $items[] = new Item(
+                $user_bid,
+                $row['id'],
+                $row['title'],
+                $row['description'],
+                $row['owner'],
+                $owner_role,
+                $main_image_url,
+                $image_urls,
+                $row['buy_now_price'],
+                $row['starting_bid'],
+                $created_at_object,
+                $end_at_object,
+                $row['duration_days'],
+                $current_bid,
+                $row['bid_count'],
+                $row['has_bids'],
+                $row['is_auction'],
+                $row['is_direct_sale'],
+                $row['has_buy_now'],
+                $row['buy_now_reached'],
+                $time_left,
+                $owner_picture
+            );
+        }
+
+        return $items;
+    }
+
+    public static function get_item_by_id(int $id) {
         $query = self::execute(
             "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
              FROM v_items_status v  -- <--- C'est ici que la magie opère
@@ -92,8 +177,7 @@ class Item extends Model
         );
     }
 
-    public static function get_user_bid_items(string $pseudo)
-    {
+    public static function get_user_bid_items(string $pseudo) {
         $user_bid_items = [];
 
         $query = self::execute(
@@ -202,8 +286,7 @@ class Item extends Model
         return $user_bid_items;
     }
 
-    public static function get_user_bid(int $item_id, int $user_id)
-    {
+    public static function get_user_bid(int $item_id, int $user_id) {
         $query = self::execute(
             "SELECT b.amount as bid
                                 from bids b 
@@ -226,8 +309,7 @@ class Item extends Model
         return $data['bid'];
     }
 
-    public static function get_user_available_items(string $pseudo)
-    {
+    public static function get_user_available_items(string $pseudo) {
         $user_available_items = [];
 
         $query = self::execute(
