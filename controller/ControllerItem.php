@@ -9,6 +9,7 @@ class ControllerItem extends Controller {
         $this->redirect("item", "list");
     }
 
+    // My items
     public function list(): void {
         $user = $this->get_user_or_redirect();
         $items = Item::get_items_by_owner($user->id);
@@ -47,7 +48,7 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    /* Prépare les données pour l'affichage */
+    /* Helper pour My Items : Prépare les données pour l'affichage */
     private function prepare_item_data(Item $item, DateTime $now): object {
         $is_closed = $item->end_at <= $now;
 
@@ -74,5 +75,38 @@ class ControllerItem extends Controller {
             'extra_images' => $extra_image_count,
             'context' => ''               // Sera rempli dans la boucle list()
         ];
+    }
+
+    // delete item
+    public function delete($id = null): void {
+        if ($id === null && isset($_GET['param1'])) {
+            $id = $_GET['param1'];
+        }
+
+        if (!$id) {
+            $this->redirect("item", "list");
+            return;
+        }
+
+        $user = $this->get_user_or_redirect();
+        $item = Item::get_item_by_id($id);
+
+        // Vérification : L'item existe
+        if (!$item) {
+            $this->redirect("item", "list");
+            return;
+        }
+
+        // LOGIQUE DE SUPPRESSION (Si on a cliqué sur "Delete" - POST)
+        if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            Item::delete($id);
+            $this->redirect("item", "list");
+        } else {
+            // LOGIQUE D'AFFICHAGE
+            (new View("delete_item"))->show([
+                "item" => $item,
+                "user" => $user
+            ]);
+        }
     }
 }

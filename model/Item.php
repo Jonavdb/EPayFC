@@ -177,6 +177,17 @@ class Item extends Model {
         );
     }
 
+    public static function delete(int $id) {
+        // D'abord supprimer les dépendances (Images, Enchères...)
+        self::execute("DELETE FROM item_pictures WHERE item = :item_id", ["item_id" => $id]);
+        self::execute("DELETE FROM bids WHERE item = :item_id", ["item_id" => $id]);
+
+        // Supprimer l'item
+        self::execute("DELETE FROM items WHERE id = :item_id", ["item_id" => $id]);
+
+        return true;
+    }
+
     public static function get_user_bid_items(string $pseudo) {
         $user_bid_items = [];
 

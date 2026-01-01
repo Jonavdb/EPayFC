@@ -52,7 +52,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
   </style>
 </head>
 
-<body>
+<body class="container">
   <nav class="navbar fixed-top navbar-dark bg-dark">
     <div class="container-fluid d-flex align-items-center">
       <div class="left-zone">
@@ -94,9 +94,9 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card text-bg-dark mb-3 border-light">
+        <div class="card text-bg-dark mb-3">
           <div class="card-body">
-            <h5>Pricing</h5>
+            <p class="fw-bold">Pricing</p>
             <?php if (!$item->is_direct_sale) { ?>
               <div class="d-flex justify-content-between mb-2">
                 <span>Current Bid</span>
@@ -177,55 +177,53 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
             <?php } ?>
           </div>
         </div>
-        <div class="card text-bg-dark mb-3 border-light">
+        <div class="card text-bg-dark mb-3">
           <div class="card-body">
-            <h5>Seller</h5>
-            <div class="d-flex align-items-center mt-2">
-
-              <img src="<?= $item->owner_picture ?>"
-                alt="Avatar"
-                class="rounded-circle me-2 border border-secondary"
-                style="width: 40px; height: 40px; object-fit: cover;">
-
-              <div class="d-flex flex-column justify-content-center">
-
-                <div class="fw-bold">
-                  <?= $item->owner_name ?>
-                </div>
-
-                <div class="small text-secondary">
-                  <?= $item->owner_role ?>
-                </div>
-
+            <p class="fw-bold">Seller Information</p>
+            <div class="d-flex align-items-center">
+              <div class="me-3">
+                <img src="<?= $item->owner_picture ?>"
+                  alt="Avatar"
+                  class="rounded-circle me-2 border border-secondary"
+                  style="width: 40px; height: 40px; object-fit: cover;">
               </div>
-
+              <div>
+                <div class="d-flex justify-content-start">
+                  <p class="fw-bold text-light mb-0">
+                    <?= $item->owner_name ?>
+                  </p>
+                </div>
+                <p class="mb-0 text-secondary">
+                  <?= ucfirst($item->owner_role) ?>
+                </p>
+              </div>
             </div>
           </div>
         </div>
         <?php if ($current_user === $item->owner_name && (!$item->has_bids)) { ?>
-          <div class="card text-bg-dark mb-3 border light">
+          <div class="card text-bg-dark mb-3">
             <div class="card-body">
-              <h5>Manage your Item</h5>
+              <p class="fw-bold">Manage your Item</p>
+
               <div class="d-grid gap-2">
                 <a href="index.php?controller=ViewOpenItem&action=edit&param1=<?= $item->id ?>"
-                  class="btn btn-outline-secondary text-start">
-                  <i class="fa-solid fa-pen me-2"></i> Edit Item Details
+                  class="btn btn-outline-secondary w-100 text-center fw-bold fs-5 text-decoration-none"">
+                  <i class=" fa-solid fa-pen me-2"></i> Edit Item Details
                 </a>
 
                 <a href="index.php?controller=ViewOpenItem&action=manage_images&param1=<?= $item->id ?>"
-                  class="btn btn-outline-info text-start">
-                  <i class="fa-solid fa-image me-2"></i> Manage Images
+                  class="btn btn-outline-info w-100 text-center fw-bold fs-5 text-decoration-none"">
+                  <i class=" fa-solid fa-image me-2"></i> Manage Images
                 </a>
 
-                <a href="index.php?controller=ViewOpenItem&action=delete_item&param1=<?= $item->id ?>"
-                  class="btn btn-outline-danger text-start">
-                  <i class="fa-solid fa-trash me-2"></i> Delete Item
+                <a href="item/delete/<?= $item->id ?>" class="btn btn-danger w-100 text-center fw-bold fs-5 text-decoration-none">
+                  <i class="fa-solid fa-trash me-2"></i>Delete Item
                 </a>
               </div>
             </div>
           </div>
         <?php } elseif ($current_user === $item->owner_name && ($item->has_bids)) { ?>
-          <div class="card text-bg-dark mb-3 border-light">
+          <div class="card text-bg-dark mb-3">
             <div class="card-body">
               <h5>Vous ne pouvez plus modifier les paramètres de votre objet car il existe des enchères dessus</h5>
             </div>
