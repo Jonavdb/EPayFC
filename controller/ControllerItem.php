@@ -4,12 +4,15 @@ require_once "framework/Controller.php";
 require_once "model/User.php";
 require_once "model/Item.php";
 
-class ControllerItem extends Controller {
-    public function index(): void {
+class ControllerItem extends Controller
+{
+    public function index(): void
+    {
         $this->redirect("item", "list");
     }
 
-    public function list(): void {
+    public function list(): void
+    {
         $user = $this->get_user_or_redirect();
         $items = Item::get_items_by_owner($user->id);
 
@@ -48,7 +51,8 @@ class ControllerItem extends Controller {
     }
 
     /* Prépare les données pour l'affichage */
-    private function prepare_item_data(Item $item, DateTime $now): object {
+    private function prepare_item_data(Item $item, DateTime $now): object
+    {
         $is_closed = $item->end_at <= $now;
 
         // Calcul du texte temps
@@ -74,5 +78,10 @@ class ControllerItem extends Controller {
             'extra_images' => $extra_image_count,
             'context' => ''               // Sera rempli dans la boucle list()
         ];
+    }
+
+    public function add_edit_item()
+    {
+        (new View("add_edit_item"))->show([]);
     }
 }
