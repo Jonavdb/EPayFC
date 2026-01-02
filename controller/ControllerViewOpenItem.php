@@ -86,6 +86,17 @@ class ControllerViewOpenItem extends Controller
         $this->redirect("ViewOpenItem", "manage_images", $item_id);
     }
 
+    public function delete_images()
+    {
+        $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
+        $filename = isset($_POST['image_filename']) ? $_POST['image_filename'] : '';
+
+        if ($item_id > 0 && !empty($filename)) {
+            Item::delete_images($filename, $item_id);
+        }
+        $this->redirect("ViewOpenItem", "manage_images", $item_id);
+    }
+
     public function new_bid()
     {
 

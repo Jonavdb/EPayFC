@@ -436,4 +436,42 @@ class Item extends Model
             );
         }
     }
+
+    public static function delete_images(string $filename, int $item_id)
+    {
+        $query = self::execute(
+            "SELECT priority, picture_path 
+         FROM item_pictures 
+         WHERE item = :item_id",
+            ["item_id" => $item_id]
+        );
+        $pictures = $query->fetchAll();
+
+        $image_to_delete = null;
+
+        foreach ($pictures as $pic) {
+            if (basename($pic['picture_path']) === $filename) {
+                $image_to_delete = $pic;
+                break;
+            }
+        }
+
+        if ($image_to_delete) {
+
+            self::execute(
+                "DELETE FROM item_pictures WHERE item = :item_id AND priority = :priority",
+                [
+                    "item_id" => $item_id,
+                    "priority" => $image_to_delete['priority']
+                ]
+            );
+            self::execute(
+                "UPDATE item_pictures SET priority = priority - 1 WHERE item = :item_id AND priority > :deleted_priority",
+                [
+                    "item_id" => $item_id,
+                    "deleted_priority" => $image_to_delete['priority']
+                ]
+            );
+        }
+    }
 }

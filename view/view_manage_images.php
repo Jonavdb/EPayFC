@@ -124,11 +124,10 @@
                                         </button>
                                     </form>
 
-                                    <form action="index.php?controller=ViewOpenItem&action=delete_image" method="POST" class="m-0">
+                                    <form action="index.php?controller=ViewOpenItem&action=delete_images" method="POST" class="m-0">
                                         <input type="hidden" name="item_id" value="<?= $item->id ?>">
                                         <input type="hidden" name="image_filename" value="<?= basename($image_url) ?>">
-
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete?');">
+                                        <button type="submit" class="btn btn-sm btn-danger">
                                             <i class="fa-solid fa-xmark"></i>
                                         </button>
                                     </form>
