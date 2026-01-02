@@ -474,4 +474,24 @@ class Item extends Model
             );
         }
     }
+
+    public static function add_picture(int $item_id, string $path)
+    {
+
+        $query = self::execute(
+            "SELECT MAX(priority) as max_p FROM item_pictures WHERE item = :item_id",
+            ["item_id" => $item_id]
+        );
+        $data = $query->fetch();
+        $next_priority = ($data['max_p']) ? $data['max_p'] + 1 : 1;
+
+        self::execute(
+            "INSERT INTO item_pictures (item, picture_path, priority) VALUES (:item, :path, :priority)",
+            [
+                "item"     => $item_id,
+                "path"     => $path,
+                "priority" => $next_priority
+            ]
+        );
+    }
 }

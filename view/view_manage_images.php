@@ -34,7 +34,7 @@
     <nav class="navbar fixed-top navbar-dark bg-dark">
         <div class="container-fluid d-flex align-items-center">
             <div class="left-zone">
-                <a href="index.php?controller=ViewOpenItem&action=show_details&param1=<?= $item->id ?>" class="text-decoration-none text-secondary">
+                <a href="ViewOpenItem/show_details/<?= $item->id ?>" class="text-decoration-none text-secondary">
                     <i class="fa-solid fa-arrow-left" style="color: #2D68C4; font-size: 22px;"></i>
                 </a>
             </div>

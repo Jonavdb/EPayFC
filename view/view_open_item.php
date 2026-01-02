@@ -212,15 +212,17 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
                   <i class="fa-solid fa-pen me-2"></i> Edit Item Details
                 </a>
 
-                <a href="index.php?controller=ViewOpenItem&action=manage_images&param1=<?= $item->id ?>"
-                  class="btn btn-outline-info text-start">
-                  <i class="fa-solid fa-image me-2"></i> Manage Images
-                </a>
+                <a href="index.php?controller=ViewOpenItem&action=manage_images&param1=<?= $item->id ?>" ...>
 
-                <a href="index.php?controller=ViewOpenItem&action=delete_item&param1=<?= $item->id ?>"
-                  class="btn btn-outline-danger text-start">
-                  <i class="fa-solid fa-trash me-2"></i> Delete Item
-                </a>
+                  <a href="ViewOpenItem/manage_images/<?= $item->id ?>"
+                    class="btn btn-outline-info text-start">
+                    <i class="fa-solid fa-image me-2"></i> Manage Images
+                  </a>
+
+                  <a href="index.php?controller=ViewOpenItem&action=delete_item&param1=<?= $item->id ?>"
+                    class="btn btn-outline-danger text-start">
+                    <i class="fa-solid fa-trash me-2"></i> Delete Item
+                  </a>
               </div>
             </div>
           </div>
