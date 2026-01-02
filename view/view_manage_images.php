@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <title>Item Open</title>
+    <title>Manage images</title>
     <style>
         body {
             display: block;
@@ -86,7 +86,57 @@
                 <?php if (empty($item->image_urls)) { ?>
                     <p class="text-secondary m-0">No images uploaded yet.</p>
                 <?php } else { ?>
+                    <div class="d-flex flex-wrap gap-3">
 
+                        <?php
+                        // On compte les images pour savoir quand arrêter le bouton "droite"
+                        $total_images = count($item->image_urls);
+
+                        foreach ($item->image_urls as $index => $image_url):
+                        ?>
+
+                            <div class="card border-secondary bg-dark" style="width: 220px;">
+
+                                <div class="bg-white rounded-top" style="height: 150px;">
+                                    <img src="<?= $image_url ?>"
+                                        class="w-100 h-100"
+                                        style="object-fit: contain;"
+                                        alt="Image">
+                                </div>
+
+                                <div class="card-body d-flex justify-content-between align-items-center p-3">
+
+                                    <form action="index.php?controller=ViewOpenItem&action=move_image_left" method="POST" class="m-0">
+                                        <input type="hidden" name="item_id" value="<?= $item->id ?>">
+                                        <input type="hidden" name="image_index" value="<?= $index ?>">
+
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary" <?= $index === 0 ? 'disabled' : '' ?>>
+                                            <i class="fa-solid fa-arrow-left"></i>
+                                        </button>
+                                    </form>
+
+                                    <form action="index.php?controller=ViewOpenItem&action=move_image_right" method="POST" class="m-0">
+                                        <input type="hidden" name="item_id" value="<?= $item->id ?>">
+                                        <input type="hidden" name="image_index" value="<?= $index ?>">
+
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary" <?= $index === ($total_images - 1) ? 'disabled' : '' ?>>
+                                            <i class="fa-solid fa-arrow-right"></i>
+                                        </button>
+                                    </form>
+
+                                    <form action="index.php?controller=ViewOpenItem&action=delete_image" method="POST" class="m-0">
+                                        <input type="hidden" name="item_id" value="<?= $item->id ?>">
+                                        <input type="hidden" name="image_filename" value="<?= basename($image_url) ?>">
+
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete?');">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                 <?php } ?>
             </div>
         </div>

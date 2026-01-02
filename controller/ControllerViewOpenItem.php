@@ -66,6 +66,26 @@ class ControllerViewOpenItem extends Controller
         ]);
     }
 
+    public function move_image_left()
+    {
+        $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
+        $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
+        if ($item_id > 0) {
+            Item::change_pics_left($image_index, $item_id);
+        }
+        $this->redirect("ViewOpenItem", "manage_images", $item_id);
+    }
+
+    public function move_image_right()
+    {
+        $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
+        $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
+        if ($item_id > 0) {
+            Item::change_pics_right($image_index, $item_id);
+        }
+        $this->redirect("ViewOpenItem", "manage_images", $item_id);
+    }
+
     public function new_bid()
     {
 
