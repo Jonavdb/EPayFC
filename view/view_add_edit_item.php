@@ -43,17 +43,17 @@
             </div>
         </div>
     </nav>
-    <form action="index.php?controller=Item&action=add_edit_item" method="POST">
+    <form action="index.php?controller=Item&action=add_edit_item" method="POST" class="bg-transparent">
         <div class="container-fluid mb-4 px-5" style="margin-top: 30px;">
             <div class="card text-bg-dark border-secondary">
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
                     <h5 class="mb-0 text-white text-start">Basic Informations</h5>
                 </div>
                 <div class="card-body">
-                    <div class="mb-3">
+                    <div class=" mb-3">
                         <label for="title" class="form-label fw-bold">Item Title *</label>
                         <input type="text"
-                            class="form-control bg-dark text-white border-secondary is-invalid"
+                            class="form-control bg-black bg-opacity-25 text-white border-secondary is-invalid"
                             id="title"
                             name="title"
                             value="ça dépend">
@@ -63,7 +63,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label fw-bold">Description</label>
-                        <textarea class="form-control bg-dark text-white border-secondary"
+                        <textarea class="form-control bg-black bg-opacity-25 text-white border-secondary"
                             id="description"
                             name="description"
                             rows="4">test</textarea>
@@ -71,7 +71,7 @@
                     <div class="mb-3">
                         <label for="duration" class="form-label fw-bold">Sale Duration(days) * </label>
                         <input type="number"
-                            class="form-control bg-dark text-white border-secondary"
+                            class="form-control bg-black bg-opacity-25 text-white border-secondary"
                             id="duration"
                             name="duration"
                             value="7">
@@ -85,36 +85,61 @@
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
                     <h5 class="mb-0 text-white text-start">Sale Type</h5>
                 </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="starting_bid" class="form-label fw-bold">Starting Bid </label>
-                        <input type="number"
-                            class="form-control bg-dark text-white border-secondary"
-                            id="starting_bid"
-                            name="starting_bid"
-                            value="888">
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="instant" class="form-label fw-bold">Instant Purchase Price (optional) </label>
-                        <input type="number"
-                            class="form-control bg-dark text-white border-secondary"
-                            id="instant"
-                            name="instant"
-                            value="888">
-                    </div>
-                </div>
 
                 <div class="card-body">
-                    <div class="mb-3">
-                        <label for="direct" class="form-label fw-bold">Sale Price </label>
-                        <input type="number"
-                            class="form-control bg-dark text-white border-secondary"
-                            id="direct"
-                            name="direct"
-                            value="888">
+
+                    <div class="card bg-dark border-primary mb-3">
+                        <div class="card-header border-primary text-primary bg-primary bg-opacity-10 fw-bold">
+                            <i class="fa-solid fa-gavel me-2"></i> Option 1: Auction
+                        </div>
+
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="starting_bid" class="form-label fw-bold text-white">Starting Bid</label>
+                                <div class="input-group">
+                                    <input type="number"
+                                        class="form-control bg-black bg-opacity-25 text-white border-secondary"
+                                        id="starting_bid"
+                                        name="starting_bid"
+                                        value="888">
+                                    <span class="input-group-text bg-dark text-white border-secondary">€</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="instant" class="form-label fw-bold text-white">Instant Purchase Price (optional)</label>
+                                <div class="input-group">
+                                    <input type="number"
+                                        class="form-control bg-black bg-opacity-25 text-white border-secondary"
+                                        id="instant"
+                                        name="instant"
+                                        value="888">
+                                    <span class="input-group-text bg-dark text-white border-secondary">€</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="card bg-dark border-success mb-0">
+                        <div class="card-header border-success text-success bg-success bg-opacity-10 fw-bold">
+                            <i class="fa-solid fa-cart-shopping me-2"></i> Option 2: Direct Sale
+                        </div>
+
+                        <div class="card-body">
+                            <div class="mb-0">
+                                <label for="direct" class="form-label fw-bold text-white">Sale Price</label>
+                                <div class="input-group">
+                                    <input type="number"
+                                        class="form-control bg-black bg-opacity-25 text-white border-secondary"
+                                        id="direct"
+                                        name="direct"
+                                        value="888">
+                                    <span class="input-group-text bg-dark text-white border-secondary">€</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
