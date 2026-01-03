@@ -32,18 +32,28 @@
 
 <body>
     <nav class="navbar fixed-top navbar-dark bg-dark">
-        <div class="container-fluid d-flex align-items-center">
-            <div class="left-zone">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
                 <a href="ViewOpenItem/show_details/18" class="text-decoration-none text-secondary">
                     <i class="fa-solid fa-arrow-left" style="color: #2D68C4; font-size: 22px;"></i>
                 </a>
             </div>
             <div class="flex-grow-1 text-center">
-                <h2 style="color: #2D68C4; margin: 0;">Add Item</h2>
+                <h2 style="color: #2D68C4; margin: 0;">
+                    <?php $item->id > 0 ? 'Edit Item' : 'Add item' ?>
+                </h2>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit"
+                    form="itemForm"
+                    class="btn fw-bold text-white">
+                    Save
+                </button>
             </div>
         </div>
     </nav>
-    <form action="index.php?controller=Item&action=add_edit_item" method="POST" class="bg-transparent">
+    <form id="itemForm" action="index.php?controller=Item&action=add_edit_item<?php $item->id > 0 ? '$param1=' . $item->id : '' ?> " method="POST" class="bg-transparent">
         <div class="container-fluid mb-4 px-5" style="margin-top: 30px;">
             <div class="card text-bg-dark border-secondary">
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
@@ -53,28 +63,35 @@
                     <div class=" mb-3">
                         <label for="title" class="form-label fw-bold">Item Title *</label>
                         <input type="text"
-                            class="form-control bg-black bg-opacity-25 text-white border-secondary is-invalid"
+                            class="form-control bg-black bg-opacity-25 text-white border-secondary <?= isset($errors['title']) ? 'is-invalid' : '' ?>"
                             id="title"
                             name="title"
-                            value="ça dépend">
-                        <div class="invalid-feedback">
-                            Title lenght must be between 3 and 255 characters.
-                        </div>
+                            value="<?php echo htmlspecialchars($item->title) ?>">
+                        <?php if (isset($errors['title'])) { ?>
+                            <div class="invalid-feedback">
+                                <?php echo $errors['title'] ?>
+                            </div>
+                        <?php } ?>
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label fw-bold">Description</label>
                         <textarea class="form-control bg-black bg-opacity-25 text-white border-secondary"
                             id="description"
                             name="description"
-                            rows="4">test</textarea>
+                            rows="4"><?php echo html_entity_decode($item->description) ?></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="duration" class="form-label fw-bold">Sale Duration(days) * </label>
                         <input type="number"
-                            class="form-control bg-black bg-opacity-25 text-white border-secondary"
+                            class="form-control bg-black bg-opacity-25 text-white border-secondary <?= isset($errors['duration']) ? 'is-invalid' : '' ?>"
                             id="duration"
                             name="duration"
-                            value="7">
+                            value="<?php echo $item->duration_days ?>">
+                        <?php if (isset($errors['duration'])) { ?>
+                            <div class="invalid-feedback">
+                                <?php echo $errors['duration'] ?>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -98,10 +115,15 @@
                                 <label for="starting_bid" class="form-label fw-bold text-white">Starting Bid</label>
                                 <div class="input-group">
                                     <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary"
+                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['starting_bid']) ? 'is-invalid' : '' ?>"
                                         id="starting_bid"
                                         name="starting_bid"
-                                        value="888">
+                                        value="<?php echo ($item->starting_bid > 0) ? $item->starting_bid : '' ?>">
+                                    <?php if (isset($errors['starting_bid'])) { ?>
+                                        <div class="invalid-feedback">
+                                            <?php echo $errors['starting_bid'] ?>
+                                        </div>
+                                    <?php } ?>
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                 </div>
                             </div>
@@ -110,10 +132,13 @@
                                 <label for="instant" class="form-label fw-bold text-white">Instant Purchase Price (optional)</label>
                                 <div class="input-group">
                                     <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary"
+                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['buy_now_price']) ? 'is-invalid' : '' ?>"
                                         id="instant"
                                         name="instant"
-                                        value="888">
+                                        value="<?php echo ($item->has_buy_now && $item->is_auction && $item->buy_now_price > 0) ? $item->buy_now_price : '' ?>">
+                                    <?php if (isset($errors['buy_now_price'])): ?>
+                                        <div class="invalid-feedback"><?php echo $errors['buy_now_price'] ?></div>
+                                    <?php endif; ?>
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                 </div>
                             </div>
@@ -130,10 +155,13 @@
                                 <label for="direct" class="form-label fw-bold text-white">Sale Price</label>
                                 <div class="input-group">
                                     <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary"
+                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['sale_price']) ? 'is-invalid' : '' ?>"
                                         id="direct"
                                         name="direct"
-                                        value="888">
+                                        value="<?php echo ($item->is_direct_sale && $item->buy_now_price > 0) ? $item->buy_now_price : ''  ?>">
+                                    <?php if (isset($errors['sale_price'])): ?>
+                                        <div class="invalid-feedback"><?php echo $errors['sale_price'] ?></div>
+                                    <?php endif; ?>
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                 </div>
                             </div>

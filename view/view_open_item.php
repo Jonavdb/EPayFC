@@ -207,7 +207,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
             <div class="card-body">
               <h5>Manage your Item</h5>
               <div class="d-grid gap-2">
-                <a href="index.php?controller=ViewOpenItem&action=edit&param1=<?= $item->id ?>"
+                <a href="index.php?controller=Item&action=add_edit_item&param1=<?= $item->id ?>"
                   class="btn btn-outline-secondary text-start">
                   <i class="fa-solid fa-pen me-2"></i> Edit Item Details
                 </a>
