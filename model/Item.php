@@ -517,4 +517,134 @@ class Item extends Model
         $this->id = $newID;
         return $newID;
     }
+
+    public static function change_pics_left(int $image_id, int $item_id)
+    {
+        $query = self::execute(
+            "SELECT priority, picture_path 
+         FROM item_pictures 
+         WHERE item = :item_id 
+         ORDER BY priority ASC",
+            ["item_id" => $item_id]
+        );
+        $pictures = $query->fetchAll();
+
+        if ($image_id > 0 && isset($pictures[$image_id])) {
+
+            $current_img = $pictures[$image_id];
+            $previous_img = $pictures[$image_id - 1];
+
+            $current_priority = $current_img['priority'];
+            $previous_priority = $previous_img['priority'];
+
+            self::execute(
+                "UPDATE item_pictures SET priority = -1 WHERE item = :item AND priority = :current_priority",
+                ["item" => $item_id, "current_priority" => $current_priority]
+            );
+
+            self::execute(
+                "UPDATE item_pictures SET priority = :current_priority WHERE item = :item AND priority = :previous_priority",
+                ["item" => $item_id, "previous_priority" => $previous_priority, "current_priority" => $current_priority]
+            );
+
+            self::execute(
+                "UPDATE item_pictures SET priority = :previous_priority WHERE item = :item AND priority = -1",
+                ["item" => $item_id, "previous_priority" => $previous_priority]
+            );
+        }
+    }
+
+    public static function change_pics_right(int $image_id, int $item_id)
+    {
+        $query = self::execute(
+            "SELECT priority, picture_path 
+         FROM item_pictures 
+         WHERE item = :item_id 
+         ORDER BY priority ASC",
+            ["item_id" => $item_id]
+        );
+        $pictures = $query->fetchAll();
+
+        if ($image_id < count($pictures) - 1 && isset($pictures[$image_id])) {
+
+            $current_img = $pictures[$image_id];
+            $next_img = $pictures[$image_id + 1];
+
+            $current_priority = $current_img['priority'];
+            $next_priority = $next_img['priority'];
+
+            self::execute(
+                "UPDATE item_pictures SET priority = -1 WHERE item = :item AND priority = :current_priority",
+                ["item" => $item_id, "current_priority" => $current_priority]
+            );
+
+            self::execute(
+                "UPDATE item_pictures SET priority = :current_priority WHERE item = :item AND priority = :next_priority",
+                ["item" => $item_id, "next_priority" => $next_priority, "current_priority" => $current_priority]
+            );
+
+            self::execute(
+                "UPDATE item_pictures SET priority = :next_priority WHERE item = :item AND priority = -1",
+                ["item" => $item_id, "next_priority" => $next_priority]
+            );
+        }
+    }
+
+    public static function delete_images(string $filename, int $item_id)
+    {
+        $query = self::execute(
+            "SELECT priority, picture_path 
+         FROM item_pictures 
+         WHERE item = :item_id",
+            ["item_id" => $item_id]
+        );
+        $pictures = $query->fetchAll();
+
+        $image_to_delete = null;
+
+        foreach ($pictures as $pic) {
+            if (basename($pic['picture_path']) === $filename) {
+                $image_to_delete = $pic;
+                break;
+            }
+        }
+
+        if ($image_to_delete) {
+
+            self::execute(
+                "DELETE FROM item_pictures WHERE item = :item_id AND priority = :priority",
+                [
+                    "item_id" => $item_id,
+                    "priority" => $image_to_delete['priority']
+                ]
+            );
+            self::execute(
+                "UPDATE item_pictures SET priority = priority - 1 WHERE item = :item_id AND priority > :deleted_priority",
+                [
+                    "item_id" => $item_id,
+                    "deleted_priority" => $image_to_delete['priority']
+                ]
+            );
+        }
+    }
+
+    public static function add_picture(int $item_id, string $path)
+    {
+
+        $query = self::execute(
+            "SELECT MAX(priority) as max_p FROM item_pictures WHERE item = :item_id",
+            ["item_id" => $item_id]
+        );
+        $data = $query->fetch();
+        $next_priority = ($data['max_p']) ? $data['max_p'] + 1 : 1;
+
+        self::execute(
+            "INSERT INTO item_pictures (item, picture_path, priority) VALUES (:item, :path, :priority)",
+            [
+                "item"     => $item_id,
+                "path"     => $path,
+                "priority" => $next_priority
+            ]
+        );
+    }
 }
