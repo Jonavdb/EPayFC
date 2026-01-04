@@ -86,9 +86,19 @@ class ControllerItem extends Controller
         $errors = [];
         $item = null;
         $user = $this->get_user_or_redirect();
+        $id = $_GET['param1'] ?? $_POST['id'] ?? null;
 
-        if (isset($_GET['param1']) && !empty($_GET['param1'])) {
-            $item = Item::get_item_by_id($_GET['param1']);
+        if ($id && !empty($id)) {
+
+            $item = Item::get_item_by_id($id);
+            if ($item) {
+
+                if ($item->owner_name !== $user->pseudo || ($item->is_auction && $item->has_bids)) {
+                    $this->redirect("ViewOpenItem", "show_details", $item->id);
+                    exit();
+                }
+                $item->id = (int)$id;
+            }
         } else {
             $now = new DateTime(AppTime::get_current_datetime());
             $end = (clone $now)->modify('+7 days');
@@ -143,7 +153,7 @@ class ControllerItem extends Controller
 
                 if ($buy_now_price !== null && $buy_now_price > 0) {
                     if ($buy_now_price < $starting_bid) {
-                        $errors['buy_now_price'] = "Buy now price must be higher than starting bid price";
+                        $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
                     }
                     $item->buy_now_price = $buy_now_price;
                     $item->has_buy_now = true;
@@ -163,10 +173,9 @@ class ControllerItem extends Controller
             } else {
                 $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
             }
-
             if (empty($errors)) {
-                //$item->save(); TODO
-                $this->redirect("Item, list");
+                $item->save();
+                $this->redirect("ViewOpenItem", "show_details", $item->id);
             }
         }
 

@@ -54,6 +54,7 @@
         </div>
     </nav>
     <form id="itemForm" action="index.php?controller=Item&action=add_edit_item<?php $item->id > 0 ? '$param1=' . $item->id : '' ?> " method="POST" class="bg-transparent">
+        <input type="hidden" name="id" value="<?= $item->id ?>">
         <div class="container-fluid mb-4 px-5" style="margin-top: 30px;">
             <div class="card text-bg-dark border-secondary">
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
@@ -66,7 +67,7 @@
                             class="form-control bg-black bg-opacity-25 text-white border-secondary <?= isset($errors['title']) ? 'is-invalid' : '' ?>"
                             id="title"
                             name="title"
-                            value="<?php echo htmlspecialchars($item->title) ?>">
+                            value="<?php echo html_entity_decode($item->title) ?>">
                         <?php if (isset($errors['title'])) { ?>
                             <div class="invalid-feedback">
                                 <?php echo $errors['title'] ?>
@@ -115,16 +116,22 @@
                                 <label for="starting_bid" class="form-label fw-bold text-white">Starting Bid</label>
                                 <div class="input-group">
                                     <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['starting_bid']) ? 'is-invalid' : '' ?>"
+                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo (isset($errors['starting_bid']) || isset($errors['sale'])) ? 'is-invalid' : '' ?>"
                                         id="starting_bid"
                                         name="starting_bid"
                                         value="<?php echo ($item->starting_bid > 0) ? $item->starting_bid : '' ?>">
+                                    <span class="input-group-text bg-dark text-white border-secondary">€</span>
+
                                     <?php if (isset($errors['starting_bid'])) { ?>
                                         <div class="invalid-feedback">
                                             <?php echo $errors['starting_bid'] ?>
                                         </div>
                                     <?php } ?>
-                                    <span class="input-group-text bg-dark text-white border-secondary">€</span>
+                                    <?php if (isset($errors['sale'])) { ?>
+                                        <div class="invalid-feedback">
+                                            <?php echo $errors['sale'] ?>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                             </div>
 
@@ -136,10 +143,10 @@
                                         id="instant"
                                         name="instant"
                                         value="<?php echo ($item->has_buy_now && $item->is_auction && $item->buy_now_price > 0) ? $item->buy_now_price : '' ?>">
+                                    <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                     <?php if (isset($errors['buy_now_price'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['buy_now_price'] ?></div>
                                     <?php endif; ?>
-                                    <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                 </div>
                             </div>
                         </div>
@@ -159,10 +166,10 @@
                                         id="direct"
                                         name="direct"
                                         value="<?php echo ($item->is_direct_sale && $item->buy_now_price > 0) ? $item->buy_now_price : ''  ?>">
+                                    <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                     <?php if (isset($errors['sale_price'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['sale_price'] ?></div>
                                     <?php endif; ?>
-                                    <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                 </div>
                             </div>
                         </div>
@@ -172,65 +179,68 @@
             </div>
         </div>
     </form>
-    <nav class="navbar navbar-dark bg-dark">
-        <ul class="navbar-nav bottom-nav" id="nav-icons">
-            <li class="nav-item text-center">
-                <a href="index.php?controller=BrowseItems&action=show_items" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
-            </li>
-            <li class="nav-item text-center">
-                <a href="index.php?controller=ViewOpenItem&action=show_my_items" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
-            </li>
-            <li class="nav-item text-center">
-                <a href="index.php?controller=ViewOpenItem&action=add_offer" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
-            </li>
-            <li class="nav-item text-center">
-                <a href="index.php?controller=User&action=see_profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
-            </li>
-        </ul>
-    </nav>
+    <div class="fixed-bottom">
 
-    <div class="d-flex justify-content-between align-items-center px-3" style="
+        <nav class="navbar navbar-dark bg-dark">
+            <ul class="navbar-nav bottom-nav" id="nav-icons">
+                <li class="nav-item text-center">
+                    <a href="index.php?controller=BrowseItems&action=show_items" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
+                </li>
+                <li class="nav-item text-center">
+                    <a href="index.php?controller=ViewOpenItem&action=show_my_items" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
+                </li>
+                <li class="nav-item text-center">
+                    <a href="index.php?controller=ViewOpenItem&action=add_offer" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
+                </li>
+                <li class="nav-item text-center">
+                    <a href="index.php?controller=User&action=see_profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="d-flex justify-content-between align-items-center px-3" style="
         background-color: #1e293b; 
         border-top: 1px solid #334155; 
         color: #94a3b8;
         height: 40px;
         font-size: 11px;
     ">
-        <span class="fw-bold text-white">
-            <?php
-            $dt = new DateTime(AppTime::get_current_datetime());
-            echo $dt->format('d/m/y H:i');
-            ?>
-        </span>
+            <span class="fw-bold text-white">
+                <?php
+                $dt = new DateTime(AppTime::get_current_datetime());
+                echo $dt->format('d/m/y H:i');
+                ?>
+            </span>
 
-        <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center">
 
-            <form method="post" action="time/advance" class="m-0">
-                <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="hour">
-                <button class="btn btn-debug text-debug-orange">
-                    <i class="fa-regular fa-clock me-1"></i>+1h
-                </button>
-            </form>
+                <form method="post" action="time/advance" class="m-0">
+                    <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="hour">
+                    <button class="btn btn-debug text-debug-orange">
+                        <i class="fa-regular fa-clock me-1"></i>+1h
+                    </button>
+                </form>
 
-            <form method="post" action="time/advance" class="m-0">
-                <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="day">
-                <button class="btn btn-debug text-debug-orange">
-                    <i class="fa-regular fa-calendar me-1"></i>+1d
-                </button>
-            </form>
+                <form method="post" action="time/advance" class="m-0">
+                    <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="day">
+                    <button class="btn btn-debug text-debug-orange">
+                        <i class="fa-regular fa-calendar me-1"></i>+1d
+                    </button>
+                </form>
 
-            <form method="post" action="time/advance" class="m-0">
-                <input type="hidden" name="amount" value="7"><input type="hidden" name="unit" value="day">
-                <button class="btn btn-debug text-debug-orange">
-                    <i class="fa-regular fa-calendar-days me-1"></i>+1w
-                </button>
-            </form>
+                <form method="post" action="time/advance" class="m-0">
+                    <input type="hidden" name="amount" value="7"><input type="hidden" name="unit" value="day">
+                    <button class="btn btn-debug text-debug-orange">
+                        <i class="fa-regular fa-calendar-days me-1"></i>+1w
+                    </button>
+                </form>
 
-            <form method="post" action="time/reset" class="m-0">
-                <button class="btn btn-debug text-debug-red">
-                    <i class="fa-solid fa-rotate-right me-1"></i>
-                </button>
-            </form>
+                <form method="post" action="time/reset" class="m-0">
+                    <button class="btn btn-debug text-debug-red">
+                        <i class="fa-solid fa-rotate-right me-1"></i>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 

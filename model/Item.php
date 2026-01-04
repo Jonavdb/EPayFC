@@ -3,7 +3,8 @@
 require_once "framework/Model.php";
 require_once "utils/AppTime.php";
 
-class Item extends Model {
+class Item extends Model
+{
 
     public function __construct(
         public float $user_bid,
@@ -28,10 +29,10 @@ class Item extends Model {
         public bool $buy_now_reached,
         public string $time_left,
         public string $owner_picture
-    ) {
-    }
+    ) {}
 
-    public static function get_items_by_owner(int $owner_id): array {
+    public static function get_items_by_owner(int $owner_id): array
+    {
         // Récupère les items du propriétaire, triés par date de fin calculée
         $sql = "SELECT * FROM v_items_status WHERE owner = :owner ORDER BY end_at DESC";
         $query = self::execute($sql, ["owner" => $owner_id]);
@@ -117,7 +118,8 @@ class Item extends Model {
         return $items;
     }
 
-    public static function get_item_by_id(int $id) {
+    public static function get_item_by_id(int $id)
+    {
         $query = self::execute(
             "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
              FROM v_items_status v  -- <--- C'est ici que la magie opère
@@ -177,7 +179,8 @@ class Item extends Model {
         );
     }
 
-    public static function get_user_bid_items(string $pseudo) {
+    public static function get_user_bid_items(string $pseudo)
+    {
         $user_bid_items = [];
 
         $query = self::execute(
@@ -286,7 +289,8 @@ class Item extends Model {
         return $user_bid_items;
     }
 
-    public static function get_user_bid(int $item_id, int $user_id) {
+    public static function get_user_bid(int $item_id, int $user_id)
+    {
         $query = self::execute(
             "SELECT b.amount as bid
                                 from bids b 
@@ -309,7 +313,8 @@ class Item extends Model {
         return $data['bid'];
     }
 
-    public static function get_user_available_items(string $pseudo) {
+    public static function get_user_available_items(string $pseudo)
+    {
         $user_available_items = [];
 
         $query = self::execute(
@@ -445,5 +450,71 @@ class Item extends Model {
         }
 
         return $user_available_items;
+    }
+
+    public function save()
+    {
+        if ($this->id > 0) {
+            return $this->update();
+        } else {
+            return $this->insert();
+        }
+    }
+
+    public function update()
+    {
+        $sql = "UPDATE items SET 
+                    title = :title,
+                    description = :description,
+                    buy_now_price = :buy_now_price,
+                    duration_days = :duration_days,
+                    starting_bid = :starting_bid
+                WHERE id = :id";
+        self::execute($sql, [
+            "id" => $this->id,
+            "title" => $this->title,
+            "description" => $this->description,
+            "buy_now_price" => $this->buy_now_price,
+            "duration_days" => $this->duration_days,
+            "starting_bid" => $this->starting_bid
+        ]);
+    }
+
+    private function insert()
+    {
+        $sql = "INSERT into items (
+                    title,
+                    description,
+                    owner,
+                    created_at,
+                    buy_now_price,
+                    duration_days,
+                    starting_bid
+                    ) Values (
+                    :title,
+                    :description,
+                    (SELECT id FROM users Where pseudo = :owner_name),
+                    :created_at,
+                    :buy_now_price,
+                    :duration_days,
+                    :starting_bid
+                )";
+        self::execute($sql, [
+            "title" => $this->title,
+            "description" => $this->description,
+            "owner_name" => $this->owner_name,
+            "created_at" => $this->created_at->format('Y-m-d H:i:s'),
+            "buy_now_price" => $this->buy_now_price,
+            "duration_days" => $this->duration_days,
+            "starting_bid" => $this->starting_bid
+        ]);
+
+        $sql_id = "SELECT MAX(id) as id FROM items";
+        $request = self::execute($sql_id, []);
+        $result = $request->fetch();
+
+        $newID = $result['id'];
+        $this->id = $newID;
+        return $newID;
     }
 }
