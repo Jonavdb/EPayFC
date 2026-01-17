@@ -36,8 +36,9 @@
         <div class="card mb-4 bg-dark shadow-soft">
             <div class="card-body text-center py-2">
                 <div class="mb-3">
+                    <!-- Setup d'une image par défaut si l'user n'a pas d'avatar -->
                     <?php
-                    $avatarPath = "uploads/users/4/default_avatar.jpg";
+                    $avatarPath = "uploads/users/4/default_avatar.jpg"; // Image par défaut
 
                     if (!empty($user->picture_path) && file_exists($user->picture_path)) {
                         $avatarPath = $user->picture_path;
@@ -168,7 +169,7 @@
                         <span>Browse</span>
                     </a>
 
-                    <a class="nav-link text-center text-secondary" href="member/items">
+                    <a class="nav-link text-center text-secondary" href="item/list">
                         <i class="fas fa-home fs-4 mb-1 d-block"></i>
                         <span>My Items</span>
                     </a>
