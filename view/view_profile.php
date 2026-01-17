@@ -45,9 +45,11 @@
                     }
                     ?>
 
-                    <img src="<?= $avatarPath ?>"
-                        alt="Profile Picture"
-                        class="rounded-circle border-secondary p-1">
+                    <div class="mx-auto" style="width: 150px; height: 150px">
+                        <img src="<?= $avatarPath ?>"
+                            alt="Profile Picture"
+                            class="rounded-circle border-secondary p-1 img-thumbnail object-fit-cover w-100 h-100">
+                    </div>
                 </div>
 
                 <h2 class="text-white mb-1">
