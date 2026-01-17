@@ -5,10 +5,24 @@ require_once 'model/User.php';
 class ControllerUser extends Controller {
     public function index(): void {
         if ($this->user_logged()) {
-            $this->redirect("profile", "index");
+            $this->profile();
         } else {
             $this->redirect("user", "login");
         }
+    }
+
+    // Connexion en tant qu'invité
+    public function guest_login(): void {
+        session_destroy(); // kill la session active
+
+        $_SESSION['guest'] = true;
+        $this->redirect("browse_items", "index");
+    }
+
+    public function profile(): void {
+        $user = $this->get_user_or_redirect();
+        $user = User::get_user_by_email($user->email);
+        (new View("profile"))->show(["user" => $user]);
     }
 
     // Gestion de la connexion d'un utilisateur
@@ -86,11 +100,37 @@ class ControllerUser extends Controller {
         ]);
     }
 
-    // Connexion en tant qu'invité
-    public function guest_login(): void {
-        session_destroy(); // kill la session active
+    // Gère l'édition du profil
+    public function edit_profile(): void {
+        $user = $this->get_user_or_redirect();
+        $errors = [];
 
-        $_SESSION['guest'] = true;
-        $this->redirect("browse_items", "index");
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $full_name = trim($_POST['full_name'] ?? '');
+            $pseudo = trim($_POST['pseudo'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $iban = trim($_POST['iban'] ?? '');
+
+            // Validation
+            if (empty($full_name)) $errors[] = "Full name is required.";
+            if (empty($pseudo)) $errors[] = "Username is required.";
+            if (empty($email)) $errors[] = "Email is required.";
+
+            // Si pas d'erreurs, on sauvegarde
+            if (empty($errors)) {
+                $user->full_name = $full_name;
+                $user->pseudo = $pseudo;
+                $user->email = $email;
+                $user->iban = $iban;
+
+                $user->persist();
+                $this->redirect("user", "profile");
+            }
+        }
+
+        (new View("edit_profile"))->show([
+            "user" => $user,
+            "errors" => $errors
+        ]);
     }
 }
