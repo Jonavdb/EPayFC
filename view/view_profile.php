@@ -36,18 +36,19 @@
         <div class="card mb-4 bg-dark shadow-soft">
             <div class="card-body text-center py-2">
                 <div class="mb-3">
-                    <!-- Setup d'une image par défaut si l'user n'a pas d'avatar -->
                     <?php
-                    $avatarPath = "uploads/users/4/default_avatar.jpg"; // Image par défaut
+                    $avatarPath = "uploads/users/4/default_avatar.jpg";
 
                     if (!empty($user->picture_path) && file_exists($user->picture_path)) {
                         $avatarPath = $user->picture_path;
                     }
                     ?>
 
-                    <img src="<?= $avatarPath ?>"
-                        alt="Profile Picture"
-                        class="rounded-circle border-secondary p-1">
+                    <div class="mx-auto" style="width: 150px; height: 150px">
+                        <img src="<?= $avatarPath ?>"
+                            alt="Profile Picture"
+                            class="rounded-circle border-secondary p-1 img-thumbnail object-fit-cover w-100 h-100">
+                    </div>
                 </div>
 
                 <h2 class="text-white mb-1">
