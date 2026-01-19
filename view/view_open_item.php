@@ -85,7 +85,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
           <?php
           foreach ($item->image_urls as $image):
           ?>
-            <a href="index.php?controller=view_open_item&action=show_details&param1=<?= $item->id ?>&selected_image=<?= $image ?>">
+            <a href="index.php?controller=item&action=open&param1=<?= $item->id ?>&selected_image=<?= $image ?>">
               <img src="<?= $image ?>"
                 class="additionnal-images"
                 alt="Vue supplémentaire">
@@ -137,7 +137,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
 
               <?php if (!$item->is_direct_sale) { ?>
 
-                <form action="index.php?controller=view_open_item&action=new_bid" method="POST" class="mb-3">
+                <form action="index.php?controller=item&action=new_bid" method="POST" class="mb-3">
 
                   <input type="hidden" name="item_id" value="<?= $item->id ?>">
 
@@ -165,7 +165,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
               <?php } ?>
               <div class="d-grid gap-3 mb-2">
                 <?php if ($item->has_buy_now) { ?>
-                  <form action="index.php?controller=view_open_item&action=buy_now" method="POST">
+                  <form action="index.php?controller=item&action=buy_now" method="POST">
                     <input type="hidden" name="item_id" value="<?= $item->id ?>" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
                     <button class="btn btn-outline-primary w-100" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>Buy Now</button>
                   </form>
@@ -207,17 +207,17 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
             <div class="card-body">
               <h5>Manage your Item</h5>
               <div class="d-grid gap-2">
-                <a href="index.php?controller=ViewOpenItem&action=edit&param1=<?= $item->id ?>"
+                <a href="index.php?controller=Item&action=edit&param1=<?= $item->id ?>"
                   class="btn btn-outline-secondary text-start">
                   <i class="fa-solid fa-pen me-2"></i> Edit Item Details
                 </a>
 
-                <a href="index.php?controller=ViewOpenItem&action=manage_images&param1=<?= $item->id ?>"
+                <a href="index.php?controller=Item&action=manage_images&param1=<?= $item->id ?>"
                   class="btn btn-outline-info text-start">
                   <i class="fa-solid fa-image me-2"></i> Manage Images
                 </a>
 
-                <a href="index.php?controller=ViewOpenItem&action=delete_item&param1=<?= $item->id ?>"
+                <a href="index.php?controller=Item&action=delete_item&param1=<?= $item->id ?>"
                   class="btn btn-outline-danger text-start">
                   <i class="fa-solid fa-trash me-2"></i> Delete Item
                 </a>
@@ -278,10 +278,10 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
           <a href="index.php?controller=BrowseItems&action=show_items" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
         </li>
         <li class="nav-item text-center">
-          <a href="index.php?controller=ViewOpenItem&action=show_my_items" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
+          <a href="index.php?controller=Item&action=show_my_items" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
         </li>
         <li class="nav-item text-center">
-          <a href="index.php?controller=ViewOpenItem&action=add_offer" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
+          <a href="index.php?controller=Item&action=add_offer" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
         </li>
         <li class="nav-item text-center">
           <a href="index.php?controller=User&action=see_profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
