@@ -275,16 +275,16 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
     <nav class="navbar navbar-dark bg-dark">
       <ul class="navbar-nav bottom-nav" id="nav-icons">
         <li class="nav-item text-center">
-          <a href="index.php?controller=BrowseItems&action=show_items" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
+          <a href="browseItems/index" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
         </li>
         <li class="nav-item text-center">
-          <a href="index.php?controller=Item&action=show_my_items" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
+          <a href="index.php?controller=Item&action=list" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
         </li>
         <li class="nav-item text-center">
-          <a href="index.php?controller=Item&action=add_offer" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
+          <a href="item/add_edit_item" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
         </li>
         <li class="nav-item text-center">
-          <a href="index.php?controller=User&action=see_profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
+          <a href="user/profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
         </li>
       </ul>
     </nav>
