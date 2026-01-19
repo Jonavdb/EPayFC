@@ -1,3 +1,5 @@
+<?php require_once "utils/GoBack.php"; ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -18,15 +20,7 @@
             <nav class="navbar fixed-top navbar-dark bg-dark border-bottom shadow-lg">
                 <div class="container-fluid p-2">
                     <div class="flex-grow-1 text-start" style="max-width: 5%;">
-                        <?php
-                        $back_link = "user/profile";
-
-                        if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
-                            $back_link = $_SERVER['HTTP_REFERER'];
-                        }
-                        ?>
-
-                        <a href="<?= $back_link ?>" class="btn-icon">
+                        <a href="<?= GoBack::go_back() ?>" class="btn-icon">
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
                     </div>
