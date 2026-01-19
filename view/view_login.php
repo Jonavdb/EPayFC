@@ -55,11 +55,18 @@
                     <?php endforeach; ?>
                 </div>
 
-                <!-- TODO : liens restants -->
                 <div class="debug-actions small fw-bold">
-                    <div class="mb-1 mt-1"><a href="setup/install" class="text-success">Restore original data</a></div>
-                    <div class="mb-1"><a href="#" class="text-warning">Backup personal data</a></div>
-                    <div><a href="#" class="text-warning">Restore personal data</a></div>
+                    <div class="mb-1 mt-1">
+                        <a href="setup/index" class="text-success">Restore original data</a>
+                    </div>
+
+                    <div class="mb-1">
+                        <a href="setup/export" class="text-warning">Backup personal data</a>
+                    </div>
+
+                    <div>
+                        <a href="setup/restore" class="text-warning">Restore personal data</a>
+                    </div>
                 </div>
             </div>
 
