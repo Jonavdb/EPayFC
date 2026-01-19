@@ -273,7 +273,7 @@ class ItemM extends Model
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
-            $user_available_items[] = new ItemM($user_bid, $is_auction, $has_buy_now, $buy_now_reached, $image_urls, $main_image_url, $title, $owner_name, $price, $current_bid, $time_left);
+            $user_available_items[] = new ItemM($user_bid, $is_auction, $has_buy_now, $buy_now_reached, $image_urls, $main_image_url, $title, $owner_name, (float)($price ?? 0.0), $current_bid, $time_left);
         }
 
         return $user_available_items;
