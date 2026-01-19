@@ -1,4 +1,6 @@
 <?php
+
+require_once "utils/GoBack.php";
 $buy_now = $item->buy_now_price;
 $now = new DateTime(AppTime::get_current_datetime());
 $is_time_expired = $now > $item->end_at;
@@ -56,7 +58,10 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
   <nav class="navbar fixed-top navbar-dark bg-dark">
     <div class="container-fluid d-flex align-items-center">
       <div class="left-zone">
+         <a href="<?= GoBack::go_back() ?>" class="btn-icon">
+                    
         <i class="fa-solid fa-arrow-left" style="color: #2D68C4; font-size: 22px;"></i>
+         </a>
       </div>
       <div class="flex-grow-1 text-center">
         <h2 style="color: #2D68C4; margin: 0;">Open item</h2>
