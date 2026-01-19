@@ -38,7 +38,7 @@
                 <div class="mb-3">
                     <!-- Setup d'une image par défaut si l'user n'a pas d'avatar -->
                     <?php
-                    $avatarPath = "uploads/users/4/default_avatar.jpg"; // Image par défaut
+                    $avatarPath = "uploads/users/4/avatar_default.jpg"; // Image par défaut
 
                     if (!empty($user->picture_path) && file_exists($user->picture_path)) {
                         $avatarPath = $user->picture_path;
