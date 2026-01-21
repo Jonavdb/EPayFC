@@ -34,7 +34,7 @@
     <nav class="navbar fixed-top navbar-dark bg-dark">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
-                <a href="ViewOpenItem/show_details/18" class="text-decoration-none text-secondary">
+                <a href="item/open/18" class="text-decoration-none text-secondary">
                     <i class="fa-solid fa-arrow-left" style="color: #2D68C4; font-size: 22px;"></i>
                 </a>
             </div>
@@ -187,10 +187,10 @@
                     <a href="index.php?controller=BrowseItems&action=show_items" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
                 </li>
                 <li class="nav-item text-center">
-                    <a href="index.php?controller=ViewOpenItem&action=show_my_items" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
+                    <a href="index.php?controller=item&action=show_my_items" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
                 </li>
                 <li class="nav-item text-center">
-                    <a href="index.php?controller=ViewOpenItem&action=add_offer" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
+                    <a href="index.php?controller=item&action=add_offer" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
                 </li>
                 <li class="nav-item text-center">
                     <a href="index.php?controller=User&action=see_profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>

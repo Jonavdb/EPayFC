@@ -34,7 +34,7 @@
     <nav class="navbar fixed-top navbar-dark bg-dark">
         <div class="container-fluid d-flex align-items-center">
             <div class="left-zone">
-                <a href="ViewOpenItem/show_details/<?= $item->id ?>" class="text-decoration-none text-secondary">
+                <a href="item/open/<?= $item->id ?>" class="text-decoration-none text-secondary">
                     <i class="fa-solid fa-arrow-left" style="color: #2D68C4; font-size: 22px;"></i>
                 </a>
             </div>
@@ -55,7 +55,7 @@
             </div>
             <div class="card-body">
                 <h6 class="fw-bold text-white text-start">Select Images</h6>
-                <form action="index.php?controller=ViewOpenItem&action=add_images" method="POST" enctype="multipart/form-data">
+                <form action="index.php?controller=item&action=add_images" method="POST" enctype="multipart/form-data">
 
                     <input type="hidden" name="item_id" value="<?= $item->id ?>">
 
@@ -106,7 +106,7 @@
 
                                 <div class="card-body d-flex justify-content-between align-items-center p-3">
 
-                                    <form action="index.php?controller=ViewOpenItem&action=move_image_left" method="POST" class="m-0">
+                                    <form action="index.php?controller=item&action=move_image_left" method="POST" class="m-0">
                                         <input type="hidden" name="item_id" value="<?= $item->id ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
@@ -115,7 +115,7 @@
                                         </button>
                                     </form>
 
-                                    <form action="index.php?controller=ViewOpenItem&action=move_image_right" method="POST" class="m-0">
+                                    <form action="index.php?controller=item&action=move_image_right" method="POST" class="m-0">
                                         <input type="hidden" name="item_id" value="<?= $item->id ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
@@ -124,7 +124,7 @@
                                         </button>
                                     </form>
 
-                                    <form action="index.php?controller=ViewOpenItem&action=delete_images" method="POST" class="m-0">
+                                    <form action="index.php?controller=item&action=delete_images" method="POST" class="m-0">
                                         <input type="hidden" name="item_id" value="<?= $item->id ?>">
                                         <input type="hidden" name="image_filename" value="<?= basename($image_url) ?>">
                                         <button type="submit" class="btn btn-sm btn-danger">
@@ -147,10 +147,10 @@
                 <a href="index.php?controller=BrowseItems&action=show_items" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
             </li>
             <li class="nav-item text-center">
-                <a href="index.php?controller=ViewOpenItem&action=show_my_items" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
+                <a href="index.php?controller=item&action=show_my_items" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
             </li>
             <li class="nav-item text-center">
-                <a href="index.php?controller=ViewOpenItem&action=add_offer" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
+                <a href="index.php?controller=item&action=add_offer" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
             </li>
             <li class="nav-item text-center">
                 <a href="index.php?controller=User&action=see_profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>

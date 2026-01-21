@@ -158,7 +158,7 @@ class ControllerItem extends Controller
             if ($item) {
 
                 if ($item->owner_name !== $user->pseudo || ($item->is_auction && $item->has_bids)) {
-                    $this->redirect("ViewOpenItem", "show_details", $item->id);
+                    $this->redirect("item", "open", $item->id);
                     exit();
                 }
                 $item->id = (int)$id;
@@ -239,7 +239,7 @@ class ControllerItem extends Controller
             }
             if (empty($errors)) {
                 $item->save();
-                $this->redirect("ViewOpenItem", "show_details", $item->id);
+                $this->redirect("item", "open", $item->id);
             }
         }
 
