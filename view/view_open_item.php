@@ -217,12 +217,12 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
                   <i class="fa-solid fa-pen me-2"></i> Edit Item Details
                 </a>
 
-                <a href="index.php?controller=Item&action=manage_images&param1=<?= $item->id ?>"
+                <a href="item/manage_images/<?= $item->id ?>"
                   class="btn btn-outline-info text-start">
                   <i class="fa-solid fa-image me-2"></i> Manage Images
                 </a>
 
-                <a href="index.php?controller=Item&action=delete_item&param1=<?= $item->id ?>"
+                <a href="item/delete_item/<?= $item->id ?>"
                   class="btn btn-outline-danger text-start">
                   <i class="fa-solid fa-trash me-2"></i> Delete Item
                 </a>
@@ -283,7 +283,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
           <a href="browseItems/index" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
         </li>
         <li class="nav-item text-center">
-          <a href="index.php?controller=Item&action=list" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
+          <a href="item/list" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
         </li>
         <li class="nav-item text-center">
           <a href="item/add_edit_item" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>

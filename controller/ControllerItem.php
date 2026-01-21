@@ -271,7 +271,7 @@ class ControllerItem extends Controller
         }
 
         if ($item->owner_name !== $current_user) {
-            $this->redirect("item", "show_details", $id);
+            $this->redirect("item", "open", $id);
             return;
         }
 
