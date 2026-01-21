@@ -3,7 +3,8 @@
 require_once "framework/Model.php";
 require_once "utils/AppTime.php";
 
-class Item extends Model {
+class Item extends Model
+{
 
     public function __construct(
         public float $user_bid,
@@ -28,10 +29,10 @@ class Item extends Model {
         public bool $buy_now_reached,
         public string $time_left,
         public string $owner_picture
-    ) {
-    }
+    ) {}
 
-    public static function get_items_by_owner(int $owner_id): array {
+    public static function get_items_by_owner(int $owner_id): array
+    {
         // Récupère les items du propriétaire, triés par date de fin calculée
         $sql = "SELECT * FROM v_items_status WHERE owner = :owner ORDER BY end_at DESC";
         $query = self::execute($sql, ["owner" => $owner_id]);
@@ -117,7 +118,8 @@ class Item extends Model {
         return $items;
     }
 
-    public static function get_item_by_id(int $id) {
+    public static function get_item_by_id(int $id)
+    {
         $query = self::execute(
             "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
              FROM v_items_status v  -- <--- C'est ici que la magie opère
@@ -177,7 +179,8 @@ class Item extends Model {
         );
     }
 
-    public static function get_user_bid_items(string $pseudo) {
+    public static function get_user_bid_items(string $pseudo)
+    {
         $user_bid_items = [];
 
         $query = self::execute(
@@ -286,7 +289,8 @@ class Item extends Model {
         return $user_bid_items;
     }
 
-    public static function get_user_bid(int $item_id, int $user_id) {
+    public static function get_user_bid(int $item_id, int $user_id)
+    {
         $query = self::execute(
             "SELECT b.amount as bid
                                 from bids b 
@@ -309,7 +313,8 @@ class Item extends Model {
         return $data['bid'];
     }
 
-    public static function get_user_available_items(string $pseudo) {
+    public static function get_user_available_items(string $pseudo)
+    {
         $user_available_items = [];
 
         $query = self::execute(
@@ -445,5 +450,201 @@ class Item extends Model {
         }
 
         return $user_available_items;
+    }
+
+    public function save()
+    {
+        if ($this->id > 0) {
+            return $this->update();
+        } else {
+            return $this->insert();
+        }
+    }
+
+    public function update()
+    {
+        $sql = "UPDATE items SET 
+                    title = :title,
+                    description = :description,
+                    buy_now_price = :buy_now_price,
+                    duration_days = :duration_days,
+                    starting_bid = :starting_bid
+                WHERE id = :id";
+        self::execute($sql, [
+            "id" => $this->id,
+            "title" => $this->title,
+            "description" => $this->description,
+            "buy_now_price" => $this->buy_now_price,
+            "duration_days" => $this->duration_days,
+            "starting_bid" => $this->starting_bid
+        ]);
+    }
+
+    private function insert()
+    {
+        $sql = "INSERT into items (
+                    title,
+                    description,
+                    owner,
+                    created_at,
+                    buy_now_price,
+                    duration_days,
+                    starting_bid
+                    ) Values (
+                    :title,
+                    :description,
+                    (SELECT id FROM users Where pseudo = :owner_name),
+                    :created_at,
+                    :buy_now_price,
+                    :duration_days,
+                    :starting_bid
+                )";
+        self::execute($sql, [
+            "title" => $this->title,
+            "description" => $this->description,
+            "owner_name" => $this->owner_name,
+            "created_at" => $this->created_at->format('Y-m-d H:i:s'),
+            "buy_now_price" => $this->buy_now_price,
+            "duration_days" => $this->duration_days,
+            "starting_bid" => $this->starting_bid
+        ]);
+
+        $sql_id = "SELECT MAX(id) as id FROM items";
+        $request = self::execute($sql_id, []);
+        $result = $request->fetch();
+
+        $newID = $result['id'];
+        $this->id = $newID;
+        return $newID;
+    }
+
+    public static function change_pics_left(int $image_id, int $item_id)
+    {
+        $query = self::execute(
+            "SELECT priority, picture_path 
+         FROM item_pictures 
+         WHERE item = :item_id 
+         ORDER BY priority ASC",
+            ["item_id" => $item_id]
+        );
+        $pictures = $query->fetchAll();
+
+        if ($image_id > 0 && isset($pictures[$image_id])) {
+
+            $current_img = $pictures[$image_id];
+            $previous_img = $pictures[$image_id - 1];
+
+            $current_priority = $current_img['priority'];
+            $previous_priority = $previous_img['priority'];
+
+            self::execute(
+                "UPDATE item_pictures SET priority = -1 WHERE item = :item AND priority = :current_priority",
+                ["item" => $item_id, "current_priority" => $current_priority]
+            );
+
+            self::execute(
+                "UPDATE item_pictures SET priority = :current_priority WHERE item = :item AND priority = :previous_priority",
+                ["item" => $item_id, "previous_priority" => $previous_priority, "current_priority" => $current_priority]
+            );
+
+            self::execute(
+                "UPDATE item_pictures SET priority = :previous_priority WHERE item = :item AND priority = -1",
+                ["item" => $item_id, "previous_priority" => $previous_priority]
+            );
+        }
+    }
+
+    public static function change_pics_right(int $image_id, int $item_id)
+    {
+        $query = self::execute(
+            "SELECT priority, picture_path 
+         FROM item_pictures 
+         WHERE item = :item_id 
+         ORDER BY priority ASC",
+            ["item_id" => $item_id]
+        );
+        $pictures = $query->fetchAll();
+
+        if ($image_id < count($pictures) - 1 && isset($pictures[$image_id])) {
+
+            $current_img = $pictures[$image_id];
+            $next_img = $pictures[$image_id + 1];
+
+            $current_priority = $current_img['priority'];
+            $next_priority = $next_img['priority'];
+
+            self::execute(
+                "UPDATE item_pictures SET priority = -1 WHERE item = :item AND priority = :current_priority",
+                ["item" => $item_id, "current_priority" => $current_priority]
+            );
+
+            self::execute(
+                "UPDATE item_pictures SET priority = :current_priority WHERE item = :item AND priority = :next_priority",
+                ["item" => $item_id, "next_priority" => $next_priority, "current_priority" => $current_priority]
+            );
+
+            self::execute(
+                "UPDATE item_pictures SET priority = :next_priority WHERE item = :item AND priority = -1",
+                ["item" => $item_id, "next_priority" => $next_priority]
+            );
+        }
+    }
+
+    public static function delete_images(string $filename, int $item_id)
+    {
+        $query = self::execute(
+            "SELECT priority, picture_path 
+         FROM item_pictures 
+         WHERE item = :item_id",
+            ["item_id" => $item_id]
+        );
+        $pictures = $query->fetchAll();
+
+        $image_to_delete = null;
+
+        foreach ($pictures as $pic) {
+            if (basename($pic['picture_path']) === $filename) {
+                $image_to_delete = $pic;
+                break;
+            }
+        }
+
+        if ($image_to_delete) {
+
+            self::execute(
+                "DELETE FROM item_pictures WHERE item = :item_id AND priority = :priority",
+                [
+                    "item_id" => $item_id,
+                    "priority" => $image_to_delete['priority']
+                ]
+            );
+            self::execute(
+                "UPDATE item_pictures SET priority = priority - 1 WHERE item = :item_id AND priority > :deleted_priority",
+                [
+                    "item_id" => $item_id,
+                    "deleted_priority" => $image_to_delete['priority']
+                ]
+            );
+        }
+    }
+
+    public static function add_picture(int $item_id, string $path)
+    {
+
+        $query = self::execute(
+            "SELECT MAX(priority) as max_p FROM item_pictures WHERE item = :item_id",
+            ["item_id" => $item_id]
+        );
+        $data = $query->fetch();
+        $next_priority = ($data['max_p']) ? $data['max_p'] + 1 : 1;
+
+        self::execute(
+            "INSERT INTO item_pictures (item, picture_path, priority) VALUES (:item, :path, :priority)",
+            [
+                "item"     => $item_id,
+                "path"     => $path,
+                "priority" => $next_priority
+            ]
+        );
     }
 }
