@@ -3,6 +3,8 @@
 require_once "framework/Controller.php";
 require_once "model/User.php";
 require_once "model/Item.php";
+require_once "model/Bid.php";
+require_once "utils/AppTime.php";
 
 class ControllerItem extends Controller
 {
@@ -79,6 +81,68 @@ class ControllerItem extends Controller
             'context' => ''               // Sera rempli dans la boucle list()
         ];
     }
+
+    public function open(): void
+    {
+        // 2. On regarde si le premier argument (l'ID) existe
+        if (isset($_GET['param1'])) {
+            $id = (int)$_GET['param1']; // On récupère le 8 de l'URL ".../index/8"
+        } else {
+            $id = 3; // Valeur par défaut si l'URL est juste ".../index"
+        }
+        $item = Item::get_item_by_id($id);
+
+        $bids = Bid::get_bid_by_item_id($id);
+        $current_user_pseudo = 'Boris';
+
+        (new View("open_item"))->show([
+            "item" => $item,
+            "bids" => $bids,
+            "current_user" => $current_user_pseudo
+        ]);
+    }
+
+    public function new_bid()
+    {
+
+        $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
+        $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : 0.0;
+
+        $current_user_pseudo = "Boris";
+
+        if ($item_id > 0 && $amount > 0) {
+            Bid::create_bid($current_user_pseudo, $item_id, $amount);
+        }
+
+        $this->redirect("item", "open", $item_id);
+    }
+
+    public function buy_now()
+    {
+        $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
+        $current_user_pseudo = "Boris";
+        if ($item_id > 0) {
+
+            $item = Item::get_item_by_id($item_id);
+
+            if ($item && $item->has_buy_now && !$item->buy_now_reached) {
+                Bid::create_bid($current_user_pseudo, $item_id, $item->buy_now_price);
+            }
+        }
+        $this->redirect("item", "open", $item_id);
+    }
+
+    public function edit()
+    {
+        $item_id = isset($_GET['item_id']) ? (int)$_GET['item_id'] : 0;
+        (new View("edit_item"))->show([
+            "id" => $item_id
+        ]);
+    }
+
+
+
+
 
     public function add_edit_item()
     {

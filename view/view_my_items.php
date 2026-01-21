@@ -79,7 +79,7 @@
 
                 <div class="d-flex justify-content-around w-100 py-3">
 
-                    <a class="nav-link text-center text-secondary" href="main/index">
+                    <a class="nav-link text-center text-secondary" href="item/browse">
                         <i class="fa-solid fa-magnifying-glass-plus fs-4 mb-1 d-block"></i>
                         <span>Browse</span>
                     </a>

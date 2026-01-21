@@ -1,3 +1,5 @@
+<?php require_once "utils/GoBack.php"; ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -18,7 +20,7 @@
             <nav class="navbar fixed-top navbar-dark bg-dark border-bottom shadow-lg">
                 <div class="container-fluid p-2">
                     <div class="flex-grow-1 text-start" style="max-width: 5%;">
-                        <a href="user/profile" class="btn-icon">
+                        <a href="<?= GoBack::go_back() ?>" class="btn-icon">
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
                     </div>
@@ -38,16 +40,18 @@
                 <div class="mb-3">
                     <!-- Setup d'une image par défaut si l'user n'a pas d'avatar -->
                     <?php
-                    $avatarPath = "uploads/users/4/default_avatar.jpg"; // Image par défaut
+                    $avatarPath = "uploads/users/4/avatar_default.jpg"; // Image par défaut
 
                     if (!empty($user->picture_path) && file_exists($user->picture_path)) {
                         $avatarPath = $user->picture_path;
                     }
                     ?>
 
-                    <img src="<?= $avatarPath ?>"
-                        alt="Profile Picture"
-                        class="rounded-circle border-secondary p-1">
+                    <div class="mx-auto" style="width: 150px; height: 150px">
+                        <img src="<?= $avatarPath ?>"
+                            alt="Profile Picture"
+                            class="rounded-circle border-secondary p-1 img-thumbnail object-fit-cover w-100 h-100">
+                    </div>
                 </div>
 
                 <h2 class="text-white mb-1">
@@ -162,7 +166,7 @@
 
                 <div class="d-flex justify-content-around w-100 py-3">
 
-                    <a class="nav-link text-center text-secondary" href="main/index">
+                    <a class="nav-link text-center text-secondary" href="item/browse">
                         <i class="fa-solid fa-magnifying-glass-plus fs-4 mb-1 d-block"></i>
                         <span>Browse</span>
                     </a>

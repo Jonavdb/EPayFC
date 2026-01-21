@@ -9,6 +9,7 @@ class User extends Model {
     public string $pseudo;
     public string $password;
     public ?string $picture_path;
+    public ?string $iban;
     public string $role;
 
     public function __construct(
@@ -18,6 +19,7 @@ class User extends Model {
         string $password,
         ?int $id = null,
         ?string $picture_path = null,
+        ?string $iban = null,
         string $role = "user"
     ) {
         $this->email = $email;
@@ -26,6 +28,7 @@ class User extends Model {
         $this->password = $password;
         $this->id = $id;
         $this->picture_path = $picture_path;
+        $this->iban = $iban;
         $this->role = $role;
     }
 
