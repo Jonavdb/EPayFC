@@ -3,10 +3,10 @@
 require_once "framework/Controller.php";
 require_once "model/User.php";
 require_once "model/Item.php";
-require_once "model/ItemM";
+require_once "model/ItemM.php";
 require_once "model/Bid.php";
 require_once "utils/AppTime.php";
-require_once "utils/ImageTool.php";
+require_once "utils/ImageTools.php";
 
 
 class ControllerItem extends Controller
