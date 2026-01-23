@@ -3,9 +3,11 @@
 require_once "framework/Controller.php";
 require_once "model/User.php";
 require_once "model/Item.php";
+require_once "model/ItemM";
 require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
+
 
 class ControllerItem extends Controller
 {
@@ -342,5 +344,22 @@ class ControllerItem extends Controller
             }
         }
         $this->redirect("item", "manage_images", $item_id);
+    }
+
+    public function browse()
+    {
+        // TODO -> use this to get the pseudo or the id once login view is linked to browse items view
+        $user = $this->get_user_or_false();
+
+        // TODO -> replace 'Boris' with user pseudo OR user id
+        $user_bid_items = ItemM::get_user_bid_items('Boris');
+        $user_available_items = ItemM::get_user_available_items('Boris');
+
+        (new View("browse_items"))->show(
+            [
+                "user_bid_items" => $user_bid_items,
+                "user_available_items" => $user_available_items
+            ]
+        );
     }
 }
