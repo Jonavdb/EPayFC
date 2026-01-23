@@ -114,7 +114,7 @@ class ControllerItem extends Controller
         $current_user_pseudo = $user->pseudo;
 
         if ($item_id > 0 && $amount > 0) {
-            //Bid::create_bid($current_user_pseudo, $item_id, $amount);
+            Bid::create_bid($current_user_pseudo, $item_id, $amount);
         }
 
         $this->redirect("item", "open", $item_id);
@@ -130,7 +130,7 @@ class ControllerItem extends Controller
             $item = Item::get_item_by_id($item_id);
 
             if ($item && $item->has_buy_now && !$item->buy_now_reached) {
-                //Bid::create_bid($current_user_pseudo, $item_id, $item->buy_now_price);
+                Bid::create_bid($current_user_pseudo, $item_id, $item->buy_now_price);
             }
         }
         $this->redirect("item", "open", $item_id);
