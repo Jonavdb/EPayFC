@@ -334,11 +334,11 @@ class ControllerItem extends Controller
                 ];
 
                 if ($file['error'] === 0) {
-                    //$path = ImageTools::upload_and_resize($file, 'items', $item_id);
+                    $path = ImageTools::upload_and_resize($file, 'items', $item_id);
 
-                    /*if ($path) {
+                    if ($path) {
                         Item::add_picture($item_id, $path);
-                    }*/
+                    }
                 }
             }
         }
