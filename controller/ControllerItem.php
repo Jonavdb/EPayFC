@@ -8,6 +8,7 @@ require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
 
 
+
 class ControllerItem extends Controller
 {
     public function index(): void
@@ -360,5 +361,13 @@ class ControllerItem extends Controller
                 "user_available_items" => $user_available_items
             ]
         );
+    }
+
+    public function purchase(): void
+    {
+        $purchases = Item::get_purchases('Boris');
+        (new View("see_my_purchases"))->show([
+            "purchases" => $purchases
+        ]);
     }
 }
