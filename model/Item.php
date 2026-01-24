@@ -179,6 +179,7 @@ class Item extends Model {
         );
     }
 
+    // Delete item
     public static function delete(int $id) {
         // D'abord supprimer les dépendances (Images, Enchères...)
         self::execute("DELETE FROM item_pictures WHERE item = :item_id", ["item_id" => $id]);

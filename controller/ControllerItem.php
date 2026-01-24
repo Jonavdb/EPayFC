@@ -77,7 +77,7 @@ class ControllerItem extends Controller {
         ];
     }
 
-    // delete item
+    // Delete item
     public function delete($id = null): void {
         if ($id === null && isset($_GET['param1'])) {
             $id = $_GET['param1'];
