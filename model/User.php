@@ -179,4 +179,32 @@ class User extends Model
         }
         return $errors;
     }
+
+    public function update(): User
+    {
+        if ($this->id) {
+            self::execute(
+                "UPDATE users SET 
+                email = :email, 
+                full_name = :full_name, 
+                pseudo = :pseudo, 
+                password = :password, 
+                picture_path = :picture_path, 
+                iban = :iban, 
+                role = :role 
+             WHERE id = :id",
+                [
+                    "id" => $this->id,
+                    "email" => $this->email,
+                    "full_name" => $this->full_name,
+                    "pseudo" => $this->pseudo,
+                    "password" => $this->password,
+                    "picture_path" => $this->picture_path,
+                    "iban" => $this->iban,
+                    "role" => $this->role
+                ]
+            );
+        }
+        return $this;
+    }
 }
