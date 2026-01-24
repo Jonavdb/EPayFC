@@ -295,7 +295,7 @@
 
                     <div class="d-flex justify-content-around w-100">
                          <!-- Browse Link -->
-                         <a class="bottom-nav-link text-decoration-none" href="#">
+                         <a class="bottom-nav-link text-decoration-none" href="item/browse">
                               <div class="d-flex flex-column">
                                    <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
                                    <div>Browse</div>
@@ -304,7 +304,7 @@
 
 
                          <!-- My Items Link -->
-                         <a class="bottom-nav-link text-decoration-none" href="#">
+                         <a class="bottom-nav-link text-decoration-none" href="item/list">
                               <div class="d-flex flex-column">
                                    <div class="d-flex justify-content-center w-100"><i class="fas fa-home"></i></div>
                                    <div>My Items</div>
@@ -312,7 +312,7 @@
                          </a>
 
                          <!-- Add Offer Link -->
-                         <a class="bottom-nav-link text-decoration-none" href="#">
+                         <a class="bottom-nav-link text-decoration-none" href="item/add">
                               <div class="d-flex flex-column">
                                    <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-plus"></i></div>
                                    <div>Add Offer</div>
@@ -321,7 +321,7 @@
 
 
                          <!-- Profile Link -->
-                         <a class="bottom-nav-link text-decoration-none" href="#">
+                         <a class="bottom-nav-link text-decoration-none" href="user/profile">
                               <div class="d-flex flex-column">
                                    <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-gear"></i></div>
                                    <div>Profile</div>

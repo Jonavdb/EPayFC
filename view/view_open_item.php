@@ -212,7 +212,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
             <div class="card-body">
               <h5>Manage your Item</h5>
               <div class="d-grid gap-2">
-                <a href="Item/add_edit_item/<?= $item->id ?>"
+                <a href="item/edit/<?= $item->id ?>"
                   class="btn btn-outline-secondary text-start">
                   <i class="fa-solid fa-pen me-2"></i> Edit Item Details
                 </a>
@@ -222,7 +222,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
                   <i class="fa-solid fa-image me-2"></i> Manage Images
                 </a>
 
-                <a href="item/delete_item/<?= $item->id ?>"
+                <a href="item/delete/<?= $item->id ?>"
                   class="btn btn-outline-danger text-start">
                   <i class="fa-solid fa-trash me-2"></i> Delete Item
                 </a>
@@ -280,13 +280,13 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
     <nav class="navbar navbar-dark bg-dark">
       <ul class="navbar-nav bottom-nav" id="nav-icons">
         <li class="nav-item text-center">
-          <a href="browseItems/index" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
+          <a href="item/browse" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
         </li>
         <li class="nav-item text-center">
           <a href="item/list" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
         </li>
         <li class="nav-item text-center">
-          <a href="item/add_edit_item" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
+          <a href="item/add" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
         </li>
         <li class="nav-item text-center">
           <a href="user/profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
