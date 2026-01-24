@@ -175,6 +175,7 @@ class ControllerItem extends Controller
 
             $item = new Item(
                 0.0,
+                null,
                 0,
                 "",
                 "",
@@ -363,11 +364,21 @@ class ControllerItem extends Controller
         );
     }
 
-    public function purchase(): void
+    public function purchases(): void
     {
         $purchases = Item::get_purchases('Boris');
         (new View("see_my_purchases"))->show([
             "purchases" => $purchases
         ]);
+    }
+
+    public function sales(): void
+    {
+        $sales = Item::get_sales("Boris");
+        (new View("see_my_sales"))->show(
+            [
+                "sales" => $sales
+            ]
+        );
     }
 }
