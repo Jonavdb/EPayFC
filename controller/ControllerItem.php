@@ -7,6 +7,7 @@ require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
 
+
 class ControllerItem extends Controller
 {
     public function index(): void
@@ -94,7 +95,8 @@ class ControllerItem extends Controller
         $item = Item::get_item_by_id($id);
 
         $bids = Bid::get_bid_by_item_id($id);
-        $current_user_pseudo = 'Boris';
+        $user = $this->get_user_or_redirect();
+        $current_user_pseudo = $user->pseudo;
 
         (new View("open_item"))->show([
             "item" => $item,
@@ -109,7 +111,8 @@ class ControllerItem extends Controller
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : 0.0;
 
-        $current_user_pseudo = "Boris";
+        $user = $this->get_user_or_redirect();
+        $current_user_pseudo = $user->pseudo;
 
         if ($item_id > 0 && $amount > 0) {
             Bid::create_bid($current_user_pseudo, $item_id, $amount);
@@ -121,7 +124,8 @@ class ControllerItem extends Controller
     public function buy_now()
     {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
-        $current_user_pseudo = "Boris";
+        $user = $this->get_user_or_redirect();
+        $current_user_pseudo = $user->pseudo;
         if ($item_id > 0) {
 
             $item = Item::get_item_by_id($item_id);
@@ -224,6 +228,7 @@ class ControllerItem extends Controller
                     $item->has_buy_now = true;
                 } else {
                     $item->buy_now_price = 0.0;
+                    $item->buy_now_price = null;
                     $item->has_buy_now = false;
                 }
 
@@ -263,7 +268,8 @@ class ControllerItem extends Controller
 
         $item = Item::get_item_by_id($id);
 
-        $current_user = "Boris";
+        $user = $this->get_user_or_redirect();
+        $current_user = $user->pseudo;
 
         if (!$item) {
             $this->redirect("BrowseItems", "show_items");
@@ -337,5 +343,22 @@ class ControllerItem extends Controller
             }
         }
         $this->redirect("item", "manage_images", $item_id);
+    }
+
+    public function browse()
+    {
+        // TODO -> use this to get the pseudo or the id once login view is linked to browse items view
+        $user = $this->get_user_or_false();
+
+        // TODO -> replace 'Boris' with user pseudo OR user id
+        $user_bid_items = Item::get_user_bid_items('Boris');
+        $user_available_items = Item::get_user_available_items('Boris');
+
+        (new View("browse_items"))->show(
+            [
+                "user_bid_items" => $user_bid_items,
+                "user_available_items" => $user_available_items
+            ]
+        );
     }
 }
