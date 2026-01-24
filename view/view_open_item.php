@@ -88,9 +88,9 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
         <h4 class="text-white mt-4 mb-4">Additionals Images</h4>
         <div class="d-flex gap-4 mb-4">
           <?php
-          foreach ($item->image_urls as $image):
+          foreach ($item->image_urls as $index => $image):
           ?>
-            <a href="index.php?controller=item&action=open&param1=<?= $item->id ?>&selected_image=<?= $image ?>">
+            <a href="item/open/<?= $item->id ?>/from-browse/<?= $index ?>">
               <img src="<?= $image ?>"
                 class="additionnal-images"
                 alt="Vue supplémentaire">
