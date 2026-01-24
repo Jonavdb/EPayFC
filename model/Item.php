@@ -178,7 +178,6 @@ class Item extends Model
             $owner_picture
         );
     }
-
     public static function get_user_bid_items(string $pseudo)
     {
         $user_bid_items = [];
@@ -186,12 +185,12 @@ class Item extends Model
         $query = self::execute(
             // Active Auctions bid on by user
             "SELECT DISTINCT vis.*
-            from users u
-            join bids b on b.owner = u.id
-            join v_items_status vis on vis.id = b.item
-            where u.pseudo = :pseudo
-            and :today BETWEEN vis.created_at AND vis.end_at
-            order by vis.id",
+                from users u 
+                join bids b on b.owner = u.id
+                join v_items_status vis on vis.id = b.item
+                where u.pseudo = :pseudo
+                and :today BETWEEN vis.created_at AND vis.end_at
+                order by vis.id",
             [
                 "pseudo" => $pseudo,
                 "today" => AppTime::get_current_datetime()
@@ -222,9 +221,9 @@ class Item extends Model
             // we retrieve item pictures
             $query_image_urls = self::execute(
                 "SELECT picture_path
-                FROM item_pictures p
-                where p.item = :item_id
-                Order BY priority ASC",
+                                FROM item_pictures p
+                                where p.item = :item_id
+                                Order BY priority ASC",
                 ["item_id" => $item_data['id']]
             );
 
@@ -249,9 +248,9 @@ class Item extends Model
             // we retrieve owner name
             $query_owner_name = self::execute(
                 "SELECT DISTINCT u.pseudo as owner_name
-                from users u
-                join v_items_status i on i.owner = u.id
-                where i.owner = :owner_id",
+                                from users u
+                                join v_items_status i on i.owner = u.id
+                                where i.owner = :owner_id",
                 ["owner_id" => $item_data['owner']]
             );
 
@@ -272,9 +271,9 @@ class Item extends Model
             // we retrieve the current bid -> max bid for this item
             $current_bid = $item_data['max_bid'];
 
-            // we retrive time left
+            // we retrive time left 
             $today = new DateTime(AppTime::get_current_datetime());
-            $end_at = new DateTime($item_data['end_at']);
+            $end_at =  new DateTime($item_data['end_at']);
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
@@ -293,12 +292,12 @@ class Item extends Model
     {
         $query = self::execute(
             "SELECT b.amount as bid
-            from bids b
-            join users u on u.id = b.owner
-            join v_items_status vis on vis.id = b.item
-            where b.amount = vis.max_bid
-            and u.id = :user_id
-            and vis.id = :item_id;",
+                                from bids b 
+                                join users u on u.id = b.owner
+                                join v_items_status vis on vis.id = b.item
+                                where b.amount = vis.max_bid
+                                and u.id = :user_id
+                                and vis.id = :item_id;",
             [
                 "item_id" => $item_id,
                 "user_id" => $user_id
@@ -321,30 +320,30 @@ class Item extends Model
             "SELECT DISTINCT vis.*
             FROM v_items_status vis
             WHERE :today BETWEEN vis.created_at AND vis.end_at
-            AND
+            AND 
             (
                 -- CONDITION 1: Active Auctions NOT bid on by user AND Not owned by User
                 (vis.is_auction = 1
                 AND vis.owner != (SELECT id FROM users WHERE pseudo = :pseudo) -- Check: NOT Owned by User
                 AND vis.id NOT IN ( -- Check: NOT Bid on by User
-                SELECT DISTINCT vis_sub.id
-                FROM users u
-                JOIN bids b ON b.owner = u.id
-                JOIN v_items_status vis_sub ON vis_sub.id = b.item
-                WHERE u.pseudo = :pseudo
+                    SELECT DISTINCT vis_sub.id
+                    FROM users u
+                    JOIN bids b ON b.owner = u.id
+                    JOIN v_items_status vis_sub ON vis_sub.id = b.item
+                    WHERE u.pseudo = :pseudo
                 )
-            )
-
-            OR
-
+                )
+                
+                OR
+                
                 -- CONDITION 2: Direct Sales NOT owned by user and NOT yet purchased
                 (vis.is_direct_sale = 1
-                    AND vis.not_purchased_direct_sale = 1
-                    AND vis.owner NOT IN (
+                AND vis.not_purchased_direct_sale = 1
+                AND vis.owner NOT IN (
                     SELECT DISTINCT u.id
                     FROM users u
                     WHERE u.pseudo = :pseudo
-                    )
+                )
                 )
             )
 
@@ -377,9 +376,9 @@ class Item extends Model
             // we retrieve item pictures
             $query_image_urls = self::execute(
                 "SELECT picture_path
-                FROM item_pictures p
-                where p.item = :item_id
-                Order BY priority ASC",
+                                FROM item_pictures p
+                                where p.item = :item_id
+                                Order BY priority ASC",
                 ["item_id" => $item_data['id']]
             );
 
@@ -404,9 +403,9 @@ class Item extends Model
             // we retrieve owner name
             $query_owner_name = self::execute(
                 "SELECT DISTINCT u.pseudo as owner_name
-                from users u
-                join v_items_status i on i.owner = u.id
-                where i.owner = :owner_id",
+                                from users u
+                                join v_items_status i on i.owner = u.id
+                                where i.owner = :owner_id",
                 ["owner_id" => $item_data['owner']]
             );
 
@@ -440,9 +439,9 @@ class Item extends Model
             $duration_days = 0;
 
 
-            // we retrieve time left
+            // we retrieve time left 
             $today = new DateTime(AppTime::get_current_datetime());
-            $end_at = new DateTime($item_data['end_at']);
+            $end_at =  new DateTime($item_data['end_at']);
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
@@ -463,13 +462,13 @@ class Item extends Model
 
     public function update()
     {
-        $sql = "UPDATE items SET
-        title = :title,
-        description = :description,
-        buy_now_price = :buy_now_price,
-        duration_days = :duration_days,
-        starting_bid = :starting_bid
-        WHERE id = :id";
+        $sql = "UPDATE items SET 
+                    title = :title,
+                    description = :description,
+                    buy_now_price = :buy_now_price,
+                    duration_days = :duration_days,
+                    starting_bid = :starting_bid
+                WHERE id = :id";
         self::execute($sql, [
             "id" => $this->id,
             "title" => $this->title,
@@ -483,22 +482,22 @@ class Item extends Model
     private function insert()
     {
         $sql = "INSERT into items (
-        title,
-        description,
-        owner,
-        created_at,
-        buy_now_price,
-        duration_days,
-        starting_bid
-        ) Values (
-        :title,
-        :description,
-        (SELECT id FROM users Where pseudo = :owner_name),
-        :created_at,
-        :buy_now_price,
-        :duration_days,
-        :starting_bid
-        )";
+                    title,
+                    description,
+                    owner,
+                    created_at,
+                    buy_now_price,
+                    duration_days,
+                    starting_bid
+                    ) Values (
+                    :title,
+                    :description,
+                    (SELECT id FROM users Where pseudo = :owner_name),
+                    :created_at,
+                    :buy_now_price,
+                    :duration_days,
+                    :starting_bid
+                )";
         self::execute($sql, [
             "title" => $this->title,
             "description" => $this->description,
@@ -521,10 +520,10 @@ class Item extends Model
     public static function change_pics_left(int $image_id, int $item_id)
     {
         $query = self::execute(
-            "SELECT priority, picture_path
-            FROM item_pictures
-            WHERE item = :item_id
-            ORDER BY priority ASC",
+            "SELECT priority, picture_path 
+         FROM item_pictures 
+         WHERE item = :item_id 
+         ORDER BY priority ASC",
             ["item_id" => $item_id]
         );
         $pictures = $query->fetchAll();
@@ -557,10 +556,10 @@ class Item extends Model
     public static function change_pics_right(int $image_id, int $item_id)
     {
         $query = self::execute(
-            "SELECT priority, picture_path
-            FROM item_pictures
-            WHERE item = :item_id
-            ORDER BY priority ASC",
+            "SELECT priority, picture_path 
+         FROM item_pictures 
+         WHERE item = :item_id 
+         ORDER BY priority ASC",
             ["item_id" => $item_id]
         );
         $pictures = $query->fetchAll();
@@ -593,9 +592,9 @@ class Item extends Model
     public static function delete_images(string $filename, int $item_id)
     {
         $query = self::execute(
-            "SELECT priority, picture_path
-            FROM item_pictures
-            WHERE item = :item_id",
+            "SELECT priority, picture_path 
+         FROM item_pictures 
+         WHERE item = :item_id",
             ["item_id" => $item_id]
         );
         $pictures = $query->fetchAll();
@@ -641,8 +640,8 @@ class Item extends Model
         self::execute(
             "INSERT INTO item_pictures (item, picture_path, priority) VALUES (:item, :path, :priority)",
             [
-                "item" => $item_id,
-                "path" => $path,
+                "item"     => $item_id,
+                "path"     => $path,
                 "priority" => $next_priority
             ]
         );
