@@ -138,66 +138,120 @@ class ControllerItem extends Controller
         $this->redirect("item", "open", $item_id);
     }
 
-    public function edit()
+
+    public function add()
     {
-        $item_id = isset($_GET['item_id']) ? (int)$_GET['item_id'] : 0;
-        (new View("edit_item"))->show([
-            "id" => $item_id
+        $errors = [];
+        $user = $this->get_user_or_redirect();
+        $now = new DateTime(AppTime::get_current_datetime());
+        $end = (clone $now)->modify('+7 days');
+
+        $item = new Item(
+            0.0,
+            null,
+            0,
+            "",
+            "",
+            $user->pseudo,
+            "",
+            "",
+            [],
+            0.0,
+            0.0,
+            $now,
+            $end,
+            7,
+            0.0,
+            0,
+            false,
+            false,
+            false,
+            false,
+            false,
+            "",
+            ""
+        );
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $item->title = trim($_POST['title']);
+            $item->description = trim($_POST['description']);
+            $item->duration_days = (int)$_POST['duration'];
+
+            $starting_bid = ($_POST['starting_bid'] !== '') ? $_POST['starting_bid'] : null;
+            $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
+            $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
+
+            if (strlen($item->title) < 3 || strlen($item->title) > 255) {
+                $errors['title'] = "Title lenght must be between 3 and 255 characters.";
+            }
+
+            if ($item->duration_days < 1) {
+                $errors['duration'] = "Duration must be at least 1 day";
+            }
+
+            if ($starting_bid !== null && $starting_bid > 0) {
+                $item->starting_bid = $starting_bid;
+                $item->is_auction = true;
+                $item->is_direct_sale = false;
+
+                if ($buy_now_price !== null && $buy_now_price > 0) {
+                    if ($buy_now_price < $starting_bid) {
+                        $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
+                    }
+                    $item->buy_now_price = $buy_now_price;
+                    $item->has_buy_now = true;
+                } else {
+                    $item->buy_now_price = null;
+                    $item->has_buy_now = false;
+                }
+
+                if ($sale_price !== null && $sale_price > 0) {
+                    $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
+                }
+            } elseif ($sale_price !== null && $sale_price > 0) {
+                $item->buy_now_price = $sale_price;
+                $item->is_auction = false;
+                $item->is_direct_sale = true;
+                $item->has_buy_now = false;
+            } else {
+                $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
+            }
+
+            if (empty($errors)) {
+                $item->save();
+                $this->redirect("item", "open", $item->id);
+            }
+        }
+
+        (new View("add_edit_item"))->show([
+            "item" => $item,
+            "errors" => $errors
         ]);
     }
 
-
-
-
-
-    public function add_edit_item()
+    public function edit()
     {
-
         $errors = [];
-        $item = null;
         $user = $this->get_user_or_redirect();
+
         $id = $_GET['param1'] ?? $_POST['id'] ?? null;
 
-        if ($id && !empty($id)) {
+        if (!$id) {
+            $this->redirect("item", "index");
+            return;
+        }
 
-            $item = Item::get_item_by_id($id);
-            if ($item) {
+        $item = Item::get_item_by_id($id);
 
-                if ($item->owner_name !== $user->pseudo || ($item->is_auction && $item->has_bids)) {
-                    $this->redirect("item", "open", $item->id);
-                    exit();
-                }
-                $item->id = (int)$id;
+        if ($item) {
+            if ($item->owner_name !== $user->pseudo || ($item->is_auction && $item->has_bids)) {
+                $this->redirect("item", "open", $item->id);
+                exit();
             }
         } else {
-            $now = new DateTime(AppTime::get_current_datetime());
-            $end = (clone $now)->modify('+7 days');
 
-            $item = new Item(
-                0.0,
-                null,
-                0,
-                "",
-                "",
-                $user->pseudo,
-                "",
-                "",
-                [],
-                0.0,
-                0.0,
-                $now,
-                $end,
-                7,
-                0.0,
-                0,
-                false,
-                false,
-                false,
-                false,
-                false,
-                "",
-                ""
-            );
+            $this->redirect("item", "index");
+            return;
         }
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -229,7 +283,6 @@ class ControllerItem extends Controller
                     $item->buy_now_price = $buy_now_price;
                     $item->has_buy_now = true;
                 } else {
-                    $item->buy_now_price = 0.0;
                     $item->buy_now_price = null;
                     $item->has_buy_now = false;
                 }
@@ -245,18 +298,20 @@ class ControllerItem extends Controller
             } else {
                 $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
             }
+
             if (empty($errors)) {
                 $item->save();
                 $this->redirect("item", "open", $item->id);
             }
         }
 
-
         (new View("add_edit_item"))->show([
             "item" => $item,
             "errors" => $errors
         ]);
     }
+
+
 
     public function manage_images(): void
     {

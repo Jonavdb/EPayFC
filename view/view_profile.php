@@ -132,7 +132,7 @@
                     </div>
                 </a>
 
-                <a href="user/profile_picture" class="text-decoration-none">
+                <a href="user/manage_profile_picture" class="text-decoration-none">
                     <div class="d-flex align-items-center p-2 mb-3 border border-primary rounded hover-effect">
                         <div class="me-3 p-2">
                             <i class="fa-solid fa-circle-user fa-lg text-primary"></i>
@@ -176,7 +176,7 @@
                         <span>My Items</span>
                     </a>
 
-                    <a class="nav-link text-center text-secondary" href="member/add_offer">
+                    <a class="nav-link text-center text-secondary" href="item/add">
                         <i class="fa-solid fa-plus fs-4 mb-1 d-block"></i>
                         <span>Add Offer</span>
                     </a>

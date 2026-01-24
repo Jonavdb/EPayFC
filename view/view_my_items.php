@@ -66,7 +66,7 @@
             <div class=" text-center mt-5 pt-5 text-secondary">
                 <i class="fa-solid fa-box-open fa-4x mb-3"></i>
                 <p class="fs-4">You haven't posted any items yet.</p>
-                <a href="member/add_offer" class="btn btn-primary btn-lg mt-2">Start selling</a>
+                <a href="item/add" class="btn btn-primary btn-lg mt-2">Start selling</a>
             </div>
         <?php endif; ?>
 
@@ -89,7 +89,7 @@
                         <span>My Items</span>
                     </a>
 
-                    <a class="nav-link text-center text-secondary" href="member/add_offer">
+                    <a class="nav-link text-center text-secondary" href="item/add">
                         <i class="fa-solid fa-plus fs-4 mb-1 d-block"></i>
                         <span>Add Offer</span>
                     </a>

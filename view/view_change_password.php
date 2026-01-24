@@ -118,12 +118,12 @@
                         <span>Browse</span>
                     </a>
 
-                    <a class="nav-link text-center text-secondary" href="member/items">
+                    <a class="nav-link text-center text-secondary" href="item/list">
                         <i class="fas fa-home fs-5 mb-1 d-block"></i>
                         <span>My Items</span>
                     </a>
 
-                    <a class="nav-link text-center text-secondary" href="member/add_offer">
+                    <a class="nav-link text-center text-secondary" href="item/add">
                         <i class="fa-solid fa-plus fs-5 mb-1 d-block"></i>
                         <span>Add Offer</span>
                     </a>
