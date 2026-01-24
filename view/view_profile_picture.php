@@ -132,13 +132,13 @@ require_once "utils/AppTime.php";
         <nav class="navbar navbar-dark bg-dark">
             <ul class="navbar-nav bottom-nav" id="nav-icons">
                 <li class="nav-item text-center">
-                    <a href="browseItems/index" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
+                    <a href="item/browse" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
                 </li>
                 <li class="nav-item text-center">
                     <a href="item/list" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
                 </li>
                 <li class="nav-item text-center">
-                    <a href="item/add_edit_item" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
+                    <a href="item/add" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
                 </li>
                 <li class="nav-item text-center">
                     <a href="user/profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
