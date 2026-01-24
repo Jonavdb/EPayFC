@@ -3,7 +3,6 @@
 require_once "framework/Controller.php";
 require_once "model/User.php";
 require_once "model/Item.php";
-require_once "model/ItemM.php";
 require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTools.php";
@@ -352,8 +351,8 @@ class ControllerItem extends Controller
         $user = $this->get_user_or_false();
 
         // TODO -> replace 'Boris' with user pseudo OR user id
-        $user_bid_items = ItemM::get_user_bid_items('Boris');
-        $user_available_items = ItemM::get_user_available_items('Boris');
+        $user_bid_items = Item::get_user_bid_items('Boris');
+        $user_available_items = Item::get_user_available_items('Boris');
 
         (new View("browse_items"))->show(
             [

@@ -151,9 +151,9 @@ view
                                                     <?php if ($has_buy_now) { ?>
 
                                                         <?php if ($buy_now_reached) { ?>
-                                                            <div class="price-left text-warning">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                            <div class="price-left text-warning">€ <?= number_format($item->buy_now_price, 2, ',', '.') ?></div>
                                                         <?php } else { ?>
-                                                            <div class="price-left">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                            <div class="price-left">€ <?= number_format($item->buy_now_price, 2, ',', '.') ?></div>
                                                         <?php } ?>
 
                                                     <?php } else { ?>
@@ -289,9 +289,9 @@ view
                                                     <?php if ($has_buy_now) { ?>
 
                                                         <?php if ($buy_now_reached) { ?>
-                                                            <div class="price-left text-warning">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                            <div class="price-left text-warning">€ <?= number_format($item->buy_now_price, 2, ',', '.') ?></div>
                                                         <?php } else { ?>
-                                                            <div class="price-left">€ <?= number_format($item->price, 2, ',', '.') ?></div>
+                                                            <div class="price-left">€ <?= number_format($item->buy_now_price, 2, ',', '.') ?></div>
                                                         <?php } ?>
 
                                                     <?php } else { ?>
