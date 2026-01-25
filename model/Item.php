@@ -245,19 +245,21 @@ class Item extends Model
             );
 
             $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
-            if (!$data_image_urls) {
-                return false;
-            }
 
             $image_urls = (array) $data_image_urls;
 
+            // Image par défaut (Placeholder)
+            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+
             // we retrieve main picture
-            $main_image_url = $image_urls[0];
-            $path_parts = pathinfo($main_image_url);
-            $main_image_url = $path_parts['dirname'] . '/' .
-                $path_parts['filename'] .
-                '_thumbnail.' .
-                $path_parts['extension'];
+            if (!empty($image_urls)) {
+                $main_image_url = $image_urls[0];
+                $path_parts = pathinfo($main_image_url);
+                $main_image_url = $path_parts['dirname'] . '/' .
+                    $path_parts['filename'] .
+                    '_thumbnail.' .
+                    $path_parts['extension'];
+            }
 
             // we retrieve the title
             $title = $item_data['title'];
@@ -400,19 +402,21 @@ class Item extends Model
             );
 
             $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
-            if (!$data_image_urls) {
-                return false;
-            }
 
             $image_urls = (array) $data_image_urls;
 
+            // Image par défaut (Placeholder)
+            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+
             // we retrieve main picture
-            $main_image_url = $image_urls[0];
-            $path_parts = pathinfo($main_image_url);
-            $main_image_url = $path_parts['dirname'] . '/' .
-                $path_parts['filename'] .
-                '_thumbnail.' .
-                $path_parts['extension'];
+            if (!empty($image_urls)) {
+                $main_image_url = $image_urls[0];
+                $path_parts = pathinfo($main_image_url);
+                $main_image_url = $path_parts['dirname'] . '/' .
+                    $path_parts['filename'] .
+                    '_thumbnail.' .
+                    $path_parts['extension'];
+            }
 
             // we retrieve the title
             $title = $item_data['title'];
