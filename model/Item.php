@@ -3,7 +3,8 @@
 require_once "framework/Model.php";
 require_once "utils/AppTime.php";
 
-class Item extends Model {
+class Item extends Model
+{
 
     public function __construct(
         public float $user_bid,
@@ -20,7 +21,7 @@ class Item extends Model {
         public DateTime $created_at,
         public DateTime $end_at,
         public int $duration_days,
-        public float $current_bid,
+        public ?float $current_bid,
         public int $bid_count,
         public bool $has_bids,
         public bool $is_auction,
@@ -29,10 +30,10 @@ class Item extends Model {
         public bool $buy_now_reached,
         public string $time_left,
         public string $owner_picture
-    ) {
-    }
+    ) {}
 
-    public static function get_items_by_owner(int $owner_id): array {
+    public static function get_items_by_owner(int $owner_id): array
+    {
         // Récupère les items du propriétaire, triés par date de fin calculée
         $sql = "SELECT * FROM v_items_status WHERE owner = :owner ORDER BY end_at DESC";
         $query = self::execute($sql, ["owner" => $owner_id]);
@@ -119,7 +120,8 @@ class Item extends Model {
         return $items;
     }
 
-    public static function get_item_by_id(int $id) {
+    public static function get_item_by_id(int $id)
+    {
         $query = self::execute(
             "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
             FROM v_items_status v  -- <--- C'est ici que la magie opère
@@ -181,7 +183,8 @@ class Item extends Model {
     }
 
     // Delete item
-    public static function delete(int $id) {
+    public static function delete(int $id)
+    {
         // D'abord supprimer les dépendances (Images, Enchères...)
         self::execute("DELETE FROM item_pictures WHERE item = :item_id", ["item_id" => $id]);
         self::execute("DELETE FROM bids WHERE item = :item_id", ["item_id" => $id]);
@@ -192,7 +195,8 @@ class Item extends Model {
         return true;
     }
 
-    public static function get_user_bid_items(string $pseudo) {
+    public static function get_user_bid_items(string $pseudo)
+    {
         $user_bid_items = [];
 
         $query = self::execute(
@@ -241,19 +245,21 @@ class Item extends Model {
             );
 
             $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
-            if (!$data_image_urls) {
-                return false;
-            }
 
             $image_urls = (array) $data_image_urls;
 
+            // Image par défaut (Placeholder)
+            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+
             // we retrieve main picture
-            $main_image_url = $image_urls[0];
-            $path_parts = pathinfo($main_image_url);
-            $main_image_url = $path_parts['dirname'] . '/' .
-                $path_parts['filename'] .
-                '_thumbnail.' .
-                $path_parts['extension'];
+            if (!empty($image_urls)) {
+                $main_image_url = $image_urls[0];
+                $path_parts = pathinfo($main_image_url);
+                $main_image_url = $path_parts['dirname'] . '/' .
+                    $path_parts['filename'] .
+                    '_thumbnail.' .
+                    $path_parts['extension'];
+            }
 
             // we retrieve the title
             $title = $item_data['title'];
@@ -295,13 +301,14 @@ class Item extends Model {
             $owner_role = '';
             $duration_days = 0;
 
-            $user_bid_items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, false, false, $has_buy_now, $buy_now_reached, $time_left, '');
+            $user_bid_items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, 0, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, false, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
 
         return $user_bid_items;
     }
 
-    public static function get_user_bid(int $item_id, int $user_id) {
+    public static function get_user_bid(int $item_id, int $user_id)
+    {
         $query = self::execute(
             "SELECT b.amount as bid
             from bids b
@@ -324,7 +331,8 @@ class Item extends Model {
         return $data['bid'];
     }
 
-    public static function get_user_available_items(string $pseudo) {
+    public static function get_user_available_items(string $pseudo)
+    {
         $user_available_items = [];
 
         $query = self::execute(
@@ -394,19 +402,21 @@ class Item extends Model {
             );
 
             $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
-            if (!$data_image_urls) {
-                return false;
-            }
 
             $image_urls = (array) $data_image_urls;
 
+            // Image par défaut (Placeholder)
+            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+
             // we retrieve main picture
-            $main_image_url = $image_urls[0];
-            $path_parts = pathinfo($main_image_url);
-            $main_image_url = $path_parts['dirname'] . '/' .
-                $path_parts['filename'] .
-                '_thumbnail.' .
-                $path_parts['extension'];
+            if (!empty($image_urls)) {
+                $main_image_url = $image_urls[0];
+                $path_parts = pathinfo($main_image_url);
+                $main_image_url = $path_parts['dirname'] . '/' .
+                    $path_parts['filename'] .
+                    '_thumbnail.' .
+                    $path_parts['extension'];
+            }
 
             // we retrieve the title
             $title = $item_data['title'];
@@ -443,7 +453,10 @@ class Item extends Model {
                 } else {
                     $current_bid = 0.0;
                 }
+            } else {
+                $current_bid = 0;
             }
+
             // unused variables
             $description = '';
             $owner_role = '';
@@ -456,13 +469,14 @@ class Item extends Model {
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
-            $user_available_items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
+            $user_available_items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, 0, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
 
         return $user_available_items;
     }
 
-    public function save() {
+    public function save()
+    {
         if ($this->id > 0) {
             return $this->update();
         } else {
@@ -470,7 +484,8 @@ class Item extends Model {
         }
     }
 
-    public function update() {
+    public function update()
+    {
         $sql = "UPDATE items SET
         title = :title,
         description = :description,
@@ -488,7 +503,8 @@ class Item extends Model {
         ]);
     }
 
-    private function insert() {
+    private function insert()
+    {
         $sql = "INSERT into items (
         title,
         description,
@@ -525,7 +541,8 @@ class Item extends Model {
         return $newID;
     }
 
-    public static function change_pics_left(int $image_id, int $item_id) {
+    public static function change_pics_left(int $image_id, int $item_id)
+    {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -560,7 +577,8 @@ class Item extends Model {
         }
     }
 
-    public static function change_pics_right(int $image_id, int $item_id) {
+    public static function change_pics_right(int $image_id, int $item_id)
+    {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -595,7 +613,8 @@ class Item extends Model {
         }
     }
 
-    public static function delete_images(string $filename, int $item_id) {
+    public static function delete_images(string $filename, int $item_id)
+    {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -632,7 +651,8 @@ class Item extends Model {
         }
     }
 
-    public static function add_picture(int $item_id, string $path) {
+    public static function add_picture(int $item_id, string $path)
+    {
 
         $query = self::execute(
             "SELECT MAX(priority) as max_p FROM item_pictures WHERE item = :item_id",
@@ -651,7 +671,8 @@ class Item extends Model {
         );
     }
 
-    public static function get_purchases($pseudo) {
+    public static function get_purchases($pseudo)
+    {
         $purchases = [];
 
         $query = self::execute(
@@ -791,7 +812,8 @@ class Item extends Model {
         return $purchases;
     }
 
-    public static function get_sales($pseudo) {
+    public static function get_sales($pseudo)
+    {
 
         $sales = [];
         $query = self::execute(
