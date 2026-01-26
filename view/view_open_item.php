@@ -53,7 +53,7 @@ $image_to_display = $item->main_image_url;
   <nav class="navbar fixed-top navbar-dark bg-dark">
     <div class="container-fluid d-flex align-items-center">
       <div class="left-zone">
-        <a href="<?= GoBack::go_back() ?>" class="btn-icon">
+        <a href="<?= GoBack::go_back_2() ?>" class="btn-icon">
 
           <i class="fa-solid fa-arrow-left" style="color: #2D68C4; font-size: 22px;"></i>
         </a>
@@ -83,9 +83,18 @@ $image_to_display = $item->main_image_url;
         <h4 class="text-white mt-4 mb-4">Additionals Images</h4>
         <div class="d-flex gap-4 mb-4">
           <?php
+          $origin = 'from-browse';
+          $uri = $_SERVER['REQUEST_URI'];
+          if (strpos($uri, 'from-list') !== false) {
+            $origin = 'from-list';
+          } elseif (strpos($uri, 'from-profile') !== false) {
+            $origin = 'from-profile';
+          } elseif (strpos($uri, 'from-items') !== false) {
+            $origin = 'from-items';
+          }
           foreach ($item->image_urls as $index => $image):
           ?>
-            <a href="item/open/<?= $item->id ?>/<?= $index ?>/from-browse">
+            <a href="item/open/<?= $item->id ?>/<?= $index ?>/<?= $origin ?>">
               <img src="<?= $image ?>"
                 class="additionnal-images"
                 alt="Vue supplémentaire">
