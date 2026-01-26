@@ -14,11 +14,6 @@ if (!empty($bids)) {
 
 $image_to_display = $item->main_image_url;
 
-if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
-  if (in_array($_GET['selected_image'], $item->image_urls)) {
-    $image_to_display = $_GET['selected_image'];
-  }
-}
 ?>
 
 
@@ -90,7 +85,7 @@ if (isset($_GET['selected_image']) && !empty($_GET['selected_image'])) {
           <?php
           foreach ($item->image_urls as $index => $image):
           ?>
-            <a href="item/open/<?= $item->id ?>/from-browse/<?= $index ?>">
+            <a href="item/open/<?= $item->id ?>/<?= $index ?>/from-browse">
               <img src="<?= $image ?>"
                 class="additionnal-images"
                 alt="Vue supplémentaire">
