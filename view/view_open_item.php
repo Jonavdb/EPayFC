@@ -135,45 +135,48 @@ $image_to_display = $item->main_image_url;
                 </div>
               <?php } ?>
 
-              <?php if (!$item->is_direct_sale) { ?>
+              <?php if ($current_user) { ?>
 
-                <form action="index.php?controller=item&action=new_bid" method="POST" class="mb-3">
+                <?php if (!$item->is_direct_sale) { ?>
 
-                  <input type="hidden" name="item_id" value="<?= $item->id ?>">
+                  <form action="index.php?controller=item&action=new_bid" method="POST" class="mb-3">
 
-                  <div class="d-grid gap-3">
+                    <input type="hidden" name="item_id" value="<?= $item->id ?>">
 
-                    <div>
-                      <label class="form-label small text-muted">Your Max Bid</label>
-                      <div class="input-group">
-                        <span class="input-group-text">€</span>
+                    <div class="d-grid gap-3">
 
-                        <input type="number"
-                          class="form-control"
-                          name="amount"
-                          value="<?= $item->current_bid + 1 ?>"
-                          min="<?= $item->current_bid + 1 ?>"
-                          step="1"
-                          required
-                          <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
+                      <div>
+                        <label class="form-label small text-muted">Your Max Bid</label>
+                        <div class="input-group">
+                          <span class="input-group-text">€</span>
 
-                        <button class="btn btn-success" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>Place Bid</button>
+                          <input type="number"
+                            class="form-control"
+                            name="amount"
+                            value="<?= $item->current_bid + 1 ?>"
+                            min="<?= $item->current_bid + 1 ?>"
+                            step="1"
+                            required
+                            <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
+
+                          <button class="btn btn-success" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>Place Bid</button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </form>
-              <?php } ?>
-              <div class="d-grid gap-3 mb-2">
-                <?php if ($item->has_buy_now) { ?>
-                  <form action="index.php?controller=item&action=buy_now" method="POST">
-                    <input type="hidden" name="item_id" value="<?= $item->id ?>" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
-                    <button class="btn btn-outline-primary w-100" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>Buy Now</button>
                   </form>
                 <?php } ?>
-              </div>
-            <?php } ?>
-            <?php if ($current_user === $item->owner_name) { ?>
-              <h5>Vous ne pouvez pas enchérir sur un objet vous appartenant</h5>
+                <div class="d-grid gap-3 mb-2">
+                  <?php if ($item->has_buy_now) { ?>
+                    <form action="index.php?controller=item&action=buy_now" method="POST">
+                      <input type="hidden" name="item_id" value="<?= $item->id ?>" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
+                      <button class="btn btn-outline-primary w-100" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>Buy Now</button>
+                    </form>
+                  <?php } ?>
+                </div>
+              <?php } ?>
+              <?php if ($current_user === $item->owner_name) { ?>
+                <h5>Vous ne pouvez pas enchérir sur un objet vous appartenant</h5>
+              <?php } ?>
             <?php } ?>
           </div>
         </div>
@@ -276,15 +279,21 @@ $image_to_display = $item->main_image_url;
         <li class="nav-item text-center">
           <a href="item/browse" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
         </li>
-        <li class="nav-item text-center">
-          <a href="item/list" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
-        </li>
-        <li class="nav-item text-center">
-          <a href="item/add" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
-        </li>
-        <li class="nav-item text-center">
-          <a href="user/profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
-        </li>
+        <?php if ($current_user) { ?>
+          <li class="nav-item text-center">
+            <a href="item/list" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
+          </li>
+          <li class="nav-item text-center">
+            <a href="item/add" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
+          </li>
+          <li class="nav-item text-center">
+            <a href="user/profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
+          </li>
+        <?php } else { ?>
+          <li class="nav-item text-center">
+            <a href="main/signup" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles d-block"></i><small style="font-size: 10px;">Join us</small></a>
+          </li>
+        <?php } ?>
       </ul>
     </nav>
 

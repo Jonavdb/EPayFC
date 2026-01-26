@@ -136,8 +136,8 @@ class ControllerItem extends Controller
         }
 
         $bids = Bid::get_bid_by_item_id($id);
-        $user = $this->get_user_or_redirect();
-        $current_user_pseudo = $user->pseudo;
+        $user = $this->get_user_or_false();
+        $current_user_pseudo = $user ?  $user->pseudo : null;
 
 
         (new View("open_item"))->show([
