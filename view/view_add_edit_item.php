@@ -52,7 +52,7 @@ require_once "utils/GoBack.php";
             <div class="d-flex justify-content-end">
                 <button type="submit"
                     form="itemForm"
-                    class="btn fw-bold text-white">
+                    class="btn fw-bold fs-4 text-white">
                     Save
                 </button>
             </div>
