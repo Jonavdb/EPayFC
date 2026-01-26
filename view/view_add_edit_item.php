@@ -193,23 +193,33 @@ require_once "utils/GoBack.php";
             </div>
         </div>
     </form>
-    <div class="fixed-bottom">
+    <footer class="fixed-bottom">
 
-        <nav class="navbar navbar-dark bg-dark">
-            <ul class="navbar-nav bottom-nav" id="nav-icons">
-                <li class="nav-item text-center">
-                    <a href="item/browse" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
-                </li>
-                <li class="nav-item text-center">
-                    <a href="item/list" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
-                </li>
-                <li class="nav-item text-center">
-                    <a href="item/add" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
-                </li>
-                <li class="nav-item text-center">
-                    <a href="user/profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
-                </li>
-            </ul>
+        <nav class="navbar navbar-dark bg-dark border-top shadow-lg">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-around w-100 py-3">
+
+                    <a class="nav-link text-center text-secondary" href="item/browse">
+                        <i class="fa-solid fa-magnifying-glass-plus fs-4 mb-1 d-block"></i>
+                        <span>Browse</span>
+                    </a>
+
+                    <a class="nav-link text-center text-secondary" href="item/list">
+                        <i class="fas fa-home fs-4 mb-1 d-block"></i>
+                        <span>My Items</span>
+                    </a>
+
+                    <a class="nav-link text-center text-secondary" href="item/add">
+                        <i class="fa-solid fa-plus fs-4 mb-1 d-block"></i>
+                        <span>Add Offer</span>
+                    </a>
+
+                    <a class="nav-link text-center text-secondary" href="user/profile">
+                        <i class="fa-solid fa-gear fs-4 mb-1 d-block"></i>
+                        <span>Profile</span>
+                    </a>
+                </div>
+            </div>
         </nav>
 
         <div class="d-flex justify-content-between align-items-center px-3" style="
@@ -227,7 +237,6 @@ require_once "utils/GoBack.php";
             </span>
 
             <div class="d-flex align-items-center">
-
                 <form method="post" action="time/advance" class="m-0">
                     <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="hour">
                     <button class="btn btn-debug text-debug-orange">
@@ -256,6 +265,8 @@ require_once "utils/GoBack.php";
                 </form>
             </div>
         </div>
+
+    </footer>
     </div>
 
     </div>

@@ -128,71 +128,35 @@ require_once "utils/AppTime.php";
         </div>
     <?php } ?>
 
-    <div class="fixed-bottom">
-        <nav class="navbar navbar-dark bg-dark">
-            <ul class="navbar-nav bottom-nav" id="nav-icons">
-                <li class="nav-item text-center">
-                    <a href="item/browse" class="nav-link"><i class="fa-solid fa-magnifying-glass d-block"></i><small style="font-size: 10px;">Browse</small></a>
-                </li>
-                <li class="nav-item text-center">
-                    <a href="item/list" class="nav-link"><i class="fa-solid fa-house d-block"></i><small style="font-size: 10px;">My Items</small></a>
-                </li>
-                <li class="nav-item text-center">
-                    <a href="item/add" class="nav-link"><i class="fa-solid fa-plus d-block"></i><small style="font-size: 10px;">Add Offer</small></a>
-                </li>
-                <li class="nav-item text-center">
-                    <a href="user/profile" class="nav-link"><i class="fa-solid fa-gear d-block"></i><small style="font-size: 10px;">Profile</small></a>
-                </li>
-            </ul>
-        </nav>
+    <footer>
+        <nav class="navbar fixed-bottom navbar-dark bg-dark border-top shadow-lg">
+            <div class="container-fluid">
 
-        <div class="d-flex justify-content-between align-items-center px-3" style="
-        background-color: #1e293b; 
-        border-top: 1px solid #334155; 
-        color: #94a3b8;
-        height: 40px;
-        font-size: 11px;
-    ">
-            <span class="fw-bold text-white">
-                <?php
-                $dt = new DateTime(AppTime::get_current_datetime());
-                echo $dt->format('d/m/y H:i');
-                ?>
-            </span>
+                <div class="d-flex justify-content-around w-100 py-3">
 
-            <div class="d-flex align-items-center">
+                    <a class="nav-link text-center text-secondary" href="item/browse">
+                        <i class="fa-solid fa-magnifying-glass-plus fs-4 mb-1 d-block"></i>
+                        <span>Browse</span>
+                    </a>
 
-                <form method="post" action="time/advance" class="m-0">
-                    <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="hour">
-                    <button class="btn btn-debug text-debug-orange">
-                        <i class="fa-regular fa-clock me-1"></i>+1h
-                    </button>
-                </form>
+                    <a class="nav-link text-center text-secondary" href="item/list">
+                        <i class="fas fa-home fs-4 mb-1 d-block"></i>
+                        <span>My Items</span>
+                    </a>
 
-                <form method="post" action="time/advance" class="m-0">
-                    <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="day">
-                    <button class="btn btn-debug text-debug-orange">
-                        <i class="fa-regular fa-calendar me-1"></i>+1d
-                    </button>
-                </form>
+                    <a class="nav-link text-center text-secondary" href="item/add">
+                        <i class="fa-solid fa-plus fs-4 mb-1 d-block"></i>
+                        <span>Add Offer</span>
+                    </a>
 
-                <form method="post" action="time/advance" class="m-0">
-                    <input type="hidden" name="amount" value="7"><input type="hidden" name="unit" value="day">
-                    <button class="btn btn-debug text-debug-orange">
-                        <i class="fa-regular fa-calendar-days me-1"></i>+1w
-                    </button>
-                </form>
-
-                <form method="post" action="time/reset" class="m-0">
-                    <button class="btn btn-debug text-debug-red">
-                        <i class="fa-solid fa-rotate-right me-1"></i>
-                    </button>
-                </form>
+                    <a class="nav-link text-center text-secondary" href="user/profile">
+                        <i class="fa-solid fa-gear fs-4 mb-1 d-block"></i>
+                        <span>Profile</span>
+                    </a>
+                </div>
             </div>
-        </div>
-
-    </div>
-    </div>
+        </nav>
+    </footer>
 </body>
 
 </html>
