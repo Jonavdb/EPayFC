@@ -195,7 +195,7 @@ class Item extends Model
         return true;
     }
 
-    public static function get_user_bid_items(string $pseudo)
+    public static function get_user_bid_items(int $id)
     {
         $user_bid_items = [];
 
@@ -205,11 +205,11 @@ class Item extends Model
             from users u
             join bids b on b.owner = u.id
             join v_items_status vis on vis.id = b.item
-            where u.pseudo = :pseudo
+            where u.id = :id
             and :today BETWEEN vis.created_at AND vis.end_at
             order by vis.id",
             [
-                "pseudo" => $pseudo,
+                "id" => $id,
                 "today" => AppTime::get_current_datetime()
             ]
         );
@@ -223,7 +223,7 @@ class Item extends Model
         foreach ($data as $item_data) {
 
             // we retrieve user bid on the item
-            $user_bid = self::get_user_bid($item_data['id'], 4);
+            $user_bid = self::get_user_bid($item_data['id'], $id);
 
             // items on which user has placed bids are always in auction
             $is_auction = true;
@@ -314,8 +314,7 @@ class Item extends Model
             from bids b
             join users u on u.id = b.owner
             join v_items_status vis on vis.id = b.item
-            where b.amount = vis.max_bid
-            and u.id = :user_id
+            where u.id = :user_id
             and vis.id = :item_id;",
             [
                 "item_id" => $item_id,
@@ -331,7 +330,7 @@ class Item extends Model
         return $data['bid'];
     }
 
-    public static function get_user_available_items(string $pseudo)
+    public static function get_user_available_items(int $id)
     {
         $user_available_items = [];
 
@@ -343,13 +342,13 @@ class Item extends Model
             (
                 -- CONDITION 1: Active Auctions NOT bid on by user AND Not owned by User
                 (vis.is_auction = 1
-                AND vis.owner != (SELECT id FROM users WHERE pseudo = :pseudo) -- Check: NOT Owned by User
+                AND vis.owner != (SELECT id FROM users WHERE id = :id) -- Check: NOT Owned by User
                 AND vis.id NOT IN ( -- Check: NOT Bid on by User
                 SELECT DISTINCT vis_sub.id
                 FROM users u
                 JOIN bids b ON b.owner = u.id
                 JOIN v_items_status vis_sub ON vis_sub.id = b.item
-                WHERE u.pseudo = :pseudo
+                WHERE u.id = :id
                 )
             )
 
@@ -361,7 +360,7 @@ class Item extends Model
                     AND vis.owner NOT IN (
                     SELECT DISTINCT u.id
                     FROM users u
-                    WHERE u.pseudo = :pseudo
+                    WHERE u.id = :id
                     )
                 )
             )
@@ -369,7 +368,7 @@ class Item extends Model
             ORDER BY vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
-                "pseudo" => $pseudo
+                "id" => $id
             ]
         );
 

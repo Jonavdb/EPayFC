@@ -449,11 +449,11 @@ class ControllerItem extends Controller
         // we retrive the user session
         $user = $this->get_user_or_false();
 
-        // we retrive items the user placed a bid on
-        $user_bid_items = Item::get_user_bid_items($user->pseudo);
+        // we retrieve items the user placed a bid on
+        $user_bid_items = Item::get_user_bid_items($user->id);
 
         // we retrieve items available for him to purchase or place a bid 
-        $user_available_items = Item::get_user_available_items($user->pseudo);
+        $user_available_items = Item::get_user_available_items($user->id);
 
         (new View("browse_items"))->show(
             [
@@ -465,6 +465,9 @@ class ControllerItem extends Controller
 
     public function purchases(): void
     {
+        // we retrive the user session
+        $user = $this->get_user_or_false();
+
         $purchases = Item::get_purchases('Boris');
         (new View("see_my_purchases"))->show([
             "purchases" => $purchases
