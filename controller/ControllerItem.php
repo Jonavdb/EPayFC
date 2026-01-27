@@ -446,12 +446,14 @@ class ControllerItem extends Controller
 
     public function browse()
     {
-        // TODO -> use this to get the pseudo or the id once login view is linked to browse items view
+        // we retrive the user session
         $user = $this->get_user_or_false();
 
-        // TODO -> replace 'Boris' with user pseudo OR user id
-        $user_bid_items = Item::get_user_bid_items('Boris');
-        $user_available_items = Item::get_user_available_items('Boris');
+        // we retrive items the user placed a bid on
+        $user_bid_items = Item::get_user_bid_items($user->pseudo);
+
+        // we retrieve items available for him to purchase or place a bid 
+        $user_available_items = Item::get_user_available_items($user->pseudo);
 
         (new View("browse_items"))->show(
             [
