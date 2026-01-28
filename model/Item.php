@@ -813,7 +813,7 @@ class Item extends Model
         return $purchases;
     }
 
-    public static function get_sales($pseudo)
+    public static function get_sales(int $user_id)
     {
 
         $sales = [];
@@ -850,12 +850,12 @@ class Item extends Model
             JOIN users seller ON seller.id = vis.owner 
 
             WHERE :today > vis.end_at   
-            AND seller.pseudo = :pseudo     -- we specifiy the pseudo of the seller associated with the items
+            AND seller.id = :user_id   -- we specifiy the pseudo of the seller associated with the items
             AND b.amount = vis.max_bid      -- we keep only the user the winning bids or what he purchased directly
             ORDER BY vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
-                "pseudo" => $pseudo
+                "user_id" => $user_id
             ]
         );
 
@@ -866,7 +866,7 @@ class Item extends Model
 
         foreach ($data as $item_data) {
             // should be 0/null because user is the owner
-            $user_bid = Item::get_user_bid($item_data['item_id'], 4);
+            $user_bid = Item::get_user_bid($item_data['item_id'], $user_id);
 
             // we retrieve name of bidder
             $bidder_name = $item_data['bidder_name'];
@@ -891,19 +891,21 @@ class Item extends Model
             );
 
             $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
-            if (!$data_image_urls) {
-                return false;
-            }
 
             $image_urls = (array) $data_image_urls;
 
+            // Image par défaut (Placeholder)
+            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+
             // we retrieve main picture
-            $main_image_url = $image_urls[0];
-            $path_parts = pathinfo($main_image_url);
-            $main_image_url = $path_parts['dirname'] . '/' .
-                $path_parts['filename'] .
-                '_thumbnail.' .
-                $path_parts['extension'];
+            if (!empty($image_urls)) {
+                $main_image_url = $image_urls[0];
+                $path_parts = pathinfo($main_image_url);
+                $main_image_url = $path_parts['dirname'] . '/' .
+                    $path_parts['filename'] .
+                    '_thumbnail.' .
+                    $path_parts['extension'];
+            }
 
             // we retrieve the title
             $title = $item_data['title'];

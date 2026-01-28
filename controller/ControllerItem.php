@@ -476,7 +476,10 @@ class ControllerItem extends Controller
 
     public function sales(): void
     {
-        $sales = Item::get_sales("Boris");
+        // we retrive the user session
+        $user = $this->get_user_or_false();
+
+        $sales = Item::get_sales($user->id);
         (new View("see_my_sales"))->show(
             [
                 "sales" => $sales
