@@ -449,16 +449,20 @@ class ControllerItem extends Controller
         // we retrive the user session
         $user = $this->get_user_or_false();
 
+        // we check whether it's an existing user or a guest
+        $is_guest = $user == false;
+
         // we retrieve items the user placed a bid on
-        $user_bid_items = Item::get_user_bid_items($user->id);
+        $user_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->id);
 
         // we retrieve items available for him to purchase or place a bid 
-        $user_available_items = Item::get_user_available_items($user->id);
+        $user_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->id);
 
         (new View("browse_items"))->show(
             [
                 "user_bid_items" => $user_bid_items,
-                "user_available_items" => $user_available_items
+                "user_available_items" => $user_available_items,
+                "is_guest" => $is_guest
             ]
         );
     }

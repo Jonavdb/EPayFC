@@ -957,4 +957,118 @@ class Item extends Model
 
         return $sales;
     }
+
+    public static function get_all_available_items()
+    {
+        $items = [];
+        $query = self::execute(
+            "SELECT * from v_items_status vis
+            WHERE :today BETWEEN vis.created_at AND vis.end_at
+            ORDER by vis.id",
+            [
+                "today" => AppTime::get_current_datetime(),
+            ]
+        );
+
+        $data = $query->fetchAll();
+        if (!$data) {
+            return [];
+        }
+
+        foreach ($data as $item_data) {
+            // available items have no user bid on them
+            $user_bid = 0;
+
+            // we get info of whether the item is in auction or not
+            $is_auction = $item_data['is_auction'];
+
+            // we get the info whether or not the item can be purchased directly
+            $has_buy_now = $item_data['has_buy_now'];
+            $has_buy_now = $has_buy_now == 1 ? true : false;
+
+            // we get the info whether or not the item last bid exceeds the direct sale price
+            $buy_now_reached = $item_data['buy_now_reached'];
+
+            // we retrieve item pictures
+            $query_image_urls = self::execute(
+                "SELECT picture_path
+                FROM item_pictures p
+                where p.item = :item_id
+                Order BY priority ASC",
+                ["item_id" => $item_data['id']]
+            );
+
+            $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
+
+            $image_urls = (array) $data_image_urls;
+
+            // Image par défaut (Placeholder)
+            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+
+            // we retrieve main picture
+            if (!empty($image_urls)) {
+                $main_image_url = $image_urls[0];
+                $path_parts = pathinfo($main_image_url);
+                $main_image_url = $path_parts['dirname'] . '/' .
+                    $path_parts['filename'] .
+                    '_thumbnail.' .
+                    $path_parts['extension'];
+            }
+
+            // we retrieve the title
+            $title = $item_data['title'];
+
+            // we retrieve owner name
+            $query_owner_name = self::execute(
+                "SELECT DISTINCT u.pseudo as owner_name
+                from users u
+                join v_items_status i on i.owner = u.id
+                where i.owner = :owner_id",
+                ["owner_id" => $item_data['owner']]
+            );
+
+            $data_owner_name = $query_owner_name->fetch();
+
+            if (!$data) {
+                return false;
+            }
+
+            $owner_name = $data_owner_name['owner_name'];
+
+            // we retrieve the price
+            $price = $item_data['buy_now_price'];
+            if ($price == null) {
+                $price = 0;
+            }
+
+
+            // we retrieve the current bid -> max bid for this item
+            $has_bids = $item_data['has_bids'];
+            if ($is_auction) {
+                if ($has_bids) {
+                    $current_bid = $item_data['max_bid'];
+                } else {
+                    $current_bid = 0.0;
+                }
+            } else {
+                $current_bid = 0;
+            }
+
+            // unused variables
+            $description = '';
+            $owner_role = '';
+            $duration_days = 0;
+
+
+            // we retrieve time left
+            $today = new DateTime(AppTime::get_current_datetime());
+            $end_at = new DateTime($item_data['end_at']);
+            $time_left_datetime = $end_at->diff($today);
+            $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
+
+            $items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, 0, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
+        }
+
+        return $items;
+    }
 }
