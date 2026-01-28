@@ -446,24 +446,33 @@ class ControllerItem extends Controller
 
     public function browse()
     {
-        // TODO -> use this to get the pseudo or the id once login view is linked to browse items view
+        // we retrive the user session
         $user = $this->get_user_or_false();
 
-        // TODO -> replace 'Boris' with user pseudo OR user id
-        $user_bid_items = Item::get_user_bid_items('Boris');
-        $user_available_items = Item::get_user_available_items('Boris');
+        // we check whether it's an existing user or a guest
+        $is_guest = $user == false;
+
+        // we retrieve items the user placed a bid on
+        $user_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->id);
+
+        // we retrieve items available for him to purchase or place a bid 
+        $user_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->id);
 
         (new View("browse_items"))->show(
             [
                 "user_bid_items" => $user_bid_items,
-                "user_available_items" => $user_available_items
+                "user_available_items" => $user_available_items,
+                "is_guest" => $is_guest
             ]
         );
     }
 
     public function purchases(): void
     {
-        $purchases = Item::get_purchases('Boris');
+        // we retrive the user session
+        $user = $this->get_user_or_false();
+
+        $purchases = Item::get_purchases($user->id);
         (new View("see_my_purchases"))->show([
             "purchases" => $purchases
         ]);
@@ -471,7 +480,10 @@ class ControllerItem extends Controller
 
     public function sales(): void
     {
-        $sales = Item::get_sales("Boris");
+        // we retrive the user session
+        $user = $this->get_user_or_false();
+
+        $sales = Item::get_sales($user->id);
         (new View("see_my_sales"))->show(
             [
                 "sales" => $sales

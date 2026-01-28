@@ -195,7 +195,7 @@ class Item extends Model
         return true;
     }
 
-    public static function get_user_bid_items(string $pseudo)
+    public static function get_user_bid_items(int $id)
     {
         $user_bid_items = [];
 
@@ -205,11 +205,11 @@ class Item extends Model
             from users u
             join bids b on b.owner = u.id
             join v_items_status vis on vis.id = b.item
-            where u.pseudo = :pseudo
+            where u.id = :id
             and :today BETWEEN vis.created_at AND vis.end_at
             order by vis.id",
             [
-                "pseudo" => $pseudo,
+                "id" => $id,
                 "today" => AppTime::get_current_datetime()
             ]
         );
@@ -223,7 +223,7 @@ class Item extends Model
         foreach ($data as $item_data) {
 
             // we retrieve user bid on the item
-            $user_bid = self::get_user_bid($item_data['id'], 4);
+            $user_bid = self::get_user_bid($item_data['id'], $id);
 
             // items on which user has placed bids are always in auction
             $is_auction = true;
@@ -249,7 +249,7 @@ class Item extends Model
             $image_urls = (array) $data_image_urls;
 
             // Image par défaut (Placeholder)
-            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+            $main_image_url = "";
 
             // we retrieve main picture
             if (!empty($image_urls)) {
@@ -314,8 +314,7 @@ class Item extends Model
             from bids b
             join users u on u.id = b.owner
             join v_items_status vis on vis.id = b.item
-            where b.amount = vis.max_bid
-            and u.id = :user_id
+            where u.id = :user_id
             and vis.id = :item_id;",
             [
                 "item_id" => $item_id,
@@ -331,7 +330,7 @@ class Item extends Model
         return $data['bid'];
     }
 
-    public static function get_user_available_items(string $pseudo)
+    public static function get_user_available_items(int $id)
     {
         $user_available_items = [];
 
@@ -343,13 +342,13 @@ class Item extends Model
             (
                 -- CONDITION 1: Active Auctions NOT bid on by user AND Not owned by User
                 (vis.is_auction = 1
-                AND vis.owner != (SELECT id FROM users WHERE pseudo = :pseudo) -- Check: NOT Owned by User
+                AND vis.owner != (SELECT id FROM users WHERE id = :id) -- Check: NOT Owned by User
                 AND vis.id NOT IN ( -- Check: NOT Bid on by User
                 SELECT DISTINCT vis_sub.id
                 FROM users u
                 JOIN bids b ON b.owner = u.id
                 JOIN v_items_status vis_sub ON vis_sub.id = b.item
-                WHERE u.pseudo = :pseudo
+                WHERE u.id = :id
                 )
             )
 
@@ -361,7 +360,7 @@ class Item extends Model
                     AND vis.owner NOT IN (
                     SELECT DISTINCT u.id
                     FROM users u
-                    WHERE u.pseudo = :pseudo
+                    WHERE u.id = :id
                     )
                 )
             )
@@ -369,7 +368,7 @@ class Item extends Model
             ORDER BY vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
-                "pseudo" => $pseudo
+                "id" => $id
             ]
         );
 
@@ -671,7 +670,7 @@ class Item extends Model
         );
     }
 
-    public static function get_purchases($pseudo)
+    public static function get_purchases(int $id)
     {
         $purchases = [];
 
@@ -709,23 +708,23 @@ class Item extends Model
             JOIN users seller ON seller.id = vis.owner 
 
             WHERE :today > vis.end_at   
-            AND u.pseudo = :pseudo          -- we specifiy the target user
+            AND u.id = :id         -- we specifiy the target user
             AND b.amount = vis.max_bid      -- we keep only the user the winning bids or what he purchased directly
             ORDER BY vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
-                "pseudo" => $pseudo
+                "id" => $id
             ]
         );
 
         $data = $query->fetchAll();
         if (!$data) {
-            return false;
+            return [];
         }
 
         foreach ($data as $item_data) {
             // available items have no user bid on them
-            $user_bid = Item::get_user_bid($item_data['item_id'], 4); // for debug, for is boris id
+            $user_bid = Item::get_user_bid($item_data['item_id'], $id); // for debug, for is boris id
 
             // we get info of whether the item is in auction or not
             $is_auction = $item_data['is_auction'];
@@ -747,19 +746,21 @@ class Item extends Model
             );
 
             $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
-            if (!$data_image_urls) {
-                return false;
-            }
 
             $image_urls = (array) $data_image_urls;
 
+            // Image par défaut (Placeholder)
+            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+
             // we retrieve main picture
-            $main_image_url = $image_urls[0];
-            $path_parts = pathinfo($main_image_url);
-            $main_image_url = $path_parts['dirname'] . '/' .
-                $path_parts['filename'] .
-                '_thumbnail.' .
-                $path_parts['extension'];
+            if (!empty($image_urls)) {
+                $main_image_url = $image_urls[0];
+                $path_parts = pathinfo($main_image_url);
+                $main_image_url = $path_parts['dirname'] . '/' .
+                    $path_parts['filename'] .
+                    '_thumbnail.' .
+                    $path_parts['extension'];
+            }
 
             // we retrieve the title
             $title = $item_data['title'];
@@ -812,7 +813,7 @@ class Item extends Model
         return $purchases;
     }
 
-    public static function get_sales($pseudo)
+    public static function get_sales(int $user_id)
     {
 
         $sales = [];
@@ -849,23 +850,23 @@ class Item extends Model
             JOIN users seller ON seller.id = vis.owner 
 
             WHERE :today > vis.end_at   
-            AND seller.pseudo = :pseudo     -- we specifiy the pseudo of the seller associated with the items
+            AND seller.id = :user_id   -- we specifiy the pseudo of the seller associated with the items
             AND b.amount = vis.max_bid      -- we keep only the user the winning bids or what he purchased directly
             ORDER BY vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
-                "pseudo" => $pseudo
+                "user_id" => $user_id
             ]
         );
 
         $data = $query->fetchAll();
         if (!$data) {
-            return false;
+            return [];
         }
 
         foreach ($data as $item_data) {
             // should be 0/null because user is the owner
-            $user_bid = Item::get_user_bid($item_data['item_id'], 4);
+            $user_bid = Item::get_user_bid($item_data['item_id'], $user_id);
 
             // we retrieve name of bidder
             $bidder_name = $item_data['bidder_name'];
@@ -890,19 +891,21 @@ class Item extends Model
             );
 
             $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
-            if (!$data_image_urls) {
-                return false;
-            }
 
             $image_urls = (array) $data_image_urls;
 
+            // Image par défaut (Placeholder)
+            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+
             // we retrieve main picture
-            $main_image_url = $image_urls[0];
-            $path_parts = pathinfo($main_image_url);
-            $main_image_url = $path_parts['dirname'] . '/' .
-                $path_parts['filename'] .
-                '_thumbnail.' .
-                $path_parts['extension'];
+            if (!empty($image_urls)) {
+                $main_image_url = $image_urls[0];
+                $path_parts = pathinfo($main_image_url);
+                $main_image_url = $path_parts['dirname'] . '/' .
+                    $path_parts['filename'] .
+                    '_thumbnail.' .
+                    $path_parts['extension'];
+            }
 
             // we retrieve the title
             $title = $item_data['title'];
@@ -953,5 +956,119 @@ class Item extends Model
         }
 
         return $sales;
+    }
+
+    public static function get_all_available_items()
+    {
+        $items = [];
+        $query = self::execute(
+            "SELECT * from v_items_status vis
+            WHERE :today BETWEEN vis.created_at AND vis.end_at
+            ORDER by vis.id",
+            [
+                "today" => AppTime::get_current_datetime(),
+            ]
+        );
+
+        $data = $query->fetchAll();
+        if (!$data) {
+            return [];
+        }
+
+        foreach ($data as $item_data) {
+            // available items have no user bid on them
+            $user_bid = 0;
+
+            // we get info of whether the item is in auction or not
+            $is_auction = $item_data['is_auction'];
+
+            // we get the info whether or not the item can be purchased directly
+            $has_buy_now = $item_data['has_buy_now'];
+            $has_buy_now = $has_buy_now == 1 ? true : false;
+
+            // we get the info whether or not the item last bid exceeds the direct sale price
+            $buy_now_reached = $item_data['buy_now_reached'];
+
+            // we retrieve item pictures
+            $query_image_urls = self::execute(
+                "SELECT picture_path
+                FROM item_pictures p
+                where p.item = :item_id
+                Order BY priority ASC",
+                ["item_id" => $item_data['id']]
+            );
+
+            $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
+
+            $image_urls = (array) $data_image_urls;
+
+            // Image par défaut (Placeholder)
+            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+
+            // we retrieve main picture
+            if (!empty($image_urls)) {
+                $main_image_url = $image_urls[0];
+                $path_parts = pathinfo($main_image_url);
+                $main_image_url = $path_parts['dirname'] . '/' .
+                    $path_parts['filename'] .
+                    '_thumbnail.' .
+                    $path_parts['extension'];
+            }
+
+            // we retrieve the title
+            $title = $item_data['title'];
+
+            // we retrieve owner name
+            $query_owner_name = self::execute(
+                "SELECT DISTINCT u.pseudo as owner_name
+                from users u
+                join v_items_status i on i.owner = u.id
+                where i.owner = :owner_id",
+                ["owner_id" => $item_data['owner']]
+            );
+
+            $data_owner_name = $query_owner_name->fetch();
+
+            if (!$data) {
+                return false;
+            }
+
+            $owner_name = $data_owner_name['owner_name'];
+
+            // we retrieve the price
+            $price = $item_data['buy_now_price'];
+            if ($price == null) {
+                $price = 0;
+            }
+
+
+            // we retrieve the current bid -> max bid for this item
+            $has_bids = $item_data['has_bids'];
+            if ($is_auction) {
+                if ($has_bids) {
+                    $current_bid = $item_data['max_bid'];
+                } else {
+                    $current_bid = 0.0;
+                }
+            } else {
+                $current_bid = 0;
+            }
+
+            // unused variables
+            $description = '';
+            $owner_role = '';
+            $duration_days = 0;
+
+
+            // we retrieve time left
+            $today = new DateTime(AppTime::get_current_datetime());
+            $end_at = new DateTime($item_data['end_at']);
+            $time_left_datetime = $end_at->diff($today);
+            $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
+
+            $items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, 0, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
+        }
+
+        return $items;
     }
 }
