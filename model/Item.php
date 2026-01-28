@@ -249,7 +249,7 @@ class Item extends Model
             $image_urls = (array) $data_image_urls;
 
             // Image par défaut (Placeholder)
-            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+            $main_image_url = "";
 
             // we retrieve main picture
             if (!empty($image_urls)) {
@@ -670,7 +670,7 @@ class Item extends Model
         );
     }
 
-    public static function get_purchases($pseudo)
+    public static function get_purchases(int $id)
     {
         $purchases = [];
 
@@ -708,12 +708,12 @@ class Item extends Model
             JOIN users seller ON seller.id = vis.owner 
 
             WHERE :today > vis.end_at   
-            AND u.pseudo = :pseudo          -- we specifiy the target user
+            AND u.id = :id         -- we specifiy the target user
             AND b.amount = vis.max_bid      -- we keep only the user the winning bids or what he purchased directly
             ORDER BY vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
-                "pseudo" => $pseudo
+                "id" => $id
             ]
         );
 
@@ -724,7 +724,7 @@ class Item extends Model
 
         foreach ($data as $item_data) {
             // available items have no user bid on them
-            $user_bid = Item::get_user_bid($item_data['item_id'], 4); // for debug, for is boris id
+            $user_bid = Item::get_user_bid($item_data['item_id'], $id); // for debug, for is boris id
 
             // we get info of whether the item is in auction or not
             $is_auction = $item_data['is_auction'];
@@ -746,19 +746,21 @@ class Item extends Model
             );
 
             $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
-            if (!$data_image_urls) {
-                return false;
-            }
 
             $image_urls = (array) $data_image_urls;
 
+            // Image par défaut (Placeholder)
+            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+
             // we retrieve main picture
-            $main_image_url = $image_urls[0];
-            $path_parts = pathinfo($main_image_url);
-            $main_image_url = $path_parts['dirname'] . '/' .
-                $path_parts['filename'] .
-                '_thumbnail.' .
-                $path_parts['extension'];
+            if (!empty($image_urls)) {
+                $main_image_url = $image_urls[0];
+                $path_parts = pathinfo($main_image_url);
+                $main_image_url = $path_parts['dirname'] . '/' .
+                    $path_parts['filename'] .
+                    '_thumbnail.' .
+                    $path_parts['extension'];
+            }
 
             // we retrieve the title
             $title = $item_data['title'];

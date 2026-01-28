@@ -468,7 +468,7 @@ class ControllerItem extends Controller
         // we retrive the user session
         $user = $this->get_user_or_false();
 
-        $purchases = Item::get_purchases('Boris');
+        $purchases = Item::get_purchases($user->id);
         (new View("see_my_purchases"))->show([
             "purchases" => $purchases
         ]);
