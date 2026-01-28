@@ -861,7 +861,7 @@ class Item extends Model
 
         $data = $query->fetchAll();
         if (!$data) {
-            return false;
+            return [];
         }
 
         foreach ($data as $item_data) {
