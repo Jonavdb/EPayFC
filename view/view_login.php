@@ -14,74 +14,80 @@
 
 <body>
     <main>
-        <form id="loginForm" action="user/login" method="post">
-            <h2 class="text-center text-white">Sign in</h2>
-            <span class="divider"></span>
+        <div class="mb-5">
+            <h1 class="display-4"><i class="fa fa-shopping-cart display-4"></i> EPayFC</h1>
+        </div>
 
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-dark border-secondary text-light">
-                    <i class="fa-solid fa-user"></i>
-                </span>
-                <input type="email" name="email" class="form-control bg-dark border-secondary text-light" placeholder="Mail" aria-label="Mail">
-            </div>
+        <div class="mt-3">
+            <form id="loginForm" action="user/login" method="post">
+                <h2 class="text-center text-white">Sign in</h2>
+                <span class="divider"></span>
 
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-dark border-secondary text-light">
-                    <i class="fa-solid fa-key"></i>
-                </span>
-                <input type="password" name="password" class="form-control bg-dark border-secondary text-light" placeholder="********" aria-label="Password">
-            </div>
-
-            <div class="d-grid gap-3">
-                <input type="submit" class="btn btn-primary fw-normal" value="Login">
-                <a href="user/guest_login" class="btn btn-secondary fw-normal text-decoration-none">Continue as guest</a>
-            </div>
-
-            <div class="text-center mt-3">
-                <span class="small">New here ? <a href="main/signup" class="text-info">Click here to subscribe !</a></span>
-            </div>
-
-            <span class="divider"></span>
-
-            <div class="debug-section text-center">
-                <h3 class="text-warning mt-3 text-bold">For Debug Purpose</h3>
-
-                <div class="debug-emails small">
-                    <?php foreach ($users ?? [] as $user): ?>
-                        <div class="text-light">
-                            <a href="user/login?email=<?= urldecode($user->email); ?>" class="font-weight-bold">
-                                Login as <?= $user->email ?>
-                            </a>
-                        </div>
-                    <?php endforeach; ?>
+                <div class="input-group mb-3">
+                    <span class="input-group-text bg-dark border-secondary text-light">
+                        <i class="fa-solid fa-user"></i>
+                    </span>
+                    <input type="email" name="email" class="form-control bg-dark border-secondary text-light" placeholder="Mail" aria-label="Mail">
                 </div>
 
-                <div class="debug-actions small fw-bold">
-                    <div class="mb-1 mt-1">
-                        <a href="setup/index" class="text-success">Restore original data</a>
-                    </div>
-
-                    <div class="mb-1">
-                        <a href="setup/export" class="text-warning">Backup personal data</a>
-                    </div>
-
-                    <div>
-                        <a href="setup/restore" class="text-warning">Restore personal data</a>
-                    </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text bg-dark border-secondary text-light">
+                        <i class="fa-solid fa-key"></i>
+                    </span>
+                    <input type="password" name="password" class="form-control bg-dark border-secondary text-light" placeholder="********" aria-label="Password">
                 </div>
-            </div>
 
-            <?php if (count($errors) != 0): ?>
-                <div class='errors'>
-                    <p>Please correct the following error(s) :</p>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?= $error ?></li>
+                <div class="d-grid gap-3">
+                    <input type="submit" class="btn btn-primary fw-normal" value="Login">
+                    <a href="user/guest_login" class="btn btn-secondary fw-normal text-decoration-none">Continue as guest</a>
+                </div>
+
+                <div class="text-center mt-3">
+                    <span class="small">New here ? <a href="main/signup" class="text-info">Click here to subscribe !</a></span>
+                </div>
+
+                <span class="divider"></span>
+
+                <div class="debug-section text-center">
+                    <h3 class="text-warning mt-3 text-bold">For Debug Purpose</h3>
+
+                    <div class="debug-emails small">
+                        <?php foreach ($users ?? [] as $user): ?>
+                            <div class="text-light">
+                                <a href="user/login?email=<?= urldecode($user->email); ?>" class="font-weight-bold">
+                                    Login as <?= $user->email ?>
+                                </a>
+                            </div>
                         <?php endforeach; ?>
-                    </ul>
+                    </div>
+
+                    <div class="debug-actions small fw-bold">
+                        <div class="mb-1 mt-1">
+                            <a href="setup/index" class="text-success">Restore original data</a>
+                        </div>
+
+                        <div class="mb-1">
+                            <a href="setup/export" class="text-warning">Backup personal data</a>
+                        </div>
+
+                        <div>
+                            <a href="setup/restore" class="text-warning">Restore personal data</a>
+                        </div>
+                    </div>
                 </div>
-            <?php endif; ?>
-        </form>
+
+                <?php if (count($errors) != 0): ?>
+                    <div class='errors'>
+                        <p>Please correct the following error(s) :</p>
+                        <ul>
+                            <?php foreach ($errors as $error): ?>
+                                <li><?= $error ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
+            </form>
+        </div>
     </main>
 </body>
 
