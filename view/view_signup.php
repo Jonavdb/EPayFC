@@ -23,7 +23,13 @@
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-solid fa-envelope"></i>
                 </span>
-                <input type="email" name="email" id="email" class="form-control bg-dark border-secondary text-light" placeholder="Mail">
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    class="form-control bg-dark border-secondary text-light"
+                    value="<?= htmlspecialchars($email); ?>"
+                    placeholder="Mail">
             </div>
 
             <!-- FULL NAME -->
@@ -31,7 +37,13 @@
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-solid fa-user"></i>
                 </span>
-                <input type="text" name="full_name" id="full_name" class="form-control bg-dark border-secondary text-light" placeholder="Full name">
+                <input
+                    type="text"
+                    name="full_name"
+                    id="full_name"
+                    class="form-control bg-dark border-secondary text-light"
+                    value="<?= htmlspecialchars($full_name); ?>"
+                    placeholder="Full name">
             </div>
 
             <!-- PSEUDO -->
@@ -39,7 +51,12 @@
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-regular fa-face-grin"></i>
                 </span>
-                <input type="text" name="pseudo" id="pseudo" class="form-control bg-dark border-secondary text-light" placeholder="Pseudo">
+                <input type="text"
+                    name="pseudo"
+                    id="pseudo"
+                    class="form-control bg-dark border-secondary text-light"
+                    value="<?= htmlspecialchars($pseudo); ?>"
+                    placeholder="Pseudo">
             </div>
 
             <!-- PASSWORD -->
@@ -47,7 +64,12 @@
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-solid fa-key"></i>
                 </span>
-                <input type="password" name="password" id="password" class="form-control bg-dark border-secondary text-light" placeholder="******">
+                <input type="password"
+                    name="password"
+                    id="password"
+                    class="form-control bg-dark border-secondary text-light"
+                    value="<?= htmlspecialchars($password); ?>"
+                    placeholder="******">
             </div>
 
             <!-- CONFIRM PASSWORD -->
@@ -55,7 +77,12 @@
                 <span class="input-group-text bg-dark border-secondary text-light">
                     <i class="fa-solid fa-key"></i>
                 </span>
-                <input type="password" name="password_confirm" id="password_confirm" class="form-control bg-dark border-secondary text-light" placeholder="******">
+                <input type="password"
+                    name="password_confirm"
+                    id="password_confirm"
+                    class="form-control bg-dark border-secondary text-light"
+                    value="<?= htmlspecialchars($password_confirm); ?>"
+                    placeholder="******">
             </div>
 
             <!-- Boutons -->
