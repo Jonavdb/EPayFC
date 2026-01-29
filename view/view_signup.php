@@ -1,3 +1,7 @@
+<?php
+require_once "utils/GoBack.php";
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -88,7 +92,7 @@
             <!-- Boutons -->
             <div class="d-grid gap-3">
                 <input type="submit" class="btn btn-primary" value="Sign Up">
-                <button type="button" class="btn btn-danger">Cancel</button>
+                <a href="<?= GoBack::go_back() ?>"><button type="button" class="btn btn-danger w-100">Cancel</button></a>
             </div>
 
             <?php if (count($errors) != 0): ?>
