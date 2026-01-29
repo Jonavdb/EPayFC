@@ -292,20 +292,30 @@ $image_to_display = $item->main_image_url;
             <span>Browse</span>
           </a>
 
-          <a class="nav-link text-center text-secondary" href="item/list">
-            <i class="fas fa-home fs-4 mb-1 d-block"></i>
-            <span>My Items</span>
-          </a>
+          <?php if ($current_user) { ?>
 
-          <a class="nav-link text-center text-secondary" href="item/add">
-            <i class="fa-solid fa-plus fs-4 mb-1 d-block"></i>
-            <span>Add Offer</span>
-          </a>
 
-          <a class="nav-link text-center text-secondary" href="user/profile">
-            <i class="fa-solid fa-gear fs-4 mb-1 d-block"></i>
-            <span>Profile</span>
-          </a>
+            <a class="nav-link text-center text-secondary" href="item/list">
+              <i class="fas fa-home fs-4 mb-1 d-block"></i>
+              <span>My Items</span>
+            </a>
+
+            <a class="nav-link text-center text-secondary" href="item/add">
+              <i class="fa-solid fa-plus fs-4 mb-1 d-block"></i>
+              <span>Add Offer</span>
+            </a>
+
+            <a class="nav-link text-center text-secondary" href="user/profile">
+              <i class="fa-solid fa-gear fs-4 mb-1 d-block"></i>
+              <span>Profile</span>
+            </a>
+
+          <?php } else { ?>
+            <a class="nav-link text-center text-secondary" href="main/signup">
+              <i class="fa-solid fa-wand-magic-sparkles fs-4 mb-1 d-block"></i>
+              <span>Join us</span>
+            </a>
+          <?php } ?>
         </div>
       </div>
     </nav>
