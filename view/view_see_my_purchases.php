@@ -1,3 +1,5 @@
+<?php require_once "utils/GoBack.php"; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,9 +23,9 @@
             <!--  takes up 5% of row width for centering -->
             <!-- left : back button -->
             <div class="flex-grow-1 text-start" style="max-width: 5%;">
-                <button class="btn btn-link d-inline-flex justify-content-start" style="padding-left: 0.5rem;">
-                    <i class="fa-solid fa-arrow-left text-primary"></i>
-                </button>
+                <a href="<?= GoBack::go_back() ?>" class="btn-icon">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
             </div>
 
             <!-- mx-auto is margin-left: auto; margin-right: auto; for centering -->
