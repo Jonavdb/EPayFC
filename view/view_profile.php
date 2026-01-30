@@ -41,7 +41,7 @@
                 <div class="mb-3">
                     <!-- Setup d'une image par défaut si l'user n'a pas d'avatar -->
                     <?php
-                    $avatarPath = "uploads/users/4/avatar_default.jpg"; // Image par défaut
+                    $avatarPath = "/database/prwb_2526_f03_images_backup/default_user_image.jpg"; // Image par défaut
 
                     if (!empty($user->picture_path) && file_exists($user->picture_path)) {
                         $avatarPath = $user->picture_path;
