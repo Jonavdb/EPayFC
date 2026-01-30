@@ -142,7 +142,7 @@
 
                               <!-- item card -->
                               <div class="col">
-                                   <a href="#" class="card bg-dark w-100 h-100 text-decoration-none">
+                                   <a href="item/open/<?= $sale->id ?>/from-sales" class="card bg-dark w-100 h-100 text-decoration-none">
                                         <!-- we wrap the card inside a container to adjust height taken by top cell and bottom cell-->
                                         <div class="d-flex flex-column h-100">
 
@@ -291,46 +291,97 @@
 
      <!-- FOOTER -->
      <footer class="content-box">
-          <nav class="navbar fixed-bottom navbar-dark bg-dark">
-               <!-- Use the 'container-fluid' or 'w-100' for full width in the footer -->
-               <div class="container-fluid">
+          <div class="fixed-bottom">
 
-                    <div class="d-flex justify-content-around w-100">
-                         <!-- Browse Link -->
-                         <a class="bottom-nav-link text-decoration-none" href="item/browse">
-                              <div class="d-flex flex-column">
-                                   <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
-                                   <div>Browse</div>
-                              </div>
-                         </a>
+               <nav class="navbar navbar-dark bg-dark border-top">
+                    <div class="container-fluid">
 
+                         <div class="d-flex justify-content-around w-100 py-1">
 
-                         <!-- My Items Link -->
-                         <a class="bottom-nav-link text-decoration-none" href="item/list">
-                              <div class="d-flex flex-column">
-                                   <div class="d-flex justify-content-center w-100"><i class="fas fa-home"></i></div>
-                                   <div>My Items</div>
-                              </div>
-                         </a>
+                              <a class="bottom-nav-link text-decoration-none" href="item/browse">
+                                   <div class="d-flex flex-column text-center">
+                                        <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
+                                        <div>Browse</div>
+                                   </div>
+                              </a>
 
-                         <!-- Add Offer Link -->
-                         <a class="bottom-nav-link text-decoration-none" href="item/add">
-                              <div class="d-flex flex-column">
-                                   <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-plus"></i></div>
-                                   <div>Add Offer</div>
-                              </div>
-                         </a>
+                              <a class="bottom-nav-link text-decoration-none" href="item/list">
+                                   <div class="d-flex flex-column text-center">
+                                        <div class="d-flex justify-content-center w-100"><i class="fas fa-home"></i></div>
+                                        <div>My Items</div>
+                                   </div>
+                              </a>
 
+                              <?php
 
-                         <!-- Profile Link -->
-                         <a class="bottom-nav-link text-decoration-none" href="user/profile">
-                              <div class="d-flex flex-column">
-                                   <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-gear"></i></div>
-                                   <div>Profile</div>
-                              </div>
-                         </a>
+                              // Check if a real user is connected for the following actions
+                              $is_real_user = isset($_SESSION['user']) && !empty($_SESSION['user']);
+                              if ($is_real_user):
+                              ?>
+                                   <a class="bottom-nav-link text-decoration-none" href="item/add">
+                                        <div class="d-flex flex-column text-center">
+                                             <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-plus"></i></div>
+                                             <div>Add Offer</div>
+                                        </div>
+                                   </a>
+
+                                   <a class="bottom-nav-link text-decoration-none" href="user/profile">
+                                        <div class="d-flex flex-column text-center">
+                                             <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-gear"></i></div>
+                                             <div>Profile</div>
+                                        </div>
+                                   </a>
+                              <?php endif; ?>
+
+                         </div>
+                    </div>
+               </nav>
+
+               <div class="d-flex justify-content-between align-items-center px-3" style="
+            background-color: #1e293b; 
+            border-top: 1px solid #334155; 
+            color: #94a3b8;
+            height: 40px;
+            font-size: 11px;">
+
+                    <span class="fw-bold text-white">
+                         <?php
+                         // Logic to fetch and format the application's virtual time
+                         $dt = new DateTime(AppTime::get_current_datetime());
+                         echo $dt->format('d/m/y H:i');
+                         ?>
+                    </span>
+
+                    <div class="d-flex align-items-center">
+                         <form method="post" action="time/advance" class="m-0">
+                              <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="hour">
+                              <button class="btn btn-debug text-debug-orange">
+                                   <i class="fa-regular fa-clock me-1"></i>+1h
+                              </button>
+                         </form>
+
+                         <form method="post" action="time/advance" class="m-0 ms-1">
+                              <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="day">
+                              <button class="btn btn-debug text-debug-orange">
+                                   <i class="fa-regular fa-calendar me-1"></i>+1d
+                              </button>
+                         </form>
+
+                         <form method="post" action="time/advance" class="m-0 ms-1">
+                              <input type="hidden" name="amount" value="7"><input type="hidden" name="unit" value="day">
+                              <button class="btn btn-debug text-debug-orange">
+                                   <i class="fa-regular fa-calendar-days me-1"></i>+1w
+                              </button>
+                         </form>
+
+                         <form method="post" action="time/reset" class="m-0 ms-1">
+                              <button class="btn btn-debug text-debug-red">
+                                   <i class="fa-solid fa-rotate-right"></i>
+                              </button>
+                         </form>
                     </div>
                </div>
-          </nav>
+
+          </div>
      </footer>
 </body>
