@@ -345,10 +345,21 @@ view
                         <span>Browse</span>
                     </a>
 
-                    <a class="nav-link text-center text-secondary" href="item/list">
-                        <i class="fas fa-home fs-5 mb-1 d-block"></i>
-                        <span>My Items</span>
-                    </a>
+
+                    <span>
+                        <?php if ($is_guest): ?>
+                            <a class="nav-link text-center text-secondary" href="main/signup">
+                                <i class="fa-solid fs-5 fa-file-signature d-block"></i>
+                                Join us
+                            </a>
+                        <?php else: ?>
+                            <a class="nav-link text-center text-secondary" href="item/list">
+                                <i class="fas fa-home fs-5 mb-1 d-block"></i>
+                                My Items
+                            <?php endif ?>
+                            </a>
+                    </span>
+
 
                     <?php
                     // On récupère le user connecté (s'il existe)
