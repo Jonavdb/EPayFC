@@ -1,3 +1,5 @@
+<?php require_once "utils/GoBack.php"; ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -18,7 +20,7 @@
             <nav class="navbar fixed-top navbar-dark bg-dark border-top shadow-lg">
                 <div class="container-fluid">
                     <div class="flex-grow-1 text-start" style="max-width: 5%;">
-                        <a href="user/profile" class="btn-icon">
+                        <a href="<?= GoBack::go_back() ?>" class="btn-icon">
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
                     </div>
