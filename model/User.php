@@ -150,7 +150,7 @@ class User extends Model
                     "password" => $this->password
                 ]
             );
-            $this->id = self::lastInsertId();
+            $this->id = (int)self::lastInsertId();
         }
         return $this;
     }
