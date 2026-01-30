@@ -276,8 +276,18 @@
                                    </div>
 
                                    <div class="d-flex align-items-center fs-5 text-secondary fw-bold">
+
                                         <div style="width: 5%;" class="text-start">
                                              <i class="fa-solid fa-trophy fs-5 text-secondary"></i>
+                                        </div>
+                                        <div class="ms-2"> <?= $top_buyer ?> </div>
+                                   </div>
+
+
+
+                                   <div class="d-flex align-items-center fs-5 text-secondary fw-bold">
+                                        <div style="width: 5%;" class="text-start">
+                                             <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold text-secondary"></i>
                                         </div>
                                         <div class="ms-2">Closed on <?= $sale->end_at->format('d/m/Y H:i:s'); ?></div>
                                    </div>
