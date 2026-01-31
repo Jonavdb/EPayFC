@@ -1,4 +1,4 @@
-view
+<?php require_once "utils/GoBack.php"; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,11 +22,27 @@ view
     <!-- HEADER -->
     <header class="content-box">
         <nav class="navbar fixed-top navbar-dark bg-dark border-top shadow-lg">
-            <div class="container-fluid d-flex align-items-center">
-                <div class="flex-grow-1 text-center">
-                    <div class="fw-bold fs-2" style="color: #2D68C4;"> Browse <i class="fa-solid fa-cart-shopping"></i>
-                    </div>
+
+            <!--  takes up 5% of row width for centering -->
+            <!-- left : back button -->
+            <div class="flex-grow-1 text-start" style="max-width: 5%;">
+                <a href="<?= GoBack::go_back() ?>" class="btn-icon">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+            </div>
+
+            <!-- mx-auto is margin-left: auto; margin-right: auto; for centering -->
+            <!-- middle : title  -->
+            <div class="mx-auto">
+                <div class="fw-bold fs-2" style="color: #2D68C4;">
+                    Browse <i class="fa-solid fa-cart-shopping"></i>
                 </div>
+            </div>
+
+            <!--  takes up 5% of row width for centering -->
+            <!-- right : placeholder to make page title perfectly centered  -->
+            <div class="flex-grow-1 text-end invisible" style="max-width: 5%;">
+                <button class="btn btn-primary"></button>
             </div>
         </nav>
     </header>
