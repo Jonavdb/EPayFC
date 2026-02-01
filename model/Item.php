@@ -28,7 +28,7 @@ class Item extends Model
         public bool $is_direct_sale,
         public bool $has_buy_now,
         public bool $buy_now_reached,
-        public string $time_left,
+        public DateInterval $time_left,
         public string $owner_picture
     ) {}
 
@@ -112,7 +112,7 @@ class Item extends Model
                 $row['is_direct_sale'],
                 $row['has_buy_now'],
                 $row['buy_now_reached'],
-                $time_left,
+                new DateInterval("0"),
                 $owner_picture
             );
         }
@@ -177,7 +177,7 @@ class Item extends Model
             $data['is_direct_sale'],
             $data['has_buy_now'],
             $data['buy_now_reached'],
-            '',
+            new DateInterval("0"),
             $owner_picture
         );
     }
@@ -293,8 +293,8 @@ class Item extends Model
             // we retrive time left
             $today = new DateTime(AppTime::get_current_datetime());
             $end_at = new DateTime($item_data['end_at']);
-            $time_left_datetime = $end_at->diff($today);
-            $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
+            $time_left = $end_at->diff($today);
+            //$time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
             // unused variables
             $description = '';
@@ -465,8 +465,8 @@ class Item extends Model
             // we retrieve time left
             $today = new DateTime(AppTime::get_current_datetime());
             $end_at = new DateTime($item_data['end_at']);
-            $time_left_datetime = $end_at->diff($today);
-            $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
+            $time_left = $end_at->diff($today);
+            //$time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
             $user_available_items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, 0, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
@@ -804,8 +804,8 @@ class Item extends Model
             // for debug
             $today = new DateTime(AppTime::get_current_datetime());
             $end_at =  new DateTime($item_data['end_at']);
-            $time_left_datetime = $end_at->diff($today);
-            $time_left_debug = $time_left_datetime->invert;
+            $time_left = $end_at->diff($today);
+            //$time_left_debug = $time_left_datetime->invert;
 
             $purchases[] = new Item($user_bid, null, $item_data['item_id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
@@ -949,8 +949,8 @@ class Item extends Model
             // for debug
             $today = new DateTime(AppTime::get_current_datetime());
             $end_at =  new DateTime($item_data['end_at']);
-            $time_left_datetime = $end_at->diff($today);
-            $time_left_debug = $time_left_datetime->invert;
+            $time_left = $end_at->diff($today);
+            //$time_left_debug = $time_left_datetime->invert;
 
             $sales[] = new Item($user_bid, $bidder_name, $item_data['item_id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
@@ -1063,8 +1063,8 @@ class Item extends Model
             // we retrieve time left
             $today = new DateTime(AppTime::get_current_datetime());
             $end_at = new DateTime($item_data['end_at']);
-            $time_left_datetime = $end_at->diff($today);
-            $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
+            $time_left = $end_at->diff($today);
+            //$time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
             $items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, 0, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
