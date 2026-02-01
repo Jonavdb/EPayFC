@@ -64,7 +64,7 @@ require_once "utils/AppTime.php";
             <div class="card-body">
                 <div class="text-center mb-4">
                     <div class="position-relative d-inline-block">
-                        <img src="<?= !empty($user->picture_path) ? $user->picture_path : 'uploads/users/avatar_default.jpg' ?>"
+                        <img src="<?= !empty($user->picture_path) ? $user->picture_path : 'css/images/default_user_image.jpg' ?>"
                             alt="Profile Picture"
                             class="rounded-circle border border-secondary"
                             style="width: 100px; height: 100px; object-fit: cover">
