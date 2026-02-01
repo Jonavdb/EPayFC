@@ -71,7 +71,14 @@ $image_to_display = $item->main_image_url;
 
           <img src="<?= $image_to_display ?>" class="card-img-top" alt="Piano" style="max-height: 500px; object-fit: cover;">
           <div class="card-body">
-            <p class="card-title"><?= $item->title ?></p>
+            <div class="d-flex justify-content-between align-items-start">
+              <h5 class="card-title"><?= $item->title ?></h5>
+              <?php if ($item->is_direct_sale) { ?>
+                <span class="badge rounded-pill bg-secondary text-white">Direct sale</span>
+              <?php } else { ?>
+                <span class="badge rounded-pill bg-secondary text-white">Auction</span>
+              <?php } ?>
+            </div>
             <p class="card-text text-secondary"><?= $item->description ?></p>
 
             <div class="small">
@@ -116,8 +123,8 @@ $image_to_display = $item->main_image_url;
             if ($auction_finished) {
 
               if ($winner) {
-                $current_user_pseudo = "Marc";
-                if ($winner === $current_user_pseudo) {
+                if ($winner === $current_user) {
+
               ?>
                   <div class="alert alert-dark border-secondary text-secondary mt-3">
                     Congratulations! You purchased this item for € <?= $item->current_bid ?>.

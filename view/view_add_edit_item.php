@@ -60,7 +60,7 @@ require_once "utils/GoBack.php";
     </nav>
     <?php
     $is_edit = ($item->id > 0);
-    $action_url = $is_edit ? "index.php?controller=Item&action=edit" : "index.php?controller=Item&action=add";
+    $action_url = $is_edit ? "item/edit/$item->id" : "item/add";
     ?>
 
     <form id="itemForm" action="<?= $action_url ?>" method="POST" class="bg-transparent">
@@ -78,15 +78,22 @@ require_once "utils/GoBack.php";
                     <div class=" mb-3">
                         <label for="title" class="form-label fw-bold">Item Title *</label>
                         <input type="text"
-                            class="form-control bg-black bg-opacity-25 text-white border-secondary <?= isset($errors['title']) ? 'is-invalid' : '' ?>"
+                            class="form-control bg-black bg-opacity-25 text-white border-secondary <?= isset($errors['title']) || isset($errors['empty']) ? 'is-invalid' : '' ?>"
                             id="title"
                             name="title"
                             value="<?php echo html_entity_decode($item->title) ?>">
+                        <?php if (isset($errors['empty'])) { ?>
+                            <div class="invalid-feedback">
+                                <?php echo $errors['empty'] ?>
+                            </div>
+                        <?php } ?>
+
                         <?php if (isset($errors['title'])) { ?>
                             <div class="invalid-feedback">
                                 <?php echo $errors['title'] ?>
                             </div>
                         <?php } ?>
+
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label fw-bold">Description</label>
@@ -130,7 +137,7 @@ require_once "utils/GoBack.php";
                                 <label for="starting_bid" class="form-label fw-bold text-white">Starting Bid</label>
                                 <div class="input-group">
                                     <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo (isset($errors['starting_bid']) || isset($errors['sale'])) ? 'is-invalid' : '' ?>"
+                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo (isset($errors['starting_bid']) || isset($errors['sale']) || isset($errors['sale_price'])) ? 'is-invalid' : '' ?>"
                                         id="starting_bid"
                                         name="starting_bid"
                                         value="<?php echo ($item->starting_bid > 0) ? $item->starting_bid : '' ?>">
@@ -144,6 +151,11 @@ require_once "utils/GoBack.php";
                                     <?php if (isset($errors['sale'])) { ?>
                                         <div class="invalid-feedback">
                                             <?php echo $errors['sale'] ?>
+                                        </div>
+                                    <?php } ?>
+                                    <?php if (isset($errors['sale_price'])) { ?>
+                                        <div class="invalid-feedback">
+                                            <?php echo $errors['sale_price'] ?>
                                         </div>
                                     <?php } ?>
                                 </div>

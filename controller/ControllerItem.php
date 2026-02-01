@@ -223,6 +223,10 @@ class ControllerItem extends Controller
             $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
             $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
 
+            if (strlen($item->title) === 0 || empty($item->title)) {
+                $errors['empty'] = "Title is required";
+            }
+
             if (strlen($item->title) < 3 || strlen($item->title) > 255) {
                 $errors['title'] = "Title lenght must be between 3 and 255 characters.";
             }
@@ -305,6 +309,10 @@ class ControllerItem extends Controller
             $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
             $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
 
+            if (strlen($item->title) === 0 || empty($item->title)) {
+                $errors['empty'] = "Title is required";
+            }
+
             if (strlen($item->title) < 3 || strlen($item->title) > 255) {
                 $errors['title'] = "Title lenght must be between 3 and 255 characters.";
             }
@@ -333,6 +341,7 @@ class ControllerItem extends Controller
                     $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
                 }
             } elseif ($sale_price !== null && $sale_price > 0) {
+                $item->starting_bid = 0;
                 $item->buy_now_price = $sale_price;
                 $item->is_auction = false;
                 $item->is_direct_sale = true;

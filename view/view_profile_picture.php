@@ -39,7 +39,7 @@ require_once "utils/AppTime.php";
     <nav class="navbar fixed-top navbar-dark bg-dark">
         <div class="container-fluid d-flex align-items-center mb-4 px-5">
             <div class="left-zone">
-                <a href="<?= GoBack::go_back() ?>" class="btn-icon">
+                <a href="<?= GoBack::go_back_2() ?>" class="btn-icon">
                     <i class="fa-solid fa-arrow-left" style="color: #2D68C4; font-size: 22px;"></i>
                 </a>
             </div>
