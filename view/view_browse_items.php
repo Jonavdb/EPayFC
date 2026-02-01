@@ -70,7 +70,9 @@
                                         <!-- TOP CELL (50%) -->
                                         <div class="row flex-fill" style="height:50%;">
                                             <div class="col-sm h-100 position-relative">
-                                                <img class="card-img-top h-100" src="<?= $item->main_image_url ?>" alt="Auction Item Image">
+                                                <img class="card-img-top h-100"
+                                                    src="<?= $item->main_image_url ?>"
+                                                    alt="Auction Item Image">
 
                                                 <!-- Everything that is on top of the item image -->
                                                 <div class="card-img-overlay d-flex flex-column justify-content-between" style="height:100%; padding:1rem;">
@@ -186,9 +188,14 @@
                                                             </div>
 
                                                             <!-- Row 3 : Bottom left (below boostrap class "card text")-->
-                                                            <div class="time-left fs-5 text-secondary fw-bold">
-                                                                <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold text-secondary"></i>
-                                                                <?= $item->time_left ?> left
+                                                            <div class="time-left fs-5 fw-bold 
+                                                                <?= ($item->time_left->days <= 0) ? 'text-warning' : 'text-secondary' ?>">
+
+                                                                <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold 
+                                                                <?= ($item->time_left->days <= 0) ? 'text-warning' : 'text-secondary' ?>"></i>
+
+                                                                <?= $item->time_left->d ?>d <?= $item->time_left->h ?>h left
+
                                                             </div>
 
                                                         </div>
@@ -312,9 +319,14 @@
                                                         </div>
 
                                                         <!-- Row 3: Time left -->
-                                                        <div class="time-left fs-5 text-secondary fw-bold">
-                                                            <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold text-secondary"></i>
-                                                            <?= $item->time_left ?> left
+                                                        <div class="time-left fs-5 fw-bold 
+                                                                <?= ($item->time_left->days <= 0) ? 'text-warning' : 'text-secondary' ?>">
+
+                                                            <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold 
+                                                                <?= ($item->time_left->days <= 0) ? 'text-warning' : 'text-secondary' ?>"></i>
+
+                                                            <?= $item->time_left->d ?>d <?= $item->time_left->h ?>h left
+
                                                         </div>
 
                                                     </div>
