@@ -136,7 +136,7 @@ class Item extends Model
         }
 
         if (empty($data['owner_picture'])) {
-            $owner_picture = '/database/prwb_2526_f03_images_backup/default_item_image.png';
+            $owner_picture = 'css/images/default_user_image.jpg';
         } else {
             $owner_picture = $data['owner_picture'];
         }
@@ -151,7 +151,7 @@ class Item extends Model
         );
 
         $pictures = $query_pics->fetchAll(PDO::FETCH_COLUMN);
-        $main_image_url = $pictures[0] ?? 'test.png';
+        $main_image_url = $pictures[0] ?? 'css/images/default_item_image.png';
         $created_at_object = new DateTime($data['created_at']);
         $end_date_object = new DateTime($data['end_at']);
         $current_price = ($data['max_bid'] !== null) ? (float)$data['max_bid'] : (float)$data['starting_bid'];
