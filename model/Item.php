@@ -207,6 +207,7 @@ class Item extends Model
             join v_items_status vis on vis.id = b.item
             where u.id = :id
             and :today BETWEEN vis.created_at AND vis.end_at
+            and vis.buy_now_reached = 0
             order by vis.id",
             [
                 "id" => $id,
@@ -340,9 +341,10 @@ class Item extends Model
             WHERE :today BETWEEN vis.created_at AND vis.end_at
             AND
             (
-                -- CONDITION 1: Active Auctions NOT bid on by user AND Not owned by User
+                -- CONDITION 1: Active Auctions NOT bid on by user AND Not owned by User AND item not purchased
                 (vis.is_auction = 1
                 AND vis.owner != (SELECT id FROM users WHERE id = :id) -- Check: NOT Owned by User
+                AND vis.buy_now_reached = 0
                 AND vis.id NOT IN ( -- Check: NOT Bid on by User
                 SELECT DISTINCT vis_sub.id
                 FROM users u
@@ -361,6 +363,7 @@ class Item extends Model
                     SELECT DISTINCT u.id
                     FROM users u
                     WHERE u.id = :id
+                    AND vis.buy_now_reached = 0
                     )
                 )
             )
