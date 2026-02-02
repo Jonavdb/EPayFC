@@ -112,12 +112,42 @@ class ControllerUser extends Controller {
             $email = trim($_POST['email'] ?? '');
             $iban = trim($_POST['iban'] ?? '');
 
-            // Validation
-            if (empty($full_name)) $errors[] = "Full name is required.";
-            if (empty($pseudo)) $errors[] = "Username is required.";
-            if (empty($email)) $errors[] = "Email is required.";
+            // Validation : Full Name (Min 3 chars)
+            if (strlen($full_name) < 3) {
+                $errors[] = "Le nom complet doit comporter au moins 3 caractères.";
+            }
 
-            // Si pas d'erreurs, on sauvegarde
+            // Validation : Email (Format + Unicité)
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = "Le format de l'adresse email n'est pas valide.";
+            } else {
+                // Vérifier si l'email est déjà pris par QUELQU'UN D'AUTRE
+                $existingUser = User::get_user_by_email($email);
+                if ($existingUser && $existingUser->id !== $user->id) {
+                    $errors[] = "Cette adresse email est déjà utilisée.";
+                }
+            }
+
+            // Validation : Pseudo (3-30 chars + Unicité)
+            if (strlen($pseudo) < 3 || strlen($pseudo) > 30) {
+                $errors[] = "Le pseudo doit avoir une longueur comprise entre 3 et 30 caractères.";
+            } else {
+                // Vérifier si le pseudo est déjà pris par QUELQU'UN D'AUTRE
+                $existingUser = User::get_user_by_pseudo($pseudo);
+                if ($existingUser && $existingUser->id !== $user->id) {
+                    $errors[] = "Ce pseudo est déjà utilisé.";
+                }
+            }
+
+            // Validation : IBAN
+            if (!empty($iban)) {
+                // Regex : Commence par BE, suivi de 2 chiffres, espace, 4 chiffres, espace, etc.
+                if (!preg_match('/^BE\d{2} \d{4} \d{4} \d{4}$/', $iban)) {
+                    $errors[] = "L'IBAN doit respecter le format : BE99 9999 9999 9999.";
+                }
+            }
+
+            // Sauvegarde si aucune erreur
             if (empty($errors)) {
                 $user->full_name = $full_name;
                 $user->pseudo = $pseudo;
