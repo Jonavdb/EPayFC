@@ -35,6 +35,17 @@
             </nav>
         </header>
 
+        <?php if (count($errors) != 0): ?>
+            <div class="errors mb-4">
+                <p>Please correct the following error(s) :</p>
+                <ul>
+                    <?php foreach ($errors as $error): ?>
+                        <li><?= htmlspecialchars($error) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
         <form action="user/edit_profile" method="post">
             <div class="card mb-4 bg-dark border-secondary">
                 <div class="card-header border-secondary text-white fw-semibold bg-secondary bg-opacity-10">
