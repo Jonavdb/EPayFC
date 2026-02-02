@@ -27,14 +27,23 @@
                     <span class="input-group-text bg-dark border-secondary text-light">
                         <i class="fa-solid fa-user"></i>
                     </span>
-                    <input type="email" name="email" class="form-control bg-dark border-secondary text-light" placeholder="Mail" aria-label="Mail">
+                    <input type="email"
+                        name="email"
+                        class="form-control bg-dark border-secondary text-light"
+                        placeholder="Mail"
+                        value="<?= htmlspecialchars($email) ?>" aria-label="Mail">
                 </div>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text bg-dark border-secondary text-light">
                         <i class="fa-solid fa-key"></i>
                     </span>
-                    <input type="password" name="password" class="form-control bg-dark border-secondary text-light" placeholder="********" aria-label="Password">
+                    <input type="password"
+                        name="password"
+                        class="form-control bg-dark border-secondary text-light"
+                        placeholder="********"
+                        value="<?= htmlspecialchars($password) ?>"
+                        aria-label="Password">
                 </div>
 
                 <div class="d-grid gap-3">
