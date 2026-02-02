@@ -26,23 +26,26 @@ class ControllerItem extends Controller {
         $now = new DateTime();
 
         foreach ($items as $item) {
-            // 1. Préparation des données d'affichage (photos des items, etc...)
+            // Préparation des données d'affichage (photos des items, etc...)
             $display_data = $this->prepare_item_data($item, $now);
 
-            // 2. Tri dans les catégories
-            if ($item->end_at > $now) {
+            // Tri dans les catégories
+            $is_buy_now = $item->buy_now_reached;
+            $is_expired = $item->end_at <= $now;
+            $has_bids   = $item->bid_count > 0;
+
+            // CAS 1 : VENDU (Achat immédiat OU Temps écoulé avec enchères)
+            if ($is_buy_now || ($is_expired && $has_bids)) {
+                $display_data->context = 'sold';
+                $sold_items[] = $display_data;
+            } elseif ($is_expired && !$has_bids) {
+                // CAS 2 : NON VENDU (Temps écoulé sans enchères)
+                $display_data->context = 'unsold';
+                $unsold_items[] = $display_data;
+            } else {
+                // CAS 3 : ACTIF (Ni fini, ni acheté)
                 $display_data->context = 'active';
                 $active_items[] = $display_data;
-            } else {
-                $is_sold = ($item->bid_count > 0) || ($item->buy_now_reached);
-
-                if ($is_sold) {
-                    $display_data->context = 'sold';
-                    $sold_items[] = $display_data;
-                } else {
-                    $display_data->context = 'unsold';
-                    $unsold_items[] = $display_data;
-                }
             }
         }
 
