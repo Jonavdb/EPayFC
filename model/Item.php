@@ -710,9 +710,10 @@ class Item extends Model
             /* Join for the person who created the item (Seller) */
             JOIN users seller ON seller.id = vis.owner 
 
-            WHERE :today > vis.end_at   
-            AND u.id = :id         -- we specifiy the target user
-            AND b.amount = vis.max_bid      -- we keep only the user the winning bids or what he purchased directly
+            WHERE u.id = :id             -- buyer / bidder
+            AND b.amount = vis.max_bid   -- with the highest bid    
+            AND (vis.buy_now_reached = 1 OR :today >= vis.end_at)  -- who bought the item or date expired
+            
             ORDER BY vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
