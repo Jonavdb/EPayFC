@@ -162,7 +162,6 @@ $image_to_display = $item->main_image_url;
                     <div class="d-grid gap-3">
 
                       <div>
-                        <label class="form-label small text-muted">Your Max Bid</label>
                         <div class="input-group">
                           <span class="input-group-text">€</span>
 
