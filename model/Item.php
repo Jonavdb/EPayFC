@@ -316,7 +316,8 @@ class Item extends Model
             join users u on u.id = b.owner
             join v_items_status vis on vis.id = b.item
             where u.id = :user_id
-            and vis.id = :item_id;",
+            and vis.id = :item_id
+            and b.amount = vis.max_bid",
             [
                 "item_id" => $item_id,
                 "user_id" => $user_id
