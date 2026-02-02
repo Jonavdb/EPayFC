@@ -52,7 +52,8 @@
                             name="current_password"
                             class="form-control bg-dark border-secondary text-white"
                             id="current_password"
-                            placeholder="Enter your current password">
+                            placeholder="Enter your current password"
+                            value="<?= htmlspecialchars($current_password); ?>">
 
                         <div class="form-text text-secondary">
                             Enter your current password to verify your identity
@@ -74,7 +75,8 @@
                             name="new_password"
                             class="form-control bg-dark border-secondary text-white"
                             id="new_password"
-                            placeholder="Enter your new password">
+                            placeholder="Enter your new password"
+                            value="<?= htmlspecialchars($new_password); ?>">
 
                         <div class="form-text text-secondary">
                             Password must be 8-16 characters with uppercase, number, and punctuation
@@ -87,6 +89,7 @@
                             name="new_password_confirm"
                             class="form-control bg-dark border-secondary text-white"
                             id="new_password_confirm"
+                            value="<?= htmlspecialchars($confirm_password); ?>"
                             placeholder="Confirm your new password">
 
                         <div class="form-text text-secondary">
