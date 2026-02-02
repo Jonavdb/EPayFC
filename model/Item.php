@@ -203,6 +203,7 @@ class Item extends Model {
             join v_items_status vis on vis.id = b.item
             where u.id = :id
             and :today BETWEEN vis.created_at AND vis.end_at
+            and vis.buy_now_reached = 0
             order by vis.id",
             [
                 "id" => $id,
@@ -310,7 +311,8 @@ class Item extends Model {
             join users u on u.id = b.owner
             join v_items_status vis on vis.id = b.item
             where u.id = :user_id
-            and vis.id = :item_id;",
+            and vis.id = :item_id
+            and b.amount = vis.max_bid",
             [
                 "item_id" => $item_id,
                 "user_id" => $user_id
@@ -334,9 +336,10 @@ class Item extends Model {
             WHERE :today BETWEEN vis.created_at AND vis.end_at
             AND
             (
-                -- CONDITION 1: Active Auctions NOT bid on by user AND Not owned by User
+                -- CONDITION 1: Active Auctions NOT bid on by user AND Not owned by User AND item not purchased
                 (vis.is_auction = 1
                 AND vis.owner != (SELECT id FROM users WHERE id = :id) -- Check: NOT Owned by User
+                AND vis.buy_now_reached = 0
                 AND vis.id NOT IN ( -- Check: NOT Bid on by User
                 SELECT DISTINCT vis_sub.id
                 FROM users u
@@ -355,6 +358,7 @@ class Item extends Model {
                     SELECT DISTINCT u.id
                     FROM users u
                     WHERE u.id = :id
+                    AND vis.buy_now_reached = 0
                     )
                 )
             )
@@ -693,9 +697,10 @@ class Item extends Model {
             /* Join for the person who created the item (Seller) */
             JOIN users seller ON seller.id = vis.owner 
 
-            WHERE :today > vis.end_at   
-            AND u.id = :id         -- we specifiy the target user
-            AND b.amount = vis.max_bid      -- we keep only the user the winning bids or what he purchased directly
+            WHERE u.id = :id             -- buyer / bidder
+            AND b.amount = vis.max_bid   -- with the highest bid    
+            AND (vis.buy_now_reached = 1 OR :today >= vis.end_at)  -- who bought the item or date expired
+            
             ORDER BY vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
@@ -834,9 +839,9 @@ class Item extends Model {
             /* Join for the person who created the item (Seller) */
             JOIN users seller ON seller.id = vis.owner 
 
-            WHERE :today > vis.end_at   
-            AND seller.id = :user_id   -- we specifiy the pseudo of the seller associated with the items
-            AND b.amount = vis.max_bid      -- we keep only the user the winning bids or what he purchased directly
+            WHERE seller.id = :user_id        -- seller 
+            AND b.amount = vis.max_bid       -- with the highest bid instance on the item    
+            AND (vis.buy_now_reached = 1 OR :today >= vis.end_at)  -- who bought the item or date expired
             ORDER BY vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
