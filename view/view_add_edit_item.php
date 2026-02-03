@@ -16,31 +16,14 @@ require_once "utils/GoBack.php";
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <title>Add item</title>
-    <style>
-        body {
-            display: block;
-            padding-top: 10px;
-            padding-bottom: 80px;
-            height: auto;
-            justify-content: unset;
-            align-items: unset;
-        }
-
-        #nav-icons {
-            gap: 0;
-            width: 100%;
-            justify-content: space-around;
-            flex-direction: row;
-        }
-    </style>
 </head>
 
-<body>
+<body class="pb-5">
     <nav class="navbar fixed-top navbar-dark bg-dark">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
                 <a href="<?= GoBack::go_back() ?>" class="btn-icon">
-                    <i class="fa-solid fa-arrow-left" style="color: #2D68C4; font-size: 22px;"></i>
+                    <i class="fa-solid fa-arrow-left text-primary"></i>
                 </a>
             </div>
             <div class="flex-grow-1 text-center">
@@ -50,10 +33,8 @@ require_once "utils/GoBack.php";
             </div>
 
             <div class="d-flex justify-content-end">
-                <button type="submit"
-                    form="itemForm"
-                    class="btn fw-bold fs-4 text-white">
-                    Save
+                <button type="submit" form="itemForm" class="btn-icon">
+                    <i class="fa-regular fa-floppy-disk fa-lg"></i>
                 </button>
             </div>
         </div>
@@ -63,8 +44,7 @@ require_once "utils/GoBack.php";
     $action_url = $is_edit ? "item/edit/$item->id" : "item/add";
     ?>
 
-    <form id="itemForm" action="<?= $action_url ?>" method="POST" class="bg-transparent">
-
+    <form id="itemForm" action="<?= $action_url ?>" method="POST" class="bg-transparent border-0 shadow-none">
         <?php if ($is_edit): ?>
             <input type="hidden" name="id" value="<?= $item->id ?>">
             <input type="hidden" name="param1" value="<?= $item->id ?>">
