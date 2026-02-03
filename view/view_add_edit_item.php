@@ -183,8 +183,8 @@ require_once "utils/GoBack.php";
     </form>
 
     <footer class="fixed-bottom">
-        <?php include 'view/view_footer.php'; ?>
         <?php include 'view/view_timer.php'; ?>
+        <?php include 'view/view_footer.php'; ?>
     </footer>
 </body>
 

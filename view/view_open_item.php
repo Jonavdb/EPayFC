@@ -1,10 +1,9 @@
 <?php
-
 require_once "utils/GoBack.php";
+
 $buy_now = $item->buy_now_price;
 $now = new DateTime(AppTime::get_current_datetime());
 $is_time_expired = $now > $item->end_at;
-
 $auction_finished = $is_time_expired || $item->buy_now_reached;
 
 $winner = null;
@@ -13,9 +12,7 @@ if (!empty($bids)) {
 }
 
 $image_to_display = $item->main_image_url;
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,356 +20,199 @@ $image_to_display = $item->main_image_url;
 <head>
   <meta charset="UTF-8">
   <base href="<?= $web_root ?>" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Jonathan_Vanderbiest">
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-  <title>Item Open</title>
-  <style>
-    body {
-      display: block;
-      padding-top: 10px;
-      padding-bottom: 80px;
-      height: auto;
-      justify-content: unset;
-      align-items: unset;
-    }
-
-    #nav-icons {
-      gap: 0;
-      width: 100%;
-      justify-content: space-around;
-      flex-direction: row;
-    }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="css/styles.css" rel="stylesheet" type="text/css" />
+  <title>Item open</title>
 </head>
 
-<body class="container">
-  <nav class="navbar fixed-top navbar-dark bg-dark">
-    <div class="container-fluid d-flex align-items-center">
-      <div class="left-zone">
-        <a href="<?= GoBack::go_back_2() ?>" class="btn-icon">
+<body class="d-flex flex-column min-vh-100 dark-bg" style="padding-bottom: 140px;">
 
-          <i class="fa-solid fa-arrow-left" style="color: #2D68C4; font-size: 22px;"></i>
-        </a>
-      </div>
-      <div class="flex-grow-1 text-center">
-        <h2 style="color: #2D68C4; margin: 0;">Open item</h2>
-      </div>
-    </div>
-  </nav>
+  <?php
+  $page_title = "Item open";
+  include 'view/view_header.php';
+  ?>
 
-  <div class="container-fluid px-4 pb-4 pt-0" style="margin-top: 40px; margin-bottom: 5px;">
-    <div class="row">
+  <div class="container-fluid px-4" style="padding-top: 80px;">
+    <div class="row g-4">
       <div class="col-md-8">
-        <div class="card text-bg-dark mb-3">
 
-          <img src="<?= $image_to_display ?>" class="card-img-top" alt="Piano" style="max-height: 500px; object-fit: cover;">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start">
-              <h5 class="card-title"><?= $item->title ?></h5>
-              <?php if ($item->is_direct_sale) { ?>
-                <span class="badge rounded-pill bg-secondary text-white">Direct sale</span>
-              <?php } else { ?>
-                <span class="badge rounded-pill bg-secondary text-white">Auction</span>
-              <?php } ?>
+        <div class="card text-bg-dark border-secondary mb-4">
+          <img src="<?= $image_to_display ?>" class="card-img-top" alt="<?= $item->title ?>" style="max-height: 500px; object-fit: cover;">
+
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h2 class="card-title fw-bold text-white mb-0"><?= $item->title ?></h2>
+              <?php if ($item->is_direct_sale): ?>
+                <span class="badge bg-secondary">Direct sale</span>
+              <?php else: ?>
+                <span class="badge bg-secondary">Auction</span>
+              <?php endif; ?>
             </div>
-            <p class="card-text text-secondary"><?= $item->description ?></p>
 
-            <div class="small">
-              <p class="mb-2">starts at : <?= $item->created_at->format('d/m/Y H:i') ?></p>
-              <p>ends at : <?= $item->end_at->format('d/m/Y H:i') ?> </p>
+            <p class="card-text text-secondary mb-4"><?= $item->description ?></p>
+
+            <div class="small text-secondary">
+              <p class="mb-1">Start: <span class="fw-bold"><?= $item->created_at->format('d/m/Y H:i:s') ?></span></p>
+              <p class="mb-1">Ends: <span class="fw-bold"><?= $item->end_at->format('d/m/Y H:i:s') ?></span> </p>
             </div>
           </div>
         </div>
-        <h4 class="text-white mt-4 mb-4">Additionals Images</h4>
-        <div class="d-flex gap-4 mb-4">
+
+        <h5 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h5>
+        <div class="d-flex gap-3 mb-5">
           <?php
-          $origin = 'from-browse';
+          $origin = 'from-browse'; // Logique d'origine conservée
           $uri = $_SERVER['REQUEST_URI'];
-          if (strpos($uri, 'from-list') !== false) {
-            $origin = 'from-list';
-          } elseif (strpos($uri, 'from-profile') !== false) {
-            $origin = 'from-profile';
-          } elseif (strpos($uri, 'from-items') !== false) {
-            $origin = 'from-items';
-          }
+          if (strpos($uri, 'from-list') !== false) $origin = 'from-list';
+          elseif (strpos($uri, 'from-profile') !== false) $origin = 'from-profile';
+          elseif (strpos($uri, 'from-items') !== false) $origin = 'from-items';
+
           foreach ($item->image_urls as $index => $image):
+            $is_active = ($image === $image_to_display);
+            $border_class = $is_active ? 'border-primary' : 'border-secondary';
           ?>
-            <a href="item/open/<?= $item->id ?>/<?= $index ?>/<?= $origin ?>">
+            <a href="item/open/<?= $item->id ?>/<?= $index ?>/<?= $origin ?>" class="d-block">
               <img src="<?= $image ?>"
-                class="additionnal-images"
-                alt="Vue supplémentaire">
+                class="rounded border <?= $border_class ?>"
+                alt="View <?= $index ?>"
+                style="width: 100px; height: 70px; object-fit: cover;">
             </a>
           <?php endforeach; ?>
         </div>
+
+        <?php if ($item->has_bids): ?>
+          <div class="card text-bg-dark border-secondary">
+            <div class="card-header border-secondary d-flex justify-content-between align-items-center bg-dark bg-opacity-50 py-3">
+              <span class="fw-bold">Bid History</span>
+              <span class="badge bg-light text-dark rounded-pill"><?= count($bids) ?> entries</span>
+            </div>
+            <ul class="list-group list-group-flush">
+              <?php foreach ($bids as $bid): ?>
+                <li class="list-group-item bg-transparent border-secondary text-white d-flex justify-content-between align-items-center py-3">
+                  <div>
+                    <div class="fw-bold mb-1"><?= $bid->owner_pseudo ?></div>
+                    <small class="text-secondary"><?= $bid->created_at->format('d/m/Y H:i:s') ?></small>
+                  </div>
+                  <div class="fw-bold text-success fs-5">
+                    € <?= number_format($bid->amount, 2, ',', ' ') ?>
+                  </div>
+                </li>
+              <?php endforeach ?>
+            </ul>
+          </div>
+        <?php endif; ?>
+
       </div>
+
       <div class="col-md-4">
-        <div class="card text-bg-dark mb-3">
-          <div class="card-body">
-            <p class="fw-bold">Pricing</p>
-            <?php if (!$item->is_direct_sale) { ?>
-              <div class="d-flex justify-content-between mb-2">
-                <span>Current Bid</span>
-                <h3 class="text-success">€ <?= $item->current_bid ?></h3>
+        <div class="card text-bg-dark border-secondary mb-4">
+          <div class="card-body p-4">
+            <h6 class="fw-bold text-secondary mb-3 text-start fs-4">Pricing</h6>
+
+            <?php if (!$item->is_direct_sale): ?>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold">Current Bid</span>
+                <span class="text-success fw-bold fs-2">€ <?= number_format($item->current_bid, 2, ',', ' ') ?></span>
               </div>
-              <?php }
+            <?php endif; ?>
 
-            if ($auction_finished) {
+            <?php if ($item->has_buy_now): ?>
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <span class="fw-bold">Price</span>
+                <span class="text-white fw-bold">€ <?= number_format($item->buy_now_price, 2, ',', ' ') ?></span>
+              </div>
+            <?php endif; ?>
 
-              if ($winner) {
-                if ($winner === $current_user) {
+            <?php if ($auction_finished): ?>
+              <?php if ($winner): ?>
+                <?php if ($winner === $current_user): ?>
+                  <div class="alert alert-success mt-3">You won this item!</div>
+                <?php else: ?>
+                  <div class="alert alert-warning mt-3">Sold to <?= $winner ?></div>
+                <?php endif; ?>
+              <?php else: ?>
+                <div class="alert alert-secondary mt-3">Auction ended without bids.</div>
+              <?php endif; ?>
 
-              ?>
-                  <div class="alert alert-dark border-secondary text-secondary mt-3">
-                    Congratulations! You purchased this item for € <?= $item->current_bid ?>.
+            <?php elseif ($current_user): ?>
+              <?php if (!$item->is_direct_sale): ?>
+                <form action="index.php?controller=item&action=new_bid" method="POST" class="mb-3">
+                  <input type="hidden" name="item_id" value="<?= $item->id ?>">
+
+                  <div class="input-group mb-2">
+                    <span class="input-group-text bg-dark border-secondary text-secondary">€</span>
+                    <input type="number"
+                      class="form-control bg-dark border-secondary text-white"
+                      name="amount"
+                      value="<?= $item->current_bid + 1 ?>"
+                      min="<?= $item->current_bid + 1 ?>"
+                      required
+                      <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
                   </div>
 
-                <?php } else { ?>
-                  <div class="alert alert-warning mt-3">
-                    This item was purchased by <strong><?= $winner ?></strong>.
-                  </div>
-                <?php } ?>
-              <?php } else { ?>
-                <div class="alert alert-secondary mt-3">
-                  <i class="fa-regular fa-clock me-2"></i>
-                  This auction has ended. <strong>No bids were placed.</strong>
-                </div>
-              <?php } ?>
+                  <button class="btn btn-success w-100 fw-bold py-2" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
+                    Place Bid
+                  </button>
+                </form>
+              <?php endif; ?>
 
-            <?php } else { ?>
+              <?php if ($item->has_buy_now): ?>
+                <form action="index.php?controller=item&action=buy_now" method="POST" class="p-1 border-0">
+                  <input type="hidden" name="item_id" value="<?= $item->id ?>">
+                  <button class="btn btn-primary w-100 fw-bold py-2" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
+                    Buy Now at € <?= number_format($item->buy_now_price, 2, ',', ' ') ?>
+                  </button>
+                </form>
+              <?php endif; ?>
 
-              <?php if ($item->has_buy_now) { ?>
-                <div class="d-flex justify-content-between mb-3">
-                  <span>Buy Now</span>
-                  <h3 class="text-success">€ <?= $item->buy_now_price ?></h3>
-                </div>
-              <?php } ?>
+              <?php if ($current_user === $item->owner_name): ?>
+                <div class="text-danger small mt-4 text-center">You cannot bid on your own item.</div>
+              <?php endif; ?>
 
-              <?php if ($current_user) { ?>
-
-                <?php if (!$item->is_direct_sale) { ?>
-
-                  <form action="index.php?controller=item&action=new_bid" method="POST" class="mb-3">
-
-                    <input type="hidden" name="item_id" value="<?= $item->id ?>">
-
-                    <div class="d-grid gap-3">
-
-                      <div>
-                        <div class="input-group">
-                          <span class="input-group-text">€</span>
-
-                          <input type="number"
-                            class="form-control"
-                            name="amount"
-                            value="<?= $item->current_bid + 1 ?>"
-                            min="<?= $item->current_bid + 1 ?>"
-                            step="1"
-                            required
-                            <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
-
-                          <button class="btn btn-success" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>Place Bid</button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                <?php } ?>
-                <div class="d-grid gap-3 mb-2">
-                  <?php if ($item->has_buy_now) { ?>
-                    <form action="index.php?controller=item&action=buy_now" method="POST">
-                      <input type="hidden" name="item_id" value="<?= $item->id ?>" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
-                      <button class="btn btn-outline-primary w-100" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>Buy Now</button>
-                    </form>
-                  <?php } ?>
-                </div>
-              <?php } ?>
-              <?php if ($current_user === $item->owner_name) { ?>
-                <h5>Vous ne pouvez pas enchérir sur un objet vous appartenant</h5>
-              <?php } ?>
-            <?php } ?>
+            <?php else: ?>
+              <div class="alert alert-info mt-3">Please <a href="main/login">login</a> to bid.</div>
+            <?php endif; ?>
           </div>
         </div>
-        <div class="card text-bg-dark mb-3">
-          <div class="card-body">
-            <p class="fw-bold">Seller Information</p>
+
+        <div class="card text-bg-dark border-secondary mb-4">
+          <div class="card-body p-4">
+            <h6 class="fw-bold text-secondary mb-3 text-start fs-4">Seller Information</h6>
             <div class="d-flex align-items-center">
-              <div class="me-3">
-                <img src="<?= $item->owner_picture ?>"
-                  alt="Avatar"
-                  class="rounded-circle me-2 border border-secondary"
-                  style="width: 40px; height: 40px; object-fit: cover;">
-              </div>
+              <img src="<?= $item->owner_picture ?>" alt="User" class="rounded-circle me-3 bg-secondary" style="width: 48px; height: 48px; object-fit: cover;">
               <div>
-                <div class="d-flex justify-content-start">
-                  <p class="fw-bold text-light mb-0">
-                    <?= $item->owner_name ?>
-                  </p>
-                </div>
-                <p class="mb-0 text-secondary">
-                  <?= ucfirst($item->owner_role) ?>
-                </p>
+                <div class="fw-bold text-white"><?= $item->owner_name ?></div>
+                <div class="text-secondary small"><?= ucfirst($item->owner_role) ?></div>
               </div>
             </div>
           </div>
         </div>
-        <?php if ($current_user === $item->owner_name && (!$item->has_bids)) { ?>
-          <div class="card text-bg-dark mb-3">
-            <div class="card-body">
-              <p class="fw-bold">Manage your Item</p>
 
+        <?php if ($current_user === $item->owner_name && (!$item->has_bids)): ?>
+          <div class="card text-bg-dark border-secondary">
+            <div class="card-body p-4">
+              <h6 class="fw-bold text-secondary mb-3">Manage Item</h6>
               <div class="d-grid gap-2">
-                <a href="item/edit/<?= $item->id ?>"
-                  class="btn btn-outline-secondary text-start">
-                  <i class="fa-solid fa-pen me-2"></i> Edit Item Details
-                </a>
-
-                <a href="item/manage_images/<?= $item->id ?>"
-                  class="btn btn-outline-info text-start">
-                  <i class="fa-solid fa-image me-2"></i> Manage Images
-                </a>
-
-                <a href="item/delete/<?= $item->id ?>"
-                  class="btn btn-outline-danger text-start">
-                  <i class="fa-solid fa-trash me-2"></i> Delete Item
-                </a>
+                <a href="item/edit/<?= $item->id ?>" class="btn btn-outline-secondary btn-sm text-start"><i class="fa-solid fa-pen me-2"></i> Edit</a>
+                <a href="item/manage_images/<?= $item->id ?>" class="btn btn-outline-info btn-sm text-start"><i class="fa-solid fa-image me-2"></i> Images</a>
+                <a href="item/delete/<?= $item->id ?>" class="btn btn-outline-danger btn-sm text-start"><i class="fa-solid fa-trash me-2"></i> Delete</a>
               </div>
             </div>
           </div>
-        <?php } elseif ($current_user === $item->owner_name && ($item->has_bids)) { ?>
-          <div class="card text-bg-dark mb-3">
-            <div class="card-body">
-              <h5>Vous ne pouvez plus modifier les paramètres de votre objet car il existe des enchères dessus</h5>
-            </div>
-          </div>
-        <?php } ?>
+        <?php endif; ?>
+
       </div>
     </div>
   </div>
-  </div>
-  <div class="container-fluid px-4 pb-4 pt-0" style="margin-top: 0px; margin-bottom: 5px;">
-    <div class="row">
-      <div class="col-md-8">
-        <div class="card text-bg-dark mb-3">
-          <div class="card-header border-secondary d-flex justify-content-between align-items-center">
-            <?php if ($item->has_bids) { ?>
-              <span>Bid History</span>
-              <span class="badge bg-light text-dark"><?= count($bids) ?> entries</span>
-          </div>
-          <ul class="list-group list-group-flush">
-            <?php foreach ($bids as $bid): ?>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                  <div class="fw-bold"><?= $bid->owner_pseudo ?></div>
-                  <small class="text-secondary"><?= $bid->created_at->format('d/m/Y H:i') ?></small>
-                </div>
 
-                <span class="<?= $bid->item ? 'text-success fw-bold' : 'text-success' ?>">
-                  € <?= $bid->amount ?>
-                </span>
-
-              </li>
-            <?php endforeach ?>
-          </ul>
-        <?php } else { ?>
-          <div class="alert alert-info text-center mt-3">
-            Be the first to bet on this item ! <br>
-            <strong>Starting price : € <?= $item->starting_bid ?></strong>
-          </div>
-        <?php } ?>
-
-        </div>
-      </div>
-    </div>
-  </div>
   <footer class="fixed-bottom">
-
-    <nav class="navbar navbar-dark bg-dark border-top shadow-lg">
-      <div class="container-fluid">
-        <div class="d-flex justify-content-around w-100 py-3">
-
-          <a class="nav-link text-center text-secondary" href="item/browse">
-            <i class="fa-solid fa-magnifying-glass-plus fs-4 mb-1 d-block"></i>
-            <span>Browse</span>
-          </a>
-
-          <?php if ($current_user) { ?>
-
-
-            <a class="nav-link text-center text-secondary" href="item/list">
-              <i class="fas fa-home fs-4 mb-1 d-block"></i>
-              <span>My Items</span>
-            </a>
-
-            <a class="nav-link text-center text-secondary" href="item/add">
-              <i class="fa-solid fa-plus fs-4 mb-1 d-block"></i>
-              <span>Add Offer</span>
-            </a>
-
-            <a class="nav-link text-center text-secondary" href="user/profile">
-              <i class="fa-solid fa-gear fs-4 mb-1 d-block"></i>
-              <span>Profile</span>
-            </a>
-
-          <?php } else { ?>
-            <a class="nav-link text-center text-secondary" href="main/signup">
-              <i class="fa-solid fa-wand-magic-sparkles fs-4 mb-1 d-block"></i>
-              <span>Join us</span>
-            </a>
-          <?php } ?>
-        </div>
-      </div>
-    </nav>
-
-    <div class="d-flex justify-content-between align-items-center px-3" style="
-        background-color: #1e293b; 
-        border-top: 1px solid #334155; 
-        color: #94a3b8;
-        height: 40px;
-        font-size: 11px;
-    ">
-      <span class="fw-bold text-white">
-        <?php
-        $dt = new DateTime(AppTime::get_current_datetime());
-        echo $dt->format('d/m/y H:i');
-        ?>
-      </span>
-
-      <div class="d-flex align-items-center">
-        <form method="post" action="time/advance" class="m-0">
-          <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="hour">
-          <button class="btn btn-debug text-debug-orange">
-            <i class="fa-regular fa-clock me-1"></i>+1h
-          </button>
-        </form>
-
-        <form method="post" action="time/advance" class="m-0">
-          <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="day">
-          <button class="btn btn-debug text-debug-orange">
-            <i class="fa-regular fa-calendar me-1"></i>+1d
-          </button>
-        </form>
-
-        <form method="post" action="time/advance" class="m-0">
-          <input type="hidden" name="amount" value="7"><input type="hidden" name="unit" value="day">
-          <button class="btn btn-debug text-debug-orange">
-            <i class="fa-regular fa-calendar-days me-1"></i>+1w
-          </button>
-        </form>
-
-        <form method="post" action="time/reset" class="m-0">
-          <button class="btn btn-debug text-debug-red">
-            <i class="fa-solid fa-rotate-right me-1"></i>
-          </button>
-        </form>
-      </div>
-    </div>
-
+    <?php include 'view/view_timer.php'; ?>
+    <?php include 'view/view_footer.php'; ?>
   </footer>
 
-  </div>
 </body>
 
 </html>
