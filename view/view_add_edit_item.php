@@ -1,5 +1,4 @@
 <?php
-
 require_once "utils/GoBack.php";
 ?>
 
@@ -9,36 +8,33 @@ require_once "utils/GoBack.php";
 <head>
     <meta charset="UTF-8">
     <base href="<?= $web_root ?>" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Jonathan_Vanderbiest">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="css/styles.css" rel="stylesheet" type="text/css" />
     <title>Add item</title>
 </head>
 
-<body class="pb-5">
-    <nav class="navbar fixed-top navbar-dark bg-dark">
-        <div class="container-fluid d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-                <a href="<?= GoBack::go_back() ?>" class="btn-icon">
-                    <i class="fa-solid fa-arrow-left text-primary"></i>
-                </a>
-            </div>
-            <div class="flex-grow-1 text-center">
-                <h2 style="color: #2D68C4; margin: 0;">
-                    <?php $item->id > 0 ? 'Edit Item' : 'Add item' ?>
-                </h2>
-            </div>
+<body style="padding-top:60px; padding-bottom: 140px;">
+    <?php
+    $page_title = ($item->id > 0) ? 'Edit Item' : 'Add Item';
 
-            <div class="d-flex justify-content-end">
-                <button type="submit" form="itemForm" class="btn-icon">
-                    <i class="fa-regular fa-floppy-disk fa-lg"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
+    // On cache l'icône "panier" pour cette page
+    $hide_default_icon = true;
+
+    // On utilise ob_start() pour capturer le HTML proprement, ou juste une string
+    ob_start();
+    ?>
+    <button type="submit" form="itemForm" class="btn-icon text-primary">
+        <i class="fa-regular fa-floppy-disk fa-lg"></i>
+    </button>
+    <?php
+    $header_right_content = ob_get_clean();
+
+    include 'view/view_header.php';
+    ?>
+
     <?php
     $is_edit = ($item->id > 0);
     $action_url = $is_edit ? "item/edit/$item->id" : "item/add";
@@ -49,7 +45,7 @@ require_once "utils/GoBack.php";
             <input type="hidden" name="id" value="<?= $item->id ?>">
             <input type="hidden" name="param1" value="<?= $item->id ?>">
         <?php endif; ?>
-        <div class="container-fluid mb-4 px-5" style="margin-top: 30px;">
+        <div class="container mb-4" style="margin-top: 30px;">
             <div class="card text-bg-dark border-secondary">
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
                     <h5 class="mb-0 text-white text-start">Basic Informations</h5>
@@ -99,7 +95,7 @@ require_once "utils/GoBack.php";
             </div>
         </div>
 
-        <div class="container-fluid mb-4 px-5">
+        <div class="container mb-4">
             <div class="card text-bg-dark border-secondary">
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
                     <h5 class="mb-0 text-white text-start">Sale Type</h5>
@@ -185,83 +181,11 @@ require_once "utils/GoBack.php";
             </div>
         </div>
     </form>
+
     <footer class="fixed-bottom">
-
-        <nav class="navbar navbar-dark bg-dark border-top shadow-lg">
-            <div class="container-fluid">
-                <div class="d-flex justify-content-around w-100 py-3">
-
-                    <a class="nav-link text-center text-secondary" href="item/browse">
-                        <i class="fa-solid fa-magnifying-glass-plus fs-4 mb-1 d-block"></i>
-                        <span>Browse</span>
-                    </a>
-
-                    <a class="nav-link text-center text-secondary" href="item/list">
-                        <i class="fas fa-home fs-4 mb-1 d-block"></i>
-                        <span>My Items</span>
-                    </a>
-
-                    <a class="nav-link text-center text-secondary" href="item/add">
-                        <i class="fa-solid fa-plus fs-4 mb-1 d-block"></i>
-                        <span>Add Offer</span>
-                    </a>
-
-                    <a class="nav-link text-center text-secondary" href="user/profile">
-                        <i class="fa-solid fa-gear fs-4 mb-1 d-block"></i>
-                        <span>Profile</span>
-                    </a>
-                </div>
-            </div>
-        </nav>
-
-        <div class="d-flex justify-content-between align-items-center px-3" style="
-        background-color: #1e293b; 
-        border-top: 1px solid #334155; 
-        color: #94a3b8;
-        height: 40px;
-        font-size: 11px;
-    ">
-            <span class="fw-bold text-white">
-                <?php
-                $dt = new DateTime(AppTime::get_current_datetime());
-                echo $dt->format('d/m/y H:i');
-                ?>
-            </span>
-
-            <div class="d-flex align-items-center">
-                <form method="post" action="time/advance" class="m-0">
-                    <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="hour">
-                    <button class="btn btn-debug text-debug-orange">
-                        <i class="fa-regular fa-clock me-1"></i>+1h
-                    </button>
-                </form>
-
-                <form method="post" action="time/advance" class="m-0">
-                    <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="day">
-                    <button class="btn btn-debug text-debug-orange">
-                        <i class="fa-regular fa-calendar me-1"></i>+1d
-                    </button>
-                </form>
-
-                <form method="post" action="time/advance" class="m-0">
-                    <input type="hidden" name="amount" value="7"><input type="hidden" name="unit" value="day">
-                    <button class="btn btn-debug text-debug-orange">
-                        <i class="fa-regular fa-calendar-days me-1"></i>+1w
-                    </button>
-                </form>
-
-                <form method="post" action="time/reset" class="m-0">
-                    <button class="btn btn-debug text-debug-red">
-                        <i class="fa-solid fa-rotate-right me-1"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-
+        <?php include 'view/view_footer.php'; ?>
+        <?php include 'view/view_timer.php'; ?>
     </footer>
-    </div>
-
-    </div>
 </body>
 
 </html>
