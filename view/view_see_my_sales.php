@@ -13,35 +13,13 @@
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100" style="padding-top: 40px" ;>
 
      <!-- HEADER -->
-     <header class="content-box">
-          <nav class="navbar fixed-top navbar-dark bg-dark border-top shadow-lg">
-
-               <!--  takes up 5% of row width for centering -->
-               <!-- left : back button -->
-               <div class="flex-grow-1 text-start" style="max-width: 5%;">
-                    <a href="<?= GoBack::go_back() ?>" class="btn-icon">
-                         <i class="fa-solid fa-arrow-left"></i>
-                    </a>
-               </div>
-
-               <!-- mx-auto is margin-left: auto; margin-right: auto; for centering -->
-               <!-- middle : title  -->
-               <div class="mx-auto">
-                    <div class="fw-bold fs-2" style="color: #2D68C4;">
-                         Sales <i class="fa-solid fa-cart-shopping"></i>
-                    </div>
-               </div>
-
-               <!--  takes up 5% of row width for centering -->
-               <!-- right : placeholder to make page title perfectly centered  -->
-               <div class="flex-grow-1 text-end invisible" style="max-width: 5%;">
-                    <button class="btn btn-primary"></button>
-               </div>
-          </nav>
-     </header>
+     <?php
+     $page_title = "Sales";
+     include 'view/view_header.php';
+     ?>
 
      <!-- PAGE CONTENT -->
      <main class="flex-grow-1 content-box py-3 mt-5" style="max-width:80%">
@@ -300,98 +278,8 @@
      </main>
 
      <!-- FOOTER -->
-     <footer class="content-box">
-          <div class="fixed-bottom">
-
-               <nav class="navbar navbar-dark bg-dark border-top">
-                    <div class="container-fluid">
-
-                         <div class="d-flex justify-content-around w-100 py-1">
-
-                              <a class="bottom-nav-link text-decoration-none" href="item/browse">
-                                   <div class="d-flex flex-column text-center">
-                                        <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
-                                        <div>Browse</div>
-                                   </div>
-                              </a>
-
-                              <a class="bottom-nav-link text-decoration-none" href="item/list">
-                                   <div class="d-flex flex-column text-center">
-                                        <div class="d-flex justify-content-center w-100"><i class="fas fa-home"></i></div>
-                                        <div>My Items</div>
-                                   </div>
-                              </a>
-
-                              <?php
-
-                              // Check if a real user is connected for the following actions
-                              $is_real_user = isset($_SESSION['user']) && !empty($_SESSION['user']);
-                              if ($is_real_user):
-                              ?>
-                                   <a class="bottom-nav-link text-decoration-none" href="item/add">
-                                        <div class="d-flex flex-column text-center">
-                                             <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-plus"></i></div>
-                                             <div>Add Offer</div>
-                                        </div>
-                                   </a>
-
-                                   <a class="bottom-nav-link text-decoration-none" href="user/profile">
-                                        <div class="d-flex flex-column text-center">
-                                             <div class="d-flex justify-content-center w-100"><i class="fa-solid fa-gear"></i></div>
-                                             <div>Profile</div>
-                                        </div>
-                                   </a>
-                              <?php endif; ?>
-
-                         </div>
-                    </div>
-               </nav>
-
-               <div class="d-flex justify-content-between align-items-center px-3" style="
-            background-color: #1e293b; 
-            border-top: 1px solid #334155; 
-            color: #94a3b8;
-            height: 40px;
-            font-size: 11px;">
-
-                    <span class="fw-bold text-white">
-                         <?php
-                         // Logic to fetch and format the application's virtual time
-                         $dt = new DateTime(AppTime::get_current_datetime());
-                         echo $dt->format('d/m/y H:i');
-                         ?>
-                    </span>
-
-                    <div class="d-flex align-items-center">
-                         <form method="post" action="time/advance" class="m-0">
-                              <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="hour">
-                              <button class="btn btn-debug text-debug-orange">
-                                   <i class="fa-regular fa-clock me-1"></i>+1h
-                              </button>
-                         </form>
-
-                         <form method="post" action="time/advance" class="m-0 ms-1">
-                              <input type="hidden" name="amount" value="1"><input type="hidden" name="unit" value="day">
-                              <button class="btn btn-debug text-debug-orange">
-                                   <i class="fa-regular fa-calendar me-1"></i>+1d
-                              </button>
-                         </form>
-
-                         <form method="post" action="time/advance" class="m-0 ms-1">
-                              <input type="hidden" name="amount" value="7"><input type="hidden" name="unit" value="day">
-                              <button class="btn btn-debug text-debug-orange">
-                                   <i class="fa-regular fa-calendar-days me-1"></i>+1w
-                              </button>
-                         </form>
-
-                         <form method="post" action="time/reset" class="m-0 ms-1">
-                              <button class="btn btn-debug text-debug-red">
-                                   <i class="fa-solid fa-rotate-right"></i>
-                              </button>
-                         </form>
-                    </div>
-               </div>
-
-          </div>
+     <footer class="fixed-bottom">
+          <?php include 'view/view_timer.php'; ?>
+          <?php include 'view/view_footer.php'; ?>
      </footer>
 </body>
