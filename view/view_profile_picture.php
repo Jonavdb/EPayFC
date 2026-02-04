@@ -25,13 +25,6 @@ require_once "utils/AppTime.php";
             justify-content: unset;
             align-items: unset;
         }
-
-        #nav-icons {
-            gap: 0;
-            width: 100%;
-            justify-content: space-around;
-            flex-direction: row;
-        }
     </style>
 </head>
 
@@ -128,34 +121,8 @@ require_once "utils/AppTime.php";
         </div>
     <?php } ?>
 
-    <footer>
-        <nav class="navbar fixed-bottom navbar-dark bg-dark border-top shadow-lg">
-            <div class="container-fluid">
-
-                <div class="d-flex justify-content-around w-100 py-3">
-
-                    <a class="nav-link text-center text-secondary" href="item/browse">
-                        <i class="fa-solid fa-magnifying-glass-plus fs-4 mb-1 d-block"></i>
-                        <span>Browse</span>
-                    </a>
-
-                    <a class="nav-link text-center text-secondary" href="item/list">
-                        <i class="fas fa-home fs-4 mb-1 d-block"></i>
-                        <span>My Items</span>
-                    </a>
-
-                    <a class="nav-link text-center text-secondary" href="item/add">
-                        <i class="fa-solid fa-plus fs-4 mb-1 d-block"></i>
-                        <span>Add Offer</span>
-                    </a>
-
-                    <a class="nav-link text-center text-secondary" href="user/profile">
-                        <i class="fa-solid fa-gear fs-4 mb-1 d-block"></i>
-                        <span>Profile</span>
-                    </a>
-                </div>
-            </div>
-        </nav>
+    <footer class="fixed-bottom">
+        <?php include 'view/view_footer.php'; ?>
     </footer>
 </body>
 

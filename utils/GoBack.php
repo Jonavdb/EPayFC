@@ -1,9 +1,7 @@
 <?php
 
-class GoBack
-{
-    public static function go_back(): string
-    {
+class GoBack {
+    public static function go_back(): string {
         $back_link = "item/browse";
 
         if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
@@ -13,8 +11,7 @@ class GoBack
         return $back_link;
     }
 
-    public static function go_back_2(): string
-    {
+    public static function go_back_2(): string {
 
         $uri = $_SERVER['REQUEST_URI'];
         $referer = $_SERVER['HTTP_REFERER'] ?? '';
