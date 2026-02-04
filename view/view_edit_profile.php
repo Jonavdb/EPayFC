@@ -17,23 +17,10 @@
 <body>
     <main class="container" style="padding-top: 80px; padding-bottom: 100px;">
         <!-- HEADER -->
-        <header class="content-box">
-            <nav class="navbar fixed-top navbar-dark bg-dark border-bottom shadow-lg">
-                <div class="container-fluid p-2">
-                    <div class="flex-grow-1 text-start" style="max-width: 5%;">
-                        <a href="<?= GoBack::go_back() ?>" class="btn-icon">
-                            <i class="fa-solid fa-arrow-left"></i>
-                        </a>
-                    </div>
-
-                    <div class="mx-auto">
-                        <div class="fw-bold fs-2 text-primary">
-                            Edit Profile <i class="fa fa-shopping-cart"></i>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        </header>
+        <?php
+        $page_title = "Edit Profile";
+        include 'view/view_header.php';
+        ?>
 
         <?php if (count($errors) != 0): ?>
             <div class="errors mb-4">
@@ -103,34 +90,8 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="content-box">
-        <nav class="navbar fixed-bottom navbar-dark bg-dark border-top shadow-lg">
-            <div class="container-fluid">
-
-                <div class="d-flex justify-content-around w-100 py-3">
-
-                    <a class="nav-link text-center text-secondary" href="item/browse">
-                        <i class="fa-solid fa-magnifying-glass-plus fs-4 mb-1 d-block"></i>
-                        <span>Browse</span>
-                    </a>
-
-                    <a class="nav-link text-center text-secondary" href="item/list">
-                        <i class="fas fa-home fs-4 mb-1 d-block"></i>
-                        <span>My Items</span>
-                    </a>
-
-                    <a class="nav-link text-center text-secondary" href="item/add">
-                        <i class="fa-solid fa-plus fs-4 mb-1 d-block"></i>
-                        <span>Add Offer</span>
-                    </a>
-
-                    <a class="nav-link text-center text-secondary" href="profile/index">
-                        <i class="fa-solid fa-gear fs-4 mb-1 d-block"></i>
-                        <span>Profile</span>
-                    </a>
-                </div>
-            </div>
-        </nav>
+    <footer class="fixed-bottom">
+        <?php include 'view/view_footer.php'; ?>
     </footer>
 </body>
 
