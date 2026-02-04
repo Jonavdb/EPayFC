@@ -237,6 +237,7 @@ class ControllerItem extends Controller
         $item->title = trim($_POST['title']);
         $item->description = trim($_POST['description']);
         $item->duration_days = (int)$_POST['duration'];
+        $errors = [];
 
         $starting_bid = ($_POST['starting_bid'] !== '') ? $_POST['starting_bid'] : null;
         $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
