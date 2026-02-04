@@ -194,11 +194,11 @@ $image_to_display = $item->main_image_url;
         <?php if ($current_user === $item->owner_name && (!$item->has_bids)): ?>
           <div class="card text-bg-dark border-secondary">
             <div class="card-body p-4">
-              <h6 class="fw-bold text-secondary mb-3">Manage Item</h6>
+              <h6 class="fw-bold text-secondary mb-3 fs-4">Manage Item</h6>
               <div class="d-grid gap-2">
-                <a href="item/edit/<?= $item->id ?>" class="btn btn-outline-secondary btn-sm text-start"><i class="fa-solid fa-pen me-2"></i> Edit</a>
-                <a href="item/manage_images/<?= $item->id ?>" class="btn btn-outline-info btn-sm text-start"><i class="fa-solid fa-image me-2"></i> Images</a>
-                <a href="item/delete/<?= $item->id ?>" class="btn btn-outline-danger btn-sm text-start"><i class="fa-solid fa-trash me-2"></i> Delete</a>
+                <a href="item/edit/<?= $item->id ?>" class="btn btn-secondary btn-sm text-start text-decoration-none"><i class="fa-solid fa-pen me-2"></i> Edit</a>
+                <a href="item/manage_images/<?= $item->id ?>" class="btn btn-info btn-sm text-start text-decoration-none"><i class="fa-solid fa-image me-2"></i> Images</a>
+                <a href="item/delete/<?= $item->id ?>" class="btn btn-danger btn-sm text-start text-decoration-none"><i class="fa-solid fa-trash me-2"></i> Delete</a>
               </div>
             </div>
           </div>
