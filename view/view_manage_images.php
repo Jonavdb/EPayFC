@@ -51,6 +51,15 @@ require_once "utils/GoBack.php";
         <h4 class="text-white text-start">
             Manage Images for "<?= $item->title ?>"
         </h4>
+        <?php if (isset($errors)): ?>
+            <div class="alert alert-danger mt-3">
+                <ul class="mb-0">
+                    <?php foreach ($errors as $error): ?>
+                        <li><?= $error ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
     </div>
     <div class="container-fluid mb-4 px-5">
         <div class="card text-bg-dark border-secondary">
@@ -59,13 +68,14 @@ require_once "utils/GoBack.php";
             </div>
             <div class="card-body">
                 <h6 class="fw-bold text-white text-start fs-4">Select Images</h6>
-                <form action="index.php?controller=item&action=add_images" method="POST" enctype="multipart/form-data" class="fs-5">
+                <form action="item/add_images" method="POST" enctype="multipart/form-data" class="fs-5">
 
                     <input type="hidden" name="item_id" value="<?= $item->id ?>">
 
                     <input class="form-control bg-dark text-secondary border-secondary"
                         type="file"
                         name="image_files[]"
+                        accept="image/png, image/jpeg, image/webp, image/gif"
                         multiple>
                     <div class="small text-secondary mt-2">
                         You can select multiple images (JPG, PNG, GIF, WEBP).Images will be added to the end of the current list.
