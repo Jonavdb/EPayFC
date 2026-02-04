@@ -43,7 +43,6 @@ require_once "utils/GoBack.php";
                 <div class="d-flex justify-content-end align-items-center" style="min-width: 50px;">
                     <?= $header_right_content ?? '' ?>
                 </div>
-
             </div>
         </nav>
     </header>

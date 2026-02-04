@@ -1,7 +1,4 @@
-<?php
-require_once "utils/GoBack.php";
-require_once "utils/AppTime.php";
-?>
+<?php require_once "utils/GoBack.php"; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,39 +6,42 @@ require_once "utils/AppTime.php";
 <head>
     <meta charset="UTF-8">
     <base href="<?= $web_root ?>" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
     <meta name="author" content="Jonathan_Vanderbiest">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <title>Manage images</title>
-    <style>
-        body {
-            display: block;
-            padding-top: 10px;
-            padding-bottom: 80px;
-            height: auto;
-            justify-content: unset;
-            align-items: unset;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="css/styles.css" rel="stylesheet" type="text/css" />
+    <title>Manage profile picture</title>
 </head>
 
-<body>
-    <nav class="navbar fixed-top navbar-dark bg-dark">
-        <div class="container-fluid d-flex align-items-center mb-4 px-5">
-            <div class="left-zone">
-                <a href="<?= GoBack::go_back_2() ?>" class="btn-icon">
-                    <i class="fa-solid fa-arrow-left" style="color: #2D68C4; font-size: 22px;"></i>
-                </a>
+<body class="d-block h-auto pt-2 pb-5">
+    <!-- HEADER (pas include car le go_back est différent) -->
+    <header class=" content-box">
+        <nav class="navbar fixed-top navbar-dark bg-dark border-bottom shadow-lg">
+            <div class="container-fluid p-2">
+
+                <div class="d-flex align-items-center" style="min-width: 50px;">
+                    <a href="<?= GoBack::go_back_2() ?>" class="btn-icon">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                </div>
+
+                <div class="flex-grow-1 text-center mx-auto">
+                    <div class="fw-bold fs-2 text-primary">
+                        Manage Profile picture
+
+                        <?php if (!isset($hide_default_icon) || !$hide_default_icon): ?>
+                            <i class="fa fa-shopping-cart ms-2"></i>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end align-items-center" style="min-width: 50px;">
+                    <?= $header_right_content ?? '' ?>
+                </div>
             </div>
-            <div class="flex-grow-1 text-center">
-                <h2 style="color: #2D68C4; margin: 0;"> Manage Profile picture
-                </h2>
-            </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <div class="container-fluid mb-4 px-5" style="margin-top: 60px;">
         <?php if (isset($_SESSION['error'])): ?>
@@ -56,13 +56,12 @@ require_once "utils/AppTime.php";
             </div>
             <div class="card-body">
                 <div class="text-center mb-4">
-                    <div class="position-relative d-inline-block">
+                    <div class="mx-auto" style="width: 120px; height: 120px">
                         <img src="<?= !empty($user->picture_path) ? $user->picture_path : 'css/images/default_user_image.jpg' ?>"
                             alt="Profile Picture"
-                            class="rounded-circle border border-secondary"
-                            style="width: 100px; height: 100px; object-fit: cover">
+                            class="rounded-circle border-secondary p-1 img-thumbnail object-fit-cover w-100 h-100">
                     </div>
-                    <h5 class="mt-2 mb-0 text-white"><?= htmlspecialchars($user->pseudo) ?></h5>
+                    <h5 class="mt-3 fs-2 mb-0 text-white"><?= htmlspecialchars($user->pseudo) ?></h5>
                     <p class="text-secondary small"><?= htmlspecialchars($user->email) ?></p>
                 </div>
             </div>
