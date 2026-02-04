@@ -44,11 +44,14 @@
     </header>
 
     <div class="container-fluid mb-4 px-5" style="margin-top: 60px;">
-        <?php if (isset($_SESSION['error'])): ?>
-            <div class="alert alert-danger">
-                <?= $_SESSION['error'] ?>
+        <?php if (isset($errors)): ?>
+            <div class="alert alert-danger mt-3">
+                <ul class="mb-0">
+                    <?php foreach ($errors as $error): ?>
+                        <li><?= $error ?></li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
-            <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
         <div class="card text-bg-dark border-secondary">
             <div class="card-header border-secondary" style="background-color: #1e293b;">

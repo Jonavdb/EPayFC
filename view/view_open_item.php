@@ -64,7 +64,7 @@ $image_to_display = $item->main_image_url;
         <h5 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h5>
         <div class="d-flex gap-3 mb-5">
           <?php
-          $origin = 'from-browse'; // Logique d'origine conservée
+          $origin = 'from-browse';
           $uri = $_SERVER['REQUEST_URI'];
           if (strpos($uri, 'from-list') !== false) $origin = 'from-list';
           elseif (strpos($uri, 'from-profile') !== false) $origin = 'from-profile';
@@ -103,7 +103,21 @@ $image_to_display = $item->main_image_url;
               <?php endforeach ?>
             </ul>
           </div>
+        <?php elseif ($item->owner_name !== $current_user): ?>
+          <div class="card text-bg-dark border-secondary">
+            <div class="text-center mt-3 mb-3">
+              <?php if ($item->is_direct_sale) { ?>
+                <h4 class="card-title mb-3">Buy this item for just : <span class="fw-bold text-success"><?= $item->buy_now_price ?>€</h4>
+              <?php } else { ?>
+                <h4 class="card-title mb-3">Be the first to bet on this item !</h4>
+                <h4 class="card-text fs-5">
+                  Starting price : <span class="fw-bold text-success">€ <?= $item->starting_bid ?></span>
+                </h4>
+              <?php } ?>
+            </div>
+          </div>
         <?php endif; ?>
+
 
       </div>
 

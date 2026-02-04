@@ -9,13 +9,16 @@ require_once "utils/ImageTool.php";
 
 
 
-class ControllerItem extends Controller {
-    public function index(): void {
+class ControllerItem extends Controller
+{
+    public function index(): void
+    {
         $this->redirect("item", "list");
     }
 
     // My items
-    public function list(): void {
+    public function list(): void
+    {
 
         $user = $this->get_user_or_redirect();
         $items = Item::get_items_by_owner($user->id);
@@ -58,7 +61,8 @@ class ControllerItem extends Controller {
     }
 
     /* Helper pour My Items : Prépare les données pour l'affichage */
-    private function prepare_item_data(Item $item, DateTime $now): object {
+    private function prepare_item_data(Item $item, DateTime $now): object
+    {
         $is_closed = $item->end_at <= $now;
 
         // Calcul du texte temps
@@ -87,7 +91,8 @@ class ControllerItem extends Controller {
     }
 
     // Delete item
-    public function delete($id = null): void {
+    public function delete($id = null): void
+    {
         if ($id === null && isset($_GET['param1'])) {
             $id = $_GET['param1'];
         }
@@ -119,7 +124,8 @@ class ControllerItem extends Controller {
         }
     }
 
-    public function open(): void {
+    public function open(): void
+    {
         // 2. On regarde si le premier argument (l'ID) existe
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1']; // On récupère le 8 de l'URL ".../index/8"
@@ -145,7 +151,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function new_bid() {
+    public function new_bid()
+    {
 
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : 0.0;
@@ -160,7 +167,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "open", $item_id);
     }
 
-    public function buy_now() {
+    public function buy_now()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
         $current_user_pseudo = $user->pseudo;
@@ -176,11 +184,12 @@ class ControllerItem extends Controller {
     }
 
 
-    public function add() {
-        $errors = [];
+    public function add()
+    {
         $user = $this->get_user_or_redirect();
         $now = new DateTime(AppTime::get_current_datetime());
         $end = (clone $now)->modify('+7 days');
+        $errors = [];
 
         $item = new Item(
             0.0,
@@ -209,53 +218,7 @@ class ControllerItem extends Controller {
         );
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $item->title = trim($_POST['title']);
-            $item->description = trim($_POST['description']);
-            $item->duration_days = (int)$_POST['duration'];
-
-            $starting_bid = ($_POST['starting_bid'] !== '') ? $_POST['starting_bid'] : null;
-            $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
-            $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
-
-            if (strlen($item->title) === 0 || empty($item->title)) {
-                $errors['empty'] = "Title is required";
-            }
-
-            if (strlen($item->title) < 3 || strlen($item->title) > 255) {
-                $errors['title'] = "Title lenght must be between 3 and 255 characters.";
-            }
-
-            if ($item->duration_days < 1) {
-                $errors['duration'] = "Duration must be at least 1 day";
-            }
-
-            if ($starting_bid !== null && $starting_bid > 0) {
-                $item->starting_bid = $starting_bid;
-                $item->is_auction = true;
-                $item->is_direct_sale = false;
-
-                if ($buy_now_price !== null && $buy_now_price > 0) {
-                    if ($buy_now_price < $starting_bid) {
-                        $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
-                    }
-                    $item->buy_now_price = $buy_now_price;
-                    $item->has_buy_now = true;
-                } else {
-                    $item->buy_now_price = null;
-                    $item->has_buy_now = false;
-                }
-
-                if ($sale_price !== null && $sale_price > 0) {
-                    $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
-                }
-            } elseif ($sale_price !== null && $sale_price > 0) {
-                $item->buy_now_price = $sale_price;
-                $item->is_auction = false;
-                $item->is_direct_sale = true;
-                $item->has_buy_now = false;
-            } else {
-                $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
-            }
+            $errors = $this->validate_and_fill($item);
 
             if (empty($errors)) {
                 $item->save();
@@ -269,11 +232,65 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function edit() {
-        $errors = [];
-        $user = $this->get_user_or_redirect();
+    private function validate_and_fill(Item $item): array
+    {
+        $item->title = trim($_POST['title']);
+        $item->description = trim($_POST['description']);
+        $item->duration_days = (int)$_POST['duration'];
 
+        $starting_bid = ($_POST['starting_bid'] !== '') ? $_POST['starting_bid'] : null;
+        $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
+        $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
+
+        if (strlen($item->title) === 0 || empty($item->title)) {
+            $errors['empty'] = "Title is required";
+        }
+
+        if (strlen($item->title) < 3 || strlen($item->title) > 255) {
+            $errors['title'] = "Title lenght must be between 3 and 255 characters.";
+        }
+
+        if ($item->duration_days < 1) {
+            $errors['duration'] = "Duration must be at least 1 day";
+        }
+
+        if ($starting_bid !== null && $starting_bid > 0) {
+            $item->starting_bid = $starting_bid;
+            $item->is_auction = true;
+            $item->is_direct_sale = false;
+
+            if ($buy_now_price !== null && $buy_now_price > 0) {
+                if ($buy_now_price < $starting_bid) {
+                    $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
+                }
+                $item->buy_now_price = $buy_now_price;
+                $item->has_buy_now = true;
+            } else {
+                $item->buy_now_price = null;
+                $item->has_buy_now = false;
+            }
+
+            if ($sale_price !== null && $sale_price > 0) {
+                $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
+            }
+        } elseif ($sale_price !== null && $sale_price > 0) {
+            $item->buy_now_price = $sale_price;
+            $item->is_auction = false;
+            $item->is_direct_sale = true;
+            $item->has_buy_now = false;
+        } else {
+            $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
+        }
+        return $errors;
+    }
+
+    public function edit()
+    {
+
+        $user = $this->get_user_or_redirect();
         $id = $_GET['param1'] ?? $_POST['id'] ?? null;
+        $errors = [];
+
 
         if (!$id) {
             $this->redirect("item", "index");
@@ -288,60 +305,13 @@ class ControllerItem extends Controller {
                 exit();
             }
         } else {
-
             $this->redirect("item", "index");
             return;
         }
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $item->title = trim($_POST['title']);
-            $item->description = trim($_POST['description']);
-            $item->duration_days = (int)$_POST['duration'];
 
-            $starting_bid = ($_POST['starting_bid'] !== '') ? $_POST['starting_bid'] : null;
-            $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
-            $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
-
-            if (strlen($item->title) === 0 || empty($item->title)) {
-                $errors['empty'] = "Title is required";
-            }
-
-            if (strlen($item->title) < 3 || strlen($item->title) > 255) {
-                $errors['title'] = "Title lenght must be between 3 and 255 characters.";
-            }
-
-            if ($item->duration_days < 1) {
-                $errors['duration'] = "Duration must be at least 1 day";
-            }
-
-            if ($starting_bid !== null && $starting_bid > 0) {
-                $item->starting_bid = $starting_bid;
-                $item->is_auction = true;
-                $item->is_direct_sale = false;
-
-                if ($buy_now_price !== null && $buy_now_price > 0) {
-                    if ($buy_now_price < $starting_bid) {
-                        $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
-                    }
-                    $item->buy_now_price = $buy_now_price;
-                    $item->has_buy_now = true;
-                } else {
-                    $item->buy_now_price = null;
-                    $item->has_buy_now = false;
-                }
-
-                if ($sale_price !== null && $sale_price > 0) {
-                    $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
-                }
-            } elseif ($sale_price !== null && $sale_price > 0) {
-                $item->starting_bid = 0;
-                $item->buy_now_price = $sale_price;
-                $item->is_auction = false;
-                $item->is_direct_sale = true;
-                $item->has_buy_now = false;
-            } else {
-                $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
-            }
+            $errors = $this->validate_and_fill($item);
 
             if (empty($errors)) {
                 $item->save();
@@ -357,7 +327,8 @@ class ControllerItem extends Controller {
 
 
 
-    public function manage_images(): void {
+    public function manage_images(): void
+    {
 
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1'];
@@ -386,7 +357,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function move_image_left() {
+    public function move_image_left()
+    {
         $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         if ($item_id > 0) {
@@ -395,7 +367,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function move_image_right() {
+    public function move_image_right()
+    {
         $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         if ($item_id > 0) {
@@ -404,7 +377,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function delete_images() {
+    public function delete_images()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $filename = isset($_POST['image_filename']) ? $_POST['image_filename'] : '';
 
@@ -414,34 +388,73 @@ class ControllerItem extends Controller {
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function add_images() {
+    public function add_images()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
+        $config_path = "config/dev.ini";
+        $config = parse_ini_file($config_path);
+        $max_size = (int)$config['upload_max_size'];
+        $allowed_type = $config['upload_allowed_types'];
+        $errors = [];
 
         if ($item_id > 0 && isset($_FILES['image_files'])) {
             $files = $_FILES['image_files'];
             $count = count($files['name']);
 
             for ($i = 0; $i < $count; $i++) {
-                $file = [
-                    'name' => $files['name'][$i],
-                    'tmp_name' => $files['tmp_name'][$i],
-                    'size'     => $files['size'][$i],
-                    'error'    => $files['error'][$i]
-                ];
 
-                if ($file['error'] === 0) {
-                    $path = ImageTools::upload_and_resize($file, 'items', $item_id);
+                $tmp_name = $files['tmp_name'][$i];
+                $name     = $files['name'][$i];
+                $size     = $files['size'][$i];
+                $error    = $files['error'][$i];
 
-                    if ($path) {
-                        Item::add_picture($item_id, $path);
+                $file_valid = true;
+
+                if ($error === 0) {
+
+                    if ($size > $max_size) {
+                        $errors[] = "The file $name is too big";
+                        $file_valid = false;
+                    }
+
+                    $image_info = getimagesize($tmp_name);
+                    if (!$image_info || !in_array($image_info['mime'], $allowed_type)) {
+                        $errors[] = "Bad format for the file $name";
+                        $file_valid = false;
+                    }
+
+                    if ($file_valid) {
+                        $file = [
+                            'name' => $files['name'][$i],
+                            'tmp_name' => $files['tmp_name'][$i],
+                            'size'     => $files['size'][$i],
+                            'error'    => $files['error'][$i]
+                        ];
+
+                        $path = ImageTools::upload_and_resize($file, 'items', $item_id);
+
+                        if ($path) {
+                            Item::add_picture($item_id, $path);
+                        } else {
+                            $errors[] = "Error during the transfert";
+                        }
                     }
                 }
             }
         }
-        $this->redirect("item", "manage_images", $item_id);
+        if (count($errors) > 0) {
+            $item = Item::get_item_by_id($item_id);
+            (new View("manage_images"))->show([
+                "item" => $item,
+                "errors" => $errors
+            ]);
+        } else {
+            $this->redirect("item", "manage_images", $item_id);
+        }
     }
 
-    public function browse() {
+    public function browse()
+    {
         // we retrive the user session
         $user = $this->get_user_or_false();
 
@@ -463,7 +476,8 @@ class ControllerItem extends Controller {
         );
     }
 
-    public function purchases(): void {
+    public function purchases(): void
+    {
         // we retrive the user session
         $user = $this->get_user_or_false();
 
@@ -473,7 +487,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function sales(): void {
+    public function sales(): void
+    {
         // we retrive the user session
         $user = $this->get_user_or_false();
 
