@@ -112,16 +112,23 @@ $image_to_display = $item->main_image_url;
           <div class="card-body p-4">
             <h6 class="fw-bold text-secondary mb-3 text-start fs-4">Pricing</h6>
 
-            <?php if (!$item->is_direct_sale): ?>
+            <?php if (!$item->is_direct_sale && $item->has_bids): ?>
               <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="fw-bold">Current Bid</span>
                 <span class="text-success fw-bold fs-2">€ <?= number_format($item->current_bid, 2, ',', ' ') ?></span>
               </div>
             <?php endif; ?>
 
+            <?php if (!$item->is_direct_sale && !$item->has_bids): ?>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold">Starting bid</span>
+                <span class="text-success fw-bold fs-2">€ <?= number_format($item->current_bid, 2, ',', ' ') ?></span>
+              </div>
+            <?php endif; ?>
+
             <?php if ($item->has_buy_now): ?>
               <div class="d-flex justify-content-between align-items-center mb-4">
-                <span class="fw-bold">Price</span>
+                <span class="fw-bold">Buy Now Price</span>
                 <span class="text-white fw-bold">€ <?= number_format($item->buy_now_price, 2, ',', ' ') ?></span>
               </div>
             <?php endif; ?>
