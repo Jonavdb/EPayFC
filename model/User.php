@@ -44,7 +44,10 @@ class User extends Model {
                 $row['full_name'],
                 $row['pseudo'],
                 $row['password'],
-                $row['id']
+                $row['id'],
+                $row['picture_path'],
+                $row['iban'],
+                $row['role']
             );
         }
         return $users;
@@ -64,6 +67,7 @@ class User extends Model {
                 $data["password"], // On passe le hash de la DB dans la propriété password
                 $data["id"] ?? null,
                 $data["picture_path"],
+                $data["iban"],
                 $data["role"]
             );
         }
@@ -120,7 +124,10 @@ class User extends Model {
                 $data["full_name"],
                 $data["pseudo"],
                 $data["password"],
-                $data["id"] ?? null
+                $data["id"] ?? null,
+                $data["picture_path"],
+                $data["iban"],
+                $data["role"]
             );
         }
     }
