@@ -83,14 +83,18 @@ class User extends Model {
     }
 
     public function validate(): array {
+        $min_len = Configuration::get('pseudo_min_length');
+        $max_len = Configuration::get('pseudo_max_length');
+        $regex   = Configuration::get('pseudo_regex');
+
         $errors = [];
         if (!strlen($this->pseudo) > 0) {
             $errors[] = "Pseudo is required.";
         }
         if (!(strlen($this->pseudo) >= 3 && strlen($this->pseudo) <= 16)) {
-            $errors[] = "Pseudo length must be between 3 and 16.";
+            $errors[] = "Pseudo length must be between $min_len and $max_len.";
         }
-        if (!(preg_match("/^[a-zA-Z][a-zA-Z0-9]*$/", $this->pseudo))) {
+        if (!preg_match($regex, $this->pseudo)) {
             $errors[] = "Pseudo must start by a letter and must contain only letters and numbers.";
         }
         return $errors;

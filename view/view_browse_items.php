@@ -214,7 +214,7 @@
                                         <!-- TOP CELL (50%) -->
                                         <div class="row flex-fill" style="height:50%;">
                                             <div class="col-sm h-100 position-relative">
-                                                <img class="card-img-top h-100" src="<?= $item->main_image_url ?>" alt="Auction Item Image">
+                                                <img class="card-img-top h-100" src="<?= isset($item->main_image_url) ? $item->main_image_url : "css/images/default_item_image.png"; ?>" alt="Auction Item Image">
 
                                                 <div class="card-img-overlay d-flex flex-column justify-content-between" style="height:100%; padding:1.2rem;">
 
