@@ -131,14 +131,20 @@
 
                                                                 <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
+
+
                                                                     <!-- Mid left -->
                                                                     <?php $has_buy_now = $item->has_buy_now;  ?>
-
-                                                                    <div class="price-left d-flex align-items-center fs-3 text-primary fw-bold">
-                                                                        <?php if ($has_buy_now) { ?>
+                                                                    <?php if ($has_buy_now): ?>
+                                                                        <div class="price-left d-flex align-items-center fs-3 text-primary fw-bold">
                                                                             € <?= number_format($item->buy_now_price, 2, ',', '.') ?>
-                                                                        <?php } ?>
-                                                                    </div>
+                                                                        </div>
+                                                                    <?php else: ?>
+                                                                        <div class="price-left d-flex align-items-center fs-3 text-warning fw-bold">
+                                                                            € <?= number_format($item->starting_bid, 2, ',', '.') ?>
+                                                                        </div>
+                                                                    <?php endif; ?>
+
 
                                                                     <!-- Mid right -->
                                                                     <div class="d-flex flex-column text-end bid-info">
@@ -267,11 +273,16 @@
                                                             <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
                                                                 <!-- Left: Buy now price -->
-                                                                <div class="price-left d-flex align-items-center fs-3 text-primary fw-bold">
-                                                                    <?php if ($item->has_buy_now): ?>
+                                                                <?php $has_buy_now = $item->has_buy_now;  ?>
+                                                                <?php if ($has_buy_now): ?>
+                                                                    <div class="price-left d-flex align-items-center fs-3 text-primary fw-bold">
                                                                         € <?= number_format($item->buy_now_price, 2, ',', '.') ?>
-                                                                    <?php endif; ?>
-                                                                </div>
+                                                                    </div>
+                                                                <?php else: ?>
+                                                                    <div class="price-left d-flex align-items-center fs-3 text-warning fw-bold">
+                                                                        € <?= number_format($item->starting_bid, 2, ',', '.') ?>
+                                                                    </div>
+                                                                <?php endif; ?>
 
                                                                 <!-- Right: Current bid -->
                                                                 <?php if ($item->is_auction): ?>
