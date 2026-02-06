@@ -32,7 +32,7 @@
 
         <div class="card-body d-flex flex-column">
             <div class="mb-2">
-                <h5 class="text-start card-title text-truncate fw-bold mb-0 text-white"><?= htmlspecialchars($element->raw_item->title) ?></h5>
+                <div class="text-start card-title text-truncate fw-bold fs-5 mb-0 text-white"><?= htmlspecialchars($element->raw_item->title) ?></div>
                 <small class="text-secondary">by <?= htmlspecialchars($user->pseudo) ?></small>
             </div>
 
