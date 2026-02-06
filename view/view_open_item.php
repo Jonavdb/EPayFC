@@ -69,6 +69,8 @@ $image_to_display = $item->main_image_url;
           if (strpos($uri, 'from-list') !== false) $origin = 'from-list';
           elseif (strpos($uri, 'from-profile') !== false) $origin = 'from-profile';
           elseif (strpos($uri, 'from-items') !== false) $origin = 'from-items';
+          elseif (strpos($uri, 'from-sales') !== false) $origin = 'from-sales';
+          elseif (strpos($uri, 'from-purchases') !== false) $origin = 'from-purchases';
 
           foreach ($item->image_urls as $index => $image):
             $is_active = ($image === $image_to_display);

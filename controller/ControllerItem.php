@@ -126,11 +126,12 @@ class ControllerItem extends Controller
 
     public function open(): void
     {
-        // 2. On regarde si le premier argument (l'ID) existe
+        // On regarde si le premier argument (l'ID) existe
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1']; // On récupère le 8 de l'URL ".../index/8"
         } else {
-            $id = 3; // Valeur par défaut si l'URL est juste ".../index"
+            $this->redirect('item', 'browse');
+            return;
         }
         $image_index = isset($_GET['param2']) ? (int)$_GET['param2'] : 0;
         $item = Item::get_item_by_id($id);
@@ -234,6 +235,13 @@ class ControllerItem extends Controller
 
     private function validate_and_fill(Item $item): array
     {
+
+        $config_path = "config/dev.ini";
+        $config = parse_ini_file($config_path);
+        $min_lenght = (int)$config['min_item_lenght'];
+        $max_lenght = (int)$config['max_item_lenght'];
+        $min_duration = (int)$config['min_duration_days'];
+        $max_duration = (int)$config['max_duration_days'];
         $item->title = trim($_POST['title']);
         $item->description = trim($_POST['description']);
         $item->duration_days = (int)$_POST['duration'];
@@ -247,12 +255,12 @@ class ControllerItem extends Controller
             $errors['empty'] = "Title is required";
         }
 
-        if (strlen($item->title) < 3 || strlen($item->title) > 255) {
-            $errors['title'] = "Title lenght must be between 3 and 255 characters.";
+        if (strlen($item->title) < $min_lenght || strlen($item->title) > $max_lenght) {
+            $errors['title'] = "Title lenght must be between $min_lenght and $max_lenght characters.";
         }
 
-        if ($item->duration_days < 1) {
-            $errors['duration'] = "Duration must be at least 1 day";
+        if ($item->duration_days < $min_duration || $item->duration_days > $max_duration) {
+            $errors['duration'] = "Duration must be at least $min_duration day and at most $max_duration days";
         }
 
         if ($starting_bid !== null && $starting_bid > 0) {
