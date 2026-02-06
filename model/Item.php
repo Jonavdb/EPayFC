@@ -454,7 +454,7 @@ class Item extends Model
                 if ($has_bids) {
                     $current_bid = $item_data['max_bid'];
                 } else {
-                    $current_bid = 0.0;
+                    $current_bid =  $item_data['starting_bid'];
                 }
             } else {
                 $current_bid = 0;
@@ -1064,7 +1064,7 @@ class Item extends Model
                 if ($has_bids) {
                     $current_bid = $item_data['max_bid'];
                 } else {
-                    $current_bid = 0.0;
+                    $current_bid =  $item_data['starting_bid'];
                 }
             } else {
                 $current_bid = 0;
