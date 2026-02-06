@@ -637,6 +637,17 @@ class Item extends Model
 
         if ($image_to_delete) {
 
+            $main_path = $image_to_delete['picture_path'];
+            $thumb_path = str_replace(".jpg", "_thumbnail.jpg", $main_path);
+
+            if (file_exists($main_path)) {
+                unlink($main_path);
+            }
+
+            if (file_exists($thumb_path)) {
+                unlink($thumb_path);
+            }
+
             self::execute(
                 "DELETE FROM item_pictures WHERE item = :item_id AND priority = :priority",
                 [
