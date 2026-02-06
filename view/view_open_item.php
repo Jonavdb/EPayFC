@@ -61,7 +61,7 @@ $image_to_display = $item->main_image_url;
           </div>
         </div>
 
-        <h5 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h5>
+        <h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h3>
         <div class="d-flex gap-3 mb-5">
           <?php
           $origin = 'from-browse';
@@ -124,7 +124,7 @@ $image_to_display = $item->main_image_url;
       <div class="col-md-4">
         <div class="card text-bg-dark border-secondary mb-4">
           <div class="card-body p-4">
-            <h6 class="fw-bold text-secondary mb-3 text-start fs-4">Pricing</h6>
+            <h4 class="fw-bold text-secondary mb-3 text-start fs-4">Pricing</h4>
 
             <?php if (!$item->is_direct_sale && $item->has_bids): ?>
               <div class="d-flex justify-content-between align-items-center mb-2">
@@ -201,7 +201,7 @@ $image_to_display = $item->main_image_url;
 
         <div class="card text-bg-dark border-secondary mb-4">
           <div class="card-body p-4">
-            <h6 class="fw-bold text-secondary mb-3 text-start fs-4">Seller Information</h6>
+            <h4 class="fw-bold text-secondary mb-3 text-start fs-4">Seller Information</h4>
             <div class="d-flex align-items-center">
               <img src="<?= $item->owner_picture ?>" alt="User" class="rounded-circle me-3 bg-secondary" style="width: 48px; height: 48px; object-fit: cover;">
               <div>
@@ -215,7 +215,7 @@ $image_to_display = $item->main_image_url;
         <?php if ($current_user === $item->owner_name && (!$item->has_bids)): ?>
           <div class="card text-bg-dark border-secondary">
             <div class="card-body p-4">
-              <h6 class="fw-bold text-secondary mb-3 fs-4 text-start">Manage Your Item</h6>
+              <h4 class="fw-bold text-secondary mb-3 fs-4 text-start">Manage Your Item</h4>
               <div class="d-grid gap-2">
                 <a href="item/edit/<?= $item->id ?>" class="btn btn-outline-secondary border text-decoration-none"><i class="fa-solid fa-pen me-2"></i> Edit</a>
                 <a href="item/manage_images/<?= $item->id ?>" class="btn btn-outline-info border text-decoration-none"><i class="fa-solid fa-image me-2"></i> Images</a>
