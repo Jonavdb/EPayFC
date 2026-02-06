@@ -175,8 +175,6 @@
                                                                  // Get the total number of images, to see whether or not it is necessary to display a badge
                                                                  $total_image_count = count($sale->image_urls);
                                                                  ?>
-
-
                                                                  <?php if ($total_image_count > 1): ?>
                                                                       <?php
                                                                       $extra_image_count = $total_image_count - 1;
