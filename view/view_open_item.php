@@ -196,7 +196,7 @@ $image_to_display = $item->main_image_url;
               <?php endif; ?>
 
             <?php else: ?>
-              <div class="alert alert-info mt-3">Please <a href="main/login">login</a> to bid.</div>
+              <div class="alert alert-info mt-3">Please <a href="user/login">login</a> to bid.</div>
             <?php endif; ?>
           </div>
         </div>

@@ -356,7 +356,7 @@ class ControllerItem extends Controller
             return;
         }
 
-        if ($item->owner_name !== $current_user) {
+        if ($item->owner_name !== $current_user || ($item->is_auction && $item->has_bids)) {
             $this->redirect("item", "open", $id);
             return;
         }
