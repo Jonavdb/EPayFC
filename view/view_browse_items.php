@@ -157,8 +157,19 @@
                                                                 </div>
 
                                                                 <!-- Row 3 : Bottom left (below boostrap class "card text")-->
-                                                                <div class="time-left fs-5 text-secondary fw-bold">
-                                                                    <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold text-secondary"></i>
+                                                                <?php
+                                                                $end = $item->end_at;
+                                                                $now = new DateTime(AppTime::get_current_datetime());
+                                                                $interval = $now->diff($end);
+
+                                                                // Check if the difference is less than 1 day and the end date is in the future
+                                                                $is_future_deadline = !$interval->invert; // checks if end date is in the future
+                                                                $isUrgent = ($interval->days < 1 && $is_future_deadline);
+                                                                $colorClass = $isUrgent ? 'text-warning' : 'text-secondary';
+                                                                ?>
+
+                                                                <div class="time-left fs-5 <?= $colorClass ?> fw-bold">
+                                                                    <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold <?= $colorClass ?>"></i>
                                                                     <?= $item->time_left ?> left
                                                                 </div>
 
