@@ -311,13 +311,10 @@ class Item extends Model
     public static function get_user_bid(int $item_id, int $user_id)
     {
         $query = self::execute(
-            "SELECT b.amount as bid
-            from bids b
-            join users u on u.id = b.owner
-            join v_items_status vis on vis.id = b.item
-            where u.id = :user_id
-            and vis.id = :item_id
-            and b.amount = vis.max_bid",
+            "SELECT MAX(amount) as bid
+            FROM bids
+            WHERE owner = :user_id
+            AND item = :item_id",
             [
                 "item_id" => $item_id,
                 "user_id" => $user_id
@@ -326,7 +323,7 @@ class Item extends Model
 
         $data = $query->fetch();
         if (!$data) {
-            return false;
+            return 0;
         }
 
         return $data['bid'];
