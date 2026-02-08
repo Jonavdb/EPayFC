@@ -1,0 +1,94 @@
+item.css
+/* -------------------------------------- */
+/* --- GENERAL CARD AND THEME STYLES --- */
+/* -------------------------------------- */
+.card.dark-theme {
+  background-color: #1a1a1a;
+  color: #fff;
+  border-radius: 0.5rem;
+  border: none;
+  overflow: hidden;
+}
+
+.card.dark-theme .card-body {
+  background-color: #1a1a1a;
+  padding: 1rem;
+}
+
+/* -------------------------------------- */
+/* --- OVERLAY (TOP) STYLES --- */
+/* -------------------------------------- */
+
+/* Ensure consistent badge sizing and text color */
+.card-img-overlay .badge {
+  padding: 0.4em 0.7em;
+  font-size: 0.8em;
+  line-height: 1.2;
+}
+
+/* FIX: Bidder badge add padding around (a little bit) */
+.badge-bidder {
+  padding: 0.5em 0.8em !important;
+}
+
+/* FIX: Auction text in white & space between Auction and Buy Now */
+.badge-auction {
+  color: #fff !important;
+  /* Force white text */
+  margin-right: 0.3rem;
+}
+
+/* FIX: Hammer icon flip */
+.fa-gavel.flipped-horizontal {
+  transform: scaleX(-1);
+}
+
+/* -------------------------------------- */
+/* --- CARD BODY (BOTTOM) STYLES --- */
+/* -------------------------------------- */
+
+/* Card Title and Author Styling */
+.card.dark-theme .card-title b {
+  color: #fff;
+}
+
+.card.dark-theme .card-title div {
+  color: #b0b0b0;
+  font-size: 0.9em;
+}
+
+/* FIX: Price text lower the position (Vertical Alignment) */
+.price-row {
+  /* Align items vertically centered instead of baseline */
+  align-items: center !important;
+}
+
+/* Middle Left: Main Price in turquoise bold */
+.price-left {
+  color: #00bcd4;
+  font-weight: bold;
+  font-size: 1.1em;
+  /* Slight downward shift might be needed to perfectly center */
+  margin-top: 0.05rem;
+}
+
+/* Middle Right: Current Bid info, smaller text */
+.bid-info {
+  font-size: 0.85em;
+  color: #b0b0b0;
+}
+
+.bid-price {
+  color: #66bb6a;
+}
+
+/* Bottom Left: Time Left with transparent clock icon */
+.time-left {
+  color: #b0b0b0;
+  font-size: 0.9em;
+}
+
+.fa-clock.transparent-icon {
+  opacity: 0.7;
+  /* Make the clock icon slightly transparent */
+}

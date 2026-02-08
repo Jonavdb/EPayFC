@@ -1,5 +1,9 @@
 # Projet PRWB 2526 - Groupe f03 - EPayFC
 
+Etudiant : Haboula Ali
+Etudiant : Yangni-Angaté Emmanuel
+Etudiant : Vanderbiest Jonathan
+
 ## Installation sous MacOS ou Linux
 
 En développement, donnez les permissions d'écriture aux dossiers uploads et database :
@@ -15,6 +19,7 @@ En développement, donnez les permissions d'écriture aux dossiers uploads et da
 * mamichel@epfc.eu, password "Password1,", utilisateur
 * quhouben@epfc.eu, password "Password1,", utilisateur
 * xapigeolet@epfc.eu, password "Password1,", utilisateur
+* admin@epfc.eu, password "Password1,", admin
 * A compléter...
 
 ### Liste des bugs connus
@@ -38,6 +43,11 @@ En développement, donnez les permissions d'écriture aux dossiers uploads et da
 ### Liste des fonctionnalités supplémentaires
 
 ### Divers
+
+Choix d'implémentation
+
+Open_item : Lorsqu'on est propriétaire de l'objet et qu'il n'y a pas de bid, je décide de ne pas afficher la partie liste des bids en dessous. 
+
 
 ## Notes de version itération 2
 
