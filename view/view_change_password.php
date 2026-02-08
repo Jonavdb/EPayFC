@@ -17,7 +17,15 @@
     <main class="container">
         <!-- HEADER -->
         <?php
+        ob_start();
+        ?>
+        <button type="submit" form="passwordForm" class="btn-icon text-primary">
+            <i class="fa-regular fa-floppy-disk fa-lg"></i>
+        </button>
+
+        <?php
         $page_title = "Change password";
+        $header_right_content = ob_get_clean();
         include 'view/view_header.php';
         ?>
 

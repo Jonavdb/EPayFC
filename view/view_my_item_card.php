@@ -55,7 +55,7 @@
                     </div>
                 </div>
 
-                <?php if ($element->raw_item->is_auction): ?>
+                <?php if ($element->raw_item->is_auction && $element->context !== "unsold"): ?>
                     <div class="text-end">
                         <div class="text-secondary small mb-0">Current bid</div>
                         <div class="fs-3 fw-bold text-success">
