@@ -224,7 +224,10 @@ class Item extends Model
         foreach ($data as $item_data) {
 
             // we retrieve user bid on the item
-            $user_bid = self::get_user_bid($item_data['id'], $id);
+            $user_bid = Item::get_user_bid($item_data['id'], $id);
+            if (is_null($user_bid)) {
+                $user_bid = 0;
+            }
 
             // items on which user has placed bids are always in auction
             $is_auction = true;
@@ -775,6 +778,9 @@ class Item extends Model
         foreach ($data as $item_data) {
             // available items have no user bid on them
             $user_bid = Item::get_user_bid($item_data['id'], $id); // for debug, for is boris id
+            if (is_null($user_bid)) {
+                $user_bid = 0;
+            }
 
             // we get info of whether the item is in auction or not
             $is_auction = $item_data['is_auction'];
@@ -935,6 +941,9 @@ class Item extends Model
         foreach ($data as $item_data) {
             // should be 0/null because user is the owner
             $user_bid = Item::get_user_bid($item_data['id'], $user_id);
+            if (is_null($user_bid)) {
+                $user_bid = 0;
+            }
 
             // we retrieve name of bidder
             $bidder_name = $item_data['bidder_name'];

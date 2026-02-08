@@ -262,7 +262,7 @@
                                         <div style="width: 5%;" class="text-start">
                                              <i class="fa-solid fa-trophy fs-5 text-secondary"></i>
                                         </div>
-                                        <div class="ms-2"> <?= $top_buyer ?> </div>
+                                        <div class="ms-2"> <?= $sale->bidder_name ?> </div>
                                    </div>
 
 
