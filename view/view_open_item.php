@@ -152,7 +152,7 @@ $image_to_display = $item->main_image_url;
             <?php if ($auction_finished): ?>
               <?php if ($winner): ?>
                 <?php if ($winner === $current_user): ?>
-                  <div class="alert alert-success mt-3">You won this item!</div>
+                  <div class="alert alert-success mt-3">Congratulations! You purchased this item for € <?= $item->current_bid ?>.</div>
                 <?php else: ?>
                   <div class="alert alert-warning mt-3">Sold to <?= $winner ?></div>
                 <?php endif; ?>
@@ -162,7 +162,7 @@ $image_to_display = $item->main_image_url;
 
             <?php elseif ($current_user): ?>
               <?php if (!$item->is_direct_sale): ?>
-                <form action="index.php?controller=item&action=new_bid" method="POST" class="mb-3">
+                <form action="item/new_bid" method="POST" class="mb-3">
                   <input type="hidden" name="item_id" value="<?= $item->id ?>">
 
                   <div class="input-group mb-2">
@@ -170,8 +170,9 @@ $image_to_display = $item->main_image_url;
                     <input type="number"
                       class="form-control bg-dark border-secondary text-white"
                       name="amount"
+                      step="0.5"
                       value="<?= $item->current_bid + 1 ?>"
-                      min="<?= $item->current_bid + 1 ?>"
+                      min="<?= $item->current_bid + 0.5 ?>"
                       required
                       <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
                   </div>
@@ -183,7 +184,7 @@ $image_to_display = $item->main_image_url;
               <?php endif; ?>
 
               <?php if ($item->has_buy_now): ?>
-                <form action="index.php?controller=item&action=buy_now" method="POST" class="p-1 border-0">
+                <form action="item/buy_now" method="POST" class="p-1 border-0">
                   <input type="hidden" name="item_id" value="<?= $item->id ?>">
                   <button class="btn btn-primary w-100 fw-bold py-2" type="submit" <?php if ($current_user === $item->owner_name) echo 'disabled'; ?>>
                     Buy Now at € <?= number_format($item->buy_now_price, 2, ',', ' ') ?>
