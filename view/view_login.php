@@ -1,3 +1,7 @@
+<?php
+require_once './framework/Configuration.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -55,35 +59,37 @@
                     <span class="small">New here ? <a href="main/signup" class="text-info">Click here to subscribe !</a></span>
                 </div>
 
-                <span class="divider"></span>
+                <?php if (Configuration::is_dev()): ?>
+                    <span class="divider"></span>
 
-                <div class="debug-section text-center">
-                    <h3 class="text-warning mt-3 text-bold">For Debug Purpose</h3>
+                    <div class="debug-section text-center">
+                        <h3 class="text-warning mt-3 text-bold">For Debug Purpose</h3>
 
-                    <div class="debug-emails small">
-                        <?php foreach ($users ?? [] as $user): ?>
-                            <div class="text-light">
-                                <a href="user/login?email=<?= urldecode($user->email); ?>" class="font-weight-bold">
-                                    Login as <?= $user->email ?>
-                                </a>
+                        <div class="debug-emails small">
+                            <?php foreach ($users ?? [] as $user): ?>
+                                <div class="text-light">
+                                    <a href="user/login?email=<?= urldecode($user->email); ?>" class="font-weight-bold">
+                                        Login as <?= $user->email ?>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div class="debug-actions small fw-bold">
+                            <div class="mb-1 mt-1">
+                                <a href="setup/index" class="text-success">Restore original data</a>
                             </div>
-                        <?php endforeach; ?>
-                    </div>
 
-                    <div class="debug-actions small fw-bold">
-                        <div class="mb-1 mt-1">
-                            <a href="setup/index" class="text-success">Restore original data</a>
-                        </div>
+                            <div class="mb-1">
+                                <a href="setup/export" class="text-warning">Backup personal data</a>
+                            </div>
 
-                        <div class="mb-1">
-                            <a href="setup/export" class="text-warning">Backup personal data</a>
-                        </div>
-
-                        <div>
-                            <a href="setup/restore" class="text-warning">Restore personal data</a>
+                            <div>
+                                <a href="setup/restore" class="text-warning">Restore personal data</a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endif; ?>
 
                 <?php if (count($errors) != 0): ?>
                     <div class='errors'>
