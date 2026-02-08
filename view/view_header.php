@@ -3,7 +3,7 @@
         <div class="container-fluid p-2">
 
             <div class="d-flex align-items-center" style="min-width: 50px;">
-                <a href="<?= GoBack::go_back_2() ?>" class="btn-icon">
+                <a href="<?= GoBack::go_back() ?>" class="btn-icon">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
             </div>

@@ -2,18 +2,18 @@
 
 class GoBack
 {
+    // public static function go_back(): string
+    // {
+    //     $back_link = "item/browse";
+
+    //     if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
+    //         $back_link = $_SERVER['HTTP_REFERER'];
+    //     }
+
+    //     return $back_link;
+    // }
+
     public static function go_back(): string
-    {
-        $back_link = "item/browse";
-
-        if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) {
-            $back_link = $_SERVER['HTTP_REFERER'];
-        }
-
-        return $back_link;
-    }
-
-    public static function go_back_2(): string
     {
 
         $uri = $_SERVER['REQUEST_URI'];
@@ -55,6 +55,8 @@ class GoBack
             $_SESSION['smart_back_link'] = 'item/sales';
         } elseif (strpos($uri, 'from-purchases') !== false) {
             $_SESSION['smart_back_link'] = 'item/purchases';
+        } elseif (strpos($referer, 'item/add') !== false) {
+            $_SESSION['smart_back_link'] = 'item/browse';
         } elseif (strpos($referer, 'item/browse') !== false) {
             $_SESSION['smart_back_link'] = 'item/browse';
         } elseif (strpos($referer, 'item/list') !== false) {

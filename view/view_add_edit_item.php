@@ -167,7 +167,7 @@ require_once "utils/GoBack.php";
                                         class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['sale_price']) ? 'is-invalid' : '' ?>"
                                         id="direct"
                                         name="direct"
-                                        value="<?php echo ($item->is_direct_sale && $item->buy_now_price > 0) ? $item->buy_now_price : ''  ?>">
+                                        value="<?php echo isset($_POST['direct']) ? $_POST['direct'] : (($item->is_direct_sale && $item->buy_now_price > 0) ? $item->buy_now_price : '') ?>">
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                     <?php if (isset($errors['sale_price'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['sale_price'] ?></div>

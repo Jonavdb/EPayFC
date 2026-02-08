@@ -61,29 +61,30 @@ $image_to_display = $item->main_image_url;
           </div>
         </div>
 
-        <h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h3>
-        <div class="d-flex gap-3 mb-5">
-          <?php
-          $origin = 'from-browse';
-          $uri = $_SERVER['REQUEST_URI'];
-          if (strpos($uri, 'from-list') !== false) $origin = 'from-list';
-          elseif (strpos($uri, 'from-profile') !== false) $origin = 'from-profile';
-          elseif (strpos($uri, 'from-items') !== false) $origin = 'from-items';
-          elseif (strpos($uri, 'from-sales') !== false) $origin = 'from-sales';
-          elseif (strpos($uri, 'from-purchases') !== false) $origin = 'from-purchases';
+        <?php if (count($item->image_urls) >= 2) { ?><h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h3>
+          <div class="d-flex gap-3 mb-5">
+            <?php
+            $origin = 'from-browse';
+            $uri = $_SERVER['REQUEST_URI'];
+            if (strpos($uri, 'from-list') !== false) $origin = 'from-list';
+            elseif (strpos($uri, 'from-profile') !== false) $origin = 'from-profile';
+            elseif (strpos($uri, 'from-items') !== false) $origin = 'from-items';
+            elseif (strpos($uri, 'from-sales') !== false) $origin = 'from-sales';
+            elseif (strpos($uri, 'from-purchases') !== false) $origin = 'from-purchases';
 
-          foreach ($item->image_urls as $index => $image):
-            $is_active = ($image === $image_to_display);
-            $border_class = $is_active ? 'border-primary' : 'border-secondary';
-          ?>
-            <a href="item/open/<?= $item->id ?>/<?= $index ?>/<?= $origin ?>" class="d-block">
-              <img src="<?= $image ?>"
-                class="rounded border <?= $border_class ?>"
-                alt="View <?= $index ?>"
-                style="width: 100px; height: 70px; object-fit: cover;">
-            </a>
-          <?php endforeach; ?>
-        </div>
+            foreach ($item->image_urls as $index => $image):
+              $is_active = ($image === $image_to_display);
+              $border_class = $is_active ? 'border-primary' : 'border-secondary';
+            ?>
+              <a href="item/open/<?= $item->id ?>/<?= $index ?>/<?= $origin ?>" class="d-block">
+                <img src="<?= $image ?>"
+                  class="rounded border <?= $border_class ?>"
+                  alt="View <?= $index ?>"
+                  style="width: 100px; height: 70px; object-fit: cover;">
+              </a>
+            <?php endforeach; ?>
+          </div>
+        <?php } ?>
 
         <?php if ($item->has_bids): ?>
           <div class="card text-bg-dark border-secondary">

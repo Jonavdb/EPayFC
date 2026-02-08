@@ -58,22 +58,5 @@ class ImageTools
         $success = imagejpeg($new_img, $dst, 85);
 
         return $success;
-
-
-        // $w = imagesx($img);
-        // $h = imagesy($img);
-        // $ratio = $w / $h;
-        // if ($w > $h) {
-        //     $nw = $max;
-        //     $nh = $max / $ratio;
-        // } else {
-        //     $nw = $max * $ratio;
-        //     $nh = $max;
-        // }
-
-        // $new = imagecreatetruecolor($nw, $nh);
-        // imagefill($new, 0, 0, imagecolorallocate($new, 255, 255, 255));
-        // imagecopyresampled($new, $img, 0, 0, 0, 0, $nw, $nh, $w, $h);
-        // return imagejpeg($new, $dst, 85);
     }
 }

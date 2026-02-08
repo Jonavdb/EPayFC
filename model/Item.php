@@ -124,7 +124,7 @@ class Item extends Model
     {
         $query = self::execute(
             "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
-            FROM v_items_status v  -- <--- C'est ici que la magie opère
+            FROM v_items_status v 
             JOIN users u on v.owner = u.id
             WHERE v.id = :item_id",
             ["item_id" => $id]

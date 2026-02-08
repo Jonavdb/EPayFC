@@ -182,8 +182,8 @@
                                                                       <div class="d-flex justify-content-end">
                                                                            <span class="badge rounded-pill bg-dark d-inline-flex align-items-center justify-content-center px-3 py-2">
                                                                                 <i class="fa-solid fa-images me-2"></i>
-                                                                                <?= $extra_image_count ?>
-                                                                                <?= ($extra_image_count === 1) ? ' image' : ' images' ?>
+                                                                                <?= $total_image_count ?>
+                                                                                <?= ($total_image_count === 1) ? ' image' : ' images' ?>
                                                                            </span>
                                                                       </div>
                                                                  <?php endif; ?>

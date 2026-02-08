@@ -370,7 +370,7 @@ class ControllerItem extends Controller
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1'];
         } else {
-            $this->redirect("BrowseItems", "show_items");
+            $this->redirect("item", "browse");
             return;
         }
 
@@ -380,7 +380,7 @@ class ControllerItem extends Controller
         $current_user = $user->pseudo;
 
         if (!$item) {
-            $this->redirect("BrowseItems", "show_items");
+            $this->redirect("item", "browse");
             return;
         }
 
@@ -539,7 +539,7 @@ class ControllerItem extends Controller
     public function purchases(): void
     {
         // we retrive the user session
-        $user = $this->get_user_or_false();
+        $user = $this->get_user_or_redirect();
 
         $purchases = Item::get_purchases($user->id);
         (new View("see_my_purchases"))->show([
@@ -550,7 +550,7 @@ class ControllerItem extends Controller
     public function sales(): void
     {
         // we retrive the user session
-        $user = $this->get_user_or_false();
+        $user = $this->get_user_or_redirect();
 
         $sales = Item::get_sales($user->id);
         (new View("see_my_sales"))->show(
