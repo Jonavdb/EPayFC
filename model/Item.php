@@ -1000,7 +1000,8 @@ class Item extends Model
         $items = [];
         $query = self::execute(
             "SELECT * from v_items_status vis
-            WHERE :today BETWEEN vis.created_at AND vis.end_at
+            WHERE :today BETWEEN vis.created_at AND vis.end_at -- Npt expired yet
+            AND vis.buy_now_reached = 0 -- Not sold yet
             ORDER by vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
