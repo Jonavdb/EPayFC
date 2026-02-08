@@ -86,9 +86,7 @@
                 </div>
                 <div class="card-body">
                     <div class="alert alert-warning border-secondary text-start">
-
-                        <i class="fa-solid fa-triangle-exclamation me-2"></i>
-                        This will permanentely delete your profile picture.
+                        This will permanentely delete your profile picture. You can upload a new one anytime.
                     </div>
                     <form action="user/delete_profile_picture" method="POST" class="text-start mt-3">
                         <button type="submit" class="btn btn-danger">
