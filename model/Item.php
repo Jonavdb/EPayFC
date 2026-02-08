@@ -710,43 +710,59 @@ class Item extends Model
     {
         $purchases = [];
 
+        // BACKUP
+        // $query = self::execute(
+        //     // query to get the items where the specified user got the winning 
+        //     // OR the items that he purchased directly
+        //     "SELECT 
+        //     /* Item Data */
+        //     vis.id AS item_id,
+        //     vis.title,
+        //     vis.buy_now_price,
+        //     vis.is_auction,
+        //     vis.has_buy_now,
+        //     vis.buy_now_reached,
+        //     vis.end_at,
+        //     vis.max_bid,
+
+        //     /* Seller Data (The person who owns the item) */
+        //     seller.id AS seller_id,         -- id of the person who owns the item (seller is the custom name of users table ie check next query lines)
+        //     seller.pseudo AS seller_name,   -- name of the person who owns the item
+
+        //     /* Bidder Data (The person who placed the winning bid) */
+        //     u.id AS bidder_id,
+        //     u.pseudo AS bidder_name,        -- name of the person of placed the bid 
+        //     b.amount AS winning_bid_amount  -- bid placed by the person 
+
+        //     FROM v_items_status vis
+        //     /* Join for the bid details */
+        //     JOIN bids b ON b.item = vis.id
+
+        //     /* Join for the person who placed the bid (Bidder / Buyer) */
+        //     JOIN users u ON u.id = b.owner
+
+        //     /* Join for the person who created the item (Seller) */
+        //     JOIN users seller ON seller.id = vis.owner 
+
+        //     WHERE u.id = :id             -- buyer / bidder
+        //     AND b.amount = vis.max_bid   -- with the highest bid    
+        //     AND (vis.buy_now_reached = 1 OR :today >= vis.end_at)  -- who bought the item or date expired
+
+        //     ORDER BY vis.end_at",
+        //     [
+        //         "today" => AppTime::get_current_datetime(),
+        //         "id" => $id
+        //     ]
+        // );
+
         $query = self::execute(
-            // query to get the items where the specified user got the winning 
-            // OR the items that he purchased directly
-            "SELECT 
-            /* Item Data */
-            vis.id AS item_id,
-            vis.title,
-            vis.buy_now_price,
-            vis.is_auction,
-            vis.has_buy_now,
-            vis.buy_now_reached,
-            vis.end_at,
-            vis.max_bid,
-
-            /* Seller Data (The person who owns the item) */
-            seller.id AS seller_id,         -- id of the person who owns the item (seller is the custom name of users table ie check next query lines)
-            seller.pseudo AS seller_name,   -- name of the person who owns the item
-
-            /* Bidder Data (The person who placed the winning bid) */
-            u.id AS bidder_id,
-            u.pseudo AS bidder_name,        -- name of the person of placed the bid 
-            b.amount AS winning_bid_amount  -- bid placed by the person 
-
+            "SELECT vis.*
             FROM v_items_status vis
-            /* Join for the bid details */
-            JOIN bids b ON b.item = vis.id
-
-            /* Join for the person who placed the bid (Bidder / Buyer) */
-            JOIN users u ON u.id = b.owner
-
-            /* Join for the person who created the item (Seller) */
-            JOIN users seller ON seller.id = vis.owner 
-
-            WHERE u.id = :id             -- buyer / bidder
-            AND b.amount = vis.max_bid   -- with the highest bid    
-            AND (vis.buy_now_reached = 1 OR :today >= vis.end_at)  -- who bought the item or date expired
-            
+            JOIN bids b ON b.item = vis.id          
+            JOIN users winner ON winner.id = b.owner 
+            WHERE b.owner = :id                      
+            AND b.amount = vis.max_bid            -- Best bidder / Buyer
+            AND (vis.buy_now_reached = 1 OR :today >= vis.end_at) -- Item not expired yet or not sold yet
             ORDER BY vis.end_at",
             [
                 "today" => AppTime::get_current_datetime(),
@@ -761,7 +777,7 @@ class Item extends Model
 
         foreach ($data as $item_data) {
             // available items have no user bid on them
-            $user_bid = Item::get_user_bid($item_data['item_id'], $id); // for debug, for is boris id
+            $user_bid = Item::get_user_bid($item_data['id'], $id); // for debug, for is boris id
 
             // we get info of whether the item is in auction or not
             $is_auction = $item_data['is_auction'];
@@ -779,7 +795,7 @@ class Item extends Model
                                 FROM item_pictures p
                                 where p.item = :item_id
                                 Order BY priority ASC",
-                ["item_id" => $item_data['item_id']]
+                ["item_id" => $item_data['id']]
             );
 
             $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
@@ -808,7 +824,7 @@ class Item extends Model
                                 from users u
                                 join v_items_status i on i.owner = u.id
                                 where i.owner = :owner_id",
-                ["owner_id" => $item_data['seller_id']]
+                ["owner_id" => $item_data['owner']]
             );
 
             $data_owner_name = $query_owner_name->fetch();
@@ -844,7 +860,7 @@ class Item extends Model
             $time_left_datetime = $end_at->diff($today);
             $time_left_debug = $time_left_datetime->invert;
 
-            $purchases[] = new Item($user_bid, null, $item_data['item_id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
+            $purchases[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $current_bid, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
 
         return $purchases;
