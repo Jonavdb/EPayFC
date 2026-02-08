@@ -9,13 +9,16 @@ require_once "utils/ImageTool.php";
 
 
 
-class ControllerItem extends Controller {
-    public function index(): void {
+class ControllerItem extends Controller
+{
+    public function index(): void
+    {
         $this->redirect("item", "list");
     }
 
     // My items
-    public function list(): void {
+    public function list(): void
+    {
 
         $user = $this->get_user_or_redirect();
         $items = Item::get_items_by_owner($user->id);
@@ -58,7 +61,8 @@ class ControllerItem extends Controller {
     }
 
     /* Helper pour My Items : Prépare les données pour l'affichage */
-    private function prepare_item_data(Item $item, DateTime $now): object {
+    private function prepare_item_data(Item $item, DateTime $now): object
+    {
         $is_closed = $item->end_at <= $now;
 
         // Calcul du texte temps
@@ -87,7 +91,8 @@ class ControllerItem extends Controller {
     }
 
     // Delete item
-    public function delete($id = null): void {
+    public function delete($id = null): void
+    {
         if ($id === null && isset($_GET['param1'])) {
             $id = $_GET['param1'];
         }
@@ -124,7 +129,8 @@ class ControllerItem extends Controller {
         }
     }
 
-    public function open(): void {
+    public function open(): void
+    {
         // On regarde si le premier argument (l'ID) existe
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1']; // On récupère le 8 de l'URL ".../index/8"
@@ -132,8 +138,12 @@ class ControllerItem extends Controller {
             $this->redirect('item', 'browse');
             return;
         }
-        $image_index = isset($_GET['param2']) ? (int)$_GET['param2'] : 0;
         $item = Item::get_item_by_id($id);
+        if (empty($item)) {
+            $this->redirect('item', 'browse');
+            return;
+        }
+        $image_index = isset($_GET['param2']) ? (int)$_GET['param2'] : 0;
         if (isset($item->image_urls[$image_index])) {
             $item->main_image_url = $item->image_urls[$image_index];
         }
@@ -151,13 +161,32 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function new_bid() {
+    public function new_bid()
+    {
 
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : 0.0;
 
         $user = $this->get_user_or_redirect();
         $current_user_pseudo = $user->pseudo;
+
+        $item = Item::get_item_by_id($item_id);
+        $now = AppTime::get_current_datetime();
+
+        if (!$item) {
+            $this->redirect('item', 'browse');
+            return;
+        }
+
+        if ($item->owner_name === $current_user_pseudo) {
+            $this->redirect('item', 'list');
+            return;
+        }
+
+        if ($item->end_at < $now) {
+            $this->redirect('item', 'open', $item_id);
+            return;
+        }
 
         if ($item_id > 0 && $amount > 0) {
             Bid::create_bid($current_user_pseudo, $item_id, $amount);
@@ -166,7 +195,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "open", $item_id);
     }
 
-    public function buy_now() {
+    public function buy_now()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
         $current_user_pseudo = $user->pseudo;
@@ -174,7 +204,7 @@ class ControllerItem extends Controller {
 
             $item = Item::get_item_by_id($item_id);
 
-            if ($item && $item->has_buy_now && !$item->buy_now_reached) {
+            if ($item && $item->owner_name !== $current_user_pseudo && $item->has_buy_now && !$item->buy_now_reached) {
                 Bid::create_bid($current_user_pseudo, $item_id, $item->buy_now_price);
             }
         }
@@ -182,7 +212,8 @@ class ControllerItem extends Controller {
     }
 
 
-    public function add() {
+    public function add()
+    {
         $user = $this->get_user_or_redirect();
         $now = new DateTime(AppTime::get_current_datetime());
         $end = (clone $now)->modify('+7 days');
@@ -229,7 +260,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    private function validate_and_fill(Item $item): array {
+    private function validate_and_fill(Item $item): array
+    {
 
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
@@ -282,13 +314,15 @@ class ControllerItem extends Controller {
             $item->is_auction = false;
             $item->is_direct_sale = true;
             $item->has_buy_now = false;
+            $item->starting_bid = 0.0;
         } else {
             $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
         }
         return $errors;
     }
 
-    public function edit() {
+    public function edit()
+    {
 
         $user = $this->get_user_or_redirect();
         $id = $_GET['param1'] ?? $_POST['id'] ?? null;
@@ -330,7 +364,8 @@ class ControllerItem extends Controller {
 
 
 
-    public function manage_images(): void {
+    public function manage_images(): void
+    {
 
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1'];
@@ -359,41 +394,69 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function move_image_left() {
+    public function move_image_left()
+    {
         $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
+        $user = $this->get_user_or_redirect();
+        $item = Item::get_item_by_id($item_id);
+        if (!$item || $item->owner_name !== $user->pseudo) {
+            $this->redirect('item', 'open', $item_id);
+            return;
+        }
         if ($item_id > 0) {
             Item::change_pics_left($image_index, $item_id);
         }
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function move_image_right() {
+    public function move_image_right()
+    {
         $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
+        $user = $this->get_user_or_redirect();
+        $item = Item::get_item_by_id($item_id);
+        if (!$item || $item->owner_name !== $user->pseudo) {
+            $this->redirect('item', 'open', $item_id);
+            return;
+        }
         if ($item_id > 0) {
             Item::change_pics_right($image_index, $item_id);
         }
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function delete_images() {
+    public function delete_images()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $filename = isset($_POST['image_filename']) ? $_POST['image_filename'] : '';
-
+        $user = $this->get_user_or_redirect();
+        $item = Item::get_item_by_id($item_id);
+        if (!$item || $item->owner_name !== $user->pseudo) {
+            $this->redirect('item', 'open', $item_id);
+            return;
+        }
         if ($item_id > 0 && !empty($filename)) {
             Item::delete_images($filename, $item_id);
         }
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function add_images() {
+    public function add_images()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
         $max_size = (int)$config['upload_max_size'];
         $allowed_type = $config['upload_allowed_types'];
         $errors = [];
+        $user = $this->get_user_or_redirect();
+        $item = Item::get_item_by_id($item_id);
+        if (!$item || $item->owner_name !== $user->pseudo) {
+            $this->redirect('item', 'open', $item_id);
+            return;
+        }
+
 
         if ($item_id > 0 && isset($_FILES['image_files'])) {
             $files = $_FILES['image_files'];
@@ -441,7 +504,6 @@ class ControllerItem extends Controller {
             }
         }
         if (count($errors) > 0) {
-            $item = Item::get_item_by_id($item_id);
             (new View("manage_images"))->show([
                 "item" => $item,
                 "errors" => $errors
@@ -451,7 +513,8 @@ class ControllerItem extends Controller {
         }
     }
 
-    public function browse() {
+    public function browse()
+    {
         // we retrive the user session
         $user = $this->get_user_or_false();
 
@@ -473,7 +536,8 @@ class ControllerItem extends Controller {
         );
     }
 
-    public function purchases(): void {
+    public function purchases(): void
+    {
         // we retrive the user session
         $user = $this->get_user_or_false();
 
@@ -483,7 +547,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function sales(): void {
+    public function sales(): void
+    {
         // we retrive the user session
         $user = $this->get_user_or_false();
 

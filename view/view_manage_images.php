@@ -119,7 +119,7 @@ require_once "utils/GoBack.php";
                                 </div>
 
                                 <div class="card-body d-flex justify-content-between align-items-center gap-3">
-                                    <form action="index.php?controller=item&action=move_image_left" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
+                                    <form action="item/move_image_left" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
                                         <input type="hidden" name="item_id" value="<?= $item->id ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
@@ -128,7 +128,7 @@ require_once "utils/GoBack.php";
                                         </button>
                                     </form>
 
-                                    <form action="index.php?controller=item&action=move_image_right" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
+                                    <form action="item/move_image_right" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
                                         <input type="hidden" name="item_id" value="<?= $item->id ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
@@ -137,7 +137,7 @@ require_once "utils/GoBack.php";
                                         </button>
                                     </form>
 
-                                    <form action="index.php?controller=item&action=delete_images" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
+                                    <form action="item/delete_images" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
                                         <input type="hidden" name="item_id" value="<?= $item->id ?>">
                                         <input type="hidden" name="image_filename" value="<?= basename($image_url) ?>">
                                         <button type="submit" class="btn btn-sm btn-danger">
