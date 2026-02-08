@@ -2,7 +2,8 @@
 
 require_once './framework/Model.php';
 
-class User extends Model {
+class User extends Model
+{
     public ?int $id;
     public string $email;
     public string $full_name;
@@ -33,8 +34,9 @@ class User extends Model {
     }
 
     // Récupère les utilisateurs pour la liste de debug
-    public static function get_debug_users(): array {
-        $query = self::execute("SELECT * FROM users WHERE pseudo IN ('quentin', 'boris', 'xavier', 'marc')", []);
+    public static function get_debug_users(): array
+    {
+        $query = self::execute("SELECT * FROM users LIMIT 4", []);
         $data = $query->fetchAll();
         $users = [];
 
@@ -54,10 +56,11 @@ class User extends Model {
     }
 
     // récupère le user par email
-    public static function get_user_by_email(string $email): User|false {
+    public static function get_user_by_email(string $email): User|false
+    {
         $query = self::execute("SELECT * FROM Users where email = :email", ["email" => $email]);
         $data = $query->fetch(); // un seul résultat au maximum
-        if ($query->rowCount() == 0) {
+        if (!$data) {
             return false;
         } else {
             return new User(
@@ -73,7 +76,8 @@ class User extends Model {
         }
     }
 
-    public static function validate_login(string $email, string $password): array {
+    public static function validate_login(string $email, string $password): array
+    {
         $errors = [];
         $user = User::get_user_by_email($email);
         if ($user) {
@@ -86,7 +90,8 @@ class User extends Model {
         return $errors;
     }
 
-    public function validate(): array {
+    public function validate(): array
+    {
         $min_len = Configuration::get('pseudo_min_length');
         $max_len = Configuration::get('pseudo_max_length');
         $regex   = Configuration::get('pseudo_regex');
@@ -104,7 +109,8 @@ class User extends Model {
         return $errors;
     }
 
-    public static function validate_unicity(string $pseudo): array {
+    public static function validate_unicity(string $pseudo): array
+    {
         $errors = [];
         $user = self::get_user_by_pseudo($pseudo);
         if ($user) {
@@ -113,10 +119,11 @@ class User extends Model {
         return $errors;
     }
 
-    public static function get_user_by_pseudo(string $pseudo): User|false {
+    public static function get_user_by_pseudo(string $pseudo): User|false
+    {
         $query = self::execute("SELECT * FROM users where pseudo = :pseudo", ["pseudo" => $pseudo]);
         $data = $query->fetch(); // un seul résultat au maximum
-        if ($query->rowCount() == 0) {
+        if (!$data) {
             return false;
         } else {
             return new User(
@@ -132,7 +139,8 @@ class User extends Model {
         }
     }
 
-    public function persist(): User {
+    public function persist(): User
+    {
         if (self::get_user_by_email($this->email)) {
             self::execute(
                 "UPDATE users SET password=:password, full_name=:full_name, pseudo=:pseudo WHERE email=:email",
@@ -158,11 +166,13 @@ class User extends Model {
         return $this;
     }
 
-    private static function check_password(string $clear_password, string $hash): bool {
+    private static function check_password(string $clear_password, string $hash): bool
+    {
         return password_verify($clear_password, $hash);
     }
 
-    public static function validate_passwords(string $password, string $password_confirm): array {
+    public static function validate_passwords(string $password, string $password_confirm): array
+    {
         $errors = User::validate_password($password);
         if ($password != $password_confirm) {
             $errors[] = "You have to enter twice the same password.";
@@ -170,7 +180,8 @@ class User extends Model {
         return $errors;
     }
 
-    private static function validate_password(string $password): array {
+    private static function validate_password(string $password): array
+    {
         $errors = [];
         if (strlen($password) < 8 || strlen($password) > 16) {
             $errors[] = "Password length must be between 8 and 16.";
@@ -181,7 +192,8 @@ class User extends Model {
         return $errors;
     }
 
-    public function update(): User {
+    public function update(): User
+    {
         if ($this->id) {
             self::execute(
                 "UPDATE users SET 

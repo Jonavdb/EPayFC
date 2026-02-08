@@ -94,7 +94,7 @@ class ControllerUser extends Controller
 
             if (empty($errors)) {
                 $user->password = password_hash($new_password, PASSWORD_BCRYPT);
-                $user->persist();
+                $user->update();
                 $this->redirect("user", "profile");
             }
         }
@@ -164,7 +164,7 @@ class ControllerUser extends Controller
                 $user->email = $email;
                 $user->iban = $iban;
 
-                $user->persist();
+                $user->update();
                 $this->redirect("user", "profile");
             }
         }
