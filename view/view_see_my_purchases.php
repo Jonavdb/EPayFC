@@ -14,8 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body class="d-flex flex-column min-vh-100" style="padding-top: 40px">
-
+<body class="d-flex flex-column min-vh-100" style="padding-top: 40px; padding-bottom: 140px;">
     <!-- HEADER -->
     <?php
     $page_title = "Purchases";
@@ -23,7 +22,7 @@
     ?>
 
     <!-- PAGE CONTENT -->
-    <main class="flex-grow-1 content-box py-3 mt-5">
+    <main class="flex-grow-1 content-box py-3 mt-5" style="padding-bottom: 140px;">
 
         <!-- Top container with global infos -->
         <div class="p-3 d-flex flex-column h-100 gap-4">
