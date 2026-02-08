@@ -336,6 +336,7 @@ class Item extends Model
     {
         $user_available_items = [];
 
+        /* BACKUP
         $query = self::execute(
             "SELECT DISTINCT vis.*
             FROM v_items_status vis
@@ -370,6 +371,26 @@ class Item extends Model
             )
 
             ORDER BY vis.id",
+            [
+                "today" => AppTime::get_current_datetime(),
+                "id" => $id
+            ]
+        ); 
+        */
+
+        $query = self::execute(
+            "SELECT vis.*
+            FROM v_items_status vis
+            WHERE :today BETWEEN vis.created_at AND vis.end_at -- Not expired yet
+            AND vis.owner != :id              -- Not my item
+            AND vis.buy_now_reached = 0       -- Not sold yet (Auction or Direct)
+            AND NOT EXISTS (                  -- I haven't bid on it
+                SELECT 1 
+                FROM bids b 
+                WHERE b.item = vis.id 
+                AND b.owner = :id
+            )
+            ORDER by vis.id",
             [
                 "today" => AppTime::get_current_datetime(),
                 "id" => $id
