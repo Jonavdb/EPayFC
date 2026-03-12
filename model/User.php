@@ -199,8 +199,11 @@ class User extends Model {
 
     private static function validate_password(string $password): array {
         $errors = [];
+        $min_pwd = Configuration::get('password_min_length');
+        $max_pwd = Configuration::get('password_max_length');
+
         if (strlen($password) < 8 || strlen($password) > 16) {
-            $errors[] = "Password length must be between 8 and 16.";
+            $errors[] = "Password length must be between $min_pwd and $max_pwd.";
         }
         if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?!\\-]/", $password))) {
             $errors[] = "Password must contain one uppercase letter, one number and one punctuation mark.";
