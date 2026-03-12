@@ -105,8 +105,8 @@ class User extends Model {
             $errors[] = "Le format de l'adresse email n'est pas valide.";
         } else {
             // On utilise 'self::' puisqu'on est déjà dans la classe User
-            $existingUser = self::get_user_by_email($this->email);
-            if ($existingUser && $existingUser->id !== $this->id) {
+            $existing_user = self::get_user_by_email($this->email);
+            if ($existing_user && $existing_user->id !== $this->id) {
                 $errors[] = "Cette adresse email est déjà utilisée.";
             }
         }
@@ -115,8 +115,8 @@ class User extends Model {
         if (strlen($this->pseudo) < $min_pseudo_len || strlen($this->pseudo) > $max_pseudo_len) {
             $errors[] = "Le pseudo doit avoir une longueur comprise entre $min_pseudo_len et $max_pseudo_len caractères.";
         } else {
-            $existingUser = self::get_user_by_pseudo($this->pseudo);
-            if ($existingUser && $existingUser->id !== $this->id) {
+            $existing_user = self::get_user_by_pseudo($this->pseudo);
+            if ($existing_user && $existing_user->id !== $this->id) {
                 $errors[] = "Ce pseudo est déjà utilisé.";
             }
         }
