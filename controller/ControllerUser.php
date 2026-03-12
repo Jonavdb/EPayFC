@@ -3,10 +3,8 @@ require_once 'framework/Controller.php';
 require_once 'model/User.php';
 require_once 'utils/ImageTool.php';
 
-class ControllerUser extends Controller
-{
-    public function index(): void
-    {
+class ControllerUser extends Controller {
+    public function index(): void {
         if ($this->user_logged()) {
             $this->redirect("item", "browse");
         } else {
@@ -15,24 +13,21 @@ class ControllerUser extends Controller
     }
 
     // Connexion en tant qu'invité
-    public function guest_login(): void
-    {
+    public function guest_login(): void {
         session_destroy(); // kill la session active
 
         $_SESSION['guest'] = true;
         $this->redirect("item", "browse");
     }
 
-    public function profile(): void
-    {
+    public function profile(): void {
         $user = $this->get_user_or_redirect();
         $user = User::get_user_by_email($user->email);
         (new View("profile"))->show(["user" => $user]);
     }
 
     // Gestion de la connexion d'un utilisateur
-    public function login(): void
-    {
+    public function login(): void {
         $email = '';
         $password = '';
         $errors = [];
@@ -67,8 +62,7 @@ class ControllerUser extends Controller
     }
 
     // Gestion du changement de mot de passe
-    public function change_password(): void
-    {
+    public function change_password(): void {
         $session_user = $this->get_user_or_false();
 
         if (!$session_user) {
@@ -108,62 +102,19 @@ class ControllerUser extends Controller
     }
 
     // Gère l'édition du profil
-    public function edit_profile(): void
-    {
+    public function edit_profile(): void {
         $user = $this->get_user_or_redirect();
         $errors = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $full_name = trim($_POST['full_name'] ?? '');
-            $pseudo = trim($_POST['pseudo'] ?? '');
-            $email = trim($_POST['email'] ?? '');
-            $iban = trim($_POST['iban'] ?? '');
+            $user->full_name = trim($_POST['full_name'] ?? '');
+            $user->pseudo = trim($_POST['pseudo'] ?? '');
+            $user->email = trim($_POST['email'] ?? '');
+            $user->iban = trim($_POST['iban'] ?? '');
 
-            // Validations depuis le dev.ini
-            $min_fullname_len = Configuration::get('full_name_min_length');
-            $min_pseudo_len   = Configuration::get('pseudo_min_length');
-            $max_pseudo_len   = Configuration::get('pseudo_max_length');
-            $iban_regex       = Configuration::get('iban_regex');
+            $errors = $user->validate();
 
-            // Full Name (Min 3 chars)
-            if (strlen($full_name) < $min_fullname_len) {
-                $errors[] = "Le nom complet doit comporter au moins $min_fullname_len caractères.";
-            }
-
-            // Email (Format + Unicité)
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors[] = "Le format de l'adresse email n'est pas valide.";
-            } else {
-                $existingUser = User::get_user_by_email($email);
-                if ($existingUser && $existingUser->id !== $user->id) {
-                    $errors[] = "Cette adresse email est déjà utilisée.";
-                }
-            }
-
-            // Pseudo (3-30 chars + Unicité)
-            if (strlen($pseudo) < $min_pseudo_len || strlen($pseudo) > $max_pseudo_len) {
-                $errors[] = "Le pseudo doit avoir une longueur comprise entre $min_pseudo_len et $max_pseudo_len caractères.";
-            } else {
-                $existingUser = User::get_user_by_pseudo($pseudo);
-                if ($existingUser && $existingUser->id !== $user->id) {
-                    $errors[] = "Ce pseudo est déjà utilisé.";
-                }
-            }
-
-            // IBAN
-            if (!empty($iban)) {
-                if (!preg_match($iban_regex, $iban)) {
-                    $errors[] = "L'IBAN doit respecter le format : BE99 9999 9999 9999.";
-                }
-            }
-
-            // Sauvegarde si aucune erreur
             if (empty($errors)) {
-                $user->full_name = $full_name;
-                $user->pseudo = $pseudo;
-                $user->email = $email;
-                $user->iban = $iban;
-
                 $user->update();
                 $this->redirect("user", "profile");
             }
@@ -175,16 +126,14 @@ class ControllerUser extends Controller
         ]);
     }
 
-    public function manage_profile_picture()
-    {
+    public function manage_profile_picture() {
 
         $user = $this->get_user_or_redirect();
 
         (new View("profile_picture"))->show(["user" => $user]);
     }
 
-    public function update_profile_picture()
-    {
+    public function update_profile_picture() {
         $user = $this->get_user_or_redirect();
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
@@ -241,8 +190,7 @@ class ControllerUser extends Controller
         }
     }
 
-    public function delete_profile_picture()
-    {
+    public function delete_profile_picture() {
         $user = $this->get_user_or_redirect();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty($user->picture_path) && file_exists($user->picture_path)) {
