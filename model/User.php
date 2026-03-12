@@ -93,6 +93,7 @@ class User extends Model {
         $min_pseudo_len   = Configuration::get('pseudo_min_length');
         $max_pseudo_len   = Configuration::get('pseudo_max_length');
         $iban_regex       = Configuration::get('iban_regex');
+        $iban_format      = Configuration::get('iban_format');
 
         // Full Name
         if (strlen($this->full_name) < $min_fullname_len) {
@@ -123,7 +124,7 @@ class User extends Model {
         // IBAN
         if (!empty($this->iban)) {
             if (!preg_match($iban_regex, $this->iban)) {
-                $errors[] = "L'IBAN doit respecter le format : BE99 9999 9999 9999.";
+                $errors[] = "L'IBAN doit respecter le format : $iban_format.";
             }
         }
 
