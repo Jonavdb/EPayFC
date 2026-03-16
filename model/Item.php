@@ -3,8 +3,7 @@
 require_once "framework/Model.php";
 require_once "utils/AppTime.php";
 
-class Item extends Model
-{
+class Item extends Model {
 
     public function __construct(
         public float $user_bid,
@@ -30,10 +29,10 @@ class Item extends Model
         public bool $buy_now_reached,
         public string $time_left,
         public string $owner_picture
-    ) {}
+    ) {
+    }
 
-    public static function get_items_by_owner(int $owner_id): array
-    {
+    public static function get_items_by_owner(int $owner_id): array {
         // Récupère les items du propriétaire, triés par date de fin calculée
         $sql = "SELECT * FROM v_items_status WHERE owner = :owner ORDER BY end_at DESC";
         $query = self::execute($sql, ["owner" => $owner_id]);
@@ -120,8 +119,7 @@ class Item extends Model
         return $items;
     }
 
-    public static function get_item_by_id(int $id)
-    {
+    public static function get_item_by_id(int $id) {
         $query = self::execute(
             "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
             FROM v_items_status v 
@@ -183,20 +181,35 @@ class Item extends Model
     }
 
     // Delete item
-    public static function delete(int $id)
-    {
-        // D'abord supprimer les dépendances (Images, Enchères...)
+    public static function delete(int $id) {
+        // cible directement le dossier de l'item
+        $baseDir = dirname(__DIR__) . "/";
+        $itemDirectory = $baseDir . "uploads/items/" . $id;
+
+        // si le dossier existe, on le vide puis on le supprime
+        if (is_dir($itemDirectory)) {
+            // glob() récupère TOUS les fichiers (l'image ET le thumbnail)
+            $files = glob($itemDirectory . '/*');
+
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file); // supprime physiquement chaque fichier
+                }
+            }
+
+            // maintenant que le dossier est vide, on le supprime
+            @rmdir($itemDirectory);
+        }
+
+        // nettoie proprement la base de données
         self::execute("DELETE FROM item_pictures WHERE item = :item_id", ["item_id" => $id]);
         self::execute("DELETE FROM bids WHERE item = :item_id", ["item_id" => $id]);
-
-        // Supprimer l'item
         self::execute("DELETE FROM items WHERE id = :item_id", ["item_id" => $id]);
 
         return true;
     }
 
-    public static function get_user_bid_items(int $id)
-    {
+    public static function get_user_bid_items(int $id) {
         $user_bid_items = [];
 
         $query = self::execute(
@@ -311,8 +324,7 @@ class Item extends Model
         return $user_bid_items;
     }
 
-    public static function get_user_bid(int $item_id, int $user_id)
-    {
+    public static function get_user_bid(int $item_id, int $user_id) {
         $query = self::execute(
             "SELECT MAX(amount) as bid
             FROM bids
@@ -332,8 +344,7 @@ class Item extends Model
         return $data['bid'];
     }
 
-    public static function get_user_available_items(int $id)
-    {
+    public static function get_user_available_items(int $id) {
         $user_available_items = [];
 
         /* BACKUP
@@ -499,8 +510,7 @@ class Item extends Model
         return $user_available_items;
     }
 
-    public function save()
-    {
+    public function save() {
         if ($this->id > 0) {
             return $this->update();
         } else {
@@ -508,8 +518,7 @@ class Item extends Model
         }
     }
 
-    public function update()
-    {
+    public function update() {
         $sql = "UPDATE items SET
         title = :title,
         description = :description,
@@ -527,8 +536,7 @@ class Item extends Model
         ]);
     }
 
-    private function insert()
-    {
+    private function insert() {
         $sql = "INSERT into items (
         title,
         description,
@@ -565,8 +573,7 @@ class Item extends Model
         return $newID;
     }
 
-    public static function change_pics_left(int $image_id, int $item_id)
-    {
+    public static function change_pics_left(int $image_id, int $item_id) {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -601,8 +608,7 @@ class Item extends Model
         }
     }
 
-    public static function change_pics_right(int $image_id, int $item_id)
-    {
+    public static function change_pics_right(int $image_id, int $item_id) {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -637,8 +643,7 @@ class Item extends Model
         }
     }
 
-    public static function delete_images(string $filename, int $item_id)
-    {
+    public static function delete_images(string $filename, int $item_id) {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -686,8 +691,7 @@ class Item extends Model
         }
     }
 
-    public static function add_picture(int $item_id, string $path)
-    {
+    public static function add_picture(int $item_id, string $path) {
 
         $query = self::execute(
             "SELECT MAX(priority) as max_p FROM item_pictures WHERE item = :item_id",
@@ -706,8 +710,7 @@ class Item extends Model
         );
     }
 
-    public static function get_purchases(int $id)
-    {
+    public static function get_purchases(int $id) {
         $purchases = [];
 
         // BACKUP
@@ -869,8 +872,7 @@ class Item extends Model
         return $purchases;
     }
 
-    public static function get_sales(int $user_id)
-    {
+    public static function get_sales(int $user_id) {
 
         $sales = [];
 
@@ -1035,8 +1037,7 @@ class Item extends Model
         return $sales;
     }
 
-    public static function get_all_available_items()
-    {
+    public static function get_all_available_items() {
         $items = [];
         $query = self::execute(
             "SELECT * from v_items_status vis
