@@ -3,9 +3,11 @@
         <div class="container-fluid p-2">
 
             <div class="d-flex align-items-center" style="min-width: 50px;">
-                <a href="<?= GoBack::go_back() ?>" class="btn-icon">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </a>
+                <?php if (!isset($hide_back_button) || !$hide_back_button): ?>
+                    <a href="<?= GoBack::go_back() ?>" class="btn-icon">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                <?php endif; ?>
             </div>
 
             <div class="flex-grow-1 text-center mx-auto">
