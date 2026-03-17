@@ -30,7 +30,6 @@
         ?>
 
         <form id="passwordForm" action="user/change_password" method="post">
-            <!-- CURRENT PASSWORD -->
             <div class="card mb-4 bg-dark border-secondary">
                 <div class="card-header border-secondary text-white fw-semibold card-header-bg">
                     Current Password
@@ -46,20 +45,19 @@
                             placeholder="Enter your current password"
                             value="<?= htmlspecialchars($current_password); ?>">
 
+                        <?php if (isset($errors['current_password'])): ?>
+                            <ul class="text-danger small mt-1 mb-0 ps-4">
+                                <li><?= $errors['current_password']; ?></li>
+                            </ul>
+                        <?php endif; ?>
+
                         <div class="form-text text-secondary">
                             Enter your current password to verify your identity
                         </div>
-
-                        <?php if (isset($errors['current_password'])): ?>
-                            <div class='errors'>
-                                <span><?= $errors['current_password']; ?></span>
-                            </div>
-                        <?php endif; ?>
                     </div>
                 </div>
             </div>
 
-            <!-- NEW PASSWORD -->
             <div class="card mb-4 bg-dark border-secondary">
                 <div class="card-header border-secondary text-white fw-semibold card-header-bg">
                     New Password
@@ -75,12 +73,15 @@
                             placeholder="Enter your new password"
                             value="<?= htmlspecialchars($new_password); ?>">
 
-                        <?php if (isset($errors['new_password'])): ?>
-                            <span><?= $errors['password_retry']; ?></span>
-                        <?php endif; ?>
-
-                        <?php if (isset($errors['password_length'])): ?>
-                            <span><?= $errors['password_length']; ?></span>
+                        <?php if (isset($errors['password_length']) || isset($errors['password_retry'])): ?>
+                            <ul class="text-danger small mt-1 mb-0 ps-4">
+                                <?php if (isset($errors['password_length'])): ?>
+                                    <li><?= $errors['password_length']; ?></li>
+                                <?php endif; ?>
+                                <?php if (isset($errors['password_retry'])): ?>
+                                    <li><?= $errors['password_retry']; ?></li>
+                                <?php endif; ?>
+                            </ul>
                         <?php endif; ?>
 
                         <div class="form-text text-secondary">
@@ -97,11 +98,10 @@
                             value="<?= htmlspecialchars($confirm_password); ?>"
                             placeholder="Confirm your new password">
 
-
                         <?php if (isset($errors['same_password'])): ?>
-                            <div class='errors'>
-                                <span><?= $errors['same_password']; ?></span>
-                            </div>
+                            <ul class="text-danger small mt-1 mb-0 ps-4">
+                                <li><?= $errors['same_password']; ?></li>
+                            </ul>
                         <?php endif; ?>
 
                         <div class="form-text text-secondary">
