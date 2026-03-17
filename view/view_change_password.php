@@ -49,6 +49,12 @@
                         <div class="form-text text-secondary">
                             Enter your current password to verify your identity
                         </div>
+
+                        <?php if (isset($errors['current_password'])): ?>
+                            <div class='errors'>
+                                <span><?= $errors['current_password']; ?></span>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -69,6 +75,13 @@
                             placeholder="Enter your new password"
                             value="<?= htmlspecialchars($new_password); ?>">
 
+                        <?php if (isset($errors['new_password']) || isset($errors['password_length'])): ?>
+                            <div class='errors'>
+                                <span><?= $errors['password_retry']; ?></span>
+                                <span><?= $errors['password_length']; ?></span>
+                            </div>
+                        <?php endif; ?>
+
                         <div class="form-text text-secondary">
                             Password must be 8-16 characters with uppercase, number, and punctuation
                         </div>
@@ -83,23 +96,19 @@
                             value="<?= htmlspecialchars($confirm_password); ?>"
                             placeholder="Confirm your new password">
 
+
+                        <?php if (isset($errors['same_password'])): ?>
+                            <div class='errors'>
+                                <span><?= $errors['same_password']; ?></span>
+                            </div>
+                        <?php endif; ?>
+
                         <div class="form-text text-secondary">
                             Re-enter your new password to confirm it matches
                         </div>
                     </div>
                 </div>
             </div>
-
-            <?php if (count($errors) != 0): ?>
-                <div class='errors'>
-                    <p>Please correct the following error(s) :</p>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?= $error ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
         </form>
     </main>
 

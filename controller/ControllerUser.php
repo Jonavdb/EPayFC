@@ -80,7 +80,7 @@ class ControllerUser extends Controller {
         if (isset($_POST['current_password']) && isset($_POST['new_password']) && isset($_POST['new_password_confirm'])) {
             // Vérification current password
             if (!password_verify($current_password, $user->password)) {
-                $errors[] = "Current password is incorrect.";
+                $errors['current_password'] = "Current password is incorrect.";
             }
 
             // Validation new password

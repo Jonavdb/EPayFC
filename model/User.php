@@ -192,7 +192,7 @@ class User extends Model {
     public static function validate_passwords(string $password, string $password_confirm): array {
         $errors = User::validate_password($password);
         if ($password != $password_confirm) {
-            $errors[] = "You have to enter twice the same password.";
+            $errors['same_password'] = "You have to enter twice the same password.";
         }
         return $errors;
     }
@@ -203,10 +203,10 @@ class User extends Model {
         $max_pwd = Configuration::get('password_max_length');
 
         if (strlen($password) < 8 || strlen($password) > 16) {
-            $errors[] = "Password length must be between $min_pwd and $max_pwd.";
+            $errors['password_length'] = "Password length must be between $min_pwd and $max_pwd.";
         }
         if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?!\\-]/", $password))) {
-            $errors[] = "Password must contain one uppercase letter, one number and one punctuation mark.";
+            $errors['password_retry'] = "Password must contain one uppercase letter, one number and one punctuation mark.";
         }
         return $errors;
     }
