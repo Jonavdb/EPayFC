@@ -26,6 +26,47 @@ class ControllerUser extends Controller {
         (new View("profile"))->show(["user" => $user]);
     }
 
+    //gestion de l'inscription d'un utilisateur
+    public function signup(): void {
+        $email = '';
+        $full_name = '';
+        $pseudo = '';
+        $password = '';
+        $password_confirm = '';
+        $errors = [];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+            $full_name = isset($_POST['full_name']) ? trim($_POST['full_name']) : '';
+            $pseudo = isset($_POST['pseudo']) ? trim($_POST['pseudo']) : '';
+            $password = isset($_POST['password']) ? $_POST['password'] : '';
+            $password_confirm = isset($_POST['password_confirm']) ? $_POST['password_confirm'] : '';
+
+            $user = new User($email, $full_name, $pseudo, password_hash($password, PASSWORD_BCRYPT));
+
+
+            $errors = $user->validate();
+            $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
+
+            if (empty($errors)) {
+                $user->persist();
+                $this->log_user($user);
+
+                $this->redirect("item", "browse");
+                return;
+            }
+        }
+
+        (new View("signup"))->show([
+            "email" => $email,
+            "full_name" => $full_name,
+            "pseudo" => $pseudo,
+            "password" => $password,
+            "password_confirm" => $password_confirm,
+            "errors" => $errors
+        ]);
+    }
+
     // Gestion de la connexion d'un utilisateur
     public function login(): void {
         $email = '';

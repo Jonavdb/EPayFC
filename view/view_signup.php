@@ -18,7 +18,7 @@ require_once "utils/GoBack.php";
 
 <body>
     <main>
-        <form id="signupForm" action="main/signup" method="post">
+        <form id="signupForm" action="user/signup" method="post">
             <h2 class="text-center text-white">Sign up</h2>
             <span class="divider"></span>
 
