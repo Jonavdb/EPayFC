@@ -16,7 +16,6 @@ class ControllerItem extends Controller {
 
     // My items
     public function list(): void {
-
         $user = $this->get_user_or_redirect();
         $items = Item::get_items_by_owner($user->id);
 

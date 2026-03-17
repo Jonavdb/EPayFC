@@ -34,7 +34,7 @@ class Item extends Model {
 
     public static function get_items_by_owner(int $owner_id): array {
         // Récupère les items du propriétaire, triés par date de fin calculée
-        $sql = "SELECT * FROM v_items_status WHERE owner = :owner ORDER BY end_at DESC";
+        $sql = "SELECT * FROM v_items_status WHERE owner = :owner ORDER BY end_at ASC";
         $query = self::execute($sql, ["owner" => $owner_id]);
         $data = $query->fetchAll();
 
