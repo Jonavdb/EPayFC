@@ -18,95 +18,133 @@ require_once "utils/GoBack.php";
 
 <body>
     <main>
-        <form id="signupForm" action="main/signup" method="post">
+        <form id="signupForm" action="user/signup" method="post">
             <h2 class="text-center text-white">Sign up</h2>
             <span class="divider"></span>
 
-            <!-- EMAIL -->
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-dark border-secondary text-light">
-                    <i class="fa-solid fa-envelope"></i>
-                </span>
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    class="form-control bg-dark border-secondary text-light"
-                    value="<?= htmlspecialchars($email); ?>"
-                    placeholder="Mail">
+            <div class="mb-3">
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-secondary text-light">
+                        <i class="fa-solid fa-envelope"></i>
+                    </span>
+                    <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        class="form-control bg-dark border-secondary text-light"
+                        value="<?= htmlspecialchars($email); ?>"
+                        placeholder="Mail">
+                </div>
+
+                <?php if (isset($errors['email_format']) || isset($errors['email_already_used'])): ?>
+                    <ul class="text-danger small mt-1 mb-0 ps-4">
+                        <?php if (isset($errors['email_format'])): ?>
+                            <li><?= $errors['email_format']; ?></li>
+                        <?php endif; ?>
+                        <?php if (isset($errors['email_already_used'])): ?>
+                            <li><?= $errors['email_already_used']; ?></li>
+                        <?php endif; ?>
+                    </ul>
+                <?php endif; ?>
             </div>
 
-            <!-- FULL NAME -->
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-dark border-secondary text-light">
-                    <i class="fa-solid fa-user"></i>
-                </span>
-                <input
-                    type="text"
-                    name="full_name"
-                    id="full_name"
-                    class="form-control bg-dark border-secondary text-light"
-                    value="<?= htmlspecialchars($full_name); ?>"
-                    placeholder="Full name">
+            <div class="mb-3">
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-secondary text-light">
+                        <i class="fa-solid fa-user"></i>
+                    </span>
+                    <input
+                        type="text"
+                        name="full_name"
+                        id="full_name"
+                        class="form-control bg-dark border-secondary text-light"
+                        value="<?= htmlspecialchars($full_name); ?>"
+                        placeholder="Full name">
+                </div>
+
+                <?php if (isset($errors['full_name'])): ?>
+                    <ul class="text-danger small mt-1 mb-0 ps-4">
+                        <li><?= $errors['full_name']; ?></li>
+                    </ul>
+                <?php endif; ?>
             </div>
 
-            <!-- PSEUDO -->
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-dark border-secondary text-light">
-                    <i class="fa-regular fa-face-grin"></i>
-                </span>
-                <input type="text"
-                    name="pseudo"
-                    id="pseudo"
-                    class="form-control bg-dark border-secondary text-light"
-                    value="<?= htmlspecialchars($pseudo); ?>"
-                    placeholder="Pseudo">
+            <div class="mb-3">
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-secondary text-light">
+                        <i class="fa-regular fa-face-grin"></i>
+                    </span>
+                    <input type="text"
+                        name="pseudo"
+                        id="pseudo"
+                        class="form-control bg-dark border-secondary text-light"
+                        value="<?= htmlspecialchars($pseudo); ?>"
+                        placeholder="Pseudo">
+                </div>
+
+                <?php if (isset($errors['pseudo_length']) || isset($errors['pseudo_already_used'])): ?>
+                    <ul class="text-danger small mt-1 mb-0 ps-4">
+                        <?php if (isset($errors['pseudo_length'])): ?>
+                            <li><?= $errors['pseudo_length']; ?></li>
+                        <?php endif; ?>
+                        <?php if (isset($errors['pseudo_already_used'])): ?>
+                            <li><?= $errors['pseudo_already_used']; ?></li>
+                        <?php endif; ?>
+                    </ul>
+                <?php endif; ?>
             </div>
 
-            <!-- PASSWORD -->
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-dark border-secondary text-light">
-                    <i class="fa-solid fa-key"></i>
-                </span>
-                <input type="password"
-                    name="password"
-                    id="password"
-                    class="form-control bg-dark border-secondary text-light"
-                    value="<?= htmlspecialchars($password); ?>"
-                    placeholder="******">
+            <div class="mb-3">
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-secondary text-light">
+                        <i class="fa-solid fa-key"></i>
+                    </span>
+                    <input type="password"
+                        name="password"
+                        id="password"
+                        class="form-control bg-dark border-secondary text-light"
+                        value="<?= htmlspecialchars($password); ?>"
+                        placeholder="******">
+                </div>
+
+                <?php if (isset($errors['password_length']) || isset($errors['password_retry'])): ?>
+                    <ul class="text-danger small mt-1 mb-0 ps-4">
+                        <?php if (isset($errors['password_length'])): ?>
+                            <li><?= $errors['password_length']; ?></li>
+                        <?php endif; ?>
+                        <?php if (isset($errors['password_retry'])): ?>
+                            <li><?= $errors['password_retry']; ?></li>
+                        <?php endif; ?>
+                    </ul>
+                <?php endif; ?>
             </div>
 
-            <!-- CONFIRM PASSWORD -->
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-dark border-secondary text-light">
-                    <i class="fa-solid fa-key"></i>
-                </span>
-                <input type="password"
-                    name="password_confirm"
-                    id="password_confirm"
-                    class="form-control bg-dark border-secondary text-light"
-                    value="<?= htmlspecialchars($password_confirm); ?>"
-                    placeholder="******">
+            <div class="mb-3">
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-secondary text-light">
+                        <i class="fa-solid fa-key"></i>
+                    </span>
+                    <input type="password"
+                        name="password_confirm"
+                        id="password_confirm"
+                        class="form-control bg-dark border-secondary text-light"
+                        value="<?= htmlspecialchars($password_confirm); ?>"
+                        placeholder="******">
+                </div>
+
+                <?php if (isset($errors['same_password'])): ?>
+                    <ul class="text-danger small mt-1 mb-0 ps-4">
+                        <li><?= $errors['same_password']; ?></li>
+                    </ul>
+                <?php endif; ?>
             </div>
 
-            <!-- Boutons -->
             <div class="d-grid gap-3">
-                <input type="submit" class="btn btn-primary" value="Sign Up">
+                <input type="submit" name="btnSignUp" class="btn btn-primary" value="Sign Up">
                 <a href="<?= GoBack::go_back() ?>" class="btn btn-danger w-100 text-decoration-none" role="button">
                     Cancel
                 </a>
             </div>
-
-            <?php if (count($errors) != 0): ?>
-                <div class='errors'>
-                    <p>Please correct the following error(s) :</p>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?= $error ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
         </form>
     </main>
 </body>

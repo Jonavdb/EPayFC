@@ -19,6 +19,7 @@
         <!-- HEADER -->
         <?php
         $page_title = "Profile";
+        $hide_back_button = true;
         include 'view/view_header.php';
         ?>
 

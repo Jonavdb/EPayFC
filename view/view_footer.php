@@ -14,7 +14,7 @@ if (!isset($is_guest)) {
             </a>
 
             <?php if ($is_guest): ?>
-                <a class="nav-link d-flex flex-column align-items-center text-secondary" href="main/signup">
+                <a class="nav-link d-flex flex-column align-items-center text-secondary" href="user/signup">
                     <i class="fa-solid fa-file-signature fs-4 mb-1"></i>
                     <span>Join us</span>
                 </a>
