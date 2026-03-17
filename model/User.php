@@ -97,34 +97,34 @@ class User extends Model {
 
         // Full Name
         if (strlen($this->full_name) < $min_fullname_len) {
-            $errors[] = "Le nom complet doit comporter au moins $min_fullname_len caractères.";
+            $errors['full_name'] = "Le nom complet doit comporter au moins $min_fullname_len caractères.";
         }
 
         // Email
         if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "Le format de l'adresse email n'est pas valide.";
+            $errors['email_format'] = "Le format de l'adresse email n'est pas valide.";
         } else {
             // On utilise 'self::' puisqu'on est déjà dans la classe User
             $existing_user = self::get_user_by_email($this->email);
             if ($existing_user && $existing_user->id !== $this->id) {
-                $errors[] = "Cette adresse email est déjà utilisée.";
+                $errors['email_already_used'] = "Cette adresse email est déjà utilisée.";
             }
         }
 
         // Pseudo
         if (strlen($this->pseudo) < $min_pseudo_len || strlen($this->pseudo) > $max_pseudo_len) {
-            $errors[] = "Le pseudo doit avoir une longueur comprise entre $min_pseudo_len et $max_pseudo_len caractères.";
+            $errors['pseudo_length'] = "Le pseudo doit avoir une longueur comprise entre $min_pseudo_len et $max_pseudo_len caractères.";
         } else {
             $existing_user = self::get_user_by_pseudo($this->pseudo);
             if ($existing_user && $existing_user->id !== $this->id) {
-                $errors[] = "Ce pseudo est déjà utilisé.";
+                $errors['pseudo_already_used'] = "Ce pseudo est déjà utilisé.";
             }
         }
 
         // IBAN
         if (!empty($this->iban)) {
             if (!preg_match($iban_regex, $this->iban)) {
-                $errors[] = "L'IBAN doit respecter le format : $iban_format.";
+                $errors['iban'] = "L'IBAN doit respecter le format : $iban_format.";
             }
         }
 
@@ -135,7 +135,7 @@ class User extends Model {
         $errors = [];
         $user = self::get_user_by_pseudo($pseudo);
         if ($user) {
-            $errors[] = "This user already exists.";
+            $errors['user_already_exists'] = "This user already exists.";
         }
         return $errors;
     }
@@ -202,7 +202,7 @@ class User extends Model {
         $min_pwd = Configuration::get('password_min_length');
         $max_pwd = Configuration::get('password_max_length');
 
-        if (strlen($password) < 8 || strlen($password) > 16) {
+        if (strlen($password) < $min_pwd || strlen($password) > $max_pwd) {
             $errors['password_length'] = "Password length must be between $min_pwd and $max_pwd.";
         }
         if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?!\\-]/", $password))) {

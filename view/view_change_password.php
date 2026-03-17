@@ -75,11 +75,12 @@
                             placeholder="Enter your new password"
                             value="<?= htmlspecialchars($new_password); ?>">
 
-                        <?php if (isset($errors['new_password']) || isset($errors['password_length'])): ?>
-                            <div class='errors'>
-                                <span><?= $errors['password_retry']; ?></span>
-                                <span><?= $errors['password_length']; ?></span>
-                            </div>
+                        <?php if (isset($errors['new_password'])): ?>
+                            <span><?= $errors['password_retry']; ?></span>
+                        <?php endif; ?>
+
+                        <?php if (isset($errors['password_length'])): ?>
+                            <span><?= $errors['password_length']; ?></span>
                         <?php endif; ?>
 
                         <div class="form-text text-secondary">
