@@ -3,7 +3,8 @@
 require_once "framework/Model.php";
 require_once "utils/AppTime.php";
 
-class Item extends Model {
+class Item extends Model
+{
 
     public function __construct(
         public float $user_bid,
@@ -29,10 +30,10 @@ class Item extends Model {
         public bool $buy_now_reached,
         public string $time_left,
         public string $owner_picture
-    ) {
-    }
+    ) {}
 
-    public static function get_items_by_owner(int $owner_id): array {
+    public static function get_items_by_owner(int $owner_id): array
+    {
         // Récupère les items du propriétaire, triés par date de fin calculée
         $sql = "SELECT * FROM v_items_status WHERE owner = :owner ORDER BY end_at ASC";
         $query = self::execute($sql, ["owner" => $owner_id]);
@@ -119,7 +120,8 @@ class Item extends Model {
         return $items;
     }
 
-    public static function get_item_by_id(int $id) {
+    public static function get_item_by_id(int $id)
+    {
         $query = self::execute(
             "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
             FROM v_items_status v 
@@ -181,7 +183,8 @@ class Item extends Model {
     }
 
     // Delete item
-    public static function delete(int $id) {
+    public static function delete(int $id)
+    {
         // cible directement le dossier de l'item
         $baseDir = dirname(__DIR__) . "/";
         $itemDirectory = $baseDir . "uploads/items/" . $id;
@@ -209,7 +212,8 @@ class Item extends Model {
         return true;
     }
 
-    public static function get_user_bid_items(int $id) {
+    public static function get_user_bid_items(int $id)
+    {
         $user_bid_items = [];
 
         $query = self::execute(
@@ -221,7 +225,7 @@ class Item extends Model {
             where u.id = :id
             and :today BETWEEN vis.created_at AND vis.end_at
             and vis.buy_now_reached = 0
-            order by vis.id",
+            order by vis.end_at",
             [
                 "id" => $id,
                 "today" => AppTime::get_current_datetime()
@@ -324,7 +328,8 @@ class Item extends Model {
         return $user_bid_items;
     }
 
-    public static function get_user_bid(int $item_id, int $user_id) {
+    public static function get_user_bid(int $item_id, int $user_id)
+    {
         $query = self::execute(
             "SELECT MAX(amount) as bid
             FROM bids
@@ -344,51 +349,9 @@ class Item extends Model {
         return $data['bid'];
     }
 
-    public static function get_user_available_items(int $id) {
+    public static function get_user_available_items(int $id)
+    {
         $user_available_items = [];
-
-        /* BACKUP
-        $query = self::execute(
-            "SELECT DISTINCT vis.*
-            FROM v_items_status vis
-            WHERE :today BETWEEN vis.created_at AND vis.end_at
-            AND
-            (
-                -- CONDITION 1: Active Auctions NOT bid on by user AND Not owned by User AND item not purchased
-                (vis.is_auction = 1
-                AND vis.owner != (SELECT id FROM users WHERE id = :id) -- Check: NOT Owned by User
-                AND vis.buy_now_reached = 0
-                AND vis.id NOT IN ( -- Check: NOT Bid on by User
-                SELECT DISTINCT vis_sub.id
-                FROM users u
-                JOIN bids b ON b.owner = u.id
-                JOIN v_items_status vis_sub ON vis_sub.id = b.item
-                WHERE u.id = :id
-                )
-            )
-
-            OR
-
-                -- CONDITION 2: Direct Sales NOT owned by user and NOT yet purchased
-                (vis.is_direct_sale = 1
-                    AND vis.not_purchased_direct_sale = 1
-                    AND vis.owner NOT IN (
-                    SELECT DISTINCT u.id
-                    FROM users u
-                    WHERE u.id = :id
-                    AND vis.buy_now_reached = 0
-                    )
-                )
-            )
-
-            ORDER BY vis.id",
-            [
-                "today" => AppTime::get_current_datetime(),
-                "id" => $id
-            ]
-        ); 
-        */
-
         $query = self::execute(
             "SELECT vis.*
             FROM v_items_status vis
@@ -401,7 +364,7 @@ class Item extends Model {
                 WHERE b.item = vis.id 
                 AND b.owner = :id
             )
-            ORDER by vis.id",
+            ORDER by vis.end_at",
             [
                 "today" => AppTime::get_current_datetime(),
                 "id" => $id
@@ -510,7 +473,8 @@ class Item extends Model {
         return $user_available_items;
     }
 
-    public function save() {
+    public function save()
+    {
         if ($this->id > 0) {
             return $this->update();
         } else {
@@ -518,7 +482,8 @@ class Item extends Model {
         }
     }
 
-    public function update() {
+    public function update()
+    {
         $sql = "UPDATE items SET
         title = :title,
         description = :description,
@@ -536,7 +501,8 @@ class Item extends Model {
         ]);
     }
 
-    private function insert() {
+    private function insert()
+    {
         $sql = "INSERT into items (
         title,
         description,
@@ -573,7 +539,8 @@ class Item extends Model {
         return $newID;
     }
 
-    public static function change_pics_left(int $image_id, int $item_id) {
+    public static function change_pics_left(int $image_id, int $item_id)
+    {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -608,7 +575,8 @@ class Item extends Model {
         }
     }
 
-    public static function change_pics_right(int $image_id, int $item_id) {
+    public static function change_pics_right(int $image_id, int $item_id)
+    {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -643,7 +611,8 @@ class Item extends Model {
         }
     }
 
-    public static function delete_images(string $filename, int $item_id) {
+    public static function delete_images(string $filename, int $item_id)
+    {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -691,7 +660,8 @@ class Item extends Model {
         }
     }
 
-    public static function add_picture(int $item_id, string $path) {
+    public static function add_picture(int $item_id, string $path)
+    {
 
         $query = self::execute(
             "SELECT MAX(priority) as max_p FROM item_pictures WHERE item = :item_id",
@@ -710,7 +680,8 @@ class Item extends Model {
         );
     }
 
-    public static function get_purchases(int $id) {
+    public static function get_purchases(int $id)
+    {
         $purchases = [];
 
         // BACKUP
@@ -872,7 +843,8 @@ class Item extends Model {
         return $purchases;
     }
 
-    public static function get_sales(int $user_id) {
+    public static function get_sales(int $user_id)
+    {
 
         $sales = [];
 
@@ -1037,13 +1009,14 @@ class Item extends Model {
         return $sales;
     }
 
-    public static function get_all_available_items() {
+    public static function get_all_available_items()
+    {
         $items = [];
         $query = self::execute(
             "SELECT * from v_items_status vis
             WHERE :today BETWEEN vis.created_at AND vis.end_at -- Npt expired yet
             AND vis.buy_now_reached = 0 -- Not sold yet
-            ORDER by vis.id",
+            ORDER by vis.end_at",
             [
                 "today" => AppTime::get_current_datetime(),
             ]
