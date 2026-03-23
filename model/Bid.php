@@ -73,7 +73,7 @@ class Bid extends Model
         return $bids_array;
     }
 
-    public static function create_bid(string $user_pseudo, int $item_id, float $amount)
+    public static function create_bid(string $user_pseudo, int $item_id, float $amount): bool
     {
         $now = AppTime::get_current_datetime();
 

@@ -238,7 +238,7 @@ class Item extends Model
         return $items;
     }
 
-    public static function get_item_by_id(int $id)
+    public static function get_item_by_id(int $id): Item|false
     {
         $query = self::execute(
             "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
@@ -301,7 +301,7 @@ class Item extends Model
     }
 
     // Delete item
-    public static function delete(int $id)
+    public static function delete(int $id): bool
     {
         // cible directement le dossier de l'item
         $baseDir = dirname(__DIR__) . "/";
@@ -330,7 +330,7 @@ class Item extends Model
         return true;
     }
 
-    public static function get_user_bid_items(int $id)
+    public static function get_user_bid_items(int $id): array
     {
         $user_bid_items = [];
 
@@ -415,7 +415,7 @@ class Item extends Model
             $data_owner_name = $query_owner_name->fetch();
 
             if (!$data) {
-                return false;
+                return [];
             }
 
             $owner_name = $data_owner_name['owner_name'];
@@ -446,7 +446,7 @@ class Item extends Model
         return $user_bid_items;
     }
 
-    public static function get_user_bid(int $item_id, int $user_id)
+    public static function get_user_bid(int $item_id, int $user_id): float|null
     {
         $query = self::execute(
             "SELECT MAX(amount) as bid
@@ -467,7 +467,7 @@ class Item extends Model
         return $data['bid'];
     }
 
-    public static function get_user_available_items(int $id)
+    public static function get_user_available_items(int $id): array
     {
         $user_available_items = [];
         $query = self::execute(
@@ -549,7 +549,7 @@ class Item extends Model
             $data_owner_name = $query_owner_name->fetch();
 
             if (!$data) {
-                return false;
+                return [];
             }
 
             $owner_name = $data_owner_name['owner_name'];
@@ -591,16 +591,16 @@ class Item extends Model
         return $user_available_items;
     }
 
-    public function save()
+    public function save(): void
     {
         if ($this->id > 0) {
-            return $this->update();
+            $this->update();
         } else {
-            return $this->insert();
+            $this->insert();
         }
     }
 
-    public function update()
+    public function update(): void
     {
         $sql = "UPDATE items SET
         title = :title,
@@ -657,7 +657,7 @@ class Item extends Model
         return $newID;
     }
 
-    public static function change_pics_left(int $image_id, int $item_id)
+    public static function change_pics_left(int $image_id, int $item_id): void
     {
         $query = self::execute(
             "SELECT priority, picture_path
@@ -693,7 +693,7 @@ class Item extends Model
         }
     }
 
-    public static function change_pics_right(int $image_id, int $item_id)
+    public static function change_pics_right(int $image_id, int $item_id): void
     {
         $query = self::execute(
             "SELECT priority, picture_path
@@ -729,7 +729,7 @@ class Item extends Model
         }
     }
 
-    public static function delete_images(string $filename, int $item_id)
+    public static function delete_images(string $filename, int $item_id): void
     {
         $query = self::execute(
             "SELECT priority, picture_path
@@ -778,7 +778,7 @@ class Item extends Model
         }
     }
 
-    public static function add_picture(int $item_id, string $path)
+    public static function add_picture(int $item_id, string $path): void
     {
 
         $query = self::execute(
@@ -798,7 +798,7 @@ class Item extends Model
         );
     }
 
-    public static function get_purchases(int $id)
+    public static function get_purchases(int $id): array
     {
         $purchases = [];
 
@@ -925,7 +925,7 @@ class Item extends Model
             $data_owner_name = $query_owner_name->fetch();
 
             if (!$data) {
-                return false;
+                return [];
             }
 
             $owner_name = $data_owner_name['owner_name'];
@@ -961,7 +961,7 @@ class Item extends Model
         return $purchases;
     }
 
-    public static function get_sales(int $user_id)
+    public static function get_sales(int $user_id): array
     {
 
         $sales = [];
@@ -1091,7 +1091,7 @@ class Item extends Model
             $data_owner_name = $query_owner_name->fetch();
 
             if (!$data) {
-                return false;
+                return [];
             }
 
             $owner_name = $data_owner_name['owner_name'];
@@ -1127,7 +1127,7 @@ class Item extends Model
         return $sales;
     }
 
-    public static function get_all_available_items()
+    public static function get_all_available_items(): array
     {
         $items = [];
         $query = self::execute(
@@ -1200,7 +1200,7 @@ class Item extends Model
             $data_owner_name = $query_owner_name->fetch();
 
             if (!$data) {
-                return false;
+                return [];
             }
 
             $owner_name = $data_owner_name['owner_name'];
