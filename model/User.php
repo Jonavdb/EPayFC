@@ -3,14 +3,14 @@
 require_once './framework/Model.php';
 
 class User extends Model {
-    public ?int $id;
-    public string $email;
-    public string $full_name;
-    public string $pseudo;
-    public string $password;
-    public ?string $picture_path;
-    public ?string $iban;
-    public string $role;
+    private ?int $id;
+    private string $email;
+    private string $full_name;
+    private string $pseudo;
+    private string $password;
+    private ?string $picture_path;
+    private ?string $iban;
+    private string $role;
 
     public function __construct(
         string $email,
@@ -22,15 +22,33 @@ class User extends Model {
         ?string $iban = null,
         string $role = "user"
     ) {
-        $this->email = $email;
-        $this->full_name = $full_name;
-        $this->pseudo = $pseudo;
-        $this->password = $password;
-        $this->id = $id;
+        $this->email        = $email;
+        $this->full_name    = $full_name;
+        $this->pseudo       = $pseudo;
+        $this->password     = $password;
+        $this->id           = $id;
         $this->picture_path = $picture_path;
-        $this->iban = $iban;
-        $this->role = $role;
+        $this->iban         = $iban;
+        $this->role         = $role;
     }
+
+    public function get_id(): ?int              { return $this->id; }
+    public function get_email(): string         { return $this->email; }
+    public function get_full_name(): string     { return $this->full_name; }
+    public function get_pseudo(): string        { return $this->pseudo; }
+    public function get_password(): string      { return $this->password; }
+    public function get_picture_path(): ?string { return $this->picture_path; }
+    public function get_iban(): ?string         { return $this->iban; }
+    public function get_role(): string          { return $this->role; }
+
+    public function set_id(int $id): void                    { $this->id = $id; }
+    public function set_password(string $password): void     { $this->password = $password; }
+    public function set_picture_path(?string $path): void    { $this->picture_path = $path; }
+    public function set_full_name(string $full_name): void   { $this->full_name = $full_name; }
+    public function set_pseudo(string $pseudo): void         { $this->pseudo = $pseudo; }
+    public function set_email(string $email): void           { $this->email = $email; }
+    public function set_iban(?string $iban): void            { $this->iban = $iban; }
+
 
     // Récupère les utilisateurs pour la liste de debug
     public static function get_debug_users(): array {
@@ -77,7 +95,7 @@ class User extends Model {
         $errors = [];
         $user = User::get_user_by_email($email);
         if ($user) {
-            if (!self::check_password($password, $user->password)) {
+            if (!self::check_password($password, $user->get_password())) {
                 $errors[] = "Wrong password. Please try again.";
             }
         } else {

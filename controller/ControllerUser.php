@@ -22,7 +22,7 @@ class ControllerUser extends Controller {
 
     public function profile(): void {
         $user = $this->get_user_or_redirect();
-        $user = User::get_user_by_email($user->email);
+        $user = User::get_user_by_email($user->get_email());
         (new View("profile"))->show(["user" => $user]);
     }
 
@@ -111,7 +111,7 @@ class ControllerUser extends Controller {
         }
 
         // Recharge depuis la DB pour avoir le hash à jour (évite des bugs)
-        $user = User::get_user_by_email($session_user->email);
+        $user = User::get_user_by_email($session_user->get_email());
 
         $current_password = $_POST['current_password'] ?? '';
         $new_password = $_POST['new_password'] ?? '';
@@ -120,7 +120,7 @@ class ControllerUser extends Controller {
 
         if (isset($_POST['current_password']) && isset($_POST['new_password']) && isset($_POST['new_password_confirm'])) {
             // Vérification current password
-            if (!password_verify($current_password, $user->password)) {
+            if (!password_verify($current_password, $user->get_password())) {
                 $errors['current_password'] = "Current password is incorrect.";
             }
 
@@ -128,7 +128,7 @@ class ControllerUser extends Controller {
             $errors = array_merge($errors, User::validate_passwords($new_password, $confirm_password));
 
             if (empty($errors)) {
-                $user->password = password_hash($new_password, PASSWORD_BCRYPT);
+                $user->set_password(password_hash($new_password, PASSWORD_BCRYPT));
                 $user->update();
                 $this->redirect("user", "profile");
             }
@@ -148,10 +148,10 @@ class ControllerUser extends Controller {
         $errors = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $user->full_name = trim($_POST['full_name'] ?? '');
-            $user->pseudo = trim($_POST['pseudo'] ?? '');
-            $user->email = trim($_POST['email'] ?? '');
-            $user->iban = trim($_POST['iban'] ?? '');
+            $user->set_full_name(trim($_POST['full_name'] ?? ''));
+            $user->set_pseudo(trim($_POST['pseudo'] ?? ''));
+            $user->set_email(trim($_POST['email'] ?? ''));
+            $user->set_iban(trim($_POST['iban'] ?? ''));
 
             $errors = $user->validate();
 
@@ -205,17 +205,17 @@ class ControllerUser extends Controller {
 
                 if ($file_valid) {
 
-                    $path = ImageTools::upload_and_resize($file, "users", $user->id);
+                    $path = ImageTools::upload_and_resize($file, "users", $user->get_id());
                     if ($path) {
-                        if (!empty($user->picture_path) && file_exists($user->picture_path)) {
-                            unlink($user->picture_path);
-                            $old_thumb = str_replace(".jpg", "_thumbnail.jpg", $user->picture_path);
+                        if (!empty($user->get_picture_path()) && file_exists($user->get_picture_path())) {
+                            unlink($user->get_picture_path());
+                            $old_thumb = str_replace(".jpg", "_thumbnail.jpg", $user->get_picture_path());
                             if (file_exists($old_thumb)) {
                                 unlink($old_thumb);
                             }
                         }
 
-                        $user->picture_path = $path;
+                        $user->set_picture_path($path);
                         $user->update();
                     }
                 }
@@ -234,14 +234,14 @@ class ControllerUser extends Controller {
     public function delete_profile_picture() {
         $user = $this->get_user_or_redirect();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (!empty($user->picture_path) && file_exists($user->picture_path)) {
-                unlink($user->picture_path);
-                $old_thumb = str_replace(".jpg", "_thumbnail.jpg", $user->picture_path);
+            if (!empty($user->get_picture_path()) && file_exists($user->get_picture_path())) {
+                unlink($user->get_picture_path());
+                $old_thumb = str_replace(".jpg", "_thumbnail.jpg", $user->get_picture_path());
                 if (file_exists($old_thumb)) {
                     unlink($old_thumb);
                 }
             }
-            $user->picture_path = null;
+            $user->set_picture_path(null);
             $user->update();
             $this->redirect("user", "manage_profile_picture");
         }

@@ -43,14 +43,14 @@
                     <div class="mb-4">
                         <label for="full_name" class="form-label text-white fw-bold">Full Name *</label>
                         <input type="text" class="form-control bg-dark text-white border-secondary" id="full_name" name="full_name"
-                            value="<?= htmlspecialchars($user->full_name) ?>" required>
+                            value="<?= htmlspecialchars($user->get_full_name()) ?>" required>
                         <div class="form-text text-secondary">Your complete name as it should appear on your profile</div>
                     </div>
 
                     <div class="mb-2">
                         <label for="pseudo" class="form-label text-white fw-bold">Username *</label>
                         <input type="text" class="form-control bg-dark text-white border-secondary" id="pseudo" name="pseudo"
-                            value="<?= htmlspecialchars($user->pseudo) ?>" required>
+                            value="<?= htmlspecialchars($user->get_pseudo()) ?>" required>
                         <div class="form-text text-secondary">This will be your public display name on the platform</div>
                     </div>
                 </div>
@@ -65,14 +65,14 @@
                     <div class="mb-4">
                         <label for="email" class="form-label text-white fw-bold">Email Address *</label>
                         <input type="email" class="form-control bg-dark text-white border-secondary" id="email" name="email"
-                            value="<?= htmlspecialchars($user->email) ?>" required>
+                            value="<?= htmlspecialchars($user->get_email()) ?>" required>
                         <div class="form-text text-secondary">We'll use this email to send you notifications about your sales and purchases</div>
                     </div>
 
                     <div class="mb-2">
                         <label for="iban" class="form-label text-white fw-bold">IBAN <span class="text-secondary fw-normal">(Optional)</span></label>
                         <input type="text" class="form-control bg-dark text-white border-secondary" id="iban" name="iban"
-                            value="<?= isset($user->iban) ? htmlspecialchars($user->iban) : '' ?>"
+                            value="<?= isset($user) ? htmlspecialchars($user->get_iban() ?? '') : '' ?>"
                             placeholder="BE99 9999 9999 9999">
                         <div class="form-text text-secondary">For receiving payments from your sales. Leave empty if you don't want to receive payments directly.</div>
                     </div>

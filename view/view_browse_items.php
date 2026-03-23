@@ -39,14 +39,14 @@
                             <!-- 1 item / col -->
                             <?php foreach ($user_bid_items as $item) { ?>
                                 <div class="col">
-                                    <a href="item/open/<?= $item->id ?>/from-browse" class="card dark-theme w-100 h-100 text-decoration-none">
+                                    <a href="item/open/<?= $item->get_id() ?>/from-browse" class="card dark-theme w-100 h-100 text-decoration-none">
                                         <div class="d-flex flex-column h-100">
 
                                             <!-- TOP CELL (50%) -->
                                             <div class="row flex-fill" style="height:50%;">
                                                 <div class="col-sm h-100 position-relative">
                                                     <img class="card-img-top h-100 border"
-                                                        src="<?= (!empty($item->main_image_url) && file_exists($item->main_image_url)) ? $item->main_image_url : 'css/images/default_item_image.png' ?>"
+                                                        src="<?= (!empty($item->get_main_image_url()) && file_exists($item->get_main_image_url())) ? $item->get_main_image_url() : 'css/images/default_item_image.png' ?>"
                                                         alt="Auction Item Image">
 
                                                     <!-- Everything that is on top of the item image -->
@@ -58,8 +58,8 @@
                                                             <!-- Top left -->
                                                             <div>
                                                                 <?php
-                                                                $highest_bid = $item->current_bid;
-                                                                $user_bid_on_this_item = $item->user_bid;
+                                                                $highest_bid = $item->get_current_bid();
+                                                                $user_bid_on_this_item = $item->get_user_bid_amount();
                                                                 $is_highest_bidder = $user_bid_on_this_item == $highest_bid;
                                                                 ?>
                                                                 <?php if ($is_highest_bidder) { ?>
@@ -80,8 +80,8 @@
                                                                 </span>
 
                                                                 <?php
-                                                                $has_buy_now = $item->has_buy_now;
-                                                                $buy_now_reached = $item->buy_now_reached;
+                                                                $has_buy_now = $item->get_has_buy_now();
+                                                                $buy_now_reached = $item->get_buy_now_reached();
                                                                 ?>
                                                                 <?php if ($has_buy_now && !$buy_now_reached) { ?>
                                                                     <span class="badge rounded-pill bg-primary d-inline-flex align-items-center justify-content-center px-3 py-2">
@@ -94,7 +94,7 @@
                                                         <!-- Row 2 : Bottom right -->
                                                         <?php
                                                         // Get the total number of images
-                                                        $total_image_count = count($item->image_urls);
+                                                        $total_image_count = count($item->get_image_urls());
                                                         // Calculate the number of extra images (excluding the main one)
                                                         $extra_image_count = $total_image_count - 1;
                                                         ?>
@@ -122,8 +122,8 @@
 
                                                             <!-- Row 1 : Top left (using bootstrap class "card title") -->
                                                             <div class="card-title">
-                                                                <b><?= $item->title ?></b>
-                                                                <div class="fs-5 fw-bold text-secondary"><?= $item->owner_name ?></div>
+                                                                <b><?= $item->get_title() ?></b>
+                                                                <div class="fs-5 fw-bold text-secondary"><?= $item->get_owner_name() ?></div>
                                                             </div>
 
                                                             <!-- Row 2 : Middle left & Middle right (using bootstrap class "card text") -->
@@ -134,14 +134,14 @@
 
 
                                                                     <!-- Mid left -->
-                                                                    <?php $has_buy_now = $item->has_buy_now;  ?>
+                                                                    <?php $has_buy_now = $item->get_has_buy_now();  ?>
                                                                     <?php if ($has_buy_now): ?>
                                                                         <div class="price-left d-flex align-items-center fs-3 text-primary fw-bold">
-                                                                            € <?= number_format($item->buy_now_price, 2, ',', '.') ?>
+                                                                            € <?= number_format($item->get_buy_now_price(), 2, ',', '.') ?>
                                                                         </div>
                                                                     <?php else: ?>
                                                                         <div class="price-left d-flex align-items-center fs-3 text-warning fw-bold">
-                                                                            € <?= number_format($item->starting_bid, 2, ',', '.') ?>
+                                                                            € <?= number_format($item->get_starting_bid(), 2, ',', '.') ?>
                                                                         </div>
                                                                     <?php endif; ?>
 
@@ -150,7 +150,7 @@
                                                                     <div class="d-flex flex-column text-end bid-info">
                                                                         <div class="fs-5 fw-bold text-secondary">Current bid</div>
                                                                         <div class="bid-price fs-4 text-success fw-bold">
-                                                                            € <?= number_format($item->current_bid, 2, ',', '.') ?>
+                                                                            € <?= number_format($item->get_current_bid(), 2, ',', '.') ?>
                                                                         </div>
                                                                     </div>
 
@@ -158,7 +158,7 @@
 
                                                                 <!-- Row 3 : Bottom left (below boostrap class "card text")-->
                                                                 <?php
-                                                                $end = $item->end_at;
+                                                                $end = $item->get_end_at();
                                                                 $now = new DateTime(AppTime::get_current_datetime());
                                                                 $interval = $now->diff($end);
 
@@ -170,7 +170,7 @@
 
                                                                 <div class="time-left fs-5 <?= $colorClass ?> fw-bold">
                                                                     <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold <?= $colorClass ?>"></i>
-                                                                    <?= $item->time_left ?> left
+                                                                    <?= $item->get_time_left() ?> left
                                                                 </div>
 
 
@@ -219,14 +219,14 @@
                         <!-- 1 item / col -->
                         <?php foreach ($user_available_items as $item) { ?>
                             <div class="col">
-                                <a href="item/open/<?= $item->id ?>/from-browse" class="card bg-dark w-100 h-100 text-decoration-none">
+                                <a href="item/open/<?= $item->get_id() ?>/from-browse" class="card bg-dark w-100 h-100 text-decoration-none">
                                     <div class="d-flex flex-column h-100">
 
                                         <!-- TOP CELL (50%) -->
                                         <div class="row flex-fill" style="height:50%;">
                                             <div class="col-sm h-100 position-relative">
                                                 <img class="card-img-top h-100"
-                                                    src="<?= (!empty($item->main_image_url) && file_exists($item->main_image_url)) ? $item->main_image_url : 'css/images/default_item_image.png' ?>"
+                                                    src="<?= (!empty($item->get_main_image_url()) && file_exists($item->get_main_image_url())) ? $item->get_main_image_url() : 'css/images/default_item_image.png' ?>"
                                                     alt="Auction Item Image">
 
                                                 <div class="card-img-overlay d-flex flex-column justify-content-between" style="height:100%; padding:1.2rem;">
@@ -235,13 +235,13 @@
                                                     <div class="d-flex justify-content-between">
                                                         <div></div>
                                                         <div class="d-flex flex-column gap-2">
-                                                            <?php if ($item->is_auction): ?>
+                                                            <?php if ($item->get_is_auction()): ?>
                                                                 <span class="badge rounded-pill bg-warning d-inline-flex align-items-center justify-content-center px-3 py-2">
                                                                     <i class="fa-solid fa-gavel flipped-horizontal me-2"></i> Auction
                                                                 </span>
                                                             <?php endif; ?>
 
-                                                            <?php if ($item->has_buy_now && !$item->buy_now_reached): ?>
+                                                            <?php if ($item->get_has_buy_now() && !$item->get_buy_now_reached()): ?>
                                                                 <span class="badge rounded-pill bg-primary d-inline-flex align-items-center justify-content-center px-3 py-2">
                                                                     <i class="fa-solid fa-bag-shopping me-2"></i> Buy now
                                                                 </span>
@@ -251,7 +251,7 @@
 
                                                     <!-- Bottom-right extra images badge -->
                                                     <?php
-                                                    $total_image_count = count($item->image_urls);
+                                                    $total_image_count = count($item->get_image_urls());
                                                     $extra_image_count = $total_image_count - 1;
                                                     ?>
                                                     <?php if ($extra_image_count > 0): ?>
@@ -276,8 +276,8 @@
 
                                                         <!-- Row 1: Title & Owner -->
                                                         <div class="card-title">
-                                                            <b><?= $item->title ?></b>
-                                                            <div class="fs-5 fw-bold text-secondary"><?= $item->owner_name ?></div>
+                                                            <b><?= $item->get_title() ?></b>
+                                                            <div class="fs-5 fw-bold text-secondary"><?= $item->get_owner_name() ?></div>
                                                         </div>
 
                                                         <!-- Row 2: Prices -->
@@ -286,23 +286,23 @@
                                                             <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
                                                                 <!-- Left: Buy now price -->
-                                                                <?php $has_buy_now = $item->has_buy_now;  ?>
+                                                                <?php $has_buy_now = $item->get_has_buy_now();  ?>
                                                                 <?php if ($has_buy_now): ?>
                                                                     <div class="price-left d-flex align-items-center fs-3 text-primary fw-bold">
-                                                                        € <?= number_format($item->buy_now_price, 2, ',', '.') ?>
+                                                                        € <?= number_format($item->get_buy_now_price(), 2, ',', '.') ?>
                                                                     </div>
                                                                 <?php else: ?>
                                                                     <div class="price-left d-flex align-items-center fs-3 text-warning fw-bold">
-                                                                        € <?= number_format($item->starting_bid, 2, ',', '.') ?>
+                                                                        € <?= number_format($item->get_starting_bid(), 2, ',', '.') ?>
                                                                     </div>
                                                                 <?php endif; ?>
 
                                                                 <!-- Right: Current bid -->
-                                                                <?php if ($item->is_auction): ?>
+                                                                <?php if ($item->get_is_auction()): ?>
                                                                     <div class="d-flex flex-column text-end bid-info">
                                                                         <div class="fs-5 fw-bold text-secondary">Current bid</div>
                                                                         <div class="bid-price fs-4 text-success fw-bold">
-                                                                            € <?= number_format($item->current_bid, 2, ',', '.') ?>
+                                                                            € <?= number_format($item->get_current_bid(), 2, ',', '.') ?>
                                                                         </div>
                                                                     </div>
                                                                 <?php endif; ?>
@@ -311,7 +311,7 @@
 
                                                             <!-- Row 3: Time left -->
                                                             <?php
-                                                            $end = $item->end_at;
+                                                            $end = $item->get_end_at();
                                                             $now = new DateTime(AppTime::get_current_datetime());
                                                             $interval = $now->diff($end);
 
@@ -323,7 +323,7 @@
 
                                                             <div class="time-left fs-5 <?= $colorClass ?> fw-bold">
                                                                 <i class="fa-solid fa-clock transparent-icon fs-5 fw-bold <?= $colorClass ?>"></i>
-                                                                <?= $item->time_left ?> left
+                                                                <?= $item->get_time_left() ?> left
                                                             </div>
 
                                                         </div>

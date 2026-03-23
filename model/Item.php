@@ -2,35 +2,153 @@
 
 require_once "framework/Model.php";
 require_once "utils/AppTime.php";
+require_once "model/ItemPicture.php";
 
 class Item extends Model
 {
+    private float $user_bid;
+    private ?string $bidder_name;
+    private int $id;
+    private string $title;
+    private string $description;
+    private string $owner_name;
+    private string $owner_role;
+    private string $main_image_url;
+    private array $image_urls;       
+    private array $pictures;         
+    private ?float $buy_now_price;
+    private ?float $starting_bid;
+    private DateTime $created_at;
+    private DateTime $end_at;
+    private int $duration_days;
+    private ?float $current_bid;
+    private int $bid_count;
+    private bool $has_bids;
+    private bool $is_auction;
+    private bool $is_direct_sale;
+    private bool $has_buy_now;
+    private bool $buy_now_reached;
+    private string $time_left;
+    private string $owner_picture;
 
     public function __construct(
-        public float $user_bid,
-        public ?string $bidder_name,
-        public int $id,
-        public string $title,
-        public string $description,
-        public string $owner_name,
-        public string $owner_role,
-        public string $main_image_url,
-        public array $image_urls,
-        public ?float $buy_now_price,
-        public ?float $starting_bid,
-        public DateTime $created_at,
-        public DateTime $end_at,
-        public int $duration_days,
-        public ?float $current_bid,
-        public int $bid_count,
-        public bool $has_bids,
-        public bool $is_auction,
-        public bool $is_direct_sale,
-        public bool $has_buy_now,
-        public bool $buy_now_reached,
-        public string $time_left,
-        public string $owner_picture
-    ) {}
+        float $user_bid,
+        ?string $bidder_name,
+        int $id,
+        string $title,
+        string $description,
+        string $owner_name,
+        string $owner_role,
+        string $main_image_url,
+        array $image_urls,
+        ?float $buy_now_price,
+        ?float $starting_bid,
+        DateTime $created_at,
+        DateTime $end_at,
+        int $duration_days,
+        ?float $current_bid,
+        int $bid_count,
+        bool $has_bids,
+        bool $is_auction,
+        bool $is_direct_sale,
+        bool $has_buy_now,
+        bool $buy_now_reached,
+        string $time_left,
+        string $owner_picture
+    ) {
+        $this->user_bid      = $user_bid;
+        $this->bidder_name   = $bidder_name;
+        $this->id            = $id;
+        $this->title         = $title;
+        $this->description   = $description;
+        $this->owner_name    = $owner_name;
+        $this->owner_role    = $owner_role;
+        $this->main_image_url = $main_image_url;
+        $this->image_urls    = $image_urls;
+        $this->buy_now_price = $buy_now_price;
+        $this->starting_bid  = $starting_bid;
+        $this->created_at    = $created_at;
+        $this->end_at        = $end_at;
+        $this->duration_days = $duration_days;
+        $this->current_bid   = $current_bid;
+        $this->bid_count     = $bid_count;
+        $this->has_bids      = $has_bids;
+        $this->is_auction    = $is_auction;
+        $this->is_direct_sale = $is_direct_sale;
+        $this->has_buy_now   = $has_buy_now;
+        $this->buy_now_reached = $buy_now_reached;
+        $this->time_left     = $time_left;
+        $this->owner_picture = $owner_picture;
+
+        $this->pictures = [];
+        foreach ($image_urls as $priority => $path) {
+            $this->pictures[] = new ItemPicture($id, $path, $priority);
+        }
+    }
+
+    public function get_user_bid_amount(): float      { return $this->user_bid; }
+    public function get_bidder_name(): ?string     { return $this->bidder_name; }
+    public function get_id(): int                  { return $this->id; }
+    public function get_title(): string            { return $this->title; }
+    public function get_description(): string      { return $this->description; }
+    public function get_owner_name(): string       { return $this->owner_name; }
+    public function get_owner_role(): string       { return $this->owner_role; }
+    public function get_main_image_url(): string   { return $this->main_image_url; }
+    public function get_image_urls(): array        { return $this->image_urls; }
+    public function get_pictures(): array          { return $this->pictures; }
+    public function get_buy_now_price(): ?float    { return $this->buy_now_price; }
+    public function get_starting_bid(): ?float     { return $this->starting_bid; }
+    public function get_created_at(): DateTime     { return $this->created_at; }
+    public function get_end_at(): DateTime         { return $this->end_at; }
+    public function get_duration_days(): int       { return $this->duration_days; }
+    public function get_current_bid(): ?float      { return $this->current_bid; }
+    public function get_bid_count(): int           { return $this->bid_count; }
+    public function get_has_bids(): bool           { return $this->has_bids; }
+    public function get_is_auction(): bool         { return $this->is_auction; }
+    public function get_is_direct_sale(): bool     { return $this->is_direct_sale; }
+    public function get_has_buy_now(): bool        { return $this->has_buy_now; }
+    public function get_buy_now_reached(): bool    { return $this->buy_now_reached; }
+    public function get_time_left(): string        { return $this->time_left; }
+    public function get_owner_picture(): string    { return $this->owner_picture; }
+
+    public function set_main_image_url(string $url): void  { $this->main_image_url = $url; }
+    public function set_id(int $id): void                   { $this->id = $id; }
+    public function set_title(string $title): void          { $this->title = $title; }
+    public function set_description(string $desc): void     { $this->description = $desc; }
+    public function set_duration_days(int $days): void      { $this->duration_days = $days; }
+    public function set_starting_bid(?float $bid): void     { $this->starting_bid = $bid; }
+    public function set_buy_now_price(?float $price): void  { $this->buy_now_price = $price; }
+    public function set_is_auction(bool $v): void           { $this->is_auction = $v; }
+    public function set_is_direct_sale(bool $v): void       { $this->is_direct_sale = $v; }
+    public function set_has_buy_now(bool $v): void          { $this->has_buy_now = $v; }
+
+    public function validate(): array
+    {
+        $errors = [];
+
+        if (empty(trim($this->title))) {
+            $errors['title'] = "Le titre ne peut pas être vide.";
+        }
+
+        if (empty(trim($this->description))) {
+            $errors['description'] = "La description ne peut pas être vide.";
+        }
+
+        if ($this->duration_days <= 0) {
+            $errors['duration_days'] = "La durée doit être supérieure à 0 jour.";
+        }
+
+        if ($this->is_auction && ($this->starting_bid === null || $this->starting_bid <= 0)) {
+            $errors['starting_bid'] = "Le prix de départ d'une enchère doit être supérieur à 0.";
+        }
+
+        if ($this->has_buy_now && ($this->buy_now_price === null || $this->buy_now_price <= 0)) {
+            $errors['buy_now_price'] = "Le prix d'achat immédiat doit être supérieur à 0.";
+        }
+
+        return $errors;
+    }
+
 
     public static function get_items_by_owner(int $owner_id): array
     {
