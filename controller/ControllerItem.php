@@ -9,13 +9,16 @@ require_once "utils/ImageTool.php";
 
 
 
-class ControllerItem extends Controller {
-    public function index(): void {
+class ControllerItem extends Controller
+{
+    public function index(): void
+    {
         $this->redirect("item", "list");
     }
 
     // My items
-    public function list(): void {
+    public function list(): void
+    {
         $user = $this->get_user_or_redirect();
         $items = Item::get_items_by_owner($user->get_id());
 
@@ -57,7 +60,8 @@ class ControllerItem extends Controller {
     }
 
     /* Helper pour My Items : Prépare les données pour l'affichage */
-    private function prepare_item_data(Item $item, DateTime $now): object {
+    private function prepare_item_data(Item $item, DateTime $now): object
+    {
         $is_closed = $item->get_end_at() <= $now;
 
         // Calcul du texte temps
@@ -86,7 +90,8 @@ class ControllerItem extends Controller {
     }
 
     // Delete item
-    public function delete($id = null): void {
+    public function delete($id = null): void
+    {
         if ($id === null && isset($_GET['param1'])) {
             $id = $_GET['param1'];
         }
@@ -124,7 +129,8 @@ class ControllerItem extends Controller {
     }
 
     // Open item
-    public function open(): void {
+    public function open(): void
+    {
         // On regarde si le premier argument (l'ID) existe
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1']; // On récupère le 8 de l'URL ".../index/8"
@@ -156,7 +162,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function new_bid() {
+    public function new_bid()
+    {
 
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : 0.0;
@@ -189,7 +196,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "open", $item_id);
     }
 
-    public function buy_now() {
+    public function buy_now()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
         $current_user_pseudo = $user->get_pseudo();
@@ -205,7 +213,8 @@ class ControllerItem extends Controller {
     }
 
 
-    public function add() {
+    public function add()
+    {
         $user = $this->get_user_or_redirect();
         $now = new DateTime(AppTime::get_current_datetime());
         $end = (clone $now)->modify('+7 days');
@@ -252,7 +261,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    private function validate_and_fill(Item $item): array {
+    private function validate_and_fill(Item $item): array
+    {
 
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
@@ -312,7 +322,8 @@ class ControllerItem extends Controller {
         return $errors;
     }
 
-    public function edit() {
+    public function edit()
+    {
 
         $user = $this->get_user_or_redirect();
         $id = $_GET['param1'] ?? $_POST['id'] ?? null;
@@ -354,7 +365,8 @@ class ControllerItem extends Controller {
 
 
 
-    public function manage_images(): void {
+    public function manage_images(): void
+    {
 
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1'];
@@ -383,7 +395,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function move_image_left() {
+    public function move_image_left()
+    {
         $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
@@ -398,7 +411,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function move_image_right() {
+    public function move_image_right()
+    {
         $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
@@ -413,7 +427,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function delete_images() {
+    public function delete_images()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $filename = isset($_POST['image_filename']) ? $_POST['image_filename'] : '';
         $user = $this->get_user_or_redirect();
@@ -428,7 +443,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function add_images() {
+    public function add_images()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
@@ -498,7 +514,8 @@ class ControllerItem extends Controller {
         }
     }
 
-    public function browse() {
+    public function browse()
+    {
         // we retrive the user session
         $user = $this->get_user_or_false();
 
@@ -520,7 +537,8 @@ class ControllerItem extends Controller {
         );
     }
 
-    public function purchases(): void {
+    public function purchases(): void
+    {
         // we retrive the user session
         $user = $this->get_user_or_redirect();
 
@@ -530,7 +548,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function sales(): void {
+    public function sales(): void
+    {
         // we retrive the user session
         $user = $this->get_user_or_redirect();
 
@@ -540,5 +559,15 @@ class ControllerItem extends Controller {
                 "sales" => $sales
             ]
         );
+    }
+
+    public function get_js_images(): void
+    {
+        $item_id = (int)$_GET['param1'];
+        $pictures = ItemPicture::get_pictures_by_item($item_id); // récupère toutes les images d'un objet
+        $urls = array_map(fn($pic) => $pic->get_picture_path(), $pictures); // map les informations en spécifiant que pour chaque image de la variables pictures, on récupère uniquement son chemin
+        header('Content-Type: application/json'); // précise au navigateur qu'il va recevoir du Json
+        echo json_encode($urls); // encode les infos du array en Json et l'affiche au navigateur
+        exit;
     }
 }

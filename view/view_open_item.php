@@ -38,10 +38,23 @@ $image_to_display = $item->get_main_image_url();
   <div class="container-fluid px-4" style="padding-top: 80px;">
     <div class="row g-4">
       <div class="col-md-8">
-
         <div class="card text-bg-dark border-secondary mb-4">
-          <img src="<?= $image_to_display ?>" class="card-img-top" alt="<?= $item->get_title() ?>" style="max-height: 500px; object-fit: cover;">
+          <div id="no_js_main_image">
+            <img src="<?= $image_to_display ?>" class="card-img-top" alt="<?= $item->get_title() ?>" style="max-height: 500px; object-fit: cover;">
+          </div>
+          <div id="js_carousel_1" style="display: none;">
+            <div id="itemCarousel" class="carousel slide mb-3">
+              <div class="carousel-inner" id="carousel-inner">
 
+              </div>
+              <button class="carousel-control-prev carousel-dark" type="button" data-bs-target="#itemCarousel" data-bs-slide="prev">
+                <span class=" carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next carousel-dark" type="button" data-bs-target="#itemCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>
+          </div>
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <h2 class="card-title fw-bold text-white mb-0"><?= $item->get_title() ?></h2>
@@ -60,31 +73,39 @@ $image_to_display = $item->get_main_image_url();
             </div>
           </div>
         </div>
+        <div id="no_js_thumbnails">
+          <?php if (count($item->get_image_urls()) >= 2) { ?><h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h3>
+            <div class="d-flex gap-3 mb-5">
+              <?php
+              $origin = 'from-browse';
+              $uri = $_SERVER['REQUEST_URI'];
+              if (strpos($uri, 'from-list') !== false) $origin = 'from-list';
+              elseif (strpos($uri, 'from-profile') !== false) $origin = 'from-profile';
+              elseif (strpos($uri, 'from-items') !== false) $origin = 'from-items';
+              elseif (strpos($uri, 'from-sales') !== false) $origin = 'from-sales';
+              elseif (strpos($uri, 'from-purchases') !== false) $origin = 'from-purchases';
 
-        <?php if (count($item->get_image_urls()) >= 2) { ?><h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h3>
-          <div class="d-flex gap-3 mb-5">
-            <?php
-            $origin = 'from-browse';
-            $uri = $_SERVER['REQUEST_URI'];
-            if (strpos($uri, 'from-list') !== false) $origin = 'from-list';
-            elseif (strpos($uri, 'from-profile') !== false) $origin = 'from-profile';
-            elseif (strpos($uri, 'from-items') !== false) $origin = 'from-items';
-            elseif (strpos($uri, 'from-sales') !== false) $origin = 'from-sales';
-            elseif (strpos($uri, 'from-purchases') !== false) $origin = 'from-purchases';
+              foreach ($item->get_image_urls() as $index => $image):
+                $is_active = ($image === $image_to_display);
+                $border_class = $is_active ? 'border-primary' : 'border-secondary';
+              ?>
+                <a href="item/open/<?= $item->get_id() ?>/<?= $index ?>/<?= $origin ?>" class="d-block">
+                  <img src="<?= $image ?>"
+                    class="rounded border <?= $border_class ?>"
+                    alt="View <?= $index ?>"
+                    style="width: 100px; height: 70px; object-fit: cover;">
+                </a>
+              <?php endforeach; ?>
+            </div>
+          <?php } ?>
+        </div>
+        <div id="js_carousel_2" style="display: none;">
+          <h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional images</h3>
+          <div id="js_thumbnails" class="d-flex gap-4 mb-5">
 
-            foreach ($item->get_image_urls() as $index => $image):
-              $is_active = ($image === $image_to_display);
-              $border_class = $is_active ? 'border-primary' : 'border-secondary';
-            ?>
-              <a href="item/open/<?= $item->get_id() ?>/<?= $index ?>/<?= $origin ?>" class="d-block">
-                <img src="<?= $image ?>"
-                  class="rounded border <?= $border_class ?>"
-                  alt="View <?= $index ?>"
-                  style="width: 100px; height: 70px; object-fit: cover;">
-              </a>
-            <?php endforeach; ?>
           </div>
-        <?php } ?>
+        </div>
+
 
         <?php if ($item->get_has_bids()): ?>
           <div class="card text-bg-dark border-secondary">
@@ -237,6 +258,42 @@ $image_to_display = $item->get_main_image_url();
     <?php include 'view/view_timer.php'; ?>
     <?php include 'view/view_footer.php'; ?>
   </footer>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    $(document).ready(function() { // on attend que le document soit prêt 
+      const itemId = <?= $item->get_id() ?>; //on récupère l'id de l'objet 
+      $.get('item/get_js_images/' + itemId, {}, function(images) { // on appelle la fonction get_js_images du controller qui nous renvoie du Json 
+        if (images.length === 0) { // si pas d'images, on fair return et on continue pas le script
+          return;
+        }
+        $('#no_js_main_image').hide(); // on cache la version no_js
+        $('#no_js_thumbnails').hide();
+        $('#js_carousel_1').show(); // on affiche la version js
+        $('#js_carousel_2').show();
+
+        $.each(images, function(index, url) { // pour chaque image du Json
+          const active = (index === 0) ? 'active' : ''; // si index 0 du tableau Json, on set en active sinon rien
+
+          $('#carousel-inner').append( // dans le corps du carrousel, on ajoute celui qui est active
+            `<div class="carousel-item ${active}"> 
+               <img src="${url}" class="d-block w-100" style="max-height:500px; object-fit:cover;">
+              </div>`
+          );
+
+          $('#js_thumbnails').append( // on ajoute les images de Thumbnails
+            `<img src="${url}" class="rounded border border-secondary vignette-js" data-index="${index}" style="width:100px; height:70px; object-fit:cover; cursor:pointer;">`
+          );
+        });
+        $('.vignette-js').on('click', function() { // quand on clique sur une vignette
+          const index = $(this).data('index'); // on récupère l'index de la vignette sur laquelle on a cliqué
+          $('#itemCarousel').carousel(index); // on demande au carousel d'afficher celle-là 
+        });
+      });
+    });
+  </script>
 
 </body>
 
