@@ -17,7 +17,7 @@ class ControllerItem extends Controller {
     // My items
     public function list(): void {
         $user = $this->get_user_or_redirect();
-        $items = Item::get_items_by_owner($user->id);
+        $items = Item::get_items_by_owner($user->get_id());
 
         $active_items = [];
         $sold_items = [];
@@ -29,9 +29,9 @@ class ControllerItem extends Controller {
             $display_data = $this->prepare_item_data($item, $now);
 
             // Tri dans les catégories
-            $is_buy_now = $item->buy_now_reached;
-            $is_expired = $item->end_at <= $now;
-            $has_bids   = $item->bid_count > 0;
+            $is_buy_now = $item->get_buy_now_reached();
+            $is_expired = $item->get_end_at() <= $now;
+            $has_bids   = $item->get_bid_count() > 0;
 
             // CAS 1 : VENDU (Achat immédiat OU Temps écoulé avec enchères)
             if ($is_buy_now || ($is_expired && $has_bids)) {
@@ -58,21 +58,21 @@ class ControllerItem extends Controller {
 
     /* Helper pour My Items : Prépare les données pour l'affichage */
     private function prepare_item_data(Item $item, DateTime $now): object {
-        $is_closed = $item->end_at <= $now;
+        $is_closed = $item->get_end_at() <= $now;
 
         // Calcul du texte temps
         if ($is_closed) {
             $time_left_str = "Closed";
         } else {
-            $diff = $now->diff($item->end_at);
+            $diff = $now->diff($item->get_end_at());
             $time_left_str = ($diff->days > 0) ? $diff->days . " days left" : $diff->h . "h " . $diff->i . "m left";
         }
 
         // Image
-        $img_src = !empty($item->main_image_url) ? $item->main_image_url : "uploads/items/item_placeholder.png";
+        $img_src = !empty($item->get_main_image_url()) ? $item->get_main_image_url() : "uploads/items/item_placeholder.png";
 
         // Compteur images
-        $total_image_count = is_array($item->image_urls) ? count($item->image_urls) : 0;
+        $total_image_count = is_array($item->get_image_urls()) ? count($item->get_image_urls()) : 0;
         $extra_image_count = max(0, $total_image_count - 1);
 
         // On retourne un objet générique
@@ -106,7 +106,7 @@ class ControllerItem extends Controller {
         }
 
         // Vérification (seulement l'user connecté est le propriétaire)
-        if ($user->pseudo != $item->owner_name) {
+        if ($user->get_pseudo() != $item->get_owner_name()) {
             $this->redirect("item", "list");
             return;
         }
@@ -138,13 +138,14 @@ class ControllerItem extends Controller {
             return;
         }
         $image_index = isset($_GET['param2']) ? (int)$_GET['param2'] : 0;
-        if (isset($item->image_urls[$image_index])) {
-            $item->main_image_url = $item->image_urls[$image_index];
+        $image_urls = $item->get_image_urls();
+        if (isset($image_urls[$image_index])) {
+            $item->set_main_image_url($image_urls[$image_index]);
         }
 
         $bids = Bid::get_bid_by_item_id($id);
         $user = $this->get_user_or_false();
-        $current_user_pseudo = $user ?  $user->pseudo : null;
+        $current_user_pseudo = $user ? $user->get_pseudo() : null;
 
 
         (new View("open_item"))->show([
@@ -161,7 +162,7 @@ class ControllerItem extends Controller {
         $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : 0.0;
 
         $user = $this->get_user_or_redirect();
-        $current_user_pseudo = $user->pseudo;
+        $current_user_pseudo = $user->get_pseudo();
 
         $item = Item::get_item_by_id($item_id);
         $now = AppTime::get_current_datetime();
@@ -171,12 +172,12 @@ class ControllerItem extends Controller {
             return;
         }
 
-        if ($item->owner_name === $current_user_pseudo) {
+        if ($item->get_owner_name() === $current_user_pseudo) {
             $this->redirect('item', 'list');
             return;
         }
 
-        if ($item->end_at < $now) {
+        if ($item->get_end_at() < $now) {
             $this->redirect('item', 'open', $item_id);
             return;
         }
@@ -191,13 +192,13 @@ class ControllerItem extends Controller {
     public function buy_now() {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
-        $current_user_pseudo = $user->pseudo;
+        $current_user_pseudo = $user->get_pseudo();
         if ($item_id > 0) {
 
             $item = Item::get_item_by_id($item_id);
 
-            if ($item && $item->owner_name !== $current_user_pseudo && $item->has_buy_now && !$item->buy_now_reached) {
-                Bid::create_bid($current_user_pseudo, $item_id, $item->buy_now_price);
+            if ($item && $item->get_owner_name() !== $current_user_pseudo && $item->get_has_buy_now() && !$item->get_buy_now_reached()) {
+                Bid::create_bid($current_user_pseudo, $item_id, $item->get_buy_now_price());
             }
         }
         $this->redirect("item", "open", $item_id);
@@ -216,7 +217,7 @@ class ControllerItem extends Controller {
             0,
             "",
             "",
-            $user->pseudo,
+            $user->get_pseudo(),
             "",
             "",
             [],
@@ -241,7 +242,7 @@ class ControllerItem extends Controller {
 
             if (empty($errors)) {
                 $item->save();
-                $this->redirect("item", "open", $item->id);
+                $this->redirect("item", "open", $item->get_id());
             }
         }
 
@@ -259,52 +260,52 @@ class ControllerItem extends Controller {
         $max_lenght = (int)$config['max_item_lenght'];
         $min_duration = (int)$config['min_duration_days'];
         $max_duration = (int)$config['max_duration_days'];
-        $item->title = trim($_POST['title']);
-        $item->description = trim($_POST['description']);
-        $item->duration_days = (int)$_POST['duration'];
+        $item->set_title(trim($_POST['title']));
+        $item->set_description(trim($_POST['description']));
+        $item->set_duration_days((int)$_POST['duration']);
         $errors = [];
 
         $starting_bid = ($_POST['starting_bid'] !== '') ? $_POST['starting_bid'] : null;
         $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
         $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
 
-        if (strlen($item->title) === 0 || empty($item->title)) {
+        if (strlen($item->get_title()) === 0 || empty($item->get_title())) {
             $errors['empty'] = "Title is required";
         }
 
-        if (strlen($item->title) < $min_lenght || strlen($item->title) > $max_lenght) {
+        if (strlen($item->get_title()) < $min_lenght || strlen($item->get_title()) > $max_lenght) {
             $errors['title'] = "Title lenght must be between $min_lenght and $max_lenght characters.";
         }
 
-        if ($item->duration_days < $min_duration || $item->duration_days > $max_duration) {
+        if ($item->get_duration_days() < $min_duration || $item->get_duration_days() > $max_duration) {
             $errors['duration'] = "Duration must be at least $min_duration day and at most $max_duration days";
         }
 
         if ($starting_bid !== null && $starting_bid > 0) {
-            $item->starting_bid = $starting_bid;
-            $item->is_auction = true;
-            $item->is_direct_sale = false;
+            $item->set_starting_bid($starting_bid);
+            $item->set_is_auction(true);
+            $item->set_is_direct_sale(false);
 
             if ($buy_now_price !== null && $buy_now_price > 0) {
                 if ($buy_now_price < $starting_bid) {
                     $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
                 }
-                $item->buy_now_price = $buy_now_price;
-                $item->has_buy_now = true;
+                $item->set_buy_now_price($buy_now_price);
+                $item->set_has_buy_now(true);
             } else {
-                $item->buy_now_price = null;
-                $item->has_buy_now = false;
+                $item->set_buy_now_price(null);
+                $item->set_has_buy_now(false);
             }
 
             if ($sale_price !== null && $sale_price > 0) {
                 $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
             }
         } elseif ($sale_price !== null && $sale_price > 0) {
-            $item->buy_now_price = $sale_price;
-            $item->is_auction = false;
-            $item->is_direct_sale = true;
-            $item->has_buy_now = false;
-            $item->starting_bid = 0.0;
+            $item->set_buy_now_price($sale_price);
+            $item->set_is_auction(false);
+            $item->set_is_direct_sale(true);
+            $item->set_has_buy_now(false);
+            $item->set_starting_bid(0.0);
         } else {
             $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
         }
@@ -326,8 +327,8 @@ class ControllerItem extends Controller {
         $item = Item::get_item_by_id($id);
 
         if ($item) {
-            if ($item->owner_name !== $user->pseudo || ($item->is_auction && $item->has_bids)) {
-                $this->redirect("item", "open", $item->id);
+            if ($item->get_owner_name() !== $user->get_pseudo() || ($item->get_is_auction() && $item->get_has_bids())) {
+                $this->redirect("item", "open", $item->get_id());
                 exit();
             }
         } else {
@@ -341,7 +342,7 @@ class ControllerItem extends Controller {
 
             if (empty($errors)) {
                 $item->save();
-                $this->redirect("item", "open", $item->id);
+                $this->redirect("item", "open", $item->get_id());
             }
         }
 
@@ -365,14 +366,14 @@ class ControllerItem extends Controller {
         $item = Item::get_item_by_id($id);
 
         $user = $this->get_user_or_redirect();
-        $current_user = $user->pseudo;
+        $current_user = $user->get_pseudo();
 
         if (!$item) {
             $this->redirect("item", "browse");
             return;
         }
 
-        if ($item->owner_name !== $current_user || ($item->is_auction && $item->has_bids)) {
+        if ($item->get_owner_name() !== $current_user || ($item->get_is_auction() && $item->get_has_bids())) {
             $this->redirect("item", "open", $id);
             return;
         }
@@ -387,7 +388,7 @@ class ControllerItem extends Controller {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
         $item = Item::get_item_by_id($item_id);
-        if (!$item || $item->owner_name !== $user->pseudo) {
+        if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
             $this->redirect('item', 'open', $item_id);
             return;
         }
@@ -402,7 +403,7 @@ class ControllerItem extends Controller {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
         $item = Item::get_item_by_id($item_id);
-        if (!$item || $item->owner_name !== $user->pseudo) {
+        if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
             $this->redirect('item', 'open', $item_id);
             return;
         }
@@ -417,7 +418,7 @@ class ControllerItem extends Controller {
         $filename = isset($_POST['image_filename']) ? $_POST['image_filename'] : '';
         $user = $this->get_user_or_redirect();
         $item = Item::get_item_by_id($item_id);
-        if (!$item || $item->owner_name !== $user->pseudo) {
+        if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
             $this->redirect('item', 'open', $item_id);
             return;
         }
@@ -436,7 +437,7 @@ class ControllerItem extends Controller {
         $errors = [];
         $user = $this->get_user_or_redirect();
         $item = Item::get_item_by_id($item_id);
-        if (!$item || $item->owner_name !== $user->pseudo) {
+        if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
             $this->redirect('item', 'open', $item_id);
             return;
         }
@@ -505,10 +506,10 @@ class ControllerItem extends Controller {
         $is_guest = $user == false;
 
         // we retrieve items the user placed a bid on
-        $user_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->id);
+        $user_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->get_id());
 
         // we retrieve items available for him to purchase or place a bid 
-        $user_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->id);
+        $user_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->get_id());
 
         (new View("browse_items"))->show(
             [
@@ -523,7 +524,7 @@ class ControllerItem extends Controller {
         // we retrive the user session
         $user = $this->get_user_or_redirect();
 
-        $purchases = Item::get_purchases($user->id);
+        $purchases = Item::get_purchases($user->get_id());
         (new View("see_my_purchases"))->show([
             "purchases" => $purchases
         ]);
@@ -533,7 +534,7 @@ class ControllerItem extends Controller {
         // we retrive the user session
         $user = $this->get_user_or_redirect();
 
-        $sales = Item::get_sales($user->id);
+        $sales = Item::get_sales($user->get_id());
         (new View("see_my_sales"))->show(
             [
                 "sales" => $sales

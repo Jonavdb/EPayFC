@@ -26,15 +26,15 @@
                 <span class="divider mb-3"></span>
 
                 <p class="text-light mb-4">
-                    Do you really want to delete item <span class="fw-bold">"<?= htmlspecialchars($item->title) ?>"</span>
-                    by <?= htmlspecialchars($user->full_name) ?> and all of its dependencies?
+                    Do you really want to delete item <span class="fw-bold">"<?= htmlspecialchars($item->get_title()) ?>"</span>
+                    by <?= htmlspecialchars($user->get_full_name()) ?> and all of its dependencies?
                     <br>
                     <br>
                     This process cannot be undone.
                 </p>
 
-                <form action="item/delete/<?= $item->id ?>" method="post">
-                    <a href="item/open/<?= $item->id ?>" class="btn btn-secondary px-4">
+                <form action="item/delete/<?= $item->get_id() ?>" method="post">
+                    <a href="item/open/<?= $item->get_id() ?>" class="btn btn-secondary px-4">
                         Cancel
                     </a>
 

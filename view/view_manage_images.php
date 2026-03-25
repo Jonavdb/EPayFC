@@ -26,7 +26,7 @@ require_once "utils/GoBack.php";
 
     <div class="container-fluid mb-4 px-5" style="margin-top: 80px;">
         <h4 class="text-white text-start">
-            Manage Images for "<?= $item->title ?>"
+            Manage Images for "<?= $item->get_title() ?>"
         </h4>
         <?php if (isset($errors)): ?>
             <div class="alert alert-danger mt-3">
@@ -47,7 +47,7 @@ require_once "utils/GoBack.php";
                 <h6 class="fw-bold text-white text-start fs-4">Select Images</h6>
                 <form action="item/add_images" method="POST" enctype="multipart/form-data" class="fs-5">
 
-                    <input type="hidden" name="item_id" value="<?= $item->id ?>">
+                    <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
 
                     <input class="form-control bg-dark text-secondary border-secondary"
                         type="file"
@@ -74,16 +74,16 @@ require_once "utils/GoBack.php";
                 <h5 class="mb-0 text-white text-start fs-4">Current Images</h5>
             </div>
             <div class="card-body">
-                <?php if (empty($item->image_urls)) { ?>
+                <?php if (empty($item->get_image_urls())) { ?>
                     <p class="text-secondary m-0">No images uploaded yet.</p>
                 <?php } else { ?>
                     <div class="d-flex flex-wrap gap-3">
 
                         <?php
                         // On compte les images pour savoir quand arrêter le bouton "droite"
-                        $total_images = count($item->image_urls);
+                        $total_images = count($item->get_image_urls());
 
-                        foreach ($item->image_urls as $index => $image_url):
+                        foreach ($item->get_image_urls() as $index => $image_url):
                         ?>
 
                             <div class="card border-secondary bg-dark" style="width: 220px;">
@@ -97,7 +97,7 @@ require_once "utils/GoBack.php";
 
                                 <div class="card-body d-flex justify-content-between align-items-center gap-3">
                                     <form action="item/move_image_left" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
-                                        <input type="hidden" name="item_id" value="<?= $item->id ?>">
+                                        <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
                                         <button type="submit" class="btn btn-sm btn-outline-secondary" <?= $index === 0 ? 'disabled' : '' ?>>
@@ -106,7 +106,7 @@ require_once "utils/GoBack.php";
                                     </form>
 
                                     <form action="item/move_image_right" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
-                                        <input type="hidden" name="item_id" value="<?= $item->id ?>">
+                                        <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
                                         <button type="submit" class="btn btn-sm btn-outline-secondary" <?= $index === ($total_images - 1) ? 'disabled' : '' ?>>
@@ -115,7 +115,7 @@ require_once "utils/GoBack.php";
                                     </form>
 
                                     <form action="item/delete_images" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
-                                        <input type="hidden" name="item_id" value="<?= $item->id ?>">
+                                        <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_filename" value="<?= basename($image_url) ?>">
                                         <button type="submit" class="btn btn-sm btn-danger">
                                             <i class="fa-solid fa-xmark"></i>

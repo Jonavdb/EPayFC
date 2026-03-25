@@ -18,7 +18,7 @@ require_once "utils/GoBack.php";
 
 <body style="padding-top:60px; padding-bottom: 140px;">
     <?php
-    $page_title = ($item->id > 0) ? 'Edit Item' : 'Add Item';
+    $page_title = ($item->get_id() > 0) ? 'Edit Item' : 'Add Item';
 
     // On cache l'icône "panier" pour cette page
     $hide_default_icon = true;
@@ -36,14 +36,14 @@ require_once "utils/GoBack.php";
     ?>
 
     <?php
-    $is_edit = ($item->id > 0);
-    $action_url = $is_edit ? "item/edit/$item->id" : "item/add";
+    $is_edit = ($item->get_id() > 0);
+    $action_url = $is_edit ? "item/edit/" . $item->get_id() : "item/add";
     ?>
 
     <form id="itemForm" action="<?= $action_url ?>" method="POST" class="bg-transparent border-0 shadow-none">
         <?php if ($is_edit): ?>
-            <input type="hidden" name="id" value="<?= $item->id ?>">
-            <input type="hidden" name="param1" value="<?= $item->id ?>">
+            <input type="hidden" name="id" value="<?= $item->get_id() ?>">
+            <input type="hidden" name="param1" value="<?= $item->get_id() ?>">
         <?php endif; ?>
         <div class="container mb-4" style="margin-top: 30px;">
             <div class="card text-bg-dark border-secondary">
@@ -57,7 +57,7 @@ require_once "utils/GoBack.php";
                             class="form-control bg-black bg-opacity-25 text-white border-secondary <?= isset($errors['title']) || isset($errors['empty']) ? 'is-invalid' : '' ?>"
                             id="title"
                             name="title"
-                            value="<?php echo html_entity_decode($item->title) ?>">
+                            value="<?php echo html_entity_decode($item->get_title()) ?>">
                         <?php if (isset($errors['empty'])) { ?>
                             <div class="invalid-feedback">
                                 <?php echo $errors['empty'] ?>
@@ -76,7 +76,7 @@ require_once "utils/GoBack.php";
                         <textarea class="form-control bg-black bg-opacity-25 text-white border-secondary"
                             id="description"
                             name="description"
-                            rows="4"><?php echo html_entity_decode($item->description) ?></textarea>
+                            rows="4"><?php echo html_entity_decode($item->get_description()) ?></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="duration" class="form-label fw-bold">Sale Duration(days) * </label>
@@ -84,7 +84,7 @@ require_once "utils/GoBack.php";
                             class="form-control bg-black bg-opacity-25 text-white border-secondary <?= isset($errors['duration']) ? 'is-invalid' : '' ?>"
                             id="duration"
                             name="duration"
-                            value="<?php echo $item->duration_days ?>">
+                            value="<?php echo $item->get_duration_days() ?>">
                         <?php if (isset($errors['duration'])) { ?>
                             <div class="invalid-feedback">
                                 <?php echo $errors['duration'] ?>
@@ -116,7 +116,7 @@ require_once "utils/GoBack.php";
                                         class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo (isset($errors['starting_bid']) || isset($errors['sale']) || isset($errors['sale_price'])) ? 'is-invalid' : '' ?>"
                                         id="starting_bid"
                                         name="starting_bid"
-                                        value="<?php echo ($item->starting_bid > 0) ? $item->starting_bid : '' ?>">
+                                        value="<?php echo ($item->get_starting_bid() > 0) ? $item->get_starting_bid() : '' ?>">
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
 
                                     <?php if (isset($errors['starting_bid'])) { ?>
@@ -144,7 +144,7 @@ require_once "utils/GoBack.php";
                                         class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['buy_now_price']) ? 'is-invalid' : '' ?>"
                                         id="instant"
                                         name="instant"
-                                        value="<?php echo ($item->has_buy_now && $item->is_auction && $item->buy_now_price > 0) ? $item->buy_now_price : '' ?>">
+                                        value="<?php echo ($item->get_has_buy_now() && $item->get_is_auction() && $item->get_buy_now_price() > 0) ? $item->get_buy_now_price() : '' ?>">
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                     <?php if (isset($errors['buy_now_price'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['buy_now_price'] ?></div>
@@ -167,7 +167,7 @@ require_once "utils/GoBack.php";
                                         class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['sale_price']) ? 'is-invalid' : '' ?>"
                                         id="direct"
                                         name="direct"
-                                        value="<?php echo isset($_POST['direct']) ? $_POST['direct'] : (($item->is_direct_sale && $item->buy_now_price > 0) ? $item->buy_now_price : '') ?>">
+                                        value="<?php echo isset($_POST['direct']) ? $_POST['direct'] : (($item->get_is_direct_sale() && $item->get_buy_now_price() > 0) ? $item->get_buy_now_price() : '') ?>">
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                     <?php if (isset($errors['sale_price'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['sale_price'] ?></div>

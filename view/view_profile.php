@@ -31,8 +31,8 @@
                     <?php
                     $avatarPath = "css/images/default_user_image.jpg"; // Image par défaut
 
-                    if (!empty($user->picture_path) && file_exists($user->picture_path)) {
-                        $avatarPath = $user->picture_path;
+                    if (!empty($user->get_picture_path()) && file_exists($user->get_picture_path())) {
+                        $avatarPath = $user->get_picture_path();
                     }
                     ?>
 
@@ -44,15 +44,15 @@
                 </div>
 
                 <h2 class="text-white mb-1">
-                    <?= $user->full_name ?>
+                    <?= $user->get_full_name() ?>
                 </h2>
 
                 <p class="card-profile-header-text fs-4 mb-1">
-                    @<?= $user->pseudo ?>
+                    @<?= $user->get_pseudo() ?>
                 </p>
 
                 <p class="card-profile-header-text fs-4">
-                    <?= $user->email ?>
+                    <?= $user->get_email() ?>
                 </p>
             </div>
         </div>
