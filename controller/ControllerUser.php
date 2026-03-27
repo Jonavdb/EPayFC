@@ -248,6 +248,20 @@ class ControllerUser extends Controller {
     }
 
     // Services AJAX
+    public function pseudo_exists_service(): void {
+        $res = "false";
+
+        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
+            $pseudo_in_db = User::get_user_by_pseudo($_GET["param1"]);
+            $current_user = $this->get_user_or_redirect();
+
+            if ($pseudo_in_db && $pseudo_in_db->get_pseudo() !== $current_user->get_pseudo()) {
+                $res = "true";
+            }
+        }
+        echo $res;
+    }
+
     public function email_exists_service(): void {
         $exists = false;
 

@@ -17,8 +17,29 @@ $(function () {
     iban = $('#iban');
     errIban = $('#errIban');
 
+    pseudo.bind('blur', checkPseudoExists);
     email.bind('blur', checkEmailExists);
 });
+
+async function checkPseudoExists() {
+    const data = await $.getJSON(`user/pseudo_exists_service/${pseudo.val()}`);
+
+    try {
+        if (data) {
+            // erreur
+            errPseudo.html(`Le pseudo ${pseudo.val()} existe déjà !`).addClass('text-danger small mt-1');
+            pseudo.removeClass('is-valid border-secondary').addClass('is-invalid');
+        } else {
+            // succès
+            errPseudo.html('').removeClass('text-danger');
+            pseudo.removeClass('is-invalid border-secondary').addClass('is-valid');
+        }
+
+        checkFormValidity();
+    } catch (error) {
+        console.error('Erreur AJAX:', error);
+    }
+}
 
 async function checkEmailExists() {
     if (email.val().trim() === '') return;
