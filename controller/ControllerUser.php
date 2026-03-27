@@ -246,4 +246,22 @@ class ControllerUser extends Controller {
             $this->redirect("user", "manage_profile_picture");
         }
     }
+
+    // Services AJAX
+    public function email_exists_service(): void {
+        $exists = false;
+
+        if (isset($_POST["email"]) && trim($_POST["email"]) !== "") {
+            $email = trim($_POST["email"]);
+            $user_in_db = User::get_user_by_email($email);
+            $current_user = $this->get_user_or_redirect();
+
+            if ($user_in_db && $user_in_db->get_id() !== $current_user->get_id()) {
+                $exists = true;
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(["exists" => $exists]);
+    }
 }
