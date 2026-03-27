@@ -18,13 +18,38 @@ $(function () {
     errIban = $('#errIban');
 
     pseudo.bind('blur', checkPseudoExists);
+    fullName.bind('blur', checkFullNameExists);
     email.bind('blur', checkEmailExists);
 });
 
-async function checkPseudoExists() {
-    const data = await $.getJSON(`user/pseudo_exists_service/${pseudo.val()}`);
+async function checkFullNameExists() {
+    if (fullName.val().trim() === '') return;
 
     try {
+        const data = await $.getJSON(`user/full_name_exists_service/${fullName.val()}`);
+
+        if (data) {
+            // erreur
+            errFullName.html(`Le full name ${fullName.val()} existe déjà !`).addClass('text-danger small mt-1');
+            fullName.removeClass('is-valid border-secondary').addClass('is-invalid');
+        } else {
+            // succès
+            errFullName.html('').removeClass('text-danger');
+            fullName.removeClass('is-invalid border-secondary').addClass('is-valid');
+        }
+
+        checkFormValidity();
+    } catch (error) {
+        console.error('Erreur AJAX:', error);
+    }
+}
+
+async function checkPseudoExists() {
+    if (pseudo.val().trim() === '') return;
+
+    try {
+        const data = await $.getJSON(`user/pseudo_exists_service/${pseudo.val()}`);
+
         if (data) {
             // erreur
             errPseudo.html(`Le pseudo ${pseudo.val()} existe déjà !`).addClass('text-danger small mt-1');
