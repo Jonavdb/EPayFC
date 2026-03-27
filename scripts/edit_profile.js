@@ -48,9 +48,11 @@ async function checkPseudoExists() {
     if (pseudo.val().trim() === '') return;
 
     try {
-        const data = await $.getJSON(`user/pseudo_exists_service/${pseudo.val()}`);
+        const data = await $.getJSON(`user/pseudo_exists_service`, { pseudo: pseudo.val().trim() });
 
-        if (data) {
+        console.log(data);
+
+        if (data.exists === true) {
             // erreur
             errPseudo.html(`Le pseudo ${pseudo.val()} existe déjà !`).addClass('text-danger small mt-1');
             pseudo.removeClass('is-valid border-secondary').addClass('is-invalid');

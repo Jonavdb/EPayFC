@@ -263,17 +263,19 @@ class ControllerUser extends Controller {
     }
 
     public function pseudo_exists_service(): void {
-        $res = "false";
+        $exists = false;
 
-        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
-            $pseudo_in_db = User::get_user_by_pseudo($_GET["param1"]);
+        if (isset($_GET["pseudo"]) && trim($_GET["pseudo"]) !== "") {
+            $pseudo = trim($_GET["pseudo"]);
+            $pseudo_in_db = User::get_user_by_pseudo($pseudo);
             $current_user = $this->get_user_or_redirect();
 
             if ($pseudo_in_db && $pseudo_in_db->get_pseudo() !== $current_user->get_pseudo()) {
-                $res = "true";
+                $exists = true;
             }
         }
-        echo $res;
+        header('Content-Type: application/json');
+        echo json_encode(["exists" => $exists]);
     }
 
     public function email_exists_service(): void {
