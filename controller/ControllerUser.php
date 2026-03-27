@@ -249,17 +249,20 @@ class ControllerUser extends Controller {
 
     // Services AJAX
     public function full_name_exists_service(): void {
-        $res = "false";
+        $exists = false;
 
-        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
-            $full_name_in_db = User::get_user_by_full_name($_GET["param1"]);
+        if (isset($_GET["full_name"]) && $_GET["full_name"] !== "") {
+            $full_name = trim($_GET["full_name"]);
+            $full_name_in_db = User::get_user_by_full_name($full_name);
             $current_user = $this->get_user_or_redirect();
 
             if ($full_name_in_db && $full_name_in_db->get_full_name() !== $current_user->get_full_name()) {
-                $res = "true";
+                $exists = true;
             }
         }
-        echo $res;
+
+        header('Content-Type: application/json');
+        echo json_encode(["exists" => $exists]);
     }
 
     public function pseudo_exists_service(): void {

@@ -1,8 +1,3 @@
-// Edit profile : validations synchrones et asynchrones sur les champs
-// full name, pseudo, email et IBAN (disponibilité email / pseudo / full name via AJAX en excluant l'utilisateur courant ;
-// obligatoire, longueurs, format email, format IBAN optionnel en synchrone).
-// En PHP (PRG), les erreurs sont affichées sous chaque champ concerné (pas de bloc d'erreurs global).
-
 let fullName, pseudo, email, iban, errFullName, errPseudo, errEmail, errIban, submitBtn;
 
 $(function () {
@@ -20,15 +15,16 @@ $(function () {
     pseudo.bind('blur', checkPseudoExists);
     fullName.bind('blur', checkFullNameExists);
     email.bind('blur', checkEmailExists);
+    iban.bind('blur', checkIbanFormat);
 });
 
 async function checkFullNameExists() {
     if (fullName.val().trim() === '') return;
 
     try {
-        const data = await $.getJSON(`user/full_name_exists_service/${fullName.val()}`);
+        const data = await $.getJSON(`user/full_name_exists_service`, { full_name: fullName.val().trim() });
 
-        if (data) {
+        if (data.exists === true) {
             // erreur
             errFullName.html(`Le full name ${fullName.val()} existe déjà !`).addClass('text-danger small mt-1');
             fullName.removeClass('is-valid border-secondary').addClass('is-invalid');
@@ -49,8 +45,6 @@ async function checkPseudoExists() {
 
     try {
         const data = await $.getJSON(`user/pseudo_exists_service`, { pseudo: pseudo.val().trim() });
-
-        console.log(data);
 
         if (data.exists === true) {
             // erreur
@@ -88,6 +82,33 @@ async function checkEmailExists() {
     } catch (error) {
         console.error('Erreur AJAX:', error);
     }
+}
+
+// fonction synchrone pour le iban
+function checkIbanFormat() {
+    const ibanValue = iban.val().trim();
+
+    // si c'est vide, c'est valide (iban optionnel dans les consignes)
+    if (ibanValue === '') {
+        iban.removeClass('is-invalid is-valid').addClass('border-secondary');
+        errIban.html('');
+        checkFormValidity();
+        return;
+    }
+
+    const ibanRegex = /^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/i;
+
+    if (!ibanRegex.test(ibanValue)) {
+        // erreur
+        errIban.html("Le format de l'IBAN est invalide.").addClass('text-danger small mt-1');
+        iban.removeClass('is-valid border-secondary').addClass('is-invalid');
+    } else {
+        // succès
+        errIban.html('').removeClass('text-danger');
+        iban.removeClass('is-invalid border-secondary').addClass('is-valid');
+    }
+
+    checkFormValidity();
 }
 
 // désactive le bouton si une au moins une class "is-invalid" est trouvée
