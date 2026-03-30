@@ -256,7 +256,7 @@ class ControllerUser extends Controller {
             $full_name_in_db = User::get_user_by_full_name($full_name);
             $current_user = $this->get_user_or_false();
 
-            if ($full_name_in_db && $full_name_in_db->get_full_name() !== $current_user->get_full_name()) {
+            if ($full_name_in_db && $current_user && $full_name_in_db->get_id() !== $current_user->get_id()) {
                 $exists = true;
             }
         }
@@ -273,7 +273,7 @@ class ControllerUser extends Controller {
             $pseudo_in_db = User::get_user_by_pseudo($pseudo);
             $current_user = $this->get_user_or_false();
 
-            if ($pseudo_in_db && $pseudo_in_db->get_pseudo() !== $current_user->get_pseudo()) {
+            if ($pseudo_in_db && $current_user && $pseudo_in_db->get_id() !== $current_user->get_id()) {
                 $exists = true;
             }
         }
@@ -284,12 +284,12 @@ class ControllerUser extends Controller {
     public function email_exists_service(): void {
         $exists = false;
 
-        if (isset($_POST["email"]) && trim($_POST["email"]) !== "") {
-            $email = trim($_POST["email"]);
-            $user_in_db = User::get_user_by_email($email);
+        if (isset($_GET["email"]) && trim($_GET["email"]) !== "") {
+            $email = trim($_GET["email"]);
+            $email_in_db = User::get_user_by_email($email);
             $current_user = $this->get_user_or_false();
 
-            if ($user_in_db && $user_in_db->get_id() !== $current_user->get_id()) {
+            if ($email_in_db && $current_user && $email_in_db->get_id() !== $current_user->get_id()) {
                 $exists = true;
             }
         }
