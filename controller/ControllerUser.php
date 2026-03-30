@@ -254,7 +254,7 @@ class ControllerUser extends Controller {
         if (isset($_GET["full_name"]) && $_GET["full_name"] !== "") {
             $full_name = trim($_GET["full_name"]);
             $full_name_in_db = User::get_user_by_full_name($full_name);
-            $current_user = $this->get_user_or_redirect();
+            $current_user = $this->get_user_or_false();
 
             if ($full_name_in_db && $full_name_in_db->get_full_name() !== $current_user->get_full_name()) {
                 $exists = true;
@@ -271,7 +271,7 @@ class ControllerUser extends Controller {
         if (isset($_GET["pseudo"]) && trim($_GET["pseudo"]) !== "") {
             $pseudo = trim($_GET["pseudo"]);
             $pseudo_in_db = User::get_user_by_pseudo($pseudo);
-            $current_user = $this->get_user_or_redirect();
+            $current_user = $this->get_user_or_false();
 
             if ($pseudo_in_db && $pseudo_in_db->get_pseudo() !== $current_user->get_pseudo()) {
                 $exists = true;
@@ -287,7 +287,7 @@ class ControllerUser extends Controller {
         if (isset($_POST["email"]) && trim($_POST["email"]) !== "") {
             $email = trim($_POST["email"]);
             $user_in_db = User::get_user_by_email($email);
-            $current_user = $this->get_user_or_redirect();
+            $current_user = $this->get_user_or_false();
 
             if ($user_in_db && $user_in_db->get_id() !== $current_user->get_id()) {
                 $exists = true;
