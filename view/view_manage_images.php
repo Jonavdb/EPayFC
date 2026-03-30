@@ -13,7 +13,11 @@ require_once "utils/GoBack.php";
     <meta name="author" content="Jonathan_Vanderbiest">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
+    <script src="jquery.ui.touch-punch.min.js"></script>
     <title>Manage Images</title>
 </head>
 
@@ -77,7 +81,7 @@ require_once "utils/GoBack.php";
                 <?php if (empty($item->get_image_urls())) { ?>
                     <p class="text-secondary m-0">No images uploaded yet.</p>
                 <?php } else { ?>
-                    <div class="d-flex flex-wrap gap-3">
+                    <div class="d-flex flex-wrap gap-3" id="sortable-images">
 
                         <?php
                         // On compte les images pour savoir quand arrêter le bouton "droite"
@@ -86,7 +90,7 @@ require_once "utils/GoBack.php";
                         foreach ($item->get_image_urls() as $index => $image_url):
                         ?>
 
-                            <div class="card border-secondary bg-dark" style="width: 220px;">
+                            <div class="card border-secondary bg-dark" style="width: 220px; " data-image-url="<?= basename($image_url) ?>"> <!-- ajout de basename afin de sécuriser le tout et ne garder que le nom du fichier -->
 
                                 <div class="bg-white rounded-top" style="height: 150px;">
                                     <img src="<?= $image_url ?>"
@@ -134,6 +138,22 @@ require_once "utils/GoBack.php";
     <footer class="fixed-bottom">
         <?php include 'view/view_footer.php'; ?>
     </footer>
+    <script>
+        $(document).ready(function() {
+            $('#sortable-images').sortable({ // on rend les images sortables avec jQueryUI
+                stop: function() { // quand l'image a été lachée, on déclenche la fonction
+                    const ordre = $('#sortable-images').sortable('toArray', {
+                        attribute: 'data-image-url'
+                    });
+
+                    $.post('item/update_image_order', { // envoie une requête POST sur le controlleur item et la méthode update_image_order en lui passant 2 paramètres
+                        item_id: <?= $item->get_id() ?>,
+                        order: ordre
+                    });
+                }
+            })
+        })
+    </script>
 </body>
 
 </html>

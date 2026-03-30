@@ -570,4 +570,21 @@ class ControllerItem extends Controller
         echo json_encode($urls); // encode les infos du array en Json et l'affiche au navigateur
         exit;
     }
+
+    public function update_image_order(): void
+    {
+        $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0; // on récupère l'ID de l'objet
+        $order = isset($_POST['order']) ? (array)$_POST['order'] : []; // on récupère l'ordre des objets
+
+        $user = $this->get_user_or_redirect(); // on récupère le user connecté
+        $item = Item::get_item_by_id($item_id); // on récupère l'objet lié à l'ID
+
+        if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
+            http_response_code(403); // si pas d'objet ou si on appelle la méthode en étant pas le owner, 403 accès forbidden
+            exit; // on stop
+        }
+        Item::update_image_priority($item_id, $order); // on update les priorités
+        http_response_code(200); // on renvoie un code 200 pour dire que c'est OK 
+        exit;
+    }
 }
