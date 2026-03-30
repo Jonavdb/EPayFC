@@ -22,7 +22,21 @@
     ?>
 
     <main class="flex-grow-1 content-box">
-        <div class="fw-bold fs-2" style="color: #2D68C4">Items I'm participating in</div>
+
+        <!-- Barre de recherche -->
+        <div class="row justify-content-center h-100">
+            <div class="input-group mb-2 shadow">
+                <span class="input-group-text bg-dark border-secondary text-light">
+                    <i class="fa fa-search"></i>
+                </span>
+
+                <input type="text"
+                    class="form-control bg-dark border-secondary text-light fs-3"
+                    placeholder="Search items...">
+            </div>
+        </div>
+
+        <div class="fw-bold fs-2 mt-4" style="color: #2D68C4">Items I'm participating in</div>
         <?php if (!empty($user_bid_items)): ?>
             <?php if (!$is_guest): ?>
                 <div class="d-flex flex-column" style="padding-bottom: 40px;">
