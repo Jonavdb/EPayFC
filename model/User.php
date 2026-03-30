@@ -32,22 +32,52 @@ class User extends Model {
         $this->role         = $role;
     }
 
-    public function get_id(): ?int              { return $this->id; }
-    public function get_email(): string         { return $this->email; }
-    public function get_full_name(): string     { return $this->full_name; }
-    public function get_pseudo(): string        { return $this->pseudo; }
-    public function get_password(): string      { return $this->password; }
-    public function get_picture_path(): ?string { return $this->picture_path; }
-    public function get_iban(): ?string         { return $this->iban; }
-    public function get_role(): string          { return $this->role; }
+    public function get_id(): ?int {
+        return $this->id;
+    }
+    public function get_email(): string {
+        return $this->email;
+    }
+    public function get_full_name(): string {
+        return $this->full_name;
+    }
+    public function get_pseudo(): string {
+        return $this->pseudo;
+    }
+    public function get_password(): string {
+        return $this->password;
+    }
+    public function get_picture_path(): ?string {
+        return $this->picture_path;
+    }
+    public function get_iban(): ?string {
+        return $this->iban;
+    }
+    public function get_role(): string {
+        return $this->role;
+    }
 
-    public function set_id(int $id): void                    { $this->id = $id; }
-    public function set_password(string $password): void     { $this->password = $password; }
-    public function set_picture_path(?string $path): void    { $this->picture_path = $path; }
-    public function set_full_name(string $full_name): void   { $this->full_name = $full_name; }
-    public function set_pseudo(string $pseudo): void         { $this->pseudo = $pseudo; }
-    public function set_email(string $email): void           { $this->email = $email; }
-    public function set_iban(?string $iban): void            { $this->iban = $iban; }
+    public function set_id(int $id): void {
+        $this->id = $id;
+    }
+    public function set_password(string $password): void {
+        $this->password = $password;
+    }
+    public function set_picture_path(?string $path): void {
+        $this->picture_path = $path;
+    }
+    public function set_full_name(string $full_name): void {
+        $this->full_name = $full_name;
+    }
+    public function set_pseudo(string $pseudo): void {
+        $this->pseudo = $pseudo;
+    }
+    public function set_email(string $email): void {
+        $this->email = $email;
+    }
+    public function set_iban(?string $iban): void {
+        $this->iban = $iban;
+    }
 
 
     // Récupère les utilisateurs pour la liste de debug
@@ -69,6 +99,26 @@ class User extends Model {
             );
         }
         return $users;
+    }
+
+    // récupère le user par full_name
+    public static function get_user_by_full_name(string $full_name): User|false {
+        $query = self::execute("SELECT * FROM users where full_name = :full_name", ["full_name" => $full_name]);
+        $data = $query->fetch(); // un seul résultat au maximum
+        if (!$data) {
+            return false;
+        } else {
+            return new User(
+                $data["email"],
+                $data["full_name"],
+                $data["pseudo"],
+                $data["password"],
+                $data["id"] ?? null,
+                $data["picture_path"],
+                $data["iban"],
+                $data["role"]
+            );
+        }
     }
 
     // récupère le user par email
