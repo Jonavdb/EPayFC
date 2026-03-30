@@ -7,8 +7,6 @@ require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
 
-
-
 class ControllerItem extends Controller {
     public function index(): void {
         $this->redirect("item", "list");
@@ -540,5 +538,39 @@ class ControllerItem extends Controller {
                 "sales" => $sales
             ]
         );
+    }
+
+    // Services AJAX
+    public function search_fulltext_service(): void {
+        header('Content-Type: application/json');
+
+        if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {
+            $search = trim($_GET["search"]);
+            $items = Item::get_item_by_search_fulltext($search);
+            $results = [];
+
+            foreach ($items as $item) {
+                $results[] = [
+                    'id'              => $item->get_id(),
+                    'title'           => $item->get_title(),
+                    'description'     => $item->get_description(),
+                    'owner_name'      => $item->get_owner_name(),
+                    'main_image_url'  => $item->get_main_image_url(),
+                    'price'           => $item->get_buy_now_price(),
+                    'current_bid'     => $item->get_current_bid(),
+                    'is_auction'      => $item->get_is_auction(),
+                    'has_buy_now'     => $item->get_has_buy_now(),
+                    'has_bids'        => $item->get_user_bid_amount() > 0,
+                    'buy_now_reached' => $item->get_buy_now_reached(),
+                    'time_left'       => $item->get_time_left(),
+                    'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'), // Formatage de la date en string
+                    'created_at'      => $item->get_created_at()->format('Y-m-d H:i:s'),
+                ];
+            }
+
+            echo json_encode($results);
+        } else {
+            echo json_encode([]);
+        }
     }
 }

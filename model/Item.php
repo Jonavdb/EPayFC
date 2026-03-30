@@ -4,8 +4,7 @@ require_once "framework/Model.php";
 require_once "utils/AppTime.php";
 require_once "model/ItemPicture.php";
 
-class Item extends Model
-{
+class Item extends Model {
     private float $user_bid;
     private ?string $bidder_name;
     private int $id;
@@ -14,8 +13,8 @@ class Item extends Model
     private string $owner_name;
     private string $owner_role;
     private string $main_image_url;
-    private array $image_urls;       
-    private array $pictures;         
+    private array $image_urls;
+    private array $pictures;
     private ?float $buy_now_price;
     private ?float $starting_bid;
     private DateTime $created_at;
@@ -86,44 +85,111 @@ class Item extends Model
         }
     }
 
-    public function get_user_bid_amount(): float      { return $this->user_bid; }
-    public function get_bidder_name(): ?string     { return $this->bidder_name; }
-    public function get_id(): int                  { return $this->id; }
-    public function get_title(): string            { return $this->title; }
-    public function get_description(): string      { return $this->description; }
-    public function get_owner_name(): string       { return $this->owner_name; }
-    public function get_owner_role(): string       { return $this->owner_role; }
-    public function get_main_image_url(): string   { return $this->main_image_url; }
-    public function get_image_urls(): array        { return $this->image_urls; }
-    public function get_pictures(): array          { return $this->pictures; }
-    public function get_buy_now_price(): ?float    { return $this->buy_now_price; }
-    public function get_starting_bid(): ?float     { return $this->starting_bid; }
-    public function get_created_at(): DateTime     { return $this->created_at; }
-    public function get_end_at(): DateTime         { return $this->end_at; }
-    public function get_duration_days(): int       { return $this->duration_days; }
-    public function get_current_bid(): ?float      { return $this->current_bid; }
-    public function get_bid_count(): int           { return $this->bid_count; }
-    public function get_has_bids(): bool           { return $this->has_bids; }
-    public function get_is_auction(): bool         { return $this->is_auction; }
-    public function get_is_direct_sale(): bool     { return $this->is_direct_sale; }
-    public function get_has_buy_now(): bool        { return $this->has_buy_now; }
-    public function get_buy_now_reached(): bool    { return $this->buy_now_reached; }
-    public function get_time_left(): string        { return $this->time_left; }
-    public function get_owner_picture(): string    { return $this->owner_picture; }
+    public function get_user_bid_amount(): float {
+        return $this->user_bid;
+    }
+    public function get_bidder_name(): ?string {
+        return $this->bidder_name;
+    }
+    public function get_id(): int {
+        return $this->id;
+    }
+    public function get_title(): string {
+        return $this->title;
+    }
+    public function get_description(): string {
+        return $this->description;
+    }
+    public function get_owner_name(): string {
+        return $this->owner_name;
+    }
+    public function get_owner_role(): string {
+        return $this->owner_role;
+    }
+    public function get_main_image_url(): string {
+        return $this->main_image_url;
+    }
+    public function get_image_urls(): array {
+        return $this->image_urls;
+    }
+    public function get_pictures(): array {
+        return $this->pictures;
+    }
+    public function get_buy_now_price(): ?float {
+        return $this->buy_now_price;
+    }
+    public function get_starting_bid(): ?float {
+        return $this->starting_bid;
+    }
+    public function get_created_at(): DateTime {
+        return $this->created_at;
+    }
+    public function get_end_at(): DateTime {
+        return $this->end_at;
+    }
+    public function get_duration_days(): int {
+        return $this->duration_days;
+    }
+    public function get_current_bid(): ?float {
+        return $this->current_bid;
+    }
+    public function get_bid_count(): int {
+        return $this->bid_count;
+    }
+    public function get_has_bids(): bool {
+        return $this->has_bids;
+    }
+    public function get_is_auction(): bool {
+        return $this->is_auction;
+    }
+    public function get_is_direct_sale(): bool {
+        return $this->is_direct_sale;
+    }
+    public function get_has_buy_now(): bool {
+        return $this->has_buy_now;
+    }
+    public function get_buy_now_reached(): bool {
+        return $this->buy_now_reached;
+    }
+    public function get_time_left(): string {
+        return $this->time_left;
+    }
+    public function get_owner_picture(): string {
+        return $this->owner_picture;
+    }
 
-    public function set_main_image_url(string $url): void  { $this->main_image_url = $url; }
-    public function set_id(int $id): void                   { $this->id = $id; }
-    public function set_title(string $title): void          { $this->title = $title; }
-    public function set_description(string $desc): void     { $this->description = $desc; }
-    public function set_duration_days(int $days): void      { $this->duration_days = $days; }
-    public function set_starting_bid(?float $bid): void     { $this->starting_bid = $bid; }
-    public function set_buy_now_price(?float $price): void  { $this->buy_now_price = $price; }
-    public function set_is_auction(bool $v): void           { $this->is_auction = $v; }
-    public function set_is_direct_sale(bool $v): void       { $this->is_direct_sale = $v; }
-    public function set_has_buy_now(bool $v): void          { $this->has_buy_now = $v; }
+    public function set_main_image_url(string $url): void {
+        $this->main_image_url = $url;
+    }
+    public function set_id(int $id): void {
+        $this->id = $id;
+    }
+    public function set_title(string $title): void {
+        $this->title = $title;
+    }
+    public function set_description(string $desc): void {
+        $this->description = $desc;
+    }
+    public function set_duration_days(int $days): void {
+        $this->duration_days = $days;
+    }
+    public function set_starting_bid(?float $bid): void {
+        $this->starting_bid = $bid;
+    }
+    public function set_buy_now_price(?float $price): void {
+        $this->buy_now_price = $price;
+    }
+    public function set_is_auction(bool $v): void {
+        $this->is_auction = $v;
+    }
+    public function set_is_direct_sale(bool $v): void {
+        $this->is_direct_sale = $v;
+    }
+    public function set_has_buy_now(bool $v): void {
+        $this->has_buy_now = $v;
+    }
 
-    public function validate(): array
-    {
+    public function validate(): array {
         $errors = [];
 
         if (empty(trim($this->title))) {
@@ -150,8 +216,7 @@ class Item extends Model
     }
 
 
-    public static function get_items_by_owner(int $owner_id): array
-    {
+    public static function get_items_by_owner(int $owner_id): array {
         // Récupère les items du propriétaire, triés par date de fin calculée
         $sql = "SELECT * FROM v_items_status WHERE owner = :owner ORDER BY end_at ASC";
         $query = self::execute($sql, ["owner" => $owner_id]);
@@ -238,8 +303,7 @@ class Item extends Model
         return $items;
     }
 
-    public static function get_item_by_id(int $id): Item|false
-    {
+    public static function get_item_by_id(int $id): Item|false {
         $query = self::execute(
             "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
             FROM v_items_status v 
@@ -301,8 +365,7 @@ class Item extends Model
     }
 
     // Delete item
-    public static function delete(int $id): bool
-    {
+    public static function delete(int $id): bool {
         // cible directement le dossier de l'item
         $baseDir = dirname(__DIR__) . "/";
         $itemDirectory = $baseDir . "uploads/items/" . $id;
@@ -330,8 +393,7 @@ class Item extends Model
         return true;
     }
 
-    public static function get_user_bid_items(int $id): array
-    {
+    public static function get_user_bid_items(int $id): array {
         $user_bid_items = [];
 
         $query = self::execute(
@@ -446,8 +508,7 @@ class Item extends Model
         return $user_bid_items;
     }
 
-    public static function get_user_bid(int $item_id, int $user_id): float|null
-    {
+    public static function get_user_bid(int $item_id, int $user_id): float|null {
         $query = self::execute(
             "SELECT MAX(amount) as bid
             FROM bids
@@ -467,8 +528,7 @@ class Item extends Model
         return $data['bid'];
     }
 
-    public static function get_user_available_items(int $id): array
-    {
+    public static function get_user_available_items(int $id): array {
         $user_available_items = [];
         $query = self::execute(
             "SELECT vis.*
@@ -591,8 +651,7 @@ class Item extends Model
         return $user_available_items;
     }
 
-    public function save(): void
-    {
+    public function save(): void {
         if ($this->id > 0) {
             $this->update();
         } else {
@@ -600,8 +659,7 @@ class Item extends Model
         }
     }
 
-    public function update(): void
-    {
+    public function update(): void {
         $sql = "UPDATE items SET
         title = :title,
         description = :description,
@@ -619,8 +677,7 @@ class Item extends Model
         ]);
     }
 
-    private function insert()
-    {
+    private function insert() {
         $sql = "INSERT into items (
         title,
         description,
@@ -657,8 +714,7 @@ class Item extends Model
         return $newID;
     }
 
-    public static function change_pics_left(int $image_id, int $item_id): void
-    {
+    public static function change_pics_left(int $image_id, int $item_id): void {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -693,8 +749,7 @@ class Item extends Model
         }
     }
 
-    public static function change_pics_right(int $image_id, int $item_id): void
-    {
+    public static function change_pics_right(int $image_id, int $item_id): void {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -729,8 +784,7 @@ class Item extends Model
         }
     }
 
-    public static function delete_images(string $filename, int $item_id): void
-    {
+    public static function delete_images(string $filename, int $item_id): void {
         $query = self::execute(
             "SELECT priority, picture_path
             FROM item_pictures
@@ -778,8 +832,7 @@ class Item extends Model
         }
     }
 
-    public static function add_picture(int $item_id, string $path): void
-    {
+    public static function add_picture(int $item_id, string $path): void {
 
         $query = self::execute(
             "SELECT MAX(priority) as max_p FROM item_pictures WHERE item = :item_id",
@@ -798,8 +851,7 @@ class Item extends Model
         );
     }
 
-    public static function get_purchases(int $id): array
-    {
+    public static function get_purchases(int $id): array {
         $purchases = [];
 
         // BACKUP
@@ -961,8 +1013,7 @@ class Item extends Model
         return $purchases;
     }
 
-    public static function get_sales(int $user_id): array
-    {
+    public static function get_sales(int $user_id): array {
 
         $sales = [];
 
@@ -1127,8 +1178,7 @@ class Item extends Model
         return $sales;
     }
 
-    public static function get_all_available_items(): array
-    {
+    public static function get_all_available_items(): array {
         $items = [];
         $query = self::execute(
             "SELECT * from v_items_status vis
@@ -1237,6 +1287,106 @@ class Item extends Model
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
             $items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, 0, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
+        }
+
+        return $items;
+    }
+
+    public static function get_item_by_search_fulltext(string $search_term, ?int $user_id = null): array {
+        $items = [];
+        $pattern = '%' . $search_term . '%'; // si on tape "velo", ça cherchera "%velo%" partout
+
+        $query = self::execute(
+            "SELECT vis.*, u.pseudo as owner_name,
+            -- la sous-requête (SELECT COALESCE...) va chercher la mise de l'user courant sur les items
+                (SELECT COALESCE(MAX(amount), 0) FROM bids WHERE item = vis.id AND owner = :user_id) as user_bid
+            FROM v_items_status vis
+            JOIN users u ON vis.owner = u.id
+            WHERE :today BETWEEN vis.created_at AND vis.end_at 
+            AND vis.buy_now_reached = 0 
+            AND (
+                vis.title LIKE :search 
+                OR vis.description LIKE :search 
+                OR u.pseudo LIKE :search
+                OR u.full_name LIKE :search
+            )
+            ORDER by vis.end_at",
+            [
+                "today"   => AppTime::get_current_datetime(),
+                "search"  => $pattern,
+                "user_id" => $user_id
+            ]
+        );
+
+        $data = $query->fetchAll();
+        if (!$data) return [];
+
+        foreach ($data as $item_data) {
+            $user_bid = $item_data['user_bid'] ?? 0;
+            $is_auction = $item_data['is_auction'];
+            $has_buy_now = $item_data['has_buy_now'] == 1 ? true : false;
+            $buy_now_reached = $item_data['buy_now_reached'];
+
+            // Récupération des images (inchangé)
+            $query_image_urls = self::execute(
+                "SELECT picture_path FROM item_pictures p WHERE p.item = :item_id ORDER BY priority ASC",
+                ["item_id" => $item_data['id']]
+            );
+            $image_urls = (array) $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
+
+            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
+            if (!empty($image_urls)) {
+                $main_image_url = $image_urls[0];
+                $path_parts = pathinfo($main_image_url);
+                $main_image_url = $path_parts['dirname'] . '/' . $path_parts['filename'] . '_thumbnail.' . $path_parts['extension'];
+            }
+
+            $title = $item_data['title'];
+            $owner_name = $item_data['owner_name'];
+
+            $price = $item_data['buy_now_price'] ?? 0;
+
+            $has_bids = $item_data['has_bids'];
+            if ($is_auction) {
+                $current_bid = $has_bids ? $item_data['max_bid'] : $item_data['starting_bid'];
+            } else {
+                $current_bid = 0;
+            }
+
+            $description = $item_data['description'] ?? '';
+            $owner_role = '';
+            $duration_days = 0;
+
+            $today = new DateTime(AppTime::get_current_datetime());
+            $end_at = new DateTime($item_data['end_at']);
+            $time_left_datetime = $end_at->diff($today);
+            $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
+
+            $items[] = new Item(
+                $user_bid,
+                null,
+                $item_data['id'],
+                $title,
+                $description,
+                $owner_name,
+                $owner_role,
+                $main_image_url,
+                $image_urls,
+                $price,
+                0,
+                new DateTime(AppTime::get_current_datetime()),
+                $end_at,
+                $duration_days,
+                $current_bid,
+                0,
+                true,
+                $is_auction,
+                false,
+                $has_buy_now,
+                $buy_now_reached,
+                $time_left,
+                ''
+            );
         }
 
         return $items;
