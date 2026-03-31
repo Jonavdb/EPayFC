@@ -7,13 +7,15 @@ require_once "utils/GoBack.php";
 
 <head>
     <meta charset="UTF-8">
+    <title>Add item</title>
     <base href="<?= $web_root ?>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Jonathan_Vanderbiest">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
-    <title>Add item</title>
+    <script src="lib/jquery-4.0.0.min.js" type="text/javascript"></script>
+    <script src="scripts/add_edit_item.js"></script>
 </head>
 
 <body style="padding-top:60px; padding-bottom: 140px;">
@@ -26,7 +28,7 @@ require_once "utils/GoBack.php";
     // On utilise ob_start() pour capturer le HTML proprement, ou juste une string
     ob_start();
     ?>
-    <button type="submit" form="itemForm" class="btn-icon text-primary">
+    <button type="submit" id="submitBtn" form="itemForm" class="btn-icon text-primary" disabled="disabled">
         <i class="fa-regular fa-floppy-disk fa-lg"></i>
     </button>
     <?php
@@ -58,18 +60,7 @@ require_once "utils/GoBack.php";
                             id="title"
                             name="title"
                             value="<?php echo html_entity_decode($item->get_title()) ?>">
-                        <?php if (isset($errors['empty'])) { ?>
-                            <div class="invalid-feedback">
-                                <?php echo $errors['empty'] ?>
-                            </div>
-                        <?php } ?>
-
-                        <?php if (isset($errors['title'])) { ?>
-                            <div class="invalid-feedback">
-                                <?php echo $errors['title'] ?>
-                            </div>
-                        <?php } ?>
-
+                        <div id="errTitle"></div>
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label fw-bold">Description</label>
@@ -77,6 +68,7 @@ require_once "utils/GoBack.php";
                             id="description"
                             name="description"
                             rows="4"><?php echo html_entity_decode($item->get_description()) ?></textarea>
+                        <div id="errDescription"></div>
                     </div>
                     <div class="mb-3">
                         <label for="duration" class="form-label fw-bold">Sale Duration(days) * </label>
@@ -85,11 +77,7 @@ require_once "utils/GoBack.php";
                             id="duration"
                             name="duration"
                             value="<?php echo $item->get_duration_days() ?>">
-                        <?php if (isset($errors['duration'])) { ?>
-                            <div class="invalid-feedback">
-                                <?php echo $errors['duration'] ?>
-                            </div>
-                        <?php } ?>
+                        <div id="errDuration"></div>
                     </div>
                 </div>
             </div>
