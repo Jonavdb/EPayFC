@@ -21,8 +21,15 @@ class ControllerUser extends Controller {
     }
 
     public function profile(): void {
-        $user = $this->get_user_or_redirect();
-        $user = User::get_user_by_email($user->get_email());
+        $loggedUser = $this->get_user_or_redirect();
+        $user = User::get_user_by_email($loggedUser->get_email());
+
+        // Sécurité : si pour une raison X le user n'est pas trouvé en DB
+        if (!$user) {
+            $this->redirect("main", "index"); // Ou une autre page d'erreur
+            return;
+        }
+
         (new View("profile"))->show(["user" => $user]);
     }
 
