@@ -599,4 +599,19 @@ class ControllerItem extends Controller
         header('Content-Type: application/json');
         echo json_encode(["is_valid" => $is_valid]);
     }
+
+    public function duration_valid_service(): void
+    {
+        $is_valid = false;
+
+        if (isset($_GET['duration']) && trim($_GET['duration']) !== "") {
+            $duration = (int)trim($_GET['duration']);
+            if ($duration >= 1) {
+                $is_valid = true;
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(["is_valid" => $is_valid]);
+    }
 }

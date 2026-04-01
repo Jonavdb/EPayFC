@@ -14,6 +14,7 @@ $(function () {
 
   itemTitle.bind("blur", checkTitleValid);
   description.bind("blur", checkDescriptionValid);
+  duration.bind("blur", checkDurationValid);
 });
 
 async function checkTitleValid() {
@@ -89,6 +90,41 @@ async function checkDescriptionValid() {
     checkFormValidity();
   } catch (error) {
     conseole.error("Erreur AJAX:", error);
+  }
+}
+
+async function checkDurationValid() {
+  if (duration.val().trim() === "") {
+    // champ laissé vide : affichage text par défaut et on masque l'erreur
+    errDuration.html("").removeClass("text-danger");
+    duration.removeClass("is-invalid is-valid").addClass("border-secondary");
+    checkFormValidity();
+    return;
+  }
+
+  try {
+    const durationValue = parseInt(duration.val().trim());
+    const data = await $.getJSON(
+      "item/duration_valid_service",
+      { duration: durationValue },
+      "json",
+    );
+
+    if (data.is_valid === true) {
+      // succès : cadre vert
+      errDuration.html("").removeClass("text-danger");
+      duration.removeClass("is-invalid border-secondary").addClass("is-valid");
+    } else {
+      // erreur : cadre rouge
+      errDuration
+        .html("<ul><li>Duration must be at least 1 day.</li></ul>")
+        .addClass("text-danger small mt-1");
+      duration.removeClass("is-valid").addClass("is-invalid");
+    }
+
+    checkFormValidity();
+  } catch (error) {
+    console.error("Erreur AJAX:", error);
   }
 }
 

@@ -78,6 +78,7 @@ require_once "utils/GoBack.php";
                             class="form-control bg-black bg-opacity-25 text-white border-secondary"
                             id="duration"
                             name="duration"
+                            placeholder="e.g, 1"
                             value="<?php echo $item->get_duration_days() ?>">
                         <div id="errDuration"></div>
                     </div>
