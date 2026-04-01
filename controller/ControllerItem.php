@@ -546,10 +546,21 @@ class ControllerItem extends Controller {
 
         if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {
             $search = trim($_GET["search"]);
-            $items = Item::get_item_by_search_fulltext($search);
+            $current_user = $this->get_user_or_false();
+
+            if (!$current_user) {
+                echo json_encode([]);
+            }
+
+            $user_id = $current_user->get_id();
+
+            $bid_items = Item::get_user_bid_items($user_id, $search);
+            $available_items = Item::get_user_available_items($user_id, $search);
+
             $results = [];
 
-            foreach ($items as $item) {
+            // les items sur lesquels on a participé
+            foreach ($bid_items as $item) {
                 $results[] = [
                     'id'              => $item->get_id(),
                     'title'           => $item->get_title(),
@@ -560,10 +571,30 @@ class ControllerItem extends Controller {
                     'current_bid'     => $item->get_current_bid(),
                     'is_auction'      => $item->get_is_auction(),
                     'has_buy_now'     => $item->get_has_buy_now(),
-                    'has_bids'        => $item->get_user_bid_amount() > 0,
+                    'has_bids'        => true,
                     'buy_now_reached' => $item->get_buy_now_reached(),
                     'time_left'       => $item->get_time_left(),
-                    'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'), // Formatage de la date en string
+                    'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
+                    'created_at'      => $item->get_created_at()->format('Y-m-d H:i:s'),
+                ];
+            }
+
+            // les autres items
+            foreach ($available_items as $item) {
+                $results[] = [
+                    'id'              => $item->get_id(),
+                    'title'           => $item->get_title(),
+                    'description'     => $item->get_description(),
+                    'owner_name'      => $item->get_owner_name(),
+                    'main_image_url'  => $item->get_main_image_url(),
+                    'price'           => $item->get_buy_now_price(),
+                    'current_bid'     => $item->get_current_bid(),
+                    'is_auction'      => $item->get_is_auction(),
+                    'has_buy_now'     => $item->get_has_buy_now(),
+                    'has_bids'        => false,
+                    'buy_now_reached' => $item->get_buy_now_reached(),
+                    'time_left'       => $item->get_time_left(),
+                    'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
                     'created_at'      => $item->get_created_at()->format('Y-m-d H:i:s'),
                 ];
             }

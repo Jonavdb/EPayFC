@@ -97,19 +97,21 @@ async function checkSearchFullText() {
                     </div>
                 `;
 
+                // ajoute l'item dans la bonne grille
                 if (item.has_bids) {
                     participatingGrid.append(cardHtml);
                 } else {
                     availableGrid.append(cardHtml);
                 }
-
-                if (participatingGrid.children().length === 0) {
-                    participatingGrid.html('<p class="text-secondary mt-3 fs-3">No item found.</p>');
-                }
-                if (availableGrid.children().length === 0) {
-                    availableGrid.html('<p class="text-secondary mt-3 fs-3">No item found.</p>');
-                }
             });
+        }
+
+        // on vérifie si une des grilles est videos, on affiche "no item found" dans ce cas
+        if (participatingGrid.children().length === 0) {
+            participatingGrid.html('<p class="text-secondary mt-3 fs-3">No item found.</p>');
+        }
+        if (availableGrid.children().length === 0) {
+            availableGrid.html('<p class="text-secondary mt-3 fs-3">No item found.</p>');
         }
     }
 }

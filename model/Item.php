@@ -393,25 +393,36 @@ class Item extends Model {
         return true;
     }
 
-    public static function get_user_bid_items(int $id): array {
+    public static function get_user_bid_items(int $id, ?string $search = null): array {
         $user_bid_items = [];
 
-        $query = self::execute(
-            // Active Auctions bid on by user
-            "SELECT DISTINCT vis.*
-            from users u
-            join bids b on b.owner = u.id
-            join v_items_status vis on vis.id = b.item
-            where u.id = :id
-            and :today BETWEEN vis.created_at AND vis.end_at
-            and vis.buy_now_reached = 0
-            order by vis.end_at",
-            [
-                "id" => $id,
-                "today" => AppTime::get_current_datetime()
-            ]
-        );
+        // On a simplifié la jointure pour cibler directement tes offres (b.owner = :id)
+        // Et on a ajouté le JOIN sur le vendeur (seller) pour pouvoir chercher son pseudo !
+        $sql = "SELECT DISTINCT vis.*
+                FROM bids b
+                JOIN v_items_status vis ON vis.id = b.item
+                JOIN users seller ON vis.owner = seller.id
+                WHERE b.owner = :id
+                AND :today BETWEEN vis.created_at AND vis.end_at
+                AND vis.buy_now_reached = 0";
 
+        $params = [
+            "id" => $id,
+            "today" => AppTime::get_current_datetime()
+        ];
+
+        // SI on a une recherche en cours, on ajoute les conditions avec de bonnes parenthèses !
+        if ($search !== null && trim($search) !== '') {
+            $sql .= " AND (
+                        vis.title LIKE :search 
+                        OR seller.pseudo LIKE :search
+                      )";
+            $params['search'] = '%' . trim($search) . '%';
+        }
+
+        $sql .= " ORDER BY vis.end_at";
+
+        $query = self::execute($sql, $params);
         $data = $query->fetchAll();
 
         if (!$data) {
@@ -419,90 +430,46 @@ class Item extends Model {
         }
 
         foreach ($data as $item_data) {
-
-            // we retrieve user bid on the item
             $user_bid = Item::get_user_bid($item_data['id'], $id);
             if (is_null($user_bid)) {
                 $user_bid = 0;
             }
 
-            // items on which user has placed bids are always in auction
             $is_auction = true;
-
-            // we get the info whether or not the item can be purchased directly
-            $has_buy_now = $item_data['has_buy_now'];
-            $has_buy_now = $has_buy_now == 1 ? true : false;
-
-            // we get the info whether or not the item last bid exceeds the direct sale price
+            $has_buy_now = $item_data['has_buy_now'] == 1 ? true : false;
             $buy_now_reached = $item_data['buy_now_reached'];
 
-            // we retrieve item pictures
             $query_image_urls = self::execute(
-                "SELECT picture_path
-                FROM item_pictures p
-                where p.item = :item_id
-                Order BY priority ASC",
+                "SELECT picture_path FROM item_pictures p WHERE p.item = :item_id ORDER BY priority ASC",
                 ["item_id" => $item_data['id']]
             );
+            $image_urls = (array) $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
 
-            $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
-
-            $image_urls = (array) $data_image_urls;
-
-            // Image par défaut (Placeholder)
             $main_image_url = "";
-
-            // we retrieve main picture
             if (!empty($image_urls)) {
                 $main_image_url = $image_urls[0];
                 $path_parts = pathinfo($main_image_url);
-                $main_image_url = $path_parts['dirname'] . '/' .
-                    $path_parts['filename'] .
-                    '_thumbnail.' .
-                    $path_parts['extension'];
+                $main_image_url = $path_parts['dirname'] . '/' . $path_parts['filename'] . '_thumbnail.' . $path_parts['extension'];
             }
 
-            // we retrieve the title
             $title = $item_data['title'];
 
-            // we retrieve owner name
             $query_owner_name = self::execute(
-                "SELECT DISTINCT u.pseudo as owner_name
-                from users u
-                join v_items_status i on i.owner = u.id
-                where i.owner = :owner_id",
+                "SELECT DISTINCT u.pseudo as owner_name FROM users u JOIN v_items_status i on i.owner = u.id WHERE i.owner = :owner_id",
                 ["owner_id" => $item_data['owner']]
             );
-
             $data_owner_name = $query_owner_name->fetch();
+            $owner_name = $data_owner_name['owner_name'] ?? '';
 
-            if (!$data) {
-                return [];
-            }
-
-            $owner_name = $data_owner_name['owner_name'];
-
-            // we retrieve the price
-            $price = $item_data['buy_now_price'];
-            if ($price == null) {
-                $price = 0;
-            }
-
-            // we retrieve the current bid -> max bid for this item
+            $price = $item_data['buy_now_price'] ?? 0;
             $current_bid = $item_data['max_bid'];
 
-            // we retrive time left
             $today = new DateTime(AppTime::get_current_datetime());
             $end_at = new DateTime($item_data['end_at']);
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
-            // unused variables
-            $description = '';
-            $owner_role = '';
-            $duration_days = 0;
-
-            $user_bid_items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $item_data['starting_bid'], new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, false, false, $has_buy_now, $buy_now_reached, $time_left, '');
+            $user_bid_items[] = new Item($user_bid, null, $item_data['id'], $title, '', $owner_name, '', $main_image_url, $image_urls, $price, $item_data['starting_bid'], new DateTime(AppTime::get_current_datetime()), $end_at, 0, $current_bid, 0, true, false, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
 
         return $user_bid_items;
@@ -528,124 +495,84 @@ class Item extends Model {
         return $data['bid'];
     }
 
-    public static function get_user_available_items(int $id): array {
+    public static function get_user_available_items(int $id, ?string $search = null): array {
         $user_available_items = [];
-        $query = self::execute(
-            "SELECT vis.*
-            FROM v_items_status vis
-            WHERE :today BETWEEN vis.created_at AND vis.end_at -- Not expired yet
-            AND vis.owner != :id              -- Not my item
-            AND vis.buy_now_reached = 0       -- Not sold yet (Auction or Direct)
-            AND NOT EXISTS (                  -- I haven't bid on it
-                SELECT 1 
-                FROM bids b 
-                WHERE b.item = vis.id 
-                AND b.owner = :id
-            )
-            ORDER by vis.end_at",
-            [
-                "today" => AppTime::get_current_datetime(),
-                "id" => $id
-            ]
-        );
 
+        // Même principe : on JOIN le vendeur pour pouvoir chercher dessus
+        $sql = "SELECT vis.*
+                FROM v_items_status vis
+                JOIN users seller ON vis.owner = seller.id
+                WHERE :today BETWEEN vis.created_at AND vis.end_at 
+                AND vis.owner != :id              
+                AND vis.buy_now_reached = 0       
+                AND NOT EXISTS (                  
+                    SELECT 1 FROM bids b WHERE b.item = vis.id AND b.owner = :id
+                )";
+
+        $params = [
+            "today" => AppTime::get_current_datetime(),
+            "id" => $id
+        ];
+
+        if ($search !== null && trim($search) !== '') {
+            $sql .= " AND (
+                        vis.title LIKE :search 
+                        OR seller.pseudo LIKE :search
+                      )";
+            $params['search'] = '%' . trim($search) . '%';
+        }
+
+        $sql .= " ORDER BY vis.end_at";
+
+        $query = self::execute($sql, $params);
         $data = $query->fetchAll();
+
         if (!$data) {
             return [];
         }
 
         foreach ($data as $item_data) {
-            // available items have no user bid on them
             $user_bid = 0;
-
-            // we get info of whether the item is in auction or not
             $is_auction = $item_data['is_auction'];
-
-            // we get the info whether or not the item can be purchased directly
-            $has_buy_now = $item_data['has_buy_now'];
-            $has_buy_now = $has_buy_now == 1 ? true : false;
-
-            // we get the info whether or not the item last bid exceeds the direct sale price
+            $has_buy_now = $item_data['has_buy_now'] == 1 ? true : false;
             $buy_now_reached = $item_data['buy_now_reached'];
 
-            // we retrieve item pictures
             $query_image_urls = self::execute(
-                "SELECT picture_path
-                FROM item_pictures p
-                where p.item = :item_id
-                Order BY priority ASC",
+                "SELECT picture_path FROM item_pictures p WHERE p.item = :item_id ORDER BY priority ASC",
                 ["item_id" => $item_data['id']]
             );
+            $image_urls = (array) $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
 
-            $data_image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
-
-            $image_urls = (array) $data_image_urls;
-
-            // Image par défaut (Placeholder)
             $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
-
-            // we retrieve main picture
             if (!empty($image_urls)) {
                 $main_image_url = $image_urls[0];
                 $path_parts = pathinfo($main_image_url);
-                $main_image_url = $path_parts['dirname'] . '/' .
-                    $path_parts['filename'] .
-                    '_thumbnail.' .
-                    $path_parts['extension'];
+                $main_image_url = $path_parts['dirname'] . '/' . $path_parts['filename'] . '_thumbnail.' . $path_parts['extension'];
             }
 
-            // we retrieve the title
             $title = $item_data['title'];
 
-            // we retrieve owner name
             $query_owner_name = self::execute(
-                "SELECT DISTINCT u.pseudo as owner_name
-                from users u
-                join v_items_status i on i.owner = u.id
-                where i.owner = :owner_id",
+                "SELECT DISTINCT u.pseudo as owner_name FROM users u JOIN v_items_status i on i.owner = u.id WHERE i.owner = :owner_id",
                 ["owner_id" => $item_data['owner']]
             );
-
             $data_owner_name = $query_owner_name->fetch();
+            $owner_name = $data_owner_name['owner_name'] ?? '';
 
-            if (!$data) {
-                return [];
-            }
+            $price = $item_data['buy_now_price'] ?? 0;
 
-            $owner_name = $data_owner_name['owner_name'];
-
-            // we retrieve the price
-            $price = $item_data['buy_now_price'];
-            if ($price == null) {
-                $price = 0;
-            }
-
-
-            // we retrieve the current bid -> max bid for this item
-            $has_bids = $item_data['has_bids'];
             if ($is_auction) {
-                if ($has_bids) {
-                    $current_bid = $item_data['max_bid'];
-                } else {
-                    $current_bid =  $item_data['starting_bid'];
-                }
+                $current_bid = $item_data['has_bids'] ? $item_data['max_bid'] : $item_data['starting_bid'];
             } else {
                 $current_bid = 0;
             }
 
-            // unused variables
-            $description = '';
-            $owner_role = '';
-            $duration_days = 0;
-
-
-            // we retrieve time left
             $today = new DateTime(AppTime::get_current_datetime());
             $end_at = new DateTime($item_data['end_at']);
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
-            $user_available_items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, $item_data['starting_bid'], new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
+            $user_available_items[] = new Item($user_bid, null, $item_data['id'], $title, '', $owner_name, '', $main_image_url, $image_urls, $price, $item_data['starting_bid'], new DateTime(AppTime::get_current_datetime()), $end_at, 0, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
 
         return $user_available_items;
@@ -1182,7 +1109,7 @@ class Item extends Model {
         $items = [];
         $query = self::execute(
             "SELECT * from v_items_status vis
-            WHERE :today BETWEEN vis.created_at AND vis.end_at -- Npt expired yet
+            WHERE :today BETWEEN vis.created_at AND vis.end_at -- Not expired yet
             AND vis.buy_now_reached = 0 -- Not sold yet
             ORDER by vis.end_at",
             [
@@ -1287,106 +1214,6 @@ class Item extends Model {
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
             $items[] = new Item($user_bid, null, $item_data['id'], $title, $description, $owner_name, $owner_role, $main_image_url, $image_urls, $price, 0, new DateTime(AppTime::get_current_datetime()), $end_at, $duration_days, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
-        }
-
-        return $items;
-    }
-
-    public static function get_item_by_search_fulltext(string $search_term, ?int $user_id = null): array {
-        $items = [];
-        $pattern = '%' . $search_term . '%'; // si on tape "velo", ça cherchera "%velo%" partout
-
-        $query = self::execute(
-            "SELECT vis.*, u.pseudo as owner_name,
-            -- la sous-requête (SELECT COALESCE...) va chercher la mise de l'user courant sur les items
-                (SELECT COALESCE(MAX(amount), 0) FROM bids WHERE item = vis.id AND owner = :user_id) as user_bid
-            FROM v_items_status vis
-            JOIN users u ON vis.owner = u.id
-            WHERE :today BETWEEN vis.created_at AND vis.end_at 
-            AND vis.buy_now_reached = 0 
-            AND (
-                vis.title LIKE :search 
-                OR vis.description LIKE :search 
-                OR u.pseudo LIKE :search
-                OR u.full_name LIKE :search
-            )
-            ORDER by vis.end_at",
-            [
-                "today"   => AppTime::get_current_datetime(),
-                "search"  => $pattern,
-                "user_id" => $user_id
-            ]
-        );
-
-        $data = $query->fetchAll();
-        if (!$data) return [];
-
-        foreach ($data as $item_data) {
-            $user_bid = $item_data['user_bid'] ?? 0;
-            $is_auction = $item_data['is_auction'];
-            $has_buy_now = $item_data['has_buy_now'] == 1 ? true : false;
-            $buy_now_reached = $item_data['buy_now_reached'];
-
-            // Récupération des images (inchangé)
-            $query_image_urls = self::execute(
-                "SELECT picture_path FROM item_pictures p WHERE p.item = :item_id ORDER BY priority ASC",
-                ["item_id" => $item_data['id']]
-            );
-            $image_urls = (array) $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
-
-            $main_image_url = "uploads/items/51/itemPlaceholder_thumbnail.png";
-            if (!empty($image_urls)) {
-                $main_image_url = $image_urls[0];
-                $path_parts = pathinfo($main_image_url);
-                $main_image_url = $path_parts['dirname'] . '/' . $path_parts['filename'] . '_thumbnail.' . $path_parts['extension'];
-            }
-
-            $title = $item_data['title'];
-            $owner_name = $item_data['owner_name'];
-
-            $price = $item_data['buy_now_price'] ?? 0;
-
-            $has_bids = $item_data['has_bids'];
-            if ($is_auction) {
-                $current_bid = $has_bids ? $item_data['max_bid'] : $item_data['starting_bid'];
-            } else {
-                $current_bid = 0;
-            }
-
-            $description = $item_data['description'] ?? '';
-            $owner_role = '';
-            $duration_days = 0;
-
-            $today = new DateTime(AppTime::get_current_datetime());
-            $end_at = new DateTime($item_data['end_at']);
-            $time_left_datetime = $end_at->diff($today);
-            $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
-
-            $items[] = new Item(
-                $user_bid,
-                null,
-                $item_data['id'],
-                $title,
-                $description,
-                $owner_name,
-                $owner_role,
-                $main_image_url,
-                $image_urls,
-                $price,
-                0,
-                new DateTime(AppTime::get_current_datetime()),
-                $end_at,
-                $duration_days,
-                $current_bid,
-                0,
-                true,
-                $is_auction,
-                false,
-                $has_buy_now,
-                $buy_now_reached,
-                $time_left,
-                ''
-            );
         }
 
         return $items;
