@@ -566,13 +566,13 @@ class ControllerItem extends Controller
     {
         $is_valid = false;
 
-        if (isset($_POST["title"]) && trim($_POST["title"]) !== "") {
-            $title = trim($_POST["title"]);
+        if (isset($_GET["title"]) && trim($_GET["title"]) !== "") {
+            $title = trim($_GET["title"]);
             $length = strlen($title);
             $min_size = 2;
             $max_size = 255;
 
-            if ($length > $min_size - 1 && $length <= $max_size) {
+            if ($length >= $min_size && $length <= $max_size) {
                 $is_valid = true;
             }
         }

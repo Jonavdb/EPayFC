@@ -56,9 +56,10 @@ require_once "utils/GoBack.php";
                     <div class=" mb-3">
                         <label for="title" class="form-label fw-bold">Item Title *</label>
                         <input type="text"
-                            class="form-control bg-black bg-opacity-25 text-white border-secondary <?= isset($errors['title']) || isset($errors['empty']) ? 'is-invalid' : '' ?>"
+                            class="form-control bg-black bg-opacity-25 text-white border-secondary"
                             id="title"
                             name="title"
+                            placeholder="Ex: IPhone 13 Pro Max 256GB"
                             value="<?php echo html_entity_decode($item->get_title()) ?>">
                         <div id="errTitle"></div>
                     </div>
@@ -73,7 +74,7 @@ require_once "utils/GoBack.php";
                     <div class="mb-3">
                         <label for="duration" class="form-label fw-bold">Sale Duration(days) * </label>
                         <input type="number"
-                            class="form-control bg-black bg-opacity-25 text-white border-secondary <?= isset($errors['duration']) ? 'is-invalid' : '' ?>"
+                            class="form-control bg-black bg-opacity-25 text-white border-secondary"
                             id="duration"
                             name="duration"
                             value="<?php echo $item->get_duration_days() ?>">
