@@ -580,4 +580,23 @@ class ControllerItem extends Controller
         header('Content-Type: application/json');
         echo json_encode(["is_valid" => $is_valid]);
     }
+
+    public function description_valid_service(): void
+    {
+        $is_valid = false;
+
+        if (isset($_GET["description"]) && trim($_GET["description"]) !== "") {
+            $description = trim($_GET["description"]);
+            $length = strlen($description);
+            $min_size = 3;
+            $max_size = 65535;
+
+            if ($length >= $min_size && $length <= $max_size) {
+                $is_valid = true;
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(["is_valid" => $is_valid]);
+    }
 }

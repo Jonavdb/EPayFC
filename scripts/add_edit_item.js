@@ -13,6 +13,7 @@ $(function () {
   errDuration = $("#errDuration");
 
   itemTitle.bind("blur", checkTitleValid);
+  description.bind("blur", checkDescriptionValid);
 });
 
 async function checkTitleValid() {
@@ -48,6 +49,46 @@ async function checkTitleValid() {
     checkFormValidity();
   } catch (error) {
     console.error("Erreur AJAX:", error);
+  }
+}
+
+async function checkDescriptionValid() {
+  if (description.val().trim() === "") {
+    // champ laissé vide : affichage texte par défaut et on masque l'erreur
+    errDescription.html("").removeClass("text-danger");
+    description.removeClass("is-invalid is-valid").addClass("border-secondary");
+    checkFormValidity();
+    return;
+  }
+
+  try {
+    const data = await $.getJSON(
+      "item/description_valid_service",
+      { description: description.val().trim() },
+      "json",
+    );
+
+    if (data.is_valid === true) {
+      // succès : cadre vert
+      errDescription.html("").removeClass("text-danger");
+      description
+        .removeClass("is-invalid border-secondary")
+        .addClass("is-valid");
+    } else {
+      // erreur cadre rouge
+      errDescription
+        .html(
+          "<ul><li>Description length must be between 3 and 65535 characters.</li></ul>",
+        )
+        .addClass("text-danger small mt-1");
+      description
+        .removeClass("is-valid border-secondary")
+        .addClass("is-invalid");
+    }
+
+    checkFormValidity();
+  } catch (error) {
+    conseole.error("Erreur AJAX:", error);
   }
 }
 

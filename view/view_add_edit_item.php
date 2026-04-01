@@ -68,6 +68,7 @@ require_once "utils/GoBack.php";
                         <textarea class="form-control bg-black bg-opacity-25 text-white border-secondary"
                             id="description"
                             name="description"
+                            placeholder="Describe your item in detail..."
                             rows="4"><?php echo html_entity_decode($item->get_description()) ?></textarea>
                         <div id="errDescription"></div>
                     </div>
