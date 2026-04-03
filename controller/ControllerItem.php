@@ -569,9 +569,8 @@ class ControllerItem extends Controller
         if (isset($_GET["title"]) && trim($_GET["title"]) !== "") {
             $title = trim($_GET["title"]);
             $length = strlen($title);
-            $min_size = 2;
-            $max_size = 255;
-
+            $min_size =  Configuration::get("min_item_lenght");
+            $max_size = Configuration::get("max_item_lenght");
             if ($length >= $min_size && $length <= $max_size) {
                 $is_valid = true;
             }
@@ -588,8 +587,8 @@ class ControllerItem extends Controller
         if (isset($_GET["description"]) && trim($_GET["description"]) !== "") {
             $description = trim($_GET["description"]);
             $length = strlen($description);
-            $min_size = 3;
-            $max_size = 65535;
+            $min_size = Configuration::get("min_description_length");
+            $max_size = Configuration::get("max_description_length");
 
             if ($length >= $min_size && $length <= $max_size) {
                 $is_valid = true;
