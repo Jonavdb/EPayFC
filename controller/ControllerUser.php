@@ -23,7 +23,7 @@ class ControllerUser extends Controller {
     public function profile(): void {
         $user = $this->get_user_or_redirect();
         $user = User::get_user_by_email($user->get_email());
-        (new View("profile"))->show(["user" => $user]);
+        (new View("profile"))->show(["user" => $user, "is_guest" => !$this->user_logged()]);
     }
 
     //gestion de l'inscription d'un utilisateur
@@ -63,7 +63,8 @@ class ControllerUser extends Controller {
             "pseudo" => $pseudo,
             "password" => $password,
             "password_confirm" => $password_confirm,
-            "errors" => $errors
+            "errors" => $errors,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -99,7 +100,7 @@ class ControllerUser extends Controller {
         // RÉCUPÉRATION DE LA LISTE DES "Debug Users"
         $users = User::get_debug_users();
 
-        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors, "users" => $users]);
+        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors, "users" => $users, "is_guest" => !$this->user_logged()]);
     }
 
     // Gestion du changement de mot de passe
@@ -138,7 +139,8 @@ class ControllerUser extends Controller {
             "errors" => $errors,
             "current_password" => $current_password,
             "new_password" => $new_password,
-            "confirm_password" => $confirm_password
+            "confirm_password" => $confirm_password,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -163,7 +165,8 @@ class ControllerUser extends Controller {
 
         (new View("edit_profile"))->show([
             "user" => $user,
-            "errors" => $errors
+            "errors" => $errors,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -171,7 +174,7 @@ class ControllerUser extends Controller {
 
         $user = $this->get_user_or_redirect();
 
-        (new View("profile_picture"))->show(["user" => $user]);
+        (new View("profile_picture"))->show(["user" => $user, "is_guest" => !$this->user_logged()]);
     }
 
     public function update_profile_picture() {
@@ -226,7 +229,8 @@ class ControllerUser extends Controller {
         } else {
             (new View("profile_picture"))->show([
                 "user" => $user,
-                "errors" => $errors
+                "errors" => $errors,
+                "is_guest" => !$this->user_logged()
             ]);
         }
     }

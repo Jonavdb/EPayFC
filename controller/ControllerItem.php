@@ -55,7 +55,8 @@ class ControllerItem extends Controller
             "user" => $user,
             "active_items" => $active_items,
             "sold_items" => $sold_items,
-            "unsold_items" => $unsold_items
+            "unsold_items" => $unsold_items,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -123,7 +124,8 @@ class ControllerItem extends Controller
         } else {
             (new View("delete_item"))->show([
                 "item" => $item,
-                "user" => $user
+                "user" => $user,
+                "is_guest" => !$this->user_logged()
             ]);
         }
     }
@@ -158,7 +160,8 @@ class ControllerItem extends Controller
             "item" => $item,
             "bids" => $bids,
             "current_user" => $current_user_pseudo,
-            'selected_image' => $image_index
+            'selected_image' => $image_index,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -257,7 +260,8 @@ class ControllerItem extends Controller
 
         (new View("add_edit_item"))->show([
             "item" => $item,
-            "errors" => $errors
+            "errors" => $errors,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -359,7 +363,8 @@ class ControllerItem extends Controller
 
         (new View("add_edit_item"))->show([
             "item" => $item,
-            "errors" => $errors
+            "errors" => $errors,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -391,7 +396,8 @@ class ControllerItem extends Controller
         }
 
         (new View("manage_images"))->show([
-            "item" => $item
+            "item" => $item,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -507,7 +513,8 @@ class ControllerItem extends Controller
         if (count($errors) > 0) {
             (new View("manage_images"))->show([
                 "item" => $item,
-                "errors" => $errors
+                "errors" => $errors,
+                "is_guest" => !$this->user_logged()
             ]);
         } else {
             $this->redirect("item", "manage_images", $item_id);
@@ -544,7 +551,8 @@ class ControllerItem extends Controller
 
         $purchases = Item::get_purchases($user->get_id());
         (new View("see_my_purchases"))->show([
-            "purchases" => $purchases
+            "purchases" => $purchases,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -556,7 +564,8 @@ class ControllerItem extends Controller
         $sales = Item::get_sales($user->get_id());
         (new View("see_my_sales"))->show(
             [
-                "sales" => $sales
+                "sales" => $sales,
+                "is_guest" => !$this->user_logged()
             ]
         );
     }
