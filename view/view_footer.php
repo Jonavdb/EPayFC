@@ -1,9 +1,3 @@
-<?php
-if (!isset($is_guest)) {
-    $is_guest = true;
-}
-?>
-
 <nav class="navbar navbar-dark bg-dark border-top shadow-lg">
     <div class="container-fluid">
         <div class="d-flex justify-content-around w-100 py-3">

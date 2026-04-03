@@ -29,7 +29,7 @@ class ControllerItem extends Controller
 
         foreach ($items as $item) {
             // Préparation des données d'affichage (photos des items, etc...)
-            $display_data = $this->prepare_item_data($item, $now);
+            $display_data = $this->prepare_item_data($item, $now, 'my-items', $user->get_pseudo());
 
             // Tri dans les catégories
             $is_buy_now = $item->get_buy_now_reached();
@@ -60,17 +60,19 @@ class ControllerItem extends Controller
         ]);
     }
 
-    /* Helper pour My Items : Prépare les données pour l'affichage */
-    private function prepare_item_data(Item $item, DateTime $now): object
+    /* Helper partagé : Prépare les données d'affichage d'une carte item */
+    private function prepare_item_data(Item $item, DateTime $now, string $card_context = 'my-items', string $owner_name = ''): object
     {
         $is_closed = $item->get_end_at() <= $now;
 
-        // Calcul du texte temps
+        // Calcul du texte temps + couleur
         if ($is_closed) {
             $time_left_str = "Closed";
+            $time_color    = "text-secondary";
         } else {
             $diff = $now->diff($item->get_end_at());
             $time_left_str = ($diff->days > 0) ? $diff->days . " days left" : $diff->h . "h " . $diff->i . "m left";
+            $time_color    = ($diff->days < 1) ? "text-warning" : "text-secondary";
         }
 
         // Image
@@ -80,13 +82,51 @@ class ControllerItem extends Controller
         $total_image_count = is_array($item->get_image_urls()) ? count($item->get_image_urls()) : 0;
         $extra_image_count = max(0, $total_image_count - 1);
 
-        // On retourne un objet générique
+        // Lien et propriétaire selon le contexte
+        $href  = ($card_context === 'my-items')
+            ? "item/open/" . $item->get_id() . "/from-items"
+            : "item/open/" . $item->get_id() . "/from-browse";
+
+        $is_highest_bidder = ($card_context === 'browse-bidding')
+            ? ($item->get_user_bid_amount() == $item->get_current_bid())
+            : false;
+
+        $context = ($card_context !== 'my-items') ? 'active' : '';
+        $has_buy_now = $item->get_has_buy_now();
+        $is_auction  = $item->get_is_auction() || $card_context === 'browse-bidding';
+        $is_direct   = $item->get_is_direct_sale();
+
+        if ($has_buy_now || $is_direct) {
+            $price_display = number_format($item->get_buy_now_price(), 2, ',', '.');
+            $price_color   = 'text-primary';
+        } elseif ($is_auction) {
+            $price_display = number_format($item->get_starting_bid(), 2, ',', '.');
+            $price_color   = 'text-warning';
+        } else {
+            $price_display = null;
+            $price_color   = '';
+        }
+
+        $show_current_bid = $is_auction;
+        $current_bid_display = ($item->get_current_bid() !== null)
+            ? number_format($item->get_current_bid(), 2, ',', '.')
+            : null;
+
         return (object) [
-            'raw_item' => $item,
-            'time_left' => $time_left_str,
-            'img_src' => $img_src,
-            'extra_images' => $extra_image_count,
-            'context' => ''               // Sera rempli dans la boucle list()
+            'raw_item'             => $item,
+            'time_left'            => $time_left_str,
+            'time_color'           => $time_color,
+            'img_src'              => $img_src,
+            'extra_images'         => $extra_image_count,
+            'context'              => $context,
+            'card_context'         => $card_context,
+            'href'                 => $href,
+            'owner'                => htmlspecialchars($owner_name),
+            'is_highest_bidder'    => $is_highest_bidder,
+            'price_display'        => $price_display,
+            'price_color'          => $price_color,
+            'show_current_bid'     => $show_current_bid,
+            'current_bid_display'  => $current_bid_display,
         ];
     }
 
@@ -529,11 +569,15 @@ class ControllerItem extends Controller
         // we check whether it's an existing user or a guest
         $is_guest = $user == false;
 
+        $now = new DateTime(AppTime::get_current_datetime());
+
         // we retrieve items the user placed a bid on
-        $user_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->get_id());
+        $raw_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->get_id());
+        $user_bid_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse-bidding', $item->get_owner_name()), $raw_bid_items);
 
         // we retrieve items available for him to purchase or place a bid 
-        $user_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->get_id());
+        $raw_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->get_id());
+        $user_available_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name()), $raw_available_items);
 
         (new View("browse_items"))->show(
             [
