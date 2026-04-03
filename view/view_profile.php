@@ -16,6 +16,11 @@
 
 <body>
     <main class="container" style="padding-top: 80px; padding-bottom: 100px;">
+        <?php if (isset($user) && is_object($user)): ?>
+        <?php else: ?>
+            <p>Utilisateur non trouvé.</p>
+        <?php endif; ?>
+
         <!-- HEADER -->
         <?php
         $page_title = "Profile";

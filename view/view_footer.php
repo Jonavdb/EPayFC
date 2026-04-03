@@ -1,6 +1,6 @@
 <?php
 if (!isset($is_guest)) {
-    $is_guest = !isset($_SESSION['user']) || empty($_SESSION['user']);
+    $is_guest = true;
 }
 ?>
 
