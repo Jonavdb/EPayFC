@@ -34,7 +34,7 @@ class ControllerUser extends Controller
             return;
         }
 
-        (new View("profile"))->show(["user" => $user]);
+        (new View("profile"))->show(["user" => $user, "is_guest" => !$this->user_logged()]);
     }
 
     //gestion de l'inscription d'un utilisateur
