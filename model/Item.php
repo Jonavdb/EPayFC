@@ -15,8 +15,6 @@ class Item extends Model {
     private string $main_image_url;
     private array $image_urls;
     private array $pictures;
-    private array $image_urls;
-    private array $pictures;
     private ?float $buy_now_price;
     private ?float $starting_bid;
     private DateTime $created_at;
