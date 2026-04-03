@@ -1,4 +1,3 @@
-<!-- Barre de recherche -->
 <div class="row justify-content-center h-100">
     <div class="input-group mb-2 shadow">
         <span class="input-group-text bg-dark border-secondary text-light">

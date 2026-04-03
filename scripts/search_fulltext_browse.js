@@ -9,10 +9,10 @@ $(function () {
     defaultParticipatingHtml = participatingGrid.html();
     defaultAvailableHtml = availableGrid.html();
 
-    searchInput.on('input', checkSearchFullText);
+    searchInput.on('input', checkSearchFullTextBrowseItems);
 });
 
-async function checkSearchFullText() {
+async function checkSearchFullTextBrowseItems() {
     const searchValue = searchInput.val().trim();
 
     // s'il n'a rien cherhcé, on affiche la liste par défaut
@@ -23,19 +23,19 @@ async function checkSearchFullText() {
     }
 
     try {
-        const items = await $.get(`item/search_fulltext_service`, { search: searchValue }, 'json');
+        const items = await $.get(`item/search_fulltext_browse_service`, { search: searchValue }, 'json');
 
         // vidage des grilles pour y mettre les résultats de manière dynamique
         participatingGrid.empty();
         availableGrid.empty();
 
-        displayItems(items);
+        displayBrowseItems(items);
     } catch (error) {
         console.error('Erreur AJAX:', error);
     }
 
     // pur affichage : fonction utilitaire qui affiche les items en JS
-    function displayItems(items) {
+    function displayBrowseItems(items) {
         if (items.length > 0) {
             items.forEach((item) => {
                 // affichage des petites icones, etc
@@ -106,7 +106,7 @@ async function checkSearchFullText() {
             });
         }
 
-        // on vérifie si une des grilles est videos, on affiche "no item found" dans ce cas
+        // on vérifie si une des grilles est vides, on affiche "no item found" dans ce cas
         if (participatingGrid.children().length === 0) {
             participatingGrid.html('<p class="text-secondary mt-3 fs-3">No item found.</p>');
         }

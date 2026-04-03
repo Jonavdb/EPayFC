@@ -216,10 +216,25 @@ class Item extends Model {
     }
 
 
-    public static function get_items_by_owner(int $owner_id): array {
+    // paramètre optionnel rajouté pour le champ de recherche de l'itération 2
+    public static function get_items_by_owner(int $owner_id, ?string $search = null): array {
         // Récupère les items du propriétaire, triés par date de fin calculée
-        $sql = "SELECT * FROM v_items_status WHERE owner = :owner ORDER BY end_at ASC";
-        $query = self::execute($sql, ["owner" => $owner_id]);
+        $sql = "SELECT * FROM v_items_status WHERE owner = :owner";
+        $params = ["owner" => $owner_id];
+
+        // si l'utilisateur a tapé quelque chose, on ajoute les conditions LIKE
+        if ($search !== null && trim($search) !== '') {
+            $sql .= " AND (
+                        title LIKE :search 
+                        OR description LIKE :search
+                      )";
+            $params['search'] = '%' . trim($search) . '%';
+        }
+
+        $sql .= " ORDER BY end_at ASC";
+
+        // exécute SQL dynamique avec les paramètres
+        $query = self::execute($sql, $params);
         $data = $query->fetchAll();
 
         $items = [];
@@ -396,8 +411,6 @@ class Item extends Model {
     public static function get_user_bid_items(int $id, ?string $search = null): array {
         $user_bid_items = [];
 
-        // On a simplifié la jointure pour cibler directement tes offres (b.owner = :id)
-        // Et on a ajouté le JOIN sur le vendeur (seller) pour pouvoir chercher son pseudo !
         $sql = "SELECT DISTINCT vis.*
                 FROM bids b
                 JOIN v_items_status vis ON vis.id = b.item
@@ -411,7 +424,7 @@ class Item extends Model {
             "today" => AppTime::get_current_datetime()
         ];
 
-        // SI on a une recherche en cours, on ajoute les conditions avec de bonnes parenthèses !
+        // SI on a une recherche en cours, on ajoute les conditions
         if ($search !== null && trim($search) !== '') {
             $sql .= " AND (
                         vis.title LIKE :search 
@@ -498,7 +511,6 @@ class Item extends Model {
     public static function get_user_available_items(int $id, ?string $search = null): array {
         $user_available_items = [];
 
-        // Même principe : on JOIN le vendeur pour pouvoir chercher dessus
         $sql = "SELECT vis.*
                 FROM v_items_status vis
                 JOIN users seller ON vis.owner = seller.id

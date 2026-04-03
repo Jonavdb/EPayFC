@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="css/item.css">
     <link rel="stylesheet" type="text/css" href="css/browse_items.css">
     <script src="lib/jquery-4.0.0.min.js" type="text/javascript"></script>
-    <script src="scripts/search_fulltext.js"></script>
+    <script src="scripts/search_fulltext_browse.js"></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100 dark-bg" style="padding-bottom: 140px;">
@@ -24,7 +24,6 @@
     ?>
 
     <main class="flex-grow-1 content-box">
-
         <!-- Barre de recherche -->
         <?php include 'view/view_search_bar.php'; ?>
 

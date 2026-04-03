@@ -541,7 +541,7 @@ class ControllerItem extends Controller {
     }
 
     // Services AJAX
-    public function search_fulltext_service(): void {
+    public function search_fulltext_browse_service(): void {
         header('Content-Type: application/json');
 
         if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {
@@ -599,6 +599,64 @@ class ControllerItem extends Controller {
                 ];
             }
 
+            echo json_encode($results);
+        } else {
+            echo json_encode([]);
+        }
+    }
+
+    public function search_fulltext_my_items_service(): void {
+        header('Content-Type: application/json');
+
+        if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {
+            $search = trim($_GET["search"]);
+            $current_user = $this->get_user_or_false();
+
+            if (!$current_user) {
+                echo json_encode([]);
+            }
+
+            $user_id = $current_user->get_id();
+            $my_items = Item::get_items_by_owner($user_id, $search);
+
+            $results = [];
+            $now = new DateTime(AppTime::get_current_datetime());
+
+            foreach ($my_items as $item) {
+                $display_data = $this->prepare_item_data($item, $now);
+
+                // sold, unsold ou active
+                $is_buy_now = $item->get_buy_now_reached();
+                $is_expired = $item->get_end_at() <= $now;
+                $has_bids   = $item->get_bid_count() > 0;
+
+                if ($is_buy_now || ($is_expired && $has_bids)) {
+                    $context = 'sold';
+                } elseif ($is_expired && !$has_bids) {
+                    $context = 'unsold';
+                } else {
+                    $context = 'active';
+                }
+
+                $results[] = [
+                    'id'              => $item->get_id(),
+                    'title'           => $item->get_title(),
+                    'description'     => $item->get_description(),
+                    'owner_name'      => $current_user->get_pseudo(),
+                    'main_image_url'  => $display_data->img_src,
+                    'price'           => $item->get_buy_now_price(),
+                    'starting_bid'    => $item->get_starting_bid(),
+                    'current_bid'     => $item->get_current_bid(),
+                    'is_auction'      => $item->get_is_auction(),
+                    'has_buy_now'     => $item->get_has_buy_now(),
+                    'time_left'       => $display_data->time_left,
+                    'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
+                    'created_at'      => $item->get_created_at()->format('Y-m-d H:i:s'),
+                    'buy_now_reached' => $item->get_buy_now_reached(),
+                    'extra_images'    => $display_data->extra_images,
+                    'context'         => $context
+                ];
+            }
             echo json_encode($results);
         } else {
             echo json_encode([]);
