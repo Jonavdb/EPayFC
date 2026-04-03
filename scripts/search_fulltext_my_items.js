@@ -42,7 +42,6 @@ async function checkSearchFullTextMyItems() {
     function displayMyItems(items) {
         if (items.length > 0) {
             items.forEach((item) => {
-                // console.log(item);
                 // affichage des petites icones, etc
                 let contextBadge = '';
 
@@ -52,7 +51,6 @@ async function checkSearchFullTextMyItems() {
                     contextBadge = `<span class="badge rounded-pill bg-secondary"><i class="fa-solid fa-ban"></i> Unsold</span>`;
                 }
 
-                // --- 2. GESTION DES BADGES DE TYPE (Auction / Buy Now) ---
                 let auctionBadge = item.is_auction
                     ? `<span class="badge rounded-pill bg-warning text-dark"><i class="fa-solid fa-gavel fa-flip-horizontal"></i> Auction</span>`
                     : '';
@@ -77,7 +75,15 @@ async function checkSearchFullTextMyItems() {
                         </div>`;
                 }
 
-                let priceHtml = item.has_buy_now ? `<div class="fs-3 fw-bold text-primary">€ ${item.price}</div>` : `<div class="fs-3 fw-bold">&nbsp;</div>`;
+                // formatage des prix pour toujours avoir les centimes (,00)
+                let safePrice = parseFloat(item.price || 0)
+                    .toFixed(2)
+                    .replace('.', ',');
+                let safeCurrentBid = parseFloat(item.current_bid || 0)
+                    .toFixed(2)
+                    .replace('.', ',');
+
+                let priceHtml = item.has_buy_now ? `<div class="fs-3 fw-bold text-primary">€ ${safePrice}</div>` : `<div class="fs-3 fw-bold">&nbsp;</div>`;
 
                 let timeColorClass = item.time_left === 'Closed' ? 'text-secondary' : 'text-success';
 
@@ -86,12 +92,13 @@ async function checkSearchFullTextMyItems() {
                         ? `
                     <div class="text-end">
                         <div class="text-secondary small mb-0">Current bid</div>
-                        <div class="fs-3 fw-bold text-success">€ ${item.current_bid}</div>
+                        <div class="fs-3 fw-bold text-success">€ ${safeCurrentBid}</div>
                     </div>`
                         : '';
 
                 let imgSrc = item.main_image_url ? item.main_image_url : 'css/images/default_item_image.png';
 
+                // la carte complète
                 let cardHtml = `
                     <div class="col">
                         <a href="item/open/${item.id}/from-items" class="card h-100 text-decoration-none shadow-sm card-hover">
@@ -124,7 +131,7 @@ async function checkSearchFullTextMyItems() {
                                         ${priceHtml}
 
                                         <div class="small ${timeColorClass} mt-2">
-                                            <i class="fa-regular fa-clock"></i> ${item.time_left} left
+                                            <i class="fa-regular fa-clock"></i> ${item.time_left}
                                         </div>
                                     </div>
                                     ${currentBidHtml}
