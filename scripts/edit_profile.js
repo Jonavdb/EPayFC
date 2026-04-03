@@ -66,7 +66,7 @@ async function checkEmailExists() {
     if (email.val().trim() === '') return;
 
     try {
-        const data = await $.post(`user/email_exists_service`, { email: email.val().trim() }, 'json');
+        const data = await $.getJSON(`user/email_exists_service`, { email: email.val().trim() });
 
         if (data.exists === true) {
             // erreur : cadre rouge

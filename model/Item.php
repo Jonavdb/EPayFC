@@ -15,6 +15,8 @@ class Item extends Model {
     private string $main_image_url;
     private array $image_urls;
     private array $pictures;
+    private array $image_urls;
+    private array $pictures;
     private ?float $buy_now_price;
     private ?float $starting_bid;
     private DateTime $created_at;
@@ -1232,5 +1234,32 @@ class Item extends Model {
         }
 
         return $items;
+    }
+
+    public static function update_image_priority(int $item_id, array $order): void {
+
+        foreach ($order as $priority => $filename) { // on set toutes les priorités en négatifs pour éviter les chevauchements
+            self::execute(
+                "UPDATE item_pictures SET priority = :priority
+                WHERE item = :item_id AND picture_path LIKE :filename",
+                [
+                    "item_id" => $item_id,
+                    "priority" => - ($priority + 1),
+                    "filename" => "%" . $filename
+                ]
+            );
+        }
+
+        foreach ($order as $priority => $filename) { // on set les bonne priorités
+            self::execute(
+                "UPDATE item_pictures SET priority = :priority
+                WHERE item = :item_id AND picture_path LIKE :filename",
+                [
+                    "item_id" => $item_id,
+                    "priority" => $priority + 1,
+                    "filename" => "%" . $filename
+                ]
+            );
+        }
     }
 }
