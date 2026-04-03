@@ -69,6 +69,14 @@ class ControllerItem extends Controller {
             $time_color    = ($diff->days < 1) ? "text-warning" : "text-secondary";
         }
 
+        // Couleurs pour le time_left
+        $time_color = $is_closed ? 'text-secondary' : 'text-success';
+        $price_color = $item->get_has_buy_now() ? 'text-primary' : 'text-warning';
+
+        $raw_price = $item->get_has_buy_now() ? $item->get_buy_now_price() : $item->get_starting_bid();
+        $price_display = $raw_price ? number_format((float)$raw_price, 2, ',', '.') : "0,00";
+        $current_bid_display = number_format((float)$item->get_current_bid(), 2, ',', '.');
+
         // Image
         $img_src = !empty($item->get_main_image_url()) ? $item->get_main_image_url() : "uploads/items/item_placeholder.png";
 
@@ -107,15 +115,17 @@ class ControllerItem extends Controller {
             : null;
 
         return (object) [
-            'raw_item'             => $item,
-            'time_left'            => $time_left_str,
-            'time_color'           => $time_color,
+            'raw_item'            => $item,
+            'time_left'           => $time_left_str,
+            'time_color'          => $time_color,
             'img_src'              => $img_src,
             'extra_images'         => $extra_image_count,
-            'context'              => $context,
-            'card_context'         => $card_context,
+            'context'             => '',
+            'card_context'        => 'my-items',       // Indique à la carte qu'on est dans My Items
             'href'                 => $href,
             'owner'                => htmlspecialchars($owner_name),
+            'price_color'         => $price_color,
+            'price_display'       => $price_display,
             'is_highest_bidder'    => $is_highest_bidder,
             'price_display'        => $price_display,
             'price_color'          => $price_color,

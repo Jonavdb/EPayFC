@@ -24,54 +24,48 @@
     ?>
 
     <main class="flex-grow-1 content-box">
-        <!-- Barre de recherche -->
         <?php include 'view/view_search_bar.php'; ?>
 
-        <div class="fw-bold fs-2 mt-4" style="color: #2D68C4">Items I'm participating in</div>
-        <?php if (!empty($user_bid_items)): ?>
-            <?php if (!$is_guest): ?>
-                <div class="d-flex flex-column" style="padding-bottom: 40px;">
-                    <div class="p-3 d-flex flex-column justify-content-evenly h-100">
+        <div class="fw-bold fs-2 mt-4 mb-3" style="color: #2D68C4">Items I'm participating in</div>
 
-                        <div id="participating_grid" class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3">
-                            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3 ">
-                                <?php foreach ($user_bid_items as $element): ?>
-                                    <?php include 'view/view_my_item_card.php'; ?>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
+        <?php if (!$is_guest): ?>
+            <div class="d-flex flex-column" style="padding-bottom: 40px;">
+                <div class="px-3 d-flex flex-column justify-content-evenly h-100">
+                    <div id="participating_grid" class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3">
+                        <?php if (!empty($user_bid_items)): ?>
+                            <?php foreach ($user_bid_items as $element): ?>
+                                <?php include 'view/view_my_item_card.php'; ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p class="text-secondary mt-3 fs-3 col-12">No item found.</p>
+                        <?php endif; ?>
                     </div>
                 </div>
-            <?php endif; ?>
-
+            </div>
         <?php else: ?>
             <div class="d-flex justify-content-center align-items-center p-5">
                 <h1 class="text-secondary display-4 m-0">No Item Participation</h1>
             </div>
         <?php endif; ?>
 
-        <div class="fw-bold fs-2" style="color: #2D68C4;">
+        <div class="fw-bold fs-2 mb-3" style="color: #2D68C4;">
             <?= $is_guest ? "Available Items" : "Other Available Items" ?>
         </div>
 
-        <?php if (!empty($user_available_items)): ?>
-            <div class="d-flex flex-column">
-                <div class="p-3 d-flex flex-column justify-content-evenly h-100">
-
-                    <div id="available_grid" class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3">
-                        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3">
-                            <?php foreach ($user_available_items as $element): ?>
-                                <?php include 'view/view_my_item_card.php'; ?>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
+        <div class="d-flex flex-column">
+            <div class="px-3 d-flex flex-column justify-content-evenly h-100">
+                <div id="available_grid" class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3">
+                    <?php if (!empty($user_available_items)): ?>
+                        <?php foreach ($user_available_items as $element): ?>
+                            <?php include 'view/view_my_item_card.php'; ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="text-secondary mt-3 fs-3 col-12">No item found.</p>
+                    <?php endif; ?>
                 </div>
             </div>
-        <?php else: ?>
-            <div class="d-flex justify-content-center align-items-center p-5">
-                <h1 class="text-secondary display-4 m-0">No Available Items</h1>
-            </div>
-        <?php endif; ?>
+        </div>
+
     </main>
 
     <footer class="fixed-bottom">

@@ -42,9 +42,8 @@ async function checkSearchFullTextMyItems() {
     function displayMyItems(items) {
         if (items.length > 0) {
             items.forEach((item) => {
-                // affichage des petites icones, etc
+                // badges, icons, etc
                 let contextBadge = '';
-
                 if (item.context === 'sold') {
                     contextBadge = `<span class="badge rounded-pill bg-success"><i class="fa-solid fa-check"></i> Sold</span>`;
                 } else if (item.context === 'unsold') {
@@ -57,16 +56,14 @@ async function checkSearchFullTextMyItems() {
 
                 let buyNowBadge =
                     item.has_buy_now && !item.buy_now_reached
-                        ? `<span class="badge rounded-pill bg-primary"><i class="fa-solid fa-bag-shopping"></i> Buy now</span>`
+                        ? `<span class="badge rounded-pill bg-primary d-inline-flex align-items-center px-3 py-2"><i class="fa-solid fa-bag-shopping me-2"></i> Buy now</span>`
                         : '';
 
                 let extraImagesBadge = '';
                 let extraImagesCount = item.extra_images || 0;
-
                 if (extraImagesCount > 0) {
                     let totalImages = extraImagesCount + 1;
                     let s = totalImages > 1 ? 's' : '';
-
                     extraImagesBadge = `
                         <div class="d-flex justify-content-end">
                             <span class="badge rounded-pill text-bg-dark bg-opacity-75">
@@ -75,33 +72,37 @@ async function checkSearchFullTextMyItems() {
                         </div>`;
                 }
 
-                // formatage des prix pour toujours avoir les centimes (,00)
                 let safePrice = parseFloat(item.price || 0)
+                    .toFixed(2)
+                    .replace('.', ',');
+                let safeStartingBid = parseFloat(item.starting_bid || 0)
                     .toFixed(2)
                     .replace('.', ',');
                 let safeCurrentBid = parseFloat(item.current_bid || 0)
                     .toFixed(2)
                     .replace('.', ',');
 
-                let priceHtml = item.has_buy_now ? `<div class="fs-3 fw-bold text-primary">€ ${safePrice}</div>` : `<div class="fs-3 fw-bold">&nbsp;</div>`;
+                let priceHtml = item.has_buy_now
+                    ? `<div class="fs-4 fw-bold text-primary">€ ${safePrice}</div>`
+                    : `<div class="fs-4 fw-bold text-warning">€ ${safeStartingBid}</div>`;
 
                 let timeColorClass = item.time_left === 'Closed' ? 'text-secondary' : 'text-success';
 
+                // On passe le current bid en fs-4 et on met "Current bid" en gras
                 let currentBidHtml =
                     item.is_auction && item.context !== 'unsold'
                         ? `
                     <div class="text-end">
-                        <div class="text-secondary small mb-0">Current bid</div>
-                        <div class="fs-3 fw-bold text-success">€ ${safeCurrentBid}</div>
+                        <div class="text-secondary small fw-bold mb-0">Current bid</div>
+                        <div class="fs-4 fw-bold text-success">€ ${safeCurrentBid}</div>
                     </div>`
                         : '';
 
                 let imgSrc = item.main_image_url ? item.main_image_url : 'css/images/default_item_image.png';
 
-                // la carte complète
                 let cardHtml = `
                     <div class="col">
-                        <a href="item/open/${item.id}/from-items" class="card h-100 text-decoration-none shadow-sm card-hover">
+                        <a href="item/open/${item.id}/from-items" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary">
                             <div class="position-relative">
                                 <img src="${imgSrc}" class="card-img-top" alt="${item.title}" style="height: 200px; object-fit: cover;">
 
@@ -126,11 +127,11 @@ async function checkSearchFullTextMyItems() {
                                     <small class="text-secondary">by ${item.owner_name}</small>
                                 </div>
 
-                                <div class="d-flex justify-content-between align-items-start mt-auto mb-2 pt-2">
+                                <div class="d-flex justify-content-between align-items-end mt-auto mb-2 pt-2">
                                     <div class="d-flex flex-column">
                                         ${priceHtml}
 
-                                        <div class="small ${timeColorClass} mt-2">
+                                        <div class="small fw-bold ${timeColorClass} mt-1">
                                             <i class="fa-regular fa-clock"></i> ${item.time_left}
                                         </div>
                                     </div>
@@ -140,7 +141,6 @@ async function checkSearchFullTextMyItems() {
                         </a>
                     </div>`;
 
-                // injecter dans la bonne grille
                 if (item.context === 'sold') {
                     soldItemsGrid.append(cardHtml);
                 } else if (item.context === 'unsold') {
@@ -151,15 +151,15 @@ async function checkSearchFullTextMyItems() {
             });
         }
 
-        // on vérifie si une des grilles est vide, on affiche "no item found" dans ce cas
+        // --- 7. MESSAGE PAR DÉFAUT SI VIDE ---
         if (activeItemsGrid.children().length === 0) {
-            activeItemsGrid.html('<p class="text-secondary mt-3 fs-3">No item found.</p>');
+            activeItemsGrid.html('<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>');
         }
         if (closedUnsoldItemsGrid.children().length === 0) {
-            closedUnsoldItemsGrid.html('<p class="text-secondary mt-3 fs-3">No item found.</p>');
+            closedUnsoldItemsGrid.html('<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>');
         }
         if (soldItemsGrid.children().length === 0) {
-            soldItemsGrid.html('<p class="text-secondary mt-3 fs-3">No item found.</p>');
+            soldItemsGrid.html('<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>');
         }
     }
 }
