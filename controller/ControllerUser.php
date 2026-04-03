@@ -3,8 +3,10 @@ require_once 'framework/Controller.php';
 require_once 'model/User.php';
 require_once 'utils/ImageTool.php';
 
-class ControllerUser extends Controller {
-    public function index(): void {
+class ControllerUser extends Controller
+{
+    public function index(): void
+    {
         if ($this->user_logged()) {
             $this->redirect("item", "browse");
         } else {
@@ -13,21 +15,31 @@ class ControllerUser extends Controller {
     }
 
     // Connexion en tant qu'invité
-    public function guest_login(): void {
+    public function guest_login(): void
+    {
         session_destroy(); // kill la session active
 
         $_SESSION['guest'] = true;
         $this->redirect("item", "browse");
     }
 
-    public function profile(): void {
-        $user = $this->get_user_or_redirect();
-        $user = User::get_user_by_email($user->get_email());
-        (new View("profile"))->show(["user" => $user, "is_guest" => !$this->user_logged()]);
+    public function profile(): void
+    {
+        $loggedUser = $this->get_user_or_redirect();
+        $user = User::get_user_by_email($loggedUser->get_email());
+
+        // Sécurité : si pour une raison X le user n'est pas trouvé en DB
+        if (!$user) {
+            $this->redirect("main", "index"); // Ou une autre page d'erreur
+            return;
+        }
+
+        (new View("profile"))->show(["user" => $user]);
     }
 
     //gestion de l'inscription d'un utilisateur
-    public function signup(): void {
+    public function signup(): void
+    {
         $email = '';
         $full_name = '';
         $pseudo = '';
@@ -69,7 +81,8 @@ class ControllerUser extends Controller {
     }
 
     // Gestion de la connexion d'un utilisateur
-    public function login(): void {
+    public function login(): void
+    {
         $email = '';
         $password = '';
         $errors = [];
@@ -104,7 +117,8 @@ class ControllerUser extends Controller {
     }
 
     // Gestion du changement de mot de passe
-    public function change_password(): void {
+    public function change_password(): void
+    {
         $session_user = $this->get_user_or_false();
 
         if (!$session_user) {
@@ -145,7 +159,8 @@ class ControllerUser extends Controller {
     }
 
     // Gère l'édition du profil
-    public function edit_profile(): void {
+    public function edit_profile(): void
+    {
         $user = $this->get_user_or_redirect();
         $errors = [];
 
@@ -170,14 +185,16 @@ class ControllerUser extends Controller {
         ]);
     }
 
-    public function manage_profile_picture() {
+    public function manage_profile_picture()
+    {
 
         $user = $this->get_user_or_redirect();
 
         (new View("profile_picture"))->show(["user" => $user, "is_guest" => !$this->user_logged()]);
     }
 
-    public function update_profile_picture() {
+    public function update_profile_picture()
+    {
         $user = $this->get_user_or_redirect();
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
@@ -235,7 +252,8 @@ class ControllerUser extends Controller {
         }
     }
 
-    public function delete_profile_picture() {
+    public function delete_profile_picture()
+    {
         $user = $this->get_user_or_redirect();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty($user->get_picture_path()) && file_exists($user->get_picture_path())) {
@@ -252,7 +270,8 @@ class ControllerUser extends Controller {
     }
 
     // Services AJAX
-    public function full_name_exists_service(): void {
+    public function full_name_exists_service(): void
+    {
         $exists = false;
 
         if (isset($_GET["full_name"]) && $_GET["full_name"] !== "") {
@@ -260,7 +279,7 @@ class ControllerUser extends Controller {
             $full_name_in_db = User::get_user_by_full_name($full_name);
             $current_user = $this->get_user_or_false();
 
-            if ($full_name_in_db && $full_name_in_db->get_full_name() !== $current_user->get_full_name()) {
+            if ($full_name_in_db && $current_user && $full_name_in_db->get_id() !== $current_user->get_id()) {
                 $exists = true;
             }
         }
@@ -269,7 +288,8 @@ class ControllerUser extends Controller {
         echo json_encode(["exists" => $exists]);
     }
 
-    public function pseudo_exists_service(): void {
+    public function pseudo_exists_service(): void
+    {
         $exists = false;
 
         if (isset($_GET["pseudo"]) && trim($_GET["pseudo"]) !== "") {
@@ -277,7 +297,7 @@ class ControllerUser extends Controller {
             $pseudo_in_db = User::get_user_by_pseudo($pseudo);
             $current_user = $this->get_user_or_false();
 
-            if ($pseudo_in_db && $pseudo_in_db->get_pseudo() !== $current_user->get_pseudo()) {
+            if ($pseudo_in_db && $current_user && $pseudo_in_db->get_id() !== $current_user->get_id()) {
                 $exists = true;
             }
         }
@@ -285,15 +305,16 @@ class ControllerUser extends Controller {
         echo json_encode(["exists" => $exists]);
     }
 
-    public function email_exists_service(): void {
+    public function email_exists_service(): void
+    {
         $exists = false;
 
-        if (isset($_POST["email"]) && trim($_POST["email"]) !== "") {
-            $email = trim($_POST["email"]);
-            $user_in_db = User::get_user_by_email($email);
+        if (isset($_GET["email"]) && trim($_GET["email"]) !== "") {
+            $email = trim($_GET["email"]);
+            $email_in_db = User::get_user_by_email($email);
             $current_user = $this->get_user_or_false();
 
-            if ($user_in_db && $user_in_db->get_id() !== $current_user->get_id()) {
+            if ($email_in_db && $current_user && $email_in_db->get_id() !== $current_user->get_id()) {
                 $exists = true;
             }
         }
