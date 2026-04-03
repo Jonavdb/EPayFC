@@ -55,7 +55,8 @@ class ControllerItem extends Controller
             "user" => $user,
             "active_items" => $active_items,
             "sold_items" => $sold_items,
-            "unsold_items" => $unsold_items
+            "unsold_items" => $unsold_items,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -123,7 +124,8 @@ class ControllerItem extends Controller
         } else {
             (new View("delete_item"))->show([
                 "item" => $item,
-                "user" => $user
+                "user" => $user,
+                "is_guest" => !$this->user_logged()
             ]);
         }
     }
@@ -158,7 +160,8 @@ class ControllerItem extends Controller
             "item" => $item,
             "bids" => $bids,
             "current_user" => $current_user_pseudo,
-            'selected_image' => $image_index
+            'selected_image' => $image_index,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -257,7 +260,8 @@ class ControllerItem extends Controller
 
         (new View("add_edit_item"))->show([
             "item" => $item,
-            "errors" => $errors
+            "errors" => $errors,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -359,7 +363,8 @@ class ControllerItem extends Controller
 
         (new View("add_edit_item"))->show([
             "item" => $item,
-            "errors" => $errors
+            "errors" => $errors,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -391,7 +396,8 @@ class ControllerItem extends Controller
         }
 
         (new View("manage_images"))->show([
-            "item" => $item
+            "item" => $item,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -507,7 +513,8 @@ class ControllerItem extends Controller
         if (count($errors) > 0) {
             (new View("manage_images"))->show([
                 "item" => $item,
-                "errors" => $errors
+                "errors" => $errors,
+                "is_guest" => !$this->user_logged()
             ]);
         } else {
             $this->redirect("item", "manage_images", $item_id);
@@ -544,7 +551,8 @@ class ControllerItem extends Controller
 
         $purchases = Item::get_purchases($user->get_id());
         (new View("see_my_purchases"))->show([
-            "purchases" => $purchases
+            "purchases" => $purchases,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -556,7 +564,8 @@ class ControllerItem extends Controller
         $sales = Item::get_sales($user->get_id());
         (new View("see_my_sales"))->show(
             [
-                "sales" => $sales
+                "sales" => $sales,
+                "is_guest" => !$this->user_logged()
             ]
         );
     }
@@ -568,6 +577,23 @@ class ControllerItem extends Controller
         $urls = array_map(fn($pic) => $pic->get_picture_path(), $pictures); // map les informations en spécifiant que pour chaque image de la variables pictures, on récupère uniquement son chemin
         header('Content-Type: application/json'); // précise au navigateur qu'il va recevoir du Json
         echo json_encode($urls); // encode les infos du array en Json et l'affiche au navigateur
+        exit;
+    }
+
+    public function update_image_order(): void
+    {
+        $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0; // on récupère l'ID de l'objet
+        $order = isset($_POST['order']) ? (array)$_POST['order'] : []; // on récupère l'ordre des objets
+
+        $user = $this->get_user_or_redirect(); // on récupère le user connecté
+        $item = Item::get_item_by_id($item_id); // on récupère l'objet lié à l'ID
+
+        if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
+            http_response_code(403); // si pas d'objet ou si on appelle la méthode en étant pas le owner, 403 accès forbidden
+            exit; // on stop
+        }
+        Item::update_image_priority($item_id, $order); // on update les priorités
+        http_response_code(200); // on renvoie un code 200 pour dire que c'est OK 
         exit;
     }
 }
