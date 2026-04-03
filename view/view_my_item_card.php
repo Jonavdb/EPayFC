@@ -24,7 +24,9 @@
 
                 <?php if ($element->extra_images > 0): ?>
                     <div class="d-flex justify-content-end">
-                        <span class="badge rounded-pill text-bg-dark bg-opacity-75"><i class="fa-solid fa-images"></i> <?= $element->extra_images + 1 ?> image<?= $element->extra_images > 1 ? 's' : '' ?></span>
+                        <span class="badge rounded-pill text-bg-dark bg-opacity-75">
+                            <i class="fa-solid fa-images"></i> <?= ($element->extra_images + 1) ?> image<?= ($element->extra_images + 1) > 1 ? 's' : '' ?>
+                        </span>
                     </div>
                 <?php endif; ?>
             </div>
