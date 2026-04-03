@@ -568,6 +568,7 @@ class ControllerItem extends Controller {
                     'owner_name'      => $item->get_owner_name(),
                     'main_image_url'  => $item->get_main_image_url(),
                     'price'           => $item->get_buy_now_price(),
+                    'starting_bid'    => $item->get_starting_bid(),
                     'current_bid'     => $item->get_current_bid(),
                     'is_auction'      => $item->get_is_auction(),
                     'has_buy_now'     => $item->get_has_buy_now(),
@@ -576,6 +577,8 @@ class ControllerItem extends Controller {
                     'time_left'       => $item->get_time_left(),
                     'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
                     'created_at'      => $item->get_created_at()->format('Y-m-d H:i:s'),
+                    'extra_images'    => count($item->get_image_urls()) - 1,
+                    'is_highest_bidder' => ($item->get_user_bid_amount() == $item->get_current_bid() && $item->get_current_bid() > 0),
                 ];
             }
 
@@ -588,6 +591,7 @@ class ControllerItem extends Controller {
                     'owner_name'      => $item->get_owner_name(),
                     'main_image_url'  => $item->get_main_image_url(),
                     'price'           => $item->get_buy_now_price(),
+                    'starting_bid'    => $item->get_starting_bid(),
                     'current_bid'     => $item->get_current_bid(),
                     'is_auction'      => $item->get_is_auction(),
                     'has_buy_now'     => $item->get_has_buy_now(),
@@ -596,6 +600,8 @@ class ControllerItem extends Controller {
                     'time_left'       => $item->get_time_left(),
                     'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
                     'created_at'      => $item->get_created_at()->format('Y-m-d H:i:s'),
+                    'extra_images'    => count($item->get_image_urls()) - 1,
+                    'is_highest_bidder' => false,
                 ];
             }
 

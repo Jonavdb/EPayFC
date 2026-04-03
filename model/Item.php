@@ -448,7 +448,6 @@ class Item extends Model {
                 $user_bid = 0;
             }
 
-            $is_auction = true;
             $has_buy_now = $item_data['has_buy_now'] == 1 ? true : false;
             $buy_now_reached = $item_data['buy_now_reached'];
 
@@ -477,12 +476,14 @@ class Item extends Model {
             $price = $item_data['buy_now_price'] ?? 0;
             $current_bid = $item_data['max_bid'];
 
+            $is_auction = $item_data['is_auction'];
+
             $today = new DateTime(AppTime::get_current_datetime());
             $end_at = new DateTime($item_data['end_at']);
             $time_left_datetime = $end_at->diff($today);
             $time_left = $time_left_datetime->days . "d " . $time_left_datetime->h . "h";
 
-            $user_bid_items[] = new Item($user_bid, null, $item_data['id'], $title, '', $owner_name, '', $main_image_url, $image_urls, $price, $item_data['starting_bid'], new DateTime(AppTime::get_current_datetime()), $end_at, 0, $current_bid, 0, true, false, false, $has_buy_now, $buy_now_reached, $time_left, '');
+            $user_bid_items[] = new Item($user_bid, null, $item_data['id'], $title, '', $owner_name, '', $main_image_url, $image_urls, $price, $item_data['starting_bid'], new DateTime(AppTime::get_current_datetime()), $end_at, 0, $current_bid, 0, true, $is_auction, false, $has_buy_now, $buy_now_reached, $time_left, '');
         }
 
         return $user_bid_items;
@@ -572,6 +573,8 @@ class Item extends Model {
             $owner_name = $data_owner_name['owner_name'] ?? '';
 
             $price = $item_data['buy_now_price'] ?? 0;
+
+            $is_auction = $item_data['is_auction'];
 
             if ($is_auction) {
                 $current_bid = $item_data['has_bids'] ? $item_data['max_bid'] : $item_data['starting_bid'];
