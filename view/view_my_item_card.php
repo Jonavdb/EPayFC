@@ -1,5 +1,5 @@
 <div class="col">
-    <a href="<?= $element->href ?>" class="card h-100 text-decoration-none shadow-sm card-hover <?= ($element->card_context !== 'my-items') ? 'dark-theme' : '' ?>">
+    <a href="<?= $element->href ?>" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary bg-dark">
         <div class="position-relative">
             <img src="<?= $element->img_src ?>" class="card-img-top" alt="<?= htmlspecialchars($element->raw_item->get_title()) ?>" style="height: 200px; object-fit: cover;">
 
@@ -38,7 +38,9 @@
 
                 <?php if ($element->extra_images > 0): ?>
                     <div class="d-flex justify-content-end">
-                        <span class="badge rounded-pill text-bg-dark bg-opacity-75"><i class="fa-solid fa-images"></i> <?= $element->extra_images + 1 ?> image<?= $element->extra_images > 1 ? 's' : '' ?></span>
+                        <span class="badge rounded-pill text-bg-dark bg-opacity-75">
+                            <i class="fa-solid fa-images"></i> <?= ($element->extra_images + 1) ?> image<?= ($element->extra_images + 1) > 1 ? 's' : '' ?>
+                        </span>
                     </div>
                 <?php endif; ?>
             </div>
@@ -52,25 +54,25 @@
                 <small class="text-secondary">by <?= $element->owner ?></small>
             </div>
 
-            <div class="d-flex justify-content-between align-items-start mt-auto mb-2 pt-2">
+            <div class="d-flex justify-content-between align-items-end mt-auto mb-2 pt-2">
                 <div class="d-flex flex-column">
                     <?php if ($element->price_display !== null): ?>
-                        <div class="fs-3 fw-bold <?= $element->price_color ?>">
+                        <div class="fs-4 fw-bold <?= $element->price_color ?>">
                             € <?= $element->price_display ?>
                         </div>
                     <?php else: ?>
-                        <div class="fs-3 fw-bold">&nbsp;</div>
+                        <div class="fs-4 fw-bold">&nbsp;</div>
                     <?php endif; ?>
 
-                    <div class="small <?= $element->time_color ?> mt-2">
+                    <div class="small fw-bold <?= $element->time_color ?> mt-1">
                         <i class="fa-regular fa-clock"></i> <?= $element->time_left ?>
                     </div>
                 </div>
 
                 <?php if ($element->show_current_bid && $element->context !== 'unsold'): ?>
                     <div class="text-end">
-                        <div class="text-secondary small mb-0">Current bid</div>
-                        <div class="fs-3 fw-bold text-success">
+                        <div class="text-secondary small fw-bold mb-0">Current bid</div>
+                        <div class="fs-4 fw-bold text-success">
                             € <?= $element->current_bid_display ?>
                         </div>
                     </div>

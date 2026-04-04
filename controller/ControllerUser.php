@@ -274,7 +274,7 @@ class ControllerUser extends Controller
     {
         $exists = false;
 
-        if (isset($_GET["full_name"]) && $_GET["full_name"] !== "") {
+        if (isset($_GET["full_name"]) && trim($_GET["full_name"]) !== "") {
             $full_name = trim($_GET["full_name"]);
             $full_name_in_db = User::get_user_by_full_name($full_name);
             $current_user = $this->get_user_or_false();
