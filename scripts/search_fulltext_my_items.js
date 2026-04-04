@@ -88,7 +88,6 @@ async function checkSearchFullTextMyItems() {
 
                 let timeColorClass = item.time_left === 'Closed' ? 'text-secondary' : 'text-success';
 
-                // On passe le current bid en fs-4 et on met "Current bid" en gras
                 let currentBidHtml =
                     item.is_auction && item.context !== 'unsold'
                         ? `

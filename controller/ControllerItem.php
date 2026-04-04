@@ -646,9 +646,12 @@ class ControllerItem extends Controller {
             $available_items = Item::get_user_available_items($user_id, $search);
 
             $results = [];
+            $now = new DateTime(AppTime::get_current_datetime());
 
             // les items sur lesquels on a participé
             foreach ($bid_items as $item) {
+                $display_data = $this->prepare_item_data($item, $now);
+
                 $results[] = [
                     'id'              => $item->get_id(),
                     'title'           => $item->get_title(),
@@ -661,17 +664,19 @@ class ControllerItem extends Controller {
                     'is_auction'      => $item->get_is_auction(),
                     'has_buy_now'     => $item->get_has_buy_now(),
                     'has_bids'        => true,
+                    'is_highest_bidder' => ($item->get_user_bid_amount() == $item->get_current_bid() && $item->get_current_bid() > 0),
                     'buy_now_reached' => $item->get_buy_now_reached(),
-                    'time_left'       => $item->get_time_left(),
+                    'time_left'       => $display_data->time_left,
                     'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
                     'created_at'      => $item->get_created_at()->format('Y-m-d H:i:s'),
-                    'extra_images'    => count($item->get_image_urls()) - 1,
-                    'is_highest_bidder' => ($item->get_user_bid_amount() == $item->get_current_bid() && $item->get_current_bid() > 0),
+                    'extra_images'    => $display_data->extra_images,
                 ];
             }
 
             // les autres items
             foreach ($available_items as $item) {
+                $display_data = $this->prepare_item_data($item, $now);
+
                 $results[] = [
                     'id'              => $item->get_id(),
                     'title'           => $item->get_title(),
@@ -684,12 +689,13 @@ class ControllerItem extends Controller {
                     'is_auction'      => $item->get_is_auction(),
                     'has_buy_now'     => $item->get_has_buy_now(),
                     'has_bids'        => false,
+                    'is_highest_bidder' => false,
                     'buy_now_reached' => $item->get_buy_now_reached(),
-                    'time_left'       => $item->get_time_left(),
+                    'time_left'       => $display_data->time_left,
                     'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
                     'created_at'      => $item->get_created_at()->format('Y-m-d H:i:s'),
-                    'extra_images'    => count($item->get_image_urls()) - 1,
-                    'is_highest_bidder' => false,
+                    'extra_images'    => $display_data->extra_images,
+                    // 'context'         => $context
                 ];
             }
 

@@ -1,5 +1,5 @@
 <div class="col">
-    <a href="<?= $element->href ?>" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary <?= ($element->card_context !== 'my-items') ? 'bg-dark' : '' ?>">
+    <a href="<?= $element->href ?>" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary bg-dark">
         <div class="position-relative">
             <img src="<?= $element->img_src ?>" class="card-img-top" alt="<?= htmlspecialchars($element->raw_item->get_title()) ?>" style="height: 200px; object-fit: cover;">
 
