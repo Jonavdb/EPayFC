@@ -279,27 +279,29 @@ class ControllerItem extends Controller
         $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
         $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
 
-        if (strlen($item->get_title()) === 0 || empty($item->get_title())) {
+        // ask if we keep
+        /* if (strlen($item->get_title()) === 0 || empty($item->get_title())) {
             $errors['empty'] = "Title is required";
-        }
+        }*/
 
-        if (strlen($item->get_title()) < $min_lenght || strlen($item->get_title()) > $max_lenght) {
+        /* if (strlen($item->get_title()) < $min_lenght || strlen($item->get_title()) > $max_lenght) {
             $errors['title'] = "Title lenght must be between $min_lenght and $max_lenght characters.";
-        }
+        }*/
 
-        if ($item->get_duration_days() < $min_duration || $item->get_duration_days() > $max_duration) {
+        /* if ($item->get_duration_days() < $min_duration || $item->get_duration_days() > $max_duration) {
             $errors['duration'] = "Duration must be at least $min_duration day and at most $max_duration days";
-        }
+        } */
 
+        // ask if we keep
         if ($starting_bid !== null && $starting_bid > 0) {
             $item->set_starting_bid($starting_bid);
             $item->set_is_auction(true);
             $item->set_is_direct_sale(false);
 
             if ($buy_now_price !== null && $buy_now_price > 0) {
-                if ($buy_now_price < $starting_bid) {
+                /*if ($buy_now_price < $starting_bid) {
                     $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
-                }
+                }*/
                 $item->set_buy_now_price($buy_now_price);
                 $item->set_has_buy_now(true);
             } else {
@@ -308,7 +310,7 @@ class ControllerItem extends Controller
             }
 
             if ($sale_price !== null && $sale_price > 0) {
-                $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
+                //$errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
             }
         } elseif ($sale_price !== null && $sale_price > 0) {
             $item->set_buy_now_price($sale_price);
@@ -317,7 +319,7 @@ class ControllerItem extends Controller
             $item->set_has_buy_now(false);
             $item->set_starting_bid(0.0);
         } else {
-            $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
+            // $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
         }
         return $errors;
     }
@@ -612,5 +614,39 @@ class ControllerItem extends Controller
 
         header('Content-Type: application/json');
         echo json_encode(["is_valid" => $is_valid]);
+    }
+
+    public function starting_bid_valid_service(): void
+    {
+        // we retrieve values and normalize
+        $starting_bid = $_GET['starting_bid'] !== "" ? (float)$_GET['starting_bid'] : null;
+        $instant = $_GET['instant'] !== "" ? (float)$_GET['instant'] : null;
+        $direct = $_GET['direct'] !== "" ? (float)$_GET['direct'] : null;
+
+        // we check if they exist
+        $starting_bid_exists = !is_null($starting_bid);
+        $instant_exists = !is_null($instant);
+        $direct_exists = !is_null($direct);
+
+        // error when the field is empty on leaving it
+        $default = (!$starting_bid_exists && !$direct_exists);
+
+        // error when user tries to fill both field 
+        $both_exist =  ($starting_bid_exists && $direct_exists);
+
+        // error if bid is too low
+        $minimum_required = $starting_bid_exists && !$direct_exists && $starting_bid <= 0;
+
+        // error if instant is cheaper than starting bid
+        $instant_price_lower = $starting_bid_exists && !$direct_exists && $instant_exists && $instant <= $starting_bid;
+
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            "default" => $default,
+            "both_exist" => $both_exist,
+            "minimum_required" => $minimum_required,
+            "instant_price_lower" => $instant_price_lower
+        ]);
     }
 }

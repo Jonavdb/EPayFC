@@ -104,27 +104,32 @@ require_once "utils/GoBack.php";
                                 <label for="starting_bid" class="form-label fw-bold text-white">Starting Bid</label>
                                 <div class="input-group">
                                     <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo (isset($errors['starting_bid']) || isset($errors['sale']) || isset($errors['sale_price'])) ? 'is-invalid' : '' ?>"
+                                        class="form-control bg-black bg-opacity-25 text-white is-invalid"
                                         id="starting_bid"
                                         name="starting_bid"
                                         value="<?php echo ($item->get_starting_bid() > 0) ? $item->get_starting_bid() : '' ?>">
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
 
-                                    <?php if (isset($errors['starting_bid'])) { ?>
+                                    <?php /* if (isset($errors['starting_bid'])) { ?>
                                         <div class="invalid-feedback">
                                             <?php echo $errors['starting_bid'] ?>
                                         </div>
-                                    <?php } ?>
-                                    <?php if (isset($errors['sale'])) { ?>
+                                    <?php }*/ ?>
+                                    <?php /* if (isset($errors['sale'])) { ?>
                                         <div class="invalid-feedback">
                                             <?php echo $errors['sale'] ?>
                                         </div>
-                                    <?php } ?>
-                                    <?php if (isset($errors['sale_price'])) { ?>
+                                    <?php } */ ?>
+                                    <?php /* if (isset($errors['sale_price'])) { ?>
                                         <div class="invalid-feedback">
                                             <?php echo $errors['sale_price'] ?>
                                         </div>
-                                    <?php } ?>
+                                    <?php } */ ?>
+                                </div>
+                                <div id="errStartingBid" class="text-danger small mt-1">
+                                    <ul>
+                                        <li>You must either fill a starting bid or direct sale.</li>
+                                    </ul>
                                 </div>
                             </div>
 
@@ -132,14 +137,15 @@ require_once "utils/GoBack.php";
                                 <label for="instant" class="form-label fw-bold text-white">Instant Purchase Price (optional)</label>
                                 <div class="input-group">
                                     <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['buy_now_price']) ? 'is-invalid' : '' ?>"
+                                        class="form-control bg-black bg-opacity-25 text-white border-secondary"
                                         id="instant"
                                         name="instant"
                                         value="<?php echo ($item->get_has_buy_now() && $item->get_is_auction() && $item->get_buy_now_price() > 0) ? $item->get_buy_now_price() : '' ?>">
+                                    <div id="errInstant"></div>
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
-                                    <?php if (isset($errors['buy_now_price'])): ?>
+                                    <?php /*if (isset($errors['buy_now_price'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['buy_now_price'] ?></div>
-                                    <?php endif; ?>
+                                    <?php endif; */ ?>
                                 </div>
                             </div>
                         </div>
@@ -159,6 +165,7 @@ require_once "utils/GoBack.php";
                                         id="direct"
                                         name="direct"
                                         value="<?php echo isset($_POST['direct']) ? $_POST['direct'] : (($item->get_is_direct_sale() && $item->get_buy_now_price() > 0) ? $item->get_buy_now_price() : '') ?>">
+                                    <div id="errDirect"></div>
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                     <?php if (isset($errors['sale_price'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['sale_price'] ?></div>

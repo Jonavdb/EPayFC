@@ -1,4 +1,10 @@
-let itemTitle, description, duration, submitBtn;
+let itemTitle,
+  description,
+  duration,
+  startingBid,
+  instantOptional,
+  direct,
+  submitBtn;
 
 $(function () {
   submitBtn = $("#submitBtn");
@@ -12,9 +18,22 @@ $(function () {
   duration = $("#duration");
   errDuration = $("#errDuration");
 
+  startingBid = $("#starting_bid");
+  errStartingBid = $("#errStartingBid");
+
+  instantOptional = $("#instant");
+  errInstant = $("#errInstant");
+
+  direct = $("#direct");
+  errDirect = $("#errDirect");
+
   itemTitle.bind("blur", checkTitleValid);
   description.bind("blur", checkDescriptionValid);
   duration.bind("blur", checkDurationValid);
+
+  startingBid.bind("blur", checkStartingBidValid);
+  instantOptional.bind("blur", checkStartingBidValid);
+  direct.bind("blur", checkStartingBidValid);
 });
 
 async function checkTitleValid() {
@@ -89,7 +108,7 @@ async function checkDescriptionValid() {
 
     checkFormValidity();
   } catch (error) {
-    conseole.error("Erreur AJAX:", error);
+    console.error("Erreur AJAX:", error);
   }
 }
 
@@ -120,6 +139,60 @@ async function checkDurationValid() {
         .html("<ul><li>Duration must be at least 1 day.</li></ul>")
         .addClass("text-danger small mt-1");
       duration.removeClass("is-valid").addClass("is-invalid");
+    }
+
+    checkFormValidity();
+  } catch (error) {
+    console.error("Erreur AJAX:", error);
+  }
+}
+
+async function checkStartingBidValid() {
+  try {
+    const data = await $.getJSON("item/starting_bid_valid_service", {
+      starting_bid: startingBid.val(),
+      instant: instantOptional.val(),
+      direct: direct.val(),
+    });
+
+    // we clear the state
+    startingBid.removeClass("is-invalid is-valid border-secondary");
+    errStartingBid.html("").removeClass("text-danger");
+
+    if (data.default) {
+      // erreur cadre rouge
+      errStartingBid
+        .html(
+          "<ul><li>You must either fill a starting bid or direct sale.</li></ul>",
+        )
+        .addClass("text-danger");
+      startingBid.addClass("is-invalid");
+    } else if (data.both_exist) {
+      // erreur cadre rouge
+      errStartingBid
+        .html(
+          "<ul><li>You can't put a direct sale price and a starting bid.</li></ul>",
+        )
+        .addClass("text-danger");
+      startingBid.addClass("is-invalid");
+    } else if (data.minimum_required === true) {
+      // erreur cadre rouge
+      errStartingBid
+        .html("<ul><li>Starting bid minimum 1.</li></ul>")
+        .addClass("text-danger");
+      startingBid.addClass("is-invalid");
+    } else if (data.instant_price_lower === true) {
+      // erreur cadre rouge
+      errStartingBid
+        .html(
+          "<ul><li>Instant purchase price must be higher than starting bid price.</li></ul>",
+        )
+        .addClass("text-danger");
+      startingBid.addClass("is-invalid");
+    } else {
+      // si pas d'erreur, alors valide
+      // success : cadre vert
+      startingBid.addClass("is-valid");
     }
 
     checkFormValidity();
