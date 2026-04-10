@@ -90,9 +90,9 @@ require_once "utils/GoBack.php";
                         foreach ($item->get_image_urls() as $index => $image_url):
                         ?>
 
-                            <div class="card border-secondary bg-dark" style="width: 220px; " data-image-url="<?= basename($image_url) ?>"> <!-- ajout de basename afin de sécuriser le tout et ne garder que le nom du fichier -->
+                            <div class="card border-secondary bg-dark" style="width: 220px; " data-image-url="<?= basename($image_url) ?>" data-image-index="<?= $index ?>"> <!-- ajout de basename afin de sécuriser le tout et ne garder que le nom du fichier -->
 
-                                <div class="bg-white rounded-top" style="height: 150px;">
+                                <div class=" bg-white rounded-top" style="height: 150px;">
                                     <img src="<?= $image_url ?>"
                                         class="w-100 h-100"
                                         style="object-fit: contain;"
@@ -104,7 +104,7 @@ require_once "utils/GoBack.php";
                                         <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary" <?= $index === 0 ? 'disabled' : '' ?>>
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary btn-left" <?= $index === 0 ? 'disabled' : '' ?>>
                                             <i class="fa-solid fa-arrow-left"></i>
                                         </button>
                                     </form>
@@ -113,7 +113,7 @@ require_once "utils/GoBack.php";
                                         <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary" <?= $index === ($total_images - 1) ? 'disabled' : '' ?>>
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary btn-right" <?= $index === ($total_images - 1) ? 'disabled' : '' ?>>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </button>
                                     </form>
@@ -150,8 +150,50 @@ require_once "utils/GoBack.php";
                         item_id: <?= $item->get_id() ?>,
                         order: ordre
                     });
+                    update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après le déplacement
                 }
             })
+            $('.btn-left').on('click', function(e) { // on gère aussi les boutons de déplacement à gauche et à droite pour les utilisateurs qui ne voudraient pas faire du drag and drop
+                e.preventDefault();
+                const card = $(this).closest('.card');
+                const previousCard = card.prev('.card');
+                if (previousCard.length) {
+                    const imageIndex = card.data('image-index');
+
+                    $.post('item/move_image_left', {
+                        item_id: <?= $item->get_id() ?>,
+                        image_index: imageIndex
+                    }, function() {
+                        previousCard.before(card); // on déplace la carte
+                        update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après le déplacement
+                    });
+                }
+            });
+
+            $('.btn-right').on('click', function(e) { // on gère aussi les boutons de déplacement à gauche et à droite pour les utilisateurs qui ne voudraient pas faire du drag and drop
+                e.preventDefault();
+                const card = $(this).closest('.card');
+                const nextcard = card.next('.card');
+                if (nextcard.length) {
+                    const imageIndex = card.data('image-index');
+
+                    $.post('item/move_image_right', {
+                        item_id: <?= $item->get_id() ?>,
+                        image_index: imageIndex
+                    }, function() {
+                        nextcard.after(card); // on déplace la carte
+                        update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après le déplacement
+                    });
+                }
+            });
+
+            function update_buttons() {
+                const cards = $('#sortable-images .card');
+                cards.find('.btn-left, .btn-right').prop('disabled', false);
+                cards.first().find('.btn-left').prop('disabled', true);
+                cards.last().find('.btn-right').prop('disabled', true);
+            }
+
         })
     </script>
 </body>
