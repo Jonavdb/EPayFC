@@ -18,6 +18,7 @@ require_once "utils/GoBack.php";
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
     <script src="jquery.ui.touch-punch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <title>Manage Images</title>
 </head>
 
@@ -71,7 +72,6 @@ require_once "utils/GoBack.php";
         </div>
 
     </div>
-
     <div class="container-fluid mb-4 px-5">
         <div class="card text-bg-dark border-secondary">
             <div class="card-header border-secondary" style="background-color: #1e293b;">
@@ -81,7 +81,7 @@ require_once "utils/GoBack.php";
                 <?php if (empty($item->get_image_urls())) { ?>
                     <p class="text-secondary m-0">No images uploaded yet.</p>
                 <?php } else { ?>
-                    <div class="d-flex flex-wrap gap-3" id="sortable-images">
+                    <div class="d-flex flex-wrap gap-5" id="sortable-images">
 
                         <?php
                         // On compte les images pour savoir quand arrêter le bouton "droite"
@@ -118,10 +118,10 @@ require_once "utils/GoBack.php";
                                         </button>
                                     </form>
 
-                                    <form action="item/delete_images" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
+                                    <form action="item/delete_images" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg" data-image-url="<?= basename($image_url) ?>">
                                         <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_filename" value="<?= basename($image_url) ?>">
-                                        <button type="submit" class="btn btn-sm btn-danger">
+                                        <button type="submit" class="btn btn-sm btn-danger btn_delete">
                                             <i class="fa-solid fa-xmark"></i>
                                         </button>
                                     </form>
@@ -134,13 +134,33 @@ require_once "utils/GoBack.php";
         </div>
     </div>
 
+    <div class="modal fade" id="modal_confirmation_delete" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-secondary">
+                <div class="modal-header border-secondary mb-4">
+                    <h3 class="modal-title">Delete Image</h3>
+                </div>
+                <div class="modal-text modal-text text-center mb-4">
+                    <h5>Are you sure you want to delete this image ?</h5>
+                    <div class="modal-body d-flex justify-content-center gap-4">
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger btn_confirm_delete">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="fixed-bottom">
         <?php include 'view/view_footer.php'; ?>
     </footer>
     <script>
+        let cardToDelete = null; // variable globale pour stocker la carte à supprimer
+        let filenameToDelete = null; // variable globale pour stocker le nom du fichier à supprimer
         $(document).ready(function() {
             $('#sortable-images').sortable({ // on rend les images sortables avec jQueryUI
+                tolerance: 'pointer', // déplacement plus précis
                 stop: function() { // quand l'image a été lachée, on déclenche la fonction
                     const ordre = $('#sortable-images').sortable('toArray', {
                         attribute: 'data-image-url'
@@ -153,37 +173,36 @@ require_once "utils/GoBack.php";
                     update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après le déplacement
                 }
             })
-            $('.btn-left').on('click', function(e) { // on gère aussi les boutons de déplacement à gauche et à droite pour les utilisateurs qui ne voudraient pas faire du drag and drop
+            $('.btn-left').on('click', async function(e) { // on gère aussi les boutons de déplacement à gauche et à droite pour les utilisateurs qui ne voudraient pas faire du drag and drop
                 e.preventDefault();
-                const card = $(this).closest('.card');
-                const previousCard = card.prev('.card');
+                const card = $(this).closest('.card'); // closest permet de trouver la carte qui se rapporte à ce bouton
+                const previousCard = card.prev('.card'); // prev permet de trouver la carte précédente
                 if (previousCard.length) {
                     const imageIndex = card.data('image-index');
 
-                    $.post('item/move_image_left', {
+                    await $.post('item/move_image_left', {
                         item_id: <?= $item->get_id() ?>,
                         image_index: imageIndex
-                    }, function() {
-                        previousCard.before(card); // on déplace la carte
-                        update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après le déplacement
                     });
+                    previousCard.before(card); // on déplace la carte
+                    update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après le déplacement
+
                 }
             });
 
-            $('.btn-right').on('click', function(e) { // on gère aussi les boutons de déplacement à gauche et à droite pour les utilisateurs qui ne voudraient pas faire du drag and drop
+            $('.btn-right').on('click', async function(e) { // on gère aussi les boutons de déplacement à gauche et à droite pour les utilisateurs qui ne voudraient pas faire du drag and drop
                 e.preventDefault();
                 const card = $(this).closest('.card');
                 const nextcard = card.next('.card');
                 if (nextcard.length) {
                     const imageIndex = card.data('image-index');
 
-                    $.post('item/move_image_right', {
+                    await $.post('item/move_image_right', {
                         item_id: <?= $item->get_id() ?>,
                         image_index: imageIndex
-                    }, function() {
-                        nextcard.after(card); // on déplace la carte
-                        update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après le déplacement
                     });
+                    nextcard.after(card); // on déplace la carte
+                    update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après le déplacement
                 }
             });
 
@@ -194,6 +213,23 @@ require_once "utils/GoBack.php";
                 cards.last().find('.btn-right').prop('disabled', true);
             }
 
+            $('.btn_delete').on('click', function(e) { // on gère aussi les boutons de suppression pour afficher une confirmation avant de supprimer l'image
+                e.preventDefault();
+                cardToDelete = $(this).closest('.card'); // on stocke la carte à supprimer dans la variable globale
+                filenameToDelete = $(this).closest('form').data('image-url'); // on stocke le nom du fichier à supprimer dans la variable globale
+                var maModal = new bootstrap.Modal(document.getElementById('modal_confirmation_delete'));
+                maModal.show();
+            });
+
+            $('.btn_confirm_delete').on('click', async function(e) {
+                await $.post('item/delete_images', {
+                    item_id: <?= $item->get_id() ?>,
+                    image_filename: filenameToDelete
+                }); // on ne supprime la carte qu'après le callback du Post
+                cardToDelete.remove(); // on supprime la carte de l'interface après la suppression sur le serveur
+                bootstrap.Modal.getInstance(document.getElementById('modal_confirmation_delete')).hide(); // on cache la modal de confirmation
+                update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après la suppression
+            });
         })
     </script>
 </body>
