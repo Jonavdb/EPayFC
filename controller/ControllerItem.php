@@ -7,13 +7,17 @@ require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
 
-class ControllerItem extends Controller {
-    public function index(): void {
+
+class ControllerItem extends Controller
+{
+    public function index(): void
+    {
         $this->redirect("item", "list");
     }
 
     // My items
-    public function list(): void {
+    public function list(): void
+    {
         $user = $this->get_user_or_redirect();
         $items = Item::get_items_by_owner($user->get_id());
 
@@ -55,8 +59,10 @@ class ControllerItem extends Controller {
         ]);
     }
 
+
     /* Helper partagé : Prépare les données d'affichage d'une carte item */
-    private function prepare_item_data(Item $item, DateTime $now, string $card_context = 'my-items', string $owner_name = ''): object {
+    private function prepare_item_data(Item $item, DateTime $now, string $card_context = 'my-items', string $owner_name = ''): object
+    {
         $is_closed = $item->get_end_at() <= $now;
 
         // Calcul du texte temps + couleur
@@ -135,7 +141,8 @@ class ControllerItem extends Controller {
     }
 
     // Delete item
-    public function delete($id = null): void {
+    public function delete($id = null): void
+    {
         if ($id === null && isset($_GET['param1'])) {
             $id = $_GET['param1'];
         }
@@ -174,7 +181,8 @@ class ControllerItem extends Controller {
     }
 
     // Open item
-    public function open(): void {
+    public function open(): void
+    {
         // On regarde si le premier argument (l'ID) existe
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1']; // On récupère le 8 de l'URL ".../index/8"
@@ -207,7 +215,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function new_bid() {
+    public function new_bid()
+    {
 
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : 0.0;
@@ -240,7 +249,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "open", $item_id);
     }
 
-    public function buy_now() {
+    public function buy_now()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
         $current_user_pseudo = $user->get_pseudo();
@@ -256,7 +266,8 @@ class ControllerItem extends Controller {
     }
 
 
-    public function add() {
+    public function add()
+    {
         $user = $this->get_user_or_redirect();
         $now = new DateTime(AppTime::get_current_datetime());
         $end = (clone $now)->modify('+7 days');
@@ -304,7 +315,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    private function validate_and_fill(Item $item): array {
+    private function validate_and_fill(Item $item): array
+    {
 
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
@@ -321,27 +333,29 @@ class ControllerItem extends Controller {
         $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
         $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
 
-        if (strlen($item->get_title()) === 0 || empty($item->get_title())) {
+        // ask if we keep
+        /* if (strlen($item->get_title()) === 0 || empty($item->get_title())) {
             $errors['empty'] = "Title is required";
-        }
+        }*/
 
-        if (strlen($item->get_title()) < $min_lenght || strlen($item->get_title()) > $max_lenght) {
+        /* if (strlen($item->get_title()) < $min_lenght || strlen($item->get_title()) > $max_lenght) {
             $errors['title'] = "Title lenght must be between $min_lenght and $max_lenght characters.";
-        }
+        }*/
 
-        if ($item->get_duration_days() < $min_duration || $item->get_duration_days() > $max_duration) {
+        /* if ($item->get_duration_days() < $min_duration || $item->get_duration_days() > $max_duration) {
             $errors['duration'] = "Duration must be at least $min_duration day and at most $max_duration days";
-        }
+        } */
 
+        // ask if we keep
         if ($starting_bid !== null && $starting_bid > 0) {
             $item->set_starting_bid($starting_bid);
             $item->set_is_auction(true);
             $item->set_is_direct_sale(false);
 
             if ($buy_now_price !== null && $buy_now_price > 0) {
-                if ($buy_now_price < $starting_bid) {
+                /*if ($buy_now_price < $starting_bid) {
                     $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
-                }
+                }*/
                 $item->set_buy_now_price($buy_now_price);
                 $item->set_has_buy_now(true);
             } else {
@@ -350,7 +364,7 @@ class ControllerItem extends Controller {
             }
 
             if ($sale_price !== null && $sale_price > 0) {
-                $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
+                //$errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
             }
         } elseif ($sale_price !== null && $sale_price > 0) {
             $item->set_buy_now_price($sale_price);
@@ -359,12 +373,13 @@ class ControllerItem extends Controller {
             $item->set_has_buy_now(false);
             $item->set_starting_bid(0.0);
         } else {
-            $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
+            // $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
         }
         return $errors;
     }
 
-    public function edit() {
+    public function edit()
+    {
 
         $user = $this->get_user_or_redirect();
         $id = $_GET['param1'] ?? $_POST['id'] ?? null;
@@ -407,7 +422,8 @@ class ControllerItem extends Controller {
 
 
 
-    public function manage_images(): void {
+    public function manage_images(): void
+    {
 
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1'];
@@ -437,7 +453,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function move_image_left() {
+    public function move_image_left()
+    {
         $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
@@ -452,7 +469,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function move_image_right() {
+    public function move_image_right()
+    {
         $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
@@ -467,7 +485,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function delete_images() {
+    public function delete_images()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $filename = isset($_POST['image_filename']) ? $_POST['image_filename'] : '';
         $user = $this->get_user_or_redirect();
@@ -482,7 +501,8 @@ class ControllerItem extends Controller {
         $this->redirect("item", "manage_images", $item_id);
     }
 
-    public function add_images() {
+    public function add_images()
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
@@ -553,7 +573,8 @@ class ControllerItem extends Controller {
         }
     }
 
-    public function browse() {
+    public function browse()
+    {
         // we retrive the user session
         $user = $this->get_user_or_false();
 
@@ -579,7 +600,8 @@ class ControllerItem extends Controller {
         );
     }
 
-    public function purchases(): void {
+    public function purchases(): void
+    {
         // we retrive the user session
         $user = $this->get_user_or_redirect();
 
@@ -590,7 +612,8 @@ class ControllerItem extends Controller {
         ]);
     }
 
-    public function sales(): void {
+    public function sales(): void
+    {
         // we retrive the user session
         $user = $this->get_user_or_redirect();
 
@@ -603,7 +626,132 @@ class ControllerItem extends Controller {
         );
     }
 
-    public function get_js_images(): void {
+    // Services AJAX
+    public function title_valid_service(): void
+    {
+        $is_valid = false;
+
+        if (isset($_GET["title"]) && trim($_GET["title"]) !== "") {
+            $title = trim($_GET["title"]);
+            $length = strlen($title);
+            $min_size =  Configuration::get("min_item_lenght");
+            $max_size = Configuration::get("max_item_lenght");
+            if ($length >= $min_size && $length <= $max_size) {
+                $is_valid = true;
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(["is_valid" => $is_valid]);
+    }
+
+    public function description_valid_service(): void
+    {
+        $is_valid = false;
+
+        if (isset($_GET["description"]) && trim($_GET["description"]) !== "") {
+            $description = trim($_GET["description"]);
+            $length = strlen($description);
+            $min_size = Configuration::get("min_description_length");
+            $max_size = Configuration::get("max_description_length");
+
+            if ($length >= $min_size && $length <= $max_size) {
+                $is_valid = true;
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(["is_valid" => $is_valid]);
+    }
+
+    public function duration_valid_service(): void
+    {
+        $is_valid = false;
+
+        if (isset($_GET['duration']) && trim($_GET['duration']) !== "") {
+            $duration = (int)trim($_GET['duration']);
+            if ($duration >= 1) {
+                $is_valid = true;
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(["is_valid" => $is_valid]);
+    }
+
+    public function starting_bid_valid_service(): void
+    {
+        // we retrieve values and normalize
+        $starting_bid = $_GET['starting_bid'] !== "" ? (float)$_GET['starting_bid'] : null;
+        $instant = $_GET['instant'] !== "" ? (float)$_GET['instant'] : null;
+        $direct = $_GET['direct'] !== "" ? (float)$_GET['direct'] : null;
+
+        // we check if they exist
+        $starting_bid_exists = !is_null($starting_bid);
+        $instant_exists = !is_null($instant);
+        $direct_exists = !is_null($direct);
+
+        // error when the field is empty 
+        $default = (!$starting_bid_exists && !$direct_exists);
+
+        // error when user tries to fill both field 
+        $both_exist =  ($starting_bid_exists && $direct_exists);
+
+        // error if bid is too low
+        $minimum_required = $starting_bid_exists && !$direct_exists && $starting_bid <= 0;
+
+        // error if instant is cheaper than starting bid
+        $instant_price_lower = $starting_bid_exists && !$direct_exists && $instant_exists && $instant <= $starting_bid;
+
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            "default" => $default,
+            "both_exist" => $both_exist,
+            "minimum_required" => $minimum_required,
+            "instant_price_lower" => $instant_price_lower
+        ]);
+    }
+
+    public function optional_instant_valid_service(): void
+    {
+        // we retrieve values and normalize
+        $starting_bid = $_GET['starting_bid'] !== "" ? (float)$_GET['starting_bid'] : null;
+        $instant = $_GET['instant'] !== "" ? (float)$_GET['instant'] : null;
+        $direct = $_GET['direct'] !== "" ? (float)$_GET['direct'] : null;
+
+        // we check if they exist
+        $starting_bid_exists = !is_null($starting_bid);
+        $instant_exists = !is_null($instant);
+        $direct_exists = !is_null($direct);
+
+        // neutral state if field empty
+        $neutral = $instant_exists == false;
+
+        // error if direct is already filled
+        $both_exist = $direct_exists == true;
+
+        // error if starting bid is empty
+        $no_starting_bid = $starting_bid_exists == false;
+
+        // error if value less than 1
+        $minimum_required = $instant < 1;
+
+        // error if value less than starting bid
+        $instant_price_lower = $instant <= $starting_bid;
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            "neutral" => $neutral,
+            "both_exist" => $both_exist,
+            "no_starting_bid" => $no_starting_bid,
+            "minimum_required" => $minimum_required,
+            "instant_price_lower" => $instant_price_lower
+        ]);
+    }
+
+    public function get_js_images(): void
+    {
         $item_id = (int)$_GET['param1'];
         $pictures = ItemPicture::get_pictures_by_item($item_id); // récupère toutes les images d'un objet
         $urls = array_map(fn($pic) => $pic->get_picture_path(), $pictures); // map les informations en spécifiant que pour chaque image de la variables pictures, on récupère uniquement son chemin
@@ -612,7 +760,8 @@ class ControllerItem extends Controller {
         exit;
     }
 
-    public function update_image_order(): void {
+    public function update_image_order(): void
+    {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0; // on récupère l'ID de l'objet
         $order = isset($_POST['order']) ? (array)$_POST['order'] : []; // on récupère l'ordre des objets
 
@@ -629,7 +778,8 @@ class ControllerItem extends Controller {
     }
 
     // Services AJAX
-    public function search_fulltext_browse_service(): void {
+    public function search_fulltext_browse_service(): void
+    {
         header('Content-Type: application/json');
 
         if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {
@@ -705,7 +855,8 @@ class ControllerItem extends Controller {
         }
     }
 
-    public function search_fulltext_my_items_service(): void {
+    public function search_fulltext_my_items_service(): void
+    {
         header('Content-Type: application/json');
 
         if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {

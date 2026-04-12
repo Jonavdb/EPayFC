@@ -7,13 +7,15 @@ require_once "utils/GoBack.php";
 
 <head>
     <meta charset="UTF-8">
+    <title>Add item</title>
     <base href="<?= $web_root ?>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Jonathan_Vanderbiest">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
-    <title>Add item</title>
+    <script src="lib/jquery-4.0.0.min.js" type="text/javascript"></script>
+    <script src="scripts/add_edit_item.js"></script>
 </head>
 
 <body style="padding-top:60px; padding-bottom: 140px;">
@@ -26,7 +28,7 @@ require_once "utils/GoBack.php";
     // On utilise ob_start() pour capturer le HTML proprement, ou juste une string
     ob_start();
     ?>
-    <button type="submit" form="itemForm" class="btn-icon text-primary">
+    <button type="submit" id="submitBtn" form="itemForm" class="btn-icon text-primary" disabled="disabled">
         <i class="fa-regular fa-floppy-disk fa-lg"></i>
     </button>
     <?php
@@ -54,42 +56,31 @@ require_once "utils/GoBack.php";
                     <div class=" mb-3">
                         <label for="title" class="form-label fw-bold">Item Title *</label>
                         <input type="text"
-                            class="form-control bg-black bg-opacity-25 text-white border-secondary <?= isset($errors['title']) || isset($errors['empty']) ? 'is-invalid' : '' ?>"
+                            class="form-control bg-black bg-opacity-25 text-white border-secondary"
                             id="title"
                             name="title"
+                            placeholder="Ex: IPhone 13 Pro Max 256GB"
                             value="<?php echo html_entity_decode($item->get_title()) ?>">
-                        <?php if (isset($errors['empty'])) { ?>
-                            <div class="invalid-feedback">
-                                <?php echo $errors['empty'] ?>
-                            </div>
-                        <?php } ?>
-
-                        <?php if (isset($errors['title'])) { ?>
-                            <div class="invalid-feedback">
-                                <?php echo $errors['title'] ?>
-                            </div>
-                        <?php } ?>
-
+                        <div id="errTitle"></div>
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label fw-bold">Description</label>
                         <textarea class="form-control bg-black bg-opacity-25 text-white border-secondary"
                             id="description"
                             name="description"
+                            placeholder="Describe your item in detail..."
                             rows="4"><?php echo html_entity_decode($item->get_description()) ?></textarea>
+                        <div id="errDescription"></div>
                     </div>
                     <div class="mb-3">
                         <label for="duration" class="form-label fw-bold">Sale Duration(days) * </label>
                         <input type="number"
-                            class="form-control bg-black bg-opacity-25 text-white border-secondary <?= isset($errors['duration']) ? 'is-invalid' : '' ?>"
+                            class="form-control bg-black bg-opacity-25 text-white border-secondary"
                             id="duration"
                             name="duration"
+                            placeholder="e.g, 1"
                             value="<?php echo $item->get_duration_days() ?>">
-                        <?php if (isset($errors['duration'])) { ?>
-                            <div class="invalid-feedback">
-                                <?php echo $errors['duration'] ?>
-                            </div>
-                        <?php } ?>
+                        <div id="errDuration"></div>
                     </div>
                 </div>
             </div>
@@ -113,27 +104,32 @@ require_once "utils/GoBack.php";
                                 <label for="starting_bid" class="form-label fw-bold text-white">Starting Bid</label>
                                 <div class="input-group">
                                     <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo (isset($errors['starting_bid']) || isset($errors['sale']) || isset($errors['sale_price'])) ? 'is-invalid' : '' ?>"
+                                        class="form-control bg-black bg-opacity-25 text-white is-invalid"
                                         id="starting_bid"
                                         name="starting_bid"
                                         value="<?php echo ($item->get_starting_bid() > 0) ? $item->get_starting_bid() : '' ?>">
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
 
-                                    <?php if (isset($errors['starting_bid'])) { ?>
+                                    <?php /* if (isset($errors['starting_bid'])) { ?>
                                         <div class="invalid-feedback">
                                             <?php echo $errors['starting_bid'] ?>
                                         </div>
-                                    <?php } ?>
-                                    <?php if (isset($errors['sale'])) { ?>
+                                    <?php }*/ ?>
+                                    <?php /* if (isset($errors['sale'])) { ?>
                                         <div class="invalid-feedback">
                                             <?php echo $errors['sale'] ?>
                                         </div>
-                                    <?php } ?>
-                                    <?php if (isset($errors['sale_price'])) { ?>
+                                    <?php } */ ?>
+                                    <?php /* if (isset($errors['sale_price'])) { ?>
                                         <div class="invalid-feedback">
                                             <?php echo $errors['sale_price'] ?>
                                         </div>
-                                    <?php } ?>
+                                    <?php } */ ?>
+                                </div>
+                                <div id="errStartingBid" class="text-danger small mt-1">
+                                    <ul>
+                                        <li>You must either fill a starting bid or direct sale.</li>
+                                    </ul>
                                 </div>
                             </div>
 
@@ -141,45 +137,48 @@ require_once "utils/GoBack.php";
                                 <label for="instant" class="form-label fw-bold text-white">Instant Purchase Price (optional)</label>
                                 <div class="input-group">
                                     <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['buy_now_price']) ? 'is-invalid' : '' ?>"
+                                        class="form-control bg-black bg-opacity-25 text-white border-secondary"
                                         id="instant"
                                         name="instant"
                                         value="<?php echo ($item->get_has_buy_now() && $item->get_is_auction() && $item->get_buy_now_price() > 0) ? $item->get_buy_now_price() : '' ?>">
+
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
-                                    <?php if (isset($errors['buy_now_price'])): ?>
+                                    <?php /*if (isset($errors['buy_now_price'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['buy_now_price'] ?></div>
-                                    <?php endif; ?>
+                                    <?php endif; */ ?>
+                                </div>
+                                <div id="errInstant" class="text-danger small mt-1">
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="card bg-dark border-success mb-0">
-                        <div class="card-header border-success text-success bg-success bg-opacity-10 fw-bold">
-                            <i class="fa-solid fa-cart-shopping me-2"></i> Option 2: Direct Sale
-                        </div>
+                        <div class="card bg-dark border-success mb-0">
+                            <div class="card-header border-success text-success bg-success bg-opacity-10 fw-bold">
+                                <i class="fa-solid fa-cart-shopping me-2"></i> Option 2: Direct Sale
+                            </div>
 
-                        <div class="card-body">
-                            <div class="mb-0">
-                                <label for="direct" class="form-label fw-bold text-white">Sale Price</label>
-                                <div class="input-group">
-                                    <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['sale_price']) ? 'is-invalid' : '' ?>"
-                                        id="direct"
-                                        name="direct"
-                                        value="<?php echo isset($_POST['direct']) ? $_POST['direct'] : (($item->get_is_direct_sale() && $item->get_buy_now_price() > 0) ? $item->get_buy_now_price() : '') ?>">
-                                    <span class="input-group-text bg-dark text-white border-secondary">€</span>
-                                    <?php if (isset($errors['sale_price'])): ?>
-                                        <div class="invalid-feedback"><?php echo $errors['sale_price'] ?></div>
-                                    <?php endif; ?>
+                            <div class="card-body">
+                                <div class="mb-0">
+                                    <label for="direct" class="form-label fw-bold text-white">Sale Price</label>
+                                    <div class="input-group">
+                                        <input type="number"
+                                            class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['sale_price']) ? 'is-invalid' : '' ?>"
+                                            id="direct"
+                                            name="direct"
+                                            value="<?php echo isset($_POST['direct']) ? $_POST['direct'] : (($item->get_is_direct_sale() && $item->get_buy_now_price() > 0) ? $item->get_buy_now_price() : '') ?>">
+                                        <div id="errDirect"></div>
+                                        <span class="input-group-text bg-dark text-white border-secondary">€</span>
+                                        <?php if (isset($errors['sale_price'])): ?>
+                                            <div class="invalid-feedback"><?php echo $errors['sale_price'] ?></div>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
-        </div>
     </form>
 
     <footer class="fixed-bottom">
