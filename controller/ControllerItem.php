@@ -628,7 +628,7 @@ class ControllerItem extends Controller
         $instant_exists = !is_null($instant);
         $direct_exists = !is_null($direct);
 
-        // error when the field is empty on leaving it
+        // error when the field is empty 
         $default = (!$starting_bid_exists && !$direct_exists);
 
         // error when user tries to fill both field 
@@ -645,6 +645,43 @@ class ControllerItem extends Controller
         echo json_encode([
             "default" => $default,
             "both_exist" => $both_exist,
+            "minimum_required" => $minimum_required,
+            "instant_price_lower" => $instant_price_lower
+        ]);
+    }
+
+    public function optional_instant_valid_service(): void
+    {
+        // we retrieve values and normalize
+        $starting_bid = $_GET['starting_bid'] !== "" ? (float)$_GET['starting_bid'] : null;
+        $instant = $_GET['instant'] !== "" ? (float)$_GET['instant'] : null;
+        $direct = $_GET['direct'] !== "" ? (float)$_GET['direct'] : null;
+
+        // we check if they exist
+        $starting_bid_exists = !is_null($starting_bid);
+        $instant_exists = !is_null($instant);
+        $direct_exists = !is_null($direct);
+
+        // neutral state if field empty
+        $neutral = $instant_exists == false;
+
+        // error if direct is already filled
+        $both_exist = $direct_exists == true;
+
+        // error if starting bid is empty
+        $no_starting_bid = $starting_bid_exists == false;
+
+        // error if value less than 1
+        $minimum_required = $instant < 1;
+
+        // error if value less than starting bid
+        $instant_price_lower = $instant <= $starting_bid;
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            "neutral" => $neutral,
+            "both_exist" => $both_exist,
+            "no_starting_bid" => $no_starting_bid,
             "minimum_required" => $minimum_required,
             "instant_price_lower" => $instant_price_lower
         ]);

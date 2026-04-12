@@ -141,43 +141,44 @@ require_once "utils/GoBack.php";
                                         id="instant"
                                         name="instant"
                                         value="<?php echo ($item->get_has_buy_now() && $item->get_is_auction() && $item->get_buy_now_price() > 0) ? $item->get_buy_now_price() : '' ?>">
-                                    <div id="errInstant"></div>
+
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
                                     <?php /*if (isset($errors['buy_now_price'])): ?>
                                         <div class="invalid-feedback"><?php echo $errors['buy_now_price'] ?></div>
                                     <?php endif; */ ?>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card bg-dark border-success mb-0">
-                        <div class="card-header border-success text-success bg-success bg-opacity-10 fw-bold">
-                            <i class="fa-solid fa-cart-shopping me-2"></i> Option 2: Direct Sale
-                        </div>
-
-                        <div class="card-body">
-                            <div class="mb-0">
-                                <label for="direct" class="form-label fw-bold text-white">Sale Price</label>
-                                <div class="input-group">
-                                    <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['sale_price']) ? 'is-invalid' : '' ?>"
-                                        id="direct"
-                                        name="direct"
-                                        value="<?php echo isset($_POST['direct']) ? $_POST['direct'] : (($item->get_is_direct_sale() && $item->get_buy_now_price() > 0) ? $item->get_buy_now_price() : '') ?>">
-                                    <div id="errDirect"></div>
-                                    <span class="input-group-text bg-dark text-white border-secondary">€</span>
-                                    <?php if (isset($errors['sale_price'])): ?>
-                                        <div class="invalid-feedback"><?php echo $errors['sale_price'] ?></div>
-                                    <?php endif; ?>
+                                <div id="errInstant" class="text-danger small mt-1">
                                 </div>
                             </div>
                         </div>
-                    </div>
 
+                        <div class="card bg-dark border-success mb-0">
+                            <div class="card-header border-success text-success bg-success bg-opacity-10 fw-bold">
+                                <i class="fa-solid fa-cart-shopping me-2"></i> Option 2: Direct Sale
+                            </div>
+
+                            <div class="card-body">
+                                <div class="mb-0">
+                                    <label for="direct" class="form-label fw-bold text-white">Sale Price</label>
+                                    <div class="input-group">
+                                        <input type="number"
+                                            class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['sale_price']) ? 'is-invalid' : '' ?>"
+                                            id="direct"
+                                            name="direct"
+                                            value="<?php echo isset($_POST['direct']) ? $_POST['direct'] : (($item->get_is_direct_sale() && $item->get_buy_now_price() > 0) ? $item->get_buy_now_price() : '') ?>">
+                                        <div id="errDirect"></div>
+                                        <span class="input-group-text bg-dark text-white border-secondary">€</span>
+                                        <?php if (isset($errors['sale_price'])): ?>
+                                            <div class="invalid-feedback"><?php echo $errors['sale_price'] ?></div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </div>
     </form>
 
     <footer class="fixed-bottom">

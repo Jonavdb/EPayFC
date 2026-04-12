@@ -32,7 +32,12 @@ $(function () {
   duration.bind("blur", checkDurationValid);
 
   startingBid.bind("blur", checkStartingBidValid);
+  startingBid.bind("blur", checkOptionalInstantValid);
+
+  instantOptional.bind("blur", checkOptionalInstantValid);
   instantOptional.bind("blur", checkStartingBidValid);
+  // .checkInstantValid
+
   direct.bind("blur", checkStartingBidValid);
 });
 
@@ -200,6 +205,67 @@ async function checkStartingBidValid() {
     console.error("Erreur AJAX:", error);
   }
 }
+
+async function checkOptionalInstantValid() {
+  try {
+    const data = await $.getJSON("item/optional_instant_valid_service", {
+      starting_bid: startingBid.val(),
+      instant: instantOptional.val(),
+      direct: direct.val(),
+    });
+
+    // we clear the state
+    instantOptional.removeClass("is-invalid is-valid border-secondary");
+    errInstant.html("").removeClass("text-danger");
+
+    if (data.neutral) {
+      // nothing
+      errInstant.html("").removeClass("text-danger");
+      instantOptional
+        .removeClass("is-invalid is-valid")
+        .addClass("border-secondary");
+    } else if (data.both_exist) {
+      // erreur cadre rouge
+      errInstant
+        .html(
+          "<ul><li>You can't put a direct sale price and an optional instant price.</li></ul>",
+        )
+        .addClass("text-danger");
+      instantOptional.addClass("is-invalid");
+    } else if (data.no_starting_bid) {
+      // erreur cadre rouge
+      errInstant
+        .html("<ul><li>You need a starting bid.</li></ul>")
+        .addClass("text-danger");
+      instantOptional.addClass("is-invalid");
+    } else if (data.minimum_required) {
+      // erreur cadre rouge
+      errInstant
+        .html("<ul><li>Minimum value 1.</li></ul>")
+        .addClass("text-danger");
+      instantOptional.addClass("is-invalid");
+    } else if (data.instant_price_lower) {
+      // erreur cadre rouge
+      errInstant
+        .html(
+          "<ul><li>Instant purchase price must be higher than starting bid price.</li></ul>",
+        )
+        .addClass("text-danger");
+      instantOptional.addClass("is-invalid");
+    } else {
+      // si pas d'erreur, alors valide
+      // success : cadre vert
+      instantOptional.addClass("is-valid");
+    }
+
+    checkFormValidity();
+  } catch (error) {
+    console.error("Erreur AJAX:", error);
+  }
+}
+
+// TODO checkOptionalInstantValid()
+// TODO : checkDirectValid() after above + add its function in controller
 
 function checkFormValidity() {
   if ($(".is-invalid").length > 0) {
