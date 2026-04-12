@@ -25,6 +25,9 @@ $image_to_display = $item->get_main_image_url();
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="css/styles.css" rel="stylesheet" type="text/css" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="scripts/carousel.js"></script>
   <title>Item open</title>
 </head>
 
@@ -38,10 +41,23 @@ $image_to_display = $item->get_main_image_url();
   <div class="container-fluid px-4" style="padding-top: 80px;">
     <div class="row g-4">
       <div class="col-md-8">
-
         <div class="card text-bg-dark border-secondary mb-4">
-          <img src="<?= $image_to_display ?>" class="card-img-top" alt="<?= $item->get_title() ?>" style="max-height: 500px; object-fit: cover;">
+          <div id="no_js_main_image">
+            <img src="<?= $image_to_display ?>" class="card-img-top" alt="<?= $item->get_title() ?>" style="max-height: 500px; object-fit: cover;">
+          </div>
+          <div id="js_carousel_1" style="display: none;" data-item-id="<?= $item->get_id() ?>">
+            <div id="itemCarousel" class="carousel slide mb-3">
+              <div class="carousel-inner" id="carousel-inner">
 
+              </div>
+              <button class="carousel-control-prev carousel-dark" type="button" data-bs-target="#itemCarousel" data-bs-slide="prev">
+                <span class=" carousel-control-prev-icon"></span>
+              </button>
+              <button class="carousel-control-next carousel-dark" type="button" data-bs-target="#itemCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+              </button>
+            </div>
+          </div>
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <h2 class="card-title fw-bold text-white mb-0"><?= $item->get_title() ?></h2>
@@ -60,31 +76,39 @@ $image_to_display = $item->get_main_image_url();
             </div>
           </div>
         </div>
+        <div id="no_js_thumbnails">
+          <?php if (count($item->get_image_urls()) >= 2) { ?><h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h3>
+            <div class="d-flex gap-3 mb-5">
+              <?php
+              $origin = 'from-browse';
+              $uri = $_SERVER['REQUEST_URI'];
+              if (strpos($uri, 'from-list') !== false) $origin = 'from-list';
+              elseif (strpos($uri, 'from-profile') !== false) $origin = 'from-profile';
+              elseif (strpos($uri, 'from-items') !== false) $origin = 'from-items';
+              elseif (strpos($uri, 'from-sales') !== false) $origin = 'from-sales';
+              elseif (strpos($uri, 'from-purchases') !== false) $origin = 'from-purchases';
 
-        <?php if (count($item->get_image_urls()) >= 2) { ?><h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h3>
-          <div class="d-flex gap-3 mb-5">
-            <?php
-            $origin = 'from-browse';
-            $uri = $_SERVER['REQUEST_URI'];
-            if (strpos($uri, 'from-list') !== false) $origin = 'from-list';
-            elseif (strpos($uri, 'from-profile') !== false) $origin = 'from-profile';
-            elseif (strpos($uri, 'from-items') !== false) $origin = 'from-items';
-            elseif (strpos($uri, 'from-sales') !== false) $origin = 'from-sales';
-            elseif (strpos($uri, 'from-purchases') !== false) $origin = 'from-purchases';
+              foreach ($item->get_image_urls() as $index => $image):
+                $is_active = ($image === $image_to_display);
+                $border_class = $is_active ? 'border-primary' : 'border-secondary';
+              ?>
+                <a href="item/open/<?= $item->get_id() ?>/<?= $index ?>/<?= $origin ?>" class="d-block">
+                  <img src="<?= $image ?>"
+                    class="rounded border <?= $border_class ?>"
+                    alt="View <?= $index ?>"
+                    style="width: 100px; height: 70px; object-fit: cover;">
+                </a>
+              <?php endforeach; ?>
+            </div>
+          <?php } ?>
+        </div>
+        <div id="js_carousel_2" style="display: none;">
+          <h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional images</h3>
+          <div id="js_thumbnails" class="d-flex gap-4 mb-5">
 
-            foreach ($item->get_image_urls() as $index => $image):
-              $is_active = ($image === $image_to_display);
-              $border_class = $is_active ? 'border-primary' : 'border-secondary';
-            ?>
-              <a href="item/open/<?= $item->get_id() ?>/<?= $index ?>/<?= $origin ?>" class="d-block">
-                <img src="<?= $image ?>"
-                  class="rounded border <?= $border_class ?>"
-                  alt="View <?= $index ?>"
-                  style="width: 100px; height: 70px; object-fit: cover;">
-              </a>
-            <?php endforeach; ?>
           </div>
-        <?php } ?>
+        </div>
+
 
         <?php if ($item->get_has_bids()): ?>
           <div class="card text-bg-dark border-secondary">
@@ -237,7 +261,6 @@ $image_to_display = $item->get_main_image_url();
     <?php include 'view/view_timer.php'; ?>
     <?php include 'view/view_footer.php'; ?>
   </footer>
-
 </body>
 
 </html>

@@ -13,7 +13,14 @@ require_once "utils/GoBack.php";
     <meta name="author" content="Jonathan_Vanderbiest">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
+    <script src="jquery.ui.touch-punch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts/delete_image.js"></script>
+    <script src="scripts/move_image.js"></script>
     <title>Manage Images</title>
 </head>
 
@@ -67,7 +74,6 @@ require_once "utils/GoBack.php";
         </div>
 
     </div>
-
     <div class="container-fluid mb-4 px-5">
         <div class="card text-bg-dark border-secondary">
             <div class="card-header border-secondary" style="background-color: #1e293b;">
@@ -77,7 +83,7 @@ require_once "utils/GoBack.php";
                 <?php if (empty($item->get_image_urls())) { ?>
                     <p class="text-secondary m-0">No images uploaded yet.</p>
                 <?php } else { ?>
-                    <div class="d-flex flex-wrap gap-3">
+                    <div class="d-flex flex-wrap gap-5" id="sortable-images" data-item-id="<?= $item->get_id() ?>">
 
                         <?php
                         // On compte les images pour savoir quand arrêter le bouton "droite"
@@ -86,9 +92,9 @@ require_once "utils/GoBack.php";
                         foreach ($item->get_image_urls() as $index => $image_url):
                         ?>
 
-                            <div class="card border-secondary bg-dark" style="width: 220px;">
+                            <div class="card border-secondary bg-dark" style="width: 220px; " data-image-url="<?= basename($image_url) ?>" data-image-index="<?= $index ?>"> <!-- ajout de basename afin de sécuriser le tout et ne garder que le nom du fichier -->
 
-                                <div class="bg-white rounded-top" style="height: 150px;">
+                                <div class=" bg-white rounded-top" style="height: 150px;">
                                     <img src="<?= $image_url ?>"
                                         class="w-100 h-100"
                                         style="object-fit: contain;"
@@ -100,7 +106,7 @@ require_once "utils/GoBack.php";
                                         <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary" <?= $index === 0 ? 'disabled' : '' ?>>
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary btn-left" <?= $index === 0 ? 'disabled' : '' ?>>
                                             <i class="fa-solid fa-arrow-left"></i>
                                         </button>
                                     </form>
@@ -109,15 +115,15 @@ require_once "utils/GoBack.php";
                                         <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary" <?= $index === ($total_images - 1) ? 'disabled' : '' ?>>
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary btn-right" <?= $index === ($total_images - 1) ? 'disabled' : '' ?>>
                                             <i class="fa-solid fa-arrow-right"></i>
                                         </button>
                                     </form>
 
-                                    <form action="item/delete_images" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
+                                    <form action="item/delete_images" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg" data-image-url="<?= basename($image_url) ?>">
                                         <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_filename" value="<?= basename($image_url) ?>">
-                                        <button type="submit" class="btn btn-sm btn-danger">
+                                        <button type="submit" class="btn btn-sm btn-danger btn_delete">
                                             <i class="fa-solid fa-xmark"></i>
                                         </button>
                                     </form>
@@ -126,6 +132,23 @@ require_once "utils/GoBack.php";
                         <?php endforeach; ?>
                     </div>
                 <?php } ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal_confirmation_delete" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-secondary">
+                <div class="modal-header border-secondary mb-4">
+                    <h3 class="modal-title">Delete Image</h3>
+                </div>
+                <div class="modal-text modal-text text-center mb-4">
+                    <h5>Are you sure you want to delete this image ?</h5>
+                    <div class="modal-body d-flex justify-content-center gap-4">
+                        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger btn_confirm_delete">Delete</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
