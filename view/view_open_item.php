@@ -92,7 +92,7 @@ $image_to_display = $item->get_main_image_url();
                 $is_active = ($image === $image_to_display);
                 $border_class = $is_active ? 'border-primary' : 'border-secondary';
               ?>
-                <a href="item/open/<?= $item->get_id() ?>/<?= $index ?>/<?= $origin ?>" class="d-block">
+                <a href="<?= GoBack::smart_href("item/open/" . $item->get_id() . "/" . $index) ?>" class="d-block">
                   <img src="<?= $image ?>"
                     class="rounded border <?= $border_class ?>"
                     alt="View <?= $index ?>"
@@ -187,7 +187,7 @@ $image_to_display = $item->get_main_image_url();
 
             <?php elseif ($current_user): ?>
               <?php if (!$item->get_is_direct_sale()): ?>
-                <form action="item/new_bid" method="POST" class="mb-3">
+                <form action="<?= GoBack::smart_href('item/new_bid/' . $item->get_id()) ?>" method="POST" class="mb-3">
                   <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
 
                   <div class="input-group mb-2">
@@ -245,9 +245,9 @@ $image_to_display = $item->get_main_image_url();
             <div class="card-body p-4">
               <h4 class="fw-bold text-secondary mb-3 fs-4 text-start">Manage Your Item</h4>
               <div class="d-grid gap-2">
-                <a href="item/edit/<?= $item->get_id() ?>" class="btn btn-outline-secondary border text-decoration-none"><i class="fa-solid fa-pen me-2"></i> Edit</a>
-                <a href="item/manage_images/<?= $item->get_id() ?>" class="btn btn-outline-info border text-decoration-none"><i class="fa-solid fa-image me-2"></i> Images</a>
-                <a href="item/delete/<?= $item->get_id() ?>" class="btn btn-outline-danger border text-decoration-none"><i class="fa-solid fa-trash me-2"></i> Delete</a>
+                <a href="<?= GoBack::smart_href("item/edit/" . $item->get_id()) ?>" class="btn btn-outline-secondary border text-decoration-none"><i class="fa-solid fa-pen me-2"></i> Edit</a>
+                <a href="<?= GoBack::smart_href("item/manage_images/" . $item->get_id()) ?>" class="btn btn-outline-info border text-decoration-none"><i class="fa-solid fa-image me-2"></i> Images</a>
+                <a href="<?= GoBack::smart_href("item/delete/" . $item->get_id()) ?>" class="btn btn-outline-danger border text-decoration-none"><i class="fa-solid fa-trash me-2"></i> Delete</a>
               </div>
             </div>
           </div>

@@ -6,6 +6,7 @@ require_once "model/Item.php";
 require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
+require_once "utils/GoBack.php";
 
 
 class ControllerItem extends Controller {
@@ -238,8 +239,9 @@ class ControllerItem extends Controller {
         if ($item_id > 0 && $amount > 0) {
             Bid::create_bid($current_user_pseudo, $item_id, $amount);
         }
+        $redirect_url = GoBack::smart_href("item/open/" . $item->get_id());
 
-        $this->redirect("item", "open", $item_id);
+        $this->redirect($redirect_url);
     }
 
     public function buy_now() {

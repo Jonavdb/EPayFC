@@ -34,7 +34,7 @@
                 </p>
 
                 <form action="item/delete/<?= $item->get_id() ?>" method="post">
-                    <a href="item/open/<?= $item->get_id() ?>" class="btn btn-secondary px-4">
+                    <a href="<?= GoBack::smart_href("item/open/" . $item->get_id()) ?>" class="btn btn-secondary px-4">
                         Cancel
                     </a>
 
