@@ -224,10 +224,8 @@ class Item extends Model {
 
         // si l'utilisateur a tapé quelque chose, on ajoute les conditions LIKE
         if ($search !== null && trim($search) !== '') {
-            $sql .= " AND (
-                        title LIKE :search 
-                        OR description LIKE :search
-                      )";
+            $sql .= " AND (title LIKE :search OR description LIKE :search)";
+
             $params['search'] = '%' . trim($search) . '%';
         }
 
@@ -429,7 +427,9 @@ class Item extends Model {
             $sql .= " AND (
                         vis.title LIKE :search 
                         OR seller.pseudo LIKE :search
+                        OR vis.description LIKE :search
                       )";
+
             $params['search'] = '%' . trim($search) . '%';
         }
 
@@ -531,6 +531,7 @@ class Item extends Model {
             $sql .= " AND (
                         vis.title LIKE :search 
                         OR seller.pseudo LIKE :search
+                        OR vis.description LIKE :search
                       )";
             $params['search'] = '%' . trim($search) . '%';
         }
