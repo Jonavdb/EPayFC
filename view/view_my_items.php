@@ -21,6 +21,7 @@
         <!-- HEADER -->
         <?php
         $page_title = "My Items";
+        $hide_back_button = true;
         include 'view/view_header.php';
         ?>
 

@@ -6,6 +6,7 @@ require_once "model/Item.php";
 require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
+require_once "utils/GoBack.php";
 
 
 class ControllerItem extends Controller {
@@ -238,8 +239,10 @@ class ControllerItem extends Controller {
         if ($item_id > 0 && $amount > 0) {
             Bid::create_bid($current_user_pseudo, $item_id, $amount);
         }
+        $redirect_url = GoBack::smart_href("item/open/" . $item->get_id());
+        $url_parts = explode('/', $redirect_url);
 
-        $this->redirect("item", "open", $item_id);
+        $this->redirect(...$url_parts);
     }
 
     public function buy_now() {
@@ -254,7 +257,9 @@ class ControllerItem extends Controller {
                 Bid::create_bid($current_user_pseudo, $item_id, $item->get_buy_now_price());
             }
         }
-        $this->redirect("item", "open", $item_id);
+        $redirect_url = GoBack::smart_href("item/open/" . $item->get_id());
+        $url_parts = explode('/', $redirect_url);
+        $this->redirect(...$url_parts);
     }
 
 
@@ -453,7 +458,9 @@ class ControllerItem extends Controller {
         if ($item_id > 0) {
             Item::change_pics_left($image_index, $item_id);
         }
-        $this->redirect("item", "manage_images", $item_id);
+        $redirect_url = GoBack::smart_href("item/manage_images/" . $item_id);
+        $url_parts = explode('/', $redirect_url);
+        $this->redirect(...$url_parts);
     }
 
     public function move_image_right() {
@@ -468,7 +475,9 @@ class ControllerItem extends Controller {
         if ($item_id > 0) {
             Item::change_pics_right($image_index, $item_id);
         }
-        $this->redirect("item", "manage_images", $item_id);
+        $redirect_url = GoBack::smart_href("item/manage_images/" . $item_id);
+        $url_parts = explode('/', $redirect_url);
+        $this->redirect(...$url_parts);
     }
 
     public function delete_images() {
@@ -483,7 +492,9 @@ class ControllerItem extends Controller {
         if ($item_id > 0 && !empty($filename)) {
             Item::delete_images($filename, $item_id);
         }
-        $this->redirect("item", "manage_images", $item_id);
+        $redirect_url = GoBack::smart_href("item/manage_images/" . $item_id);
+        $url_parts = explode('/', $redirect_url);
+        $this->redirect(...$url_parts);
     }
 
     public function add_images() {
@@ -553,7 +564,9 @@ class ControllerItem extends Controller {
                 "is_guest" => !$this->user_logged()
             ]);
         } else {
-            $this->redirect("item", "manage_images", $item_id);
+            $redirect_url = GoBack::smart_href("item/manage_images/" . $item_id);
+            $url_parts = explode('/', $redirect_url);
+            $this->redirect(...$url_parts);
         }
     }
 
