@@ -209,7 +209,7 @@ $image_to_display = $item->get_main_image_url();
               <?php endif; ?>
 
               <?php if ($item->get_has_buy_now()): ?>
-                <form action="item/buy_now" method="POST" class="p-1 border-0">
+                <form action="<?= GoBack::smart_href('item/buy_now/' . $item->get_id()) ?>" method="POST" class="p-1 border-0">
                   <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                   <button class="btn btn-primary w-100 fw-bold py-2" type="submit" <?php if ($current_user === $item->get_owner_name()) echo 'disabled'; ?>>
                     Buy Now at € <?= number_format($item->get_buy_now_price(), 2, ',', ' ') ?>

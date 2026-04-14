@@ -21,6 +21,8 @@ require_once "utils/GoBack.php";
 <body style="padding-top:60px; padding-bottom: 140px;">
     <?php
     $page_title = ($item->get_id() > 0) ? 'Edit Item' : 'Add Item';
+    $hide_back_button = true;
+
 
     // On cache l'icône "panier" pour cette page
     $hide_default_icon = true;

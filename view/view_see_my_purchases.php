@@ -123,7 +123,7 @@
                     <div class="d-flex flex-column h-100 gap-3">
                         <!-- item card -->
                         <div class="col">
-                            <a href="<?= GoBack::smart_href("item/open/" . $purchased_item->get_id()) ?>" class="card bg-dark w-100 h-100 text-decoration-none">
+                            <a href="<?= GoBack::smart_href("item/open/" . $purchased_item->get_id() . "/from-purchases") ?>" class="card bg-dark w-100 h-100 text-decoration-none">
                                 <!-- we wrap the card inside a container to adjust height taken by top cell and bottom cell-->
                                 <div class="d-flex flex-column h-100">
 

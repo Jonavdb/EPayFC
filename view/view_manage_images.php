@@ -52,8 +52,7 @@ require_once "utils/GoBack.php";
             </div>
             <div class="card-body">
                 <h6 class="fw-bold text-white text-start fs-4">Select Images</h6>
-                <form action="item/add_images" method="POST" enctype="multipart/form-data" class="fs-5">
-
+                <form action="<?= GoBack::smart_href('item/add_images/' . $item->get_id()) ?>" method="POST" enctype="multipart/form-data" class="fs-5">
                     <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
 
                     <input class="form-control bg-dark text-secondary border-secondary"
@@ -102,7 +101,7 @@ require_once "utils/GoBack.php";
                                 </div>
 
                                 <div class="card-body d-flex justify-content-between align-items-center gap-3">
-                                    <form action="item/move_image_left" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
+                                    <form action="<?= GoBack::smart_href('item/move_image_left/' . $item->get_id()) ?>" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
                                         <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
@@ -111,7 +110,7 @@ require_once "utils/GoBack.php";
                                         </button>
                                     </form>
 
-                                    <form action="item/move_image_right" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
+                                    <form action="<?= GoBack::smart_href('item/move_image_right/' . $item->get_id()) ?>" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg">
                                         <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_index" value="<?= $index ?>">
 
@@ -120,7 +119,7 @@ require_once "utils/GoBack.php";
                                         </button>
                                     </form>
 
-                                    <form action="item/delete_images" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg" data-image-url="<?= basename($image_url) ?>">
+                                    <form action="<?= GoBack::smart_href('item/delete_images/' . $item->get_id()) ?>" method="POST" class="m-0 p-0 border-0 bg-transparent shadow-lg" data-image-url="<?= basename($image_url) ?>">
                                         <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                                         <input type="hidden" name="image_filename" value="<?= basename($image_url) ?>">
                                         <button type="submit" class="btn btn-sm btn-danger btn_delete">
