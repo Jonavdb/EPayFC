@@ -1,4 +1,10 @@
-<?php require_once "utils/GoBack.php"; ?>
+<?php
+require_once "utils/GoBack.php";
+
+// Sécurité au cas où les variables ne sont pas passées
+$context = $context ?? 'from-browse';
+$encoded_search = $encoded_search ?? '';
+?>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">

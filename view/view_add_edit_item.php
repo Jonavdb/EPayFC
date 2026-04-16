@@ -35,7 +35,6 @@ require_once "utils/GoBack.php";
     </button>
     <?php
     $header_right_content = ob_get_clean();
-
     include 'view/view_header.php';
     ?>
 
@@ -48,6 +47,8 @@ require_once "utils/GoBack.php";
         <?php if ($is_edit): ?>
             <input type="hidden" name="id" value="<?= $item->get_id() ?>">
             <input type="hidden" name="param1" value="<?= $item->get_id() ?>">
+            <input type="hidden" name="context" value="<?= $context ?? 'from-browse' ?>">
+            <input type="hidden" name="encoded_search" value="<?= $encoded_search ?? '' ?>">
         <?php endif; ?>
         <div class="container mb-4" style="margin-top: 30px;">
             <div class="card text-bg-dark border-secondary">
@@ -145,9 +146,6 @@ require_once "utils/GoBack.php";
                                         value="<?php echo ($item->get_has_buy_now() && $item->get_is_auction() && $item->get_buy_now_price() > 0) ? $item->get_buy_now_price() : '' ?>">
 
                                     <span class="input-group-text bg-dark text-white border-secondary">€</span>
-                                    <?php /*if (isset($errors['buy_now_price'])): ?>
-                                        <div class="invalid-feedback"><?php echo $errors['buy_now_price'] ?></div>
-                                    <?php endif; */ ?>
                                 </div>
                                 <div id="errInstant" class="text-danger small mt-1">
                                 </div>

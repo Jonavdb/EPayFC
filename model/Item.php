@@ -252,13 +252,11 @@ class Item extends Model {
                 ["item_id" => $row['id']]
             );
 
-            // On récupère un tableau simple de chaînes (chemins)
             $image_urls = $query_image_urls->fetchAll(PDO::FETCH_COLUMN);
 
             // Image par défaut (Placeholder)
             $main_image_url = "css/images/default_item_image.png";
 
-            // Si on a trouvé des images en base de données
             if (!empty($image_urls)) {
                 $first_image = $image_urls[0];
 
@@ -335,7 +333,6 @@ class Item extends Model {
         } else {
             $owner_picture = $data['owner_picture'];
         }
-
 
         $query_pics = self::execute(
             "SELECT picture_path
@@ -1222,7 +1219,6 @@ class Item extends Model {
             $owner_role = '';
             $duration_days = 0;
 
-
             // we retrieve time left
             $today = new DateTime(AppTime::get_current_datetime());
             $end_at = new DateTime($item_data['end_at']);
@@ -1236,7 +1232,6 @@ class Item extends Model {
     }
 
     public static function update_image_priority(int $item_id, array $order): void {
-
         foreach ($order as $priority => $filename) { // on set toutes les priorités en négatifs pour éviter les chevauchements
             self::execute(
                 "UPDATE item_pictures SET priority = :priority
