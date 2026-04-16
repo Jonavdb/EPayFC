@@ -12,6 +12,17 @@ if (!empty($bids)) {
 }
 
 $image_to_display = $item->get_main_image_url();
+
+// Sécurité au cas où les variables ne sont pas passées
+$context = $context ?? 'from-browse';
+$encoded_search = $encoded_search ?? '';
+
+
+// --- CALCUL DE L'URL DE RETOUR ---
+// $back_url = ($context === 'from-items') ? "item/list" : "item/browse";
+// if ($encoded_search !== '') {
+//   $back_url .= "/" . $encoded_search;
+// }
 ?>
 
 <!DOCTYPE html>
@@ -241,12 +252,21 @@ $image_to_display = $item->get_main_image_url();
         </div>
 
         <?php if ($current_user === $item->get_owner_name() && (!$item->get_has_bids())): ?>
+          <?php
+          // On prépare le suffixe d'URL à ajouter aux boutons
+          $url_suffix = "/" . $context;
+          if ($encoded_search !== '') {
+            $url_suffix .= "/" . $encoded_search;
+          }
+          ?>
           <div class="card text-bg-dark border-secondary">
             <div class="card-body p-4">
               <h4 class="fw-bold text-secondary mb-3 fs-4 text-start">Manage Your Item</h4>
               <div class="d-grid gap-2">
                 <a href="<?= GoBack::smart_href("item/edit/" . $item->get_id()) ?>" class="btn btn-outline-secondary border text-decoration-none"><i class="fa-solid fa-pen me-2"></i> Edit</a>
+
                 <a href="<?= GoBack::smart_href("item/manage_images/" . $item->get_id()) ?>" class="btn btn-outline-info border text-decoration-none"><i class="fa-solid fa-image me-2"></i> Images</a>
+
                 <a href="<?= GoBack::smart_href("item/delete/" . $item->get_id()) ?>" class="btn btn-outline-danger border text-decoration-none"><i class="fa-solid fa-trash me-2"></i> Delete</a>
               </div>
             </div>
