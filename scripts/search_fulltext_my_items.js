@@ -1,10 +1,13 @@
 let searchInput, activeItemsGrid, closedUnsoldItemsGrid, soldItemsGrid, defaultActiveHtml, defaultClosedUnsoldHtml, defaultSoldHtml;
+let initialSearchValue = '';
 
 $(function () {
     searchInput = $('#search_fulltext');
     activeItemsGrid = $('#active_items_grid');
     closedUnsoldItemsGrid = $('#closed_unsold_items_grid');
     soldItemsGrid = $('#sold_items_grid');
+
+    initialSearchValue = searchInput.val().trim(); // mémorise ce qu'il y a dans la barre au chargement
 
     // page par défaut sauvergardée (les listes d'items de l'utilisateur courrant)
     defaultActiveHtml = activeItemsGrid.html();
@@ -19,6 +22,12 @@ async function checkSearchFullTextMyItems() {
 
     // s'il n'a rien cherché, on affiche les listes par défaut
     if (searchValue === '') {
+        if (initialSearchValue !== '') {
+            window.location.href = 'item/list';
+            return;
+        }
+
+        // sinon, restauration du cache
         activeItemsGrid.html(defaultActiveHtml);
         closedUnsoldItemsGrid.html(defaultClosedUnsoldHtml);
         soldItemsGrid.html(defaultSoldHtml);
@@ -26,22 +35,28 @@ async function checkSearchFullTextMyItems() {
     }
 
     try {
-        const items = await $.get(`item/search_fulltext_my_items_service`, { search: searchValue }, 'json');
+        const response = await $.get(`item/search_fulltext_my_items_service`, { search: searchValue }, 'json');
 
         // vidage des grilles pour y mettre les résultats de manière dynamique
         activeItemsGrid.empty();
         closedUnsoldItemsGrid.empty();
         soldItemsGrid.empty();
 
-        displayMyItems(items);
+        displayMyItems(response.items, response.encoded_search);
     } catch (error) {
         console.error('Erreur AJAX Search My Items:', error);
     }
 
     // pur affichage : fonction utilitaire qui affiche les items en JS
-    function displayMyItems(items) {
+    function displayMyItems(items, encodedSearch = '') {
         if (items.length > 0) {
             items.forEach((item) => {
+                let href = `item/open/${item.id}/from-items`;
+
+                if (encodedSearch !== '') {
+                    href += `/${encodedSearch}`;
+                }
+
                 // badges, icons, etc
                 let contextBadge = '';
                 if (item.context === 'sold') {
@@ -101,7 +116,7 @@ async function checkSearchFullTextMyItems() {
 
                 let cardHtml = `
                     <div class="col">
-                        <a href="item/open/${item.id}/from-items" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary">
+                        <a href="${href}" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary">
                             <div class="position-relative">
                                 <img src="${imgSrc}" class="card-img-top" alt="${item.title}" style="height: 200px; object-fit: cover;">
 
@@ -150,7 +165,6 @@ async function checkSearchFullTextMyItems() {
             });
         }
 
-        // --- 7. MESSAGE PAR DÉFAUT SI VIDE ---
         if (activeItemsGrid.children().length === 0) {
             activeItemsGrid.html('<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>');
         }

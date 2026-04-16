@@ -16,13 +16,6 @@ $image_to_display = $item->get_main_image_url();
 // Sécurité au cas où les variables ne sont pas passées
 $context = $context ?? 'from-browse';
 $encoded_search = $encoded_search ?? '';
-
-
-// --- CALCUL DE L'URL DE RETOUR ---
-// $back_url = ($context === 'from-items') ? "item/list" : "item/browse";
-// if ($encoded_search !== '') {
-//   $back_url .= "/" . $encoded_search;
-// }
 ?>
 
 <!DOCTYPE html>
@@ -155,8 +148,6 @@ $encoded_search = $encoded_search ?? '';
             </div>
           </div>
         <?php endif; ?>
-
-
       </div>
 
       <div class="col-md-4">
@@ -222,10 +213,19 @@ $encoded_search = $encoded_search ?? '';
               <?php endif; ?>
 
               <?php if ($item->get_has_buy_now()): ?>
-                <form action="<?= GoBack::smart_href('item/buy_now/' . $item->get_id()) ?>" method="POST" class="p-1 border-0">
+                <?php
+                $buy_now_url = GoBack::smart_href('item/buy_now/' . $item->get_id());
 
+                // raccroche la recherche encodée si elle est active
+                if ($encoded_search !== '') {
+                  $buy_now_url .= "/" . $encoded_search;
+                }
+
+                ?>
+                <form action="<?= $buy_now_url; ?>" method="POST" class="p-1 border-0">
                   <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                   <input type="hidden" name="encoded_search" value="<?= $encoded_search ?>">
+                  <input type="hidden" name="context" value="<?= $context ?>">
 
                   <button class="btn btn-primary w-100 fw-bold py-2" type="submit" <?php if ($current_user === $item->get_owner_name()) echo 'disabled'; ?>>
                     Buy Now at € <?= number_format($item->get_buy_now_price(), 2, ',', ' ') ?>

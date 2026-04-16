@@ -1,9 +1,12 @@
 let searchInput, participatingGrid, availableGrid, defaultParticipatingHtml, defaultAvailableHtml;
+let initialSearchValue = '';
 
 $(function () {
     searchInput = $('#search_fulltext');
     participatingGrid = $('#participating_grid');
     availableGrid = $('#available_grid');
+
+    initialSearchValue = searchInput.val().trim(); // mémorise ce qu'il y a dans la barre au chargement
 
     // pages par défaut sauvergardées (les listes d'items de l'utilisateur courrant)
     defaultParticipatingHtml = participatingGrid.html();
@@ -15,10 +18,17 @@ $(function () {
 async function checkSearchFullTextBrowseItems() {
     const searchValue = searchInput.val().trim();
 
-    // s'il n'a rien cherhcé, on affiche la liste par défaut
+    // s'il n'a rien cherché, on affiche les listes par défaut
     if (searchValue === '') {
-        participatingGrid.html(defaultParticipatingHtml);
-        availableGrid.html(defaultAvailableHtml);
+        if (initialSearchValue !== '') {
+            window.location.href = 'item/browse';
+            return;
+        }
+
+        // sinon, restauration du cache
+        activeItemsGrid.html(defaultActiveHtml);
+        closedUnsoldItemsGrid.html(defaultClosedUnsoldHtml);
+        soldItemsGrid.html(defaultSoldHtml);
         return;
     }
 
