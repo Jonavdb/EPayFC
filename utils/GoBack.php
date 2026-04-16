@@ -2,7 +2,6 @@
 
 class GoBack {
     public static function go_back(): string {
-
         $uri = $_SERVER['REQUEST_URI'];
 
         // Correction du strpos avec !== false
@@ -25,14 +24,24 @@ class GoBack {
             'from-sales' => 'item/sales',
             'from-purchases' => 'item/purchases'
         ];
+
         $from = null;
         foreach ($params_map as $param => $target_url) {
             if (strpos($uri, $param) !== false) {
                 $from = $param;
-                if (isset($parts[3]) && is_numeric($parts[3]) && !strpos($uri, 'item/open')) {
-                    return "item/open/" . $parts[3] . "/" . $from;
+
+                $encoded_search = ''; // attrape la recherche encodée si elle suit le paramètre contextuel
+                $param_index = array_search($param, $parts);
+
+                if ($param_index !== false && isset($parts[$param_index + 1])) {
+                    $encoded_search = "/" . $parts[$param_index + 1];
                 }
-                return $target_url;
+
+                if (isset($parts[3]) && is_numeric($parts[3]) && !strpos($uri, 'item/open')) {
+                    return "item/open/" . $parts[3] . "/" . $from . $encoded_search;
+                }
+
+                return $target_url . $encoded_search;
             }
         }
         return 'item/browse';

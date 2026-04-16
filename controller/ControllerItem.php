@@ -226,12 +226,14 @@ class ControllerItem extends Controller {
     }
 
     public function new_bid() {
-
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : 0.0;
 
         $user = $this->get_user_or_redirect();
         $current_user_pseudo = $user->get_pseudo();
+
+        $encoded_search = isset($_POST['encoded_search']) ? $_POST['encoded_search'] : '';
+        $context = isset($_POST['context']) ? $_POST['context'] : 'from-browse';
 
         $item = Item::get_item_by_id($item_id);
         $now = AppTime::get_current_datetime();
@@ -246,18 +248,28 @@ class ControllerItem extends Controller {
             return;
         }
 
+        $redirect_params = ['item', 'open', $item_id, $context];
+
+        if ($encoded_search !== '') {
+            $redirect_params[] = $encoded_search;
+        }
+
+
         if ($item->get_end_at() < $now) {
-            $this->redirect('item', 'open', $item_id);
+            $this->redirect(...$redirect_params);
             return;
         }
 
         if ($item_id > 0 && $amount > 0) {
             Bid::create_bid($current_user_pseudo, $item_id, $amount);
         }
-        $redirect_url = GoBack::smart_href("item/open/" . $item->get_id());
-        $url_parts = explode('/', $redirect_url);
 
-        $this->redirect(...$url_parts);
+        $this->redirect(...$redirect_params);
+
+        // $redirect_url = GoBack::smart_href("item/open/" . $item->get_id() . "/" . $encoded_search);
+        // $url_parts = explode('/', $redirect_url);
+
+        // $this->redirect(...$url_parts);
     }
 
     public function buy_now() {
