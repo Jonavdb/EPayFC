@@ -4,7 +4,8 @@
 
             <div class="d-flex align-items-center" style="min-width: 50px;">
                 <?php if (!isset($hide_back_button) || !$hide_back_button): ?>
-                    <a href="<?= GoBack::go_back() ?>" class="btn-icon">
+                    <?php $target_url = isset($custom_back_url) ? $custom_back_url : GoBack::go_back(); ?>
+                    <a href="<?= $target_url ?>" class="btn-icon">
                         <i class="fa-solid fa-arrow-left"></i>
                     </a>
                 <?php endif; ?>

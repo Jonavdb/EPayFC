@@ -6,7 +6,7 @@ require_once "model/Item.php";
 require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
-
+require_once "utils/UrlEncoder.php";
 
 class ControllerItem extends Controller {
     public function index(): void {
@@ -58,7 +58,13 @@ class ControllerItem extends Controller {
 
 
     /* Helper partagé : Prépare les données d'affichage d'une carte item */
-    private function prepare_item_data(Item $item, DateTime $now, string $card_context = 'my-items', string $owner_name = ''): object {
+    private function prepare_item_data(
+        Item $item,
+        DateTime $now,
+        string $card_context = 'my-items',
+        string $owner_name = '',
+        string $encoded_search = ''
+    ): object {
         $is_closed = $item->get_end_at() <= $now;
 
         // Calcul du texte temps + couleur
@@ -95,7 +101,10 @@ class ControllerItem extends Controller {
             ? ($item->get_user_bid_amount() == $item->get_current_bid())
             : false;
 
-        $context = ($card_context !== 'my-items') ? 'active' : '';
+        if ($encoded_search !== '') {
+            $href .= "/" . $encoded_search;
+        }
+
         $has_buy_now = $item->get_has_buy_now();
         $is_auction  = $item->get_is_auction() || $card_context === 'browse-bidding';
         $is_direct   = $item->get_is_direct_sale();
@@ -133,6 +142,7 @@ class ControllerItem extends Controller {
             'price_color'          => $price_color,
             'show_current_bid'     => $show_current_bid,
             'current_bid_display'  => $current_bid_display,
+            'href' => $href
         ];
     }
 
@@ -199,13 +209,17 @@ class ControllerItem extends Controller {
         $user = $this->get_user_or_false();
         $current_user_pseudo = $user ? $user->get_pseudo() : null;
 
+        $context = isset($_GET['param2']) ? $_GET['param2'] : 'from-browse';
+        $encoded_search = isset($_GET['param3']) ? $_GET['param3'] : '';
 
         (new View("open_item"))->show([
             "item" => $item,
             "bids" => $bids,
             "current_user" => $current_user_pseudo,
             'selected_image' => $image_index,
-            "is_guest" => !$this->user_logged()
+            "is_guest" => !$this->user_logged(),
+            "context" => $context,
+            "encoded_search" => $encoded_search
         ]);
     }
 
@@ -558,27 +572,36 @@ class ControllerItem extends Controller {
     }
 
     public function browse() {
-        // we retrive the user session
         $user = $this->get_user_or_false();
-
-        // we check whether it's an existing user or a guest
         $is_guest = $user == false;
-
         $now = new DateTime(AppTime::get_current_datetime());
 
+        // on lit le paramètre d'URL et on le décode
+        $encoded_search = isset($_GET['param1']) ? $_GET['param1'] : '';
+        $search_query = "";
+
+        if ($encoded_search !== '') {
+            $decoded = UrlEncoder::url_safe_decode($encoded_search);
+
+            if (is_array($decoded) && isset($decoded['search'])) {
+                $search_query = $decoded['search'];
+            }
+        }
+
         // we retrieve items the user placed a bid on
-        $raw_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->get_id());
-        $user_bid_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse-bidding', $item->get_owner_name()), $raw_bid_items);
+        $raw_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->get_id(), $search_query);
+        $user_bid_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse-bidding', $item->get_owner_name(), $encoded_search), $raw_bid_items);
 
         // we retrieve items available for him to purchase or place a bid 
-        $raw_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->get_id());
-        $user_available_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name()), $raw_available_items);
+        $raw_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->get_id(), $search_query);
+        $user_available_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search), $raw_available_items);
 
         (new View("browse_items"))->show(
             [
                 "user_bid_items" => $user_bid_items,
                 "user_available_items" => $user_available_items,
-                "is_guest" => $is_guest
+                "is_guest" => $is_guest,
+                "search_query" => $search_query
             ]
         );
     }
@@ -759,6 +782,8 @@ class ControllerItem extends Controller {
             $search = trim($_GET["search"]);
             $current_user = $this->get_user_or_false();
 
+            $encoded_search = UrlEncoder::url_safe_encode(['search' => $search]);
+
             if (!$current_user) {
                 echo json_encode([]);
             }
@@ -773,7 +798,7 @@ class ControllerItem extends Controller {
 
             // les items sur lesquels on a participé
             foreach ($bid_items as $item) {
-                $display_data = $this->prepare_item_data($item, $now);
+                $display_data = $this->prepare_item_data($item, $now, 'browse-bidding', $item->get_owner_name(), $encoded_search);
 
                 $results[] = [
                     'id'              => $item->get_id(),
@@ -798,7 +823,7 @@ class ControllerItem extends Controller {
 
             // les autres items
             foreach ($available_items as $item) {
-                $display_data = $this->prepare_item_data($item, $now);
+                $display_data = $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search);
 
                 $results[] = [
                     'id'              => $item->get_id(),
@@ -822,9 +847,14 @@ class ControllerItem extends Controller {
                 ];
             }
 
-            echo json_encode($results);
+            // echo json_encode($results);
+            echo json_encode([
+                'encoded_search' => $encoded_search,
+                'items' => $results
+            ]);
         } else {
-            echo json_encode([]);
+            // echo json_encode([]);
+            echo json_encode(['encoded_search' => '', 'items' => []]);
         }
     }
 
