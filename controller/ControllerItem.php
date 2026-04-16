@@ -120,10 +120,6 @@ class ControllerItem extends Controller {
             $href .= "/" . $encoded_search;
         }
 
-        if ($encoded_search !== '') {
-            $href .= "/" . $encoded_search;
-        }
-
         $has_buy_now = $item->get_has_buy_now();
         $is_auction  = $item->get_is_auction() || $card_context === 'browse';
         $is_direct   = $item->get_is_direct_sale();

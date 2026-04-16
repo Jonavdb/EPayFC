@@ -16,6 +16,12 @@ $image_to_display = $item->get_main_image_url();
 // Sécurité au cas où les variables ne sont pas passées
 $context = $context ?? 'from-browse';
 $encoded_search = $encoded_search ?? '';
+
+// --- CALCUL DE L'URL DE RETOUR ---
+$back_url = ($context === 'from-items') ? "item/list" : "item/browse";
+if ($encoded_search !== '') {
+  $back_url .= "/" . $encoded_search;
+}
 ?>
 
 <!DOCTYPE html>
