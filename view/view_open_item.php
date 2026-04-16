@@ -38,6 +38,7 @@ $encoded_search = $encoded_search ?? '';
 <body class="d-flex flex-column min-vh-100 dark-bg" style="padding-bottom: 140px;">
 
   <?php
+  $custom_back_url = $back_url;
   $page_title = "Item open";
   include 'view/view_header.php';
   ?>
@@ -257,6 +258,13 @@ $encoded_search = $encoded_search ?? '';
         </div>
 
         <?php if ($current_user === $item->get_owner_name() && (!$item->get_has_bids())): ?>
+          <?php
+          // On prépare le suffixe d'URL à ajouter aux boutons
+          $url_suffix = "/" . $context;
+          if ($encoded_search !== '') {
+            $url_suffix .= "/" . $encoded_search;
+          }
+          ?>
           <div class="card text-bg-dark border-secondary">
             <div class="card-body p-4">
               <h4 class="fw-bold text-secondary mb-3 fs-4 text-start">Manage Your Item</h4>

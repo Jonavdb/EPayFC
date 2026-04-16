@@ -120,6 +120,10 @@ class ControllerItem extends Controller {
             $href .= "/" . $encoded_search;
         }
 
+        if ($encoded_search !== '') {
+            $href .= "/" . $encoded_search;
+        }
+
         $has_buy_now = $item->get_has_buy_now();
         $is_auction  = $item->get_is_auction() || $card_context === 'browse';
         $is_direct   = $item->get_is_direct_sale();
@@ -627,6 +631,8 @@ class ControllerItem extends Controller {
         $user_bid_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search), $raw_bid_items);
 
         // we retrieve items available for him to purchase or place a bid 
+        $raw_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->get_id(), $search_query);
+        $user_available_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search), $raw_available_items);
         $raw_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->get_id(), $search_query);
         $user_available_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search), $raw_available_items);
 
