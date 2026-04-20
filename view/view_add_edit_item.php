@@ -15,7 +15,8 @@ require_once "utils/GoBack.php";
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
     <script src="lib/jquery-4.0.0.min.js" type="text/javascript"></script>
-    <script src="scripts/add_edit_item.js"></script>
+    <script type="module" src="scripts/get_constants.js"></script>
+    <script type="module" src="scripts/add_edit_item.js"></script>
 </head>
 
 <body style="padding-top:60px; padding-bottom: 140px;">
