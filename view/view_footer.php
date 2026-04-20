@@ -20,7 +20,7 @@
             <?php endif; ?>
 
             <?php if (!$is_guest): ?>
-                <a class="nav-link d-flex flex-column align-items-center text-secondary" href=<?= GoBack::smart_href("item/add/")?>>
+                <a class="nav-link d-flex flex-column align-items-center text-secondary" href="item/add">
                     <i class="fa-solid fa-plus fs-4 mb-1"></i>
                     <span>Add Offer</span>
                 </a>

@@ -21,13 +21,13 @@ require_once "utils/GoBack.php";
 <body style="padding-top:60px; padding-bottom: 140px;">
     <?php
     $page_title = ($item->get_id() > 0) ? 'Edit Item' : 'Add Item';
-    $hide_back_button = true;
+    $hide_back_button = ($item->get_id() > 0) ? false : true;
 
 
     // On cache l'icône "panier" pour cette page
     $hide_default_icon = true;
 
-    // On utilise ob_start() pour capturer le HTML proprement, ou juste une string
+    // On utilise ob_start() pour capturer le HTML proprement, ou juste une stringgit
     ob_start();
     ?>
     <button type="submit" id="submitBtn" form="itemForm" class="btn-icon text-primary" disabled="disabled">
