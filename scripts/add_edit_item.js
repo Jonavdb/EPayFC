@@ -12,12 +12,16 @@ let itemTitle,
     errInstant,
     direct,
     errDirect,
-    submitBtn;
+    submitBtn,
+    goBackBtn,
+    footerElements;
 
 const APP_CONFIG = await fetchConstants();
 
 $(function () {
     submitBtn = $("#submitBtn");
+    goBackBtn = $("#goBack");
+    footerElements = $("footer a.nav-link");
 
     itemTitle = $("#title");
     errTitle = $("#errTitle");
@@ -54,6 +58,14 @@ $(function () {
     direct.bind("blur", checkStartingBidValid);
     direct.bind("blur", checkOptionalInstantValid);
 
+    // event listener sur le go back
+    goBackBtn.on("click", null, (e) => {
+        handleLeaveConfirmation(e);
+    });
+    footerElements.on("click", null, (e) => {
+        handleLeaveConfirmation(e);
+    });
+
     // triggers de validation au chargement
     itemTitle.trigger("blur");
     startingBid.trigger("blur");
@@ -63,14 +75,8 @@ $(function () {
     instantOptional.trigger("blur");
     direct.trigger("blur");
 
-    /* debug affichage constantes (OK)
-    console.log("min item l " + APP_CONFIG.min_item_length);
-    console.log("max item l " + APP_CONFIG.max_item_length);
-    console.log("min duration " + APP_CONFIG.min_duration_days);
-    console.log("max duration " + APP_CONFIG.max_duration_days);
-    console.log("min desc " + APP_CONFIG.min_description_length);
-    console.log("max desc " + APP_CONFIG.max_description_length);
-    */
+    // debug
+    console.log("go back retrieved:" + goBackBtn.hasClass("btn-icon"));
 });
 
 async function checkTitleValid() {
@@ -369,4 +375,42 @@ function checkFormValidity() {
     } else {
         submitBtn.prop("disabled", false);
     }
+}
+
+function handleLeaveConfirmation(e) {
+    if (hasUnsavedChanges()) {
+        // on arrête la navigation
+        e.preventDefault();
+
+        // on affiche la box de confirmation
+        const redirect = e.currentTarget.href; // lien de redirection normal si l'utilisateur choisit de quitter
+        askConfirm(redirect);
+    }
+
+    // si pas de de changement, le bouton agit normalement
+}
+
+function hasUnsavedChanges() {
+    // on recup les champs
+    const fields = Array.from($("#title, #description, #duration, #starting_bid, #instant, #direct"));
+
+    // on check si il y a eu des changements depuis le chargement de la page
+    const hasChanges = fields.some((field) => {
+        return field.value !== field.defaultValue;
+    });
+    return hasChanges;
+}
+
+function askConfirm(redirect) {
+    // affiche la box de confirmation
+    $("#unsavedModal").modal("show");
+
+    // redirection
+    const leaveBtn = $("#confirmLeaveBtn");
+
+    // .off pour empêcher le stack de plusieurs évènements 'quitter' à l'appui du bouton
+    leaveBtn.off("click").on("click", (e) => {
+        // prend la fenêtre courante du navigateur et lui assigne l'url de destination
+        window.location.href = redirect;
+    });
 }
