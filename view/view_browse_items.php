@@ -20,6 +20,7 @@
 <body class="d-flex flex-column min-vh-100 dark-bg" style="padding-bottom: 140px;">
     <?php
     $page_title = "Browse";
+    $hide_back_button = true;
     include 'view/view_header.php';
     ?>
 

@@ -1,4 +1,10 @@
-<?php require_once "utils/GoBack.php"; ?>
+<?php
+require_once "utils/GoBack.php";
+
+// Sécurité au cas où les variables ne sont pas passées
+$context = $context ?? 'from-browse';
+$encoded_search = $encoded_search ?? '';
+?>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -21,6 +27,7 @@
         <!-- HEADER -->
         <?php
         $page_title = "My Items";
+        $hide_back_button = true;
         include 'view/view_header.php';
         ?>
 

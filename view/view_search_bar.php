@@ -7,6 +7,7 @@
         <input type="text"
             class="form-control bg-dark border-secondary text-light fs-3"
             id="search_fulltext"
-            placeholder="Search items...">
+            placeholder="Search items..."
+            value="<?= isset($search_query) ? htmlspecialchars($search_query) : '' ?>">
     </div>
 </div>

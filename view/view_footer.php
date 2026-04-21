@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="d-flex justify-content-around w-100 py-3">
 
-            <a class="nav-link d-flex flex-column align-items-center text-secondary" href="item/browse">
+            <a class="nav-link d-flex flex-column align-items-center text-secondary" href="item/browse/">
                 <i class="fa-solid fa-magnifying-glass-plus fs-4 mb-1"></i>
                 <span>Browse</span>
             </a>

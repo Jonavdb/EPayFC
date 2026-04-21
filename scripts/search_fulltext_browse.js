@@ -1,9 +1,12 @@
 let searchInput, participatingGrid, availableGrid, defaultParticipatingHtml, defaultAvailableHtml;
+let initialSearchValue = '';
 
 $(function () {
     searchInput = $('#search_fulltext');
     participatingGrid = $('#participating_grid');
     availableGrid = $('#available_grid');
+
+    initialSearchValue = searchInput.val().trim(); // mémorise ce qu'il y a dans la barre au chargement
 
     // pages par défaut sauvergardées (les listes d'items de l'utilisateur courrant)
     defaultParticipatingHtml = participatingGrid.html();
@@ -15,29 +18,42 @@ $(function () {
 async function checkSearchFullTextBrowseItems() {
     const searchValue = searchInput.val().trim();
 
-    // s'il n'a rien cherhcé, on affiche la liste par défaut
+    // s'il n'a rien cherché, on affiche les listes par défaut
     if (searchValue === '') {
-        participatingGrid.html(defaultParticipatingHtml);
-        availableGrid.html(defaultAvailableHtml);
+        if (initialSearchValue !== '') {
+            window.location.href = 'item/browse';
+            return;
+        }
+
+        // sinon, restauration du cache
+        activeItemsGrid.html(defaultActiveHtml);
+        closedUnsoldItemsGrid.html(defaultClosedUnsoldHtml);
+        soldItemsGrid.html(defaultSoldHtml);
         return;
     }
 
     try {
-        const items = await $.get(`item/search_fulltext_browse_service`, { search: searchValue }, 'json');
+        const response = await $.get('item/search_fulltext_browse_service', { search: searchValue }, 'json');
 
         // vidage des grilles pour y mettre les résultats de manière dynamique
         participatingGrid.empty();
         availableGrid.empty();
 
-        displayBrowseItems(items);
+        displayBrowseItems(response.items, response.encoded_search);
     } catch (error) {
         console.error('Erreur AJAX:', error);
     }
 
     // pur affichage : fonction utilitaire qui affiche les items en JS
-    function displayBrowseItems(items) {
+    function displayBrowseItems(items, encodedSearch = '') {
         if (items.length > 0) {
             items.forEach((item) => {
+                let href = `item/open/${item.id}/from-browse`;
+
+                if (encodedSearch !== '') {
+                    href += `/${encodedSearch}`;
+                }
+
                 // badges, icons, etc
                 let contextBadge = '';
                 if (item.context === 'sold') {
@@ -97,7 +113,7 @@ async function checkSearchFullTextBrowseItems() {
 
                 let cardHtml = `
                     <div class="col">
-                        <a href="item/open/${item.id}/from-items" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary bg-dark">
+                        <a href="${href}" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary bg-dark">
                             <div class="position-relative">
                                 <img src="${imgSrc}" class="card-img-top" alt="${item.title}" style="height: 200px; object-fit: cover;">
 

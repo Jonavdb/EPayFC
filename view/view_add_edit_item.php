@@ -22,11 +22,13 @@ require_once "utils/GoBack.php";
 <body style="padding-top:60px; padding-bottom: 140px;">
     <?php
     $page_title = ($item->get_id() > 0) ? 'Edit Item' : 'Add Item';
+    $hide_back_button = ($item->get_id() > 0) ? false : true;
+
 
     // On cache l'icône "panier" pour cette page
     $hide_default_icon = true;
 
-    // On utilise ob_start() pour capturer le HTML proprement, ou juste une string
+    // On utilise ob_start() pour capturer le HTML proprement, ou juste une stringgit
     ob_start();
     ?>
     <button type="submit" id="submitBtn" form="itemForm" class="btn-icon text-primary">
@@ -34,7 +36,6 @@ require_once "utils/GoBack.php";
     </button>
     <?php
     $header_right_content = ob_get_clean();
-
     include 'view/view_header.php';
     ?>
 
@@ -47,6 +48,8 @@ require_once "utils/GoBack.php";
         <?php if ($is_edit): ?>
             <input type="hidden" name="id" value="<?= $item->get_id() ?>">
             <input type="hidden" name="param1" value="<?= $item->get_id() ?>">
+            <input type="hidden" name="context" value="<?= $context ?? 'from-browse' ?>">
+            <input type="hidden" name="encoded_search" value="<?= $encoded_search ?? '' ?>">
         <?php endif; ?>
         <div class="container mb-4" style="margin-top: 30px;">
             <div class="card text-bg-dark border-secondary">
