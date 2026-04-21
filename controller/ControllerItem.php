@@ -666,122 +666,18 @@ class ControllerItem extends Controller {
         );
     }
 
+
+
     // Services AJAX
-    public function title_valid_service(): void {
-        $is_valid = false;
-
-        if (isset($_GET["title"]) && trim($_GET["title"]) !== "") {
-            $title = trim($_GET["title"]);
-            $length = strlen($title);
-            $min_size =  Configuration::get("min_item_lenght");
-            $max_size = Configuration::get("max_item_lenght");
-            if ($length >= $min_size && $length <= $max_size) {
-                $is_valid = true;
-            }
-        }
-
-        header('Content-Type: application/json');
-        echo json_encode(["is_valid" => $is_valid]);
-    }
-
-    public function description_valid_service(): void {
-        $is_valid = false;
-
-        if (isset($_GET["description"]) && trim($_GET["description"]) !== "") {
-            $description = trim($_GET["description"]);
-            $length = strlen($description);
-            $min_size = Configuration::get("min_description_length");
-            $max_size = Configuration::get("max_description_length");
-
-            if ($length >= $min_size && $length <= $max_size) {
-                $is_valid = true;
-            }
-        }
-
-        header('Content-Type: application/json');
-        echo json_encode(["is_valid" => $is_valid]);
-    }
-
-    public function duration_valid_service(): void {
-        $is_valid = false;
-
-        if (isset($_GET['duration']) && trim($_GET['duration']) !== "") {
-            $duration = (int)trim($_GET['duration']);
-            if ($duration >= 1) {
-                $is_valid = true;
-            }
-        }
-
-        header('Content-Type: application/json');
-        echo json_encode(["is_valid" => $is_valid]);
-    }
-
-    public function starting_bid_valid_service(): void {
-        // we retrieve values and normalize
-        $starting_bid = $_GET['starting_bid'] !== "" ? (float)$_GET['starting_bid'] : null;
-        $instant = $_GET['instant'] !== "" ? (float)$_GET['instant'] : null;
-        $direct = $_GET['direct'] !== "" ? (float)$_GET['direct'] : null;
-
-        // we check if they exist
-        $starting_bid_exists = !is_null($starting_bid);
-        $instant_exists = !is_null($instant);
-        $direct_exists = !is_null($direct);
-
-        // error when the field is empty 
-        $default = (!$starting_bid_exists && !$direct_exists);
-
-        // error when user tries to fill both field 
-        $both_exist =  ($starting_bid_exists && $direct_exists);
-
-        // error if bid is too low
-        $minimum_required = $starting_bid_exists && !$direct_exists && $starting_bid <= 0;
-
-        // error if instant is cheaper than starting bid
-        $instant_price_lower = $starting_bid_exists && !$direct_exists && $instant_exists && $instant <= $starting_bid;
-
-
+    public function get_constants_service(): void {
         header('Content-Type: application/json');
         echo json_encode([
-            "default" => $default,
-            "both_exist" => $both_exist,
-            "minimum_required" => $minimum_required,
-            "instant_price_lower" => $instant_price_lower
-        ]);
-    }
-
-    public function optional_instant_valid_service(): void {
-        // we retrieve values and normalize
-        $starting_bid = $_GET['starting_bid'] !== "" ? (float)$_GET['starting_bid'] : null;
-        $instant = $_GET['instant'] !== "" ? (float)$_GET['instant'] : null;
-        $direct = $_GET['direct'] !== "" ? (float)$_GET['direct'] : null;
-
-        // we check if they exist
-        $starting_bid_exists = !is_null($starting_bid);
-        $instant_exists = !is_null($instant);
-        $direct_exists = !is_null($direct);
-
-        // neutral state if field empty
-        $neutral = $instant_exists == false;
-
-        // error if direct is already filled
-        $both_exist = $direct_exists == true;
-
-        // error if starting bid is empty
-        $no_starting_bid = $starting_bid_exists == false;
-
-        // error if value less than 1
-        $minimum_required = $instant < 1;
-
-        // error if value less than starting bid
-        $instant_price_lower = $instant <= $starting_bid;
-
-        header('Content-Type: application/json');
-        echo json_encode([
-            "neutral" => $neutral,
-            "both_exist" => $both_exist,
-            "no_starting_bid" => $no_starting_bid,
-            "minimum_required" => $minimum_required,
-            "instant_price_lower" => $instant_price_lower
+            "min_item_length" => Configuration::get("min_item_lenght"),
+            "max_item_length" => Configuration::get("max_item_lenght"),
+            "min_duration_days" => Configuration::get("min_duration_days"),
+            "max_duration_days" => Configuration::get("max_duration_days"),
+            "min_description_length" => Configuration::get("min_description_length"),
+            "max_description_length" => Configuration::get("max_description_length"),
         ]);
     }
 
