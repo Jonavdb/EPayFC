@@ -14,6 +14,8 @@ require_once "utils/GoBack.php";
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <script src="lib/jquery-4.0.0.min.js" type="text/javascript"></script>
+    <script type="module" src="scripts/signup.js"></script>
 </head>
 
 <body>
@@ -35,17 +37,16 @@ require_once "utils/GoBack.php";
                         value="<?= htmlspecialchars($email); ?>"
                         placeholder="Mail">
                 </div>
-
-                <?php if (isset($errors['email_format']) || isset($errors['email_already_used'])): ?>
-                    <ul class="text-danger small mt-1 mb-0 ps-4">
+                <div id="errEmail" class="text-danger small mt-1 mb-0 ps-4">
+                    <?php if (isset($errors['email_format']) || isset($errors['email_already_used'])): ?>
                         <?php if (isset($errors['email_format'])): ?>
                             <li><?= $errors['email_format']; ?></li>
                         <?php endif; ?>
                         <?php if (isset($errors['email_already_used'])): ?>
                             <li><?= $errors['email_already_used']; ?></li>
                         <?php endif; ?>
-                    </ul>
-                <?php endif; ?>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <div class="mb-3">
@@ -140,7 +141,7 @@ require_once "utils/GoBack.php";
             </div>
 
             <div class="d-grid gap-3">
-                <input type="submit" name="btnSignUp" class="btn btn-primary" value="Sign Up">
+                <input type="submit" name="btnSignUp" class="btn btn-primary" value="Sign Up" id="btnSignup" disabled="disabled">
                 <a href="<?= GoBack::go_back() ?>" class="btn btn-danger w-100 text-decoration-none" role="button">
                     Cancel
                 </a>
