@@ -87,17 +87,18 @@ require_once "utils/GoBack.php";
                         value="<?= htmlspecialchars($pseudo); ?>"
                         placeholder="Pseudo">
                 </div>
-
-                <?php if (isset($errors['pseudo_length']) || isset($errors['pseudo_already_used'])): ?>
-                    <ul class="text-danger small mt-1 mb-0 ps-4">
-                        <?php if (isset($errors['pseudo_length'])): ?>
-                            <li><?= $errors['pseudo_length']; ?></li>
-                        <?php endif; ?>
-                        <?php if (isset($errors['pseudo_already_used'])): ?>
-                            <li><?= $errors['pseudo_already_used']; ?></li>
-                        <?php endif; ?>
-                    </ul>
-                <?php endif; ?>
+                <div id="errPseudo" class="text-danger small mt-1 mb-0 ps-4">
+                    <?php if (isset($errors['pseudo_length']) || isset($errors['pseudo_already_used'])): ?>
+                        <ul class="text-danger small mt-1 mb-0 ps-4">
+                            <?php if (isset($errors['pseudo_length'])): ?>
+                                <li><?= $errors['pseudo_length']; ?></li>
+                            <?php endif; ?>
+                            <?php if (isset($errors['pseudo_already_used'])): ?>
+                                <li><?= $errors['pseudo_already_used']; ?></li>
+                            <?php endif; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <div class="mb-3">

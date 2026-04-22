@@ -267,7 +267,7 @@ class ControllerUser extends Controller {
             $full_name_in_db = User::get_user_by_full_name($full_name);
             $current_user = $this->get_user_or_false();
 
-            // If there is an email in the DB
+            // If there is this full name in the DB
             if ($full_name_in_db) {
                 if (!$current_user || $full_name_in_db->get_id() !== $current_user->get_id()) {
                     $exists = true;
@@ -287,8 +287,11 @@ class ControllerUser extends Controller {
             $pseudo_in_db = User::get_user_by_pseudo($pseudo);
             $current_user = $this->get_user_or_false();
 
-            if ($pseudo_in_db && $current_user && $pseudo_in_db->get_id() !== $current_user->get_id()) {
-                $exists = true;
+            // If pseudo already exists in DB
+            if ($pseudo_in_db) {
+                if (!$current_user || $pseudo_in_db->get_id() !== $current_user->get_id()) {
+                    $exists = true;
+                }
             }
         }
         header('Content-Type: application/json');
@@ -326,7 +329,10 @@ class ControllerUser extends Controller {
             "max_duration_days" => Configuration::get("max_duration_days"),
             "min_description_length" => Configuration::get("min_description_length"),
             "max_description_length" => Configuration::get("max_description_length"),
-            "full_name_min_length" => Configuration::get("full_name_min_length")
+            "full_name_min_length" => Configuration::get("full_name_min_length"),
+            "pseudo_min_length" => Configuration::get("pseudo_min_length"),
+            "pseudo_max_length" => Configuration::get("pseudo_max_length"),
+            "pseudo_regex" =>  Configuration::get("pseudo_regex"),
         ]);
     }
 }

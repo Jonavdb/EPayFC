@@ -13,9 +13,13 @@ $(function () {
     fullName = $("#full_name");
     errFullName = $("#errFullName");
 
+    pseudo = $("#pseudo");
+    errPseudo = $("#errPseudo");
+
     // bindings
     email.bind("blur", checkEmailValid);
     fullName.bind("blur", checkFullNameValid);
+    pseudo.bind("blur", checkPseudoValid);
 });
 
 async function checkEmailValid() {
@@ -31,7 +35,7 @@ async function checkEmailValid() {
     // erreur : email existe déjà
     let alreadyExists = false;
     try {
-        const data = await $.getJSON("user/email_exists_service", { email: email.val().trim() });
+        const data = await $.getJSON("user/email_exists_service", { email: emailSanitized });
         alreadyExists = data.exists === true;
     } catch (error) {
         console.error("Erreur AJAX:", error);
@@ -76,7 +80,7 @@ async function checkFullNameValid() {
     // erreur : full name existe déjà
     let alreadyExists = false;
     try {
-        const data = await $.getJSON(`user/full_name_exists_service`, { full_name: fullName.val().trim() });
+        const data = await $.getJSON(`user/full_name_exists_service`, { full_name: fullNameSanitized });
         alreadyExists = data.exists === true;
     } catch (error) {
         console.error("Erreur AJAX:", error);
@@ -105,6 +109,61 @@ async function checkFullNameValid() {
     checkFormValidity();
 }
 
+async function checkPseudoValid() {
+    const pseudoSanitized = pseudo.val().trim();
+    const length = pseudoSanitized.length;
+    const minSize = APP_CONFIG.pseudo_min_length;
+    const maxSize = APP_CONFIG.pseudo_max_length;
+    if (pseudoSanitized === "") {
+        // champ laissé vide : affichage texte par défaut et on masque l'erreur
+        errPseudo.html("").removeClass("text-danger");
+        pseudo.removeClass("is-invalid is-valid").addClass("border-secondary");
+        checkFormValidity();
+        return;
+    }
+
+    // erreur : pseudo name existe déjà
+    let alreadyExists = false;
+    try {
+        const data = await $.getJSON("user/pseudo_exists_service", { pseudo: pseudoSanitized });
+        alreadyExists = data.exists === true;
+    } catch (error) {
+        console.error("Erreur AJAX:", error);
+    }
+
+    // erreur : longueur invalide
+    const isInvalidLength = length < minSize || length > maxSize;
+
+    // erreur : format invalid
+    const rawRegex = APP_CONFIG.pseudo_regex.replace(/^\/|\/$/g, "");
+    const pseudoRegex = new RegExp(rawRegex);
+    const isInvalidFormat = !pseudoRegex.test(pseudoSanitized);
+
+    // on clear l'état du champ
+    pseudo.removeClass("is-valid is-invalid border-secondary");
+    errPseudo.html("").removeClass("text-danger");
+
+    if (alreadyExists) {
+        // erreur : cadre rouge
+        errPseudo.html("<ul><li>Ce pseudo est déjà utilisé.</li></ul>").addClass("text-danger");
+        pseudo.addClass("is-invalid");
+    } else if (isInvalidLength) {
+        // erreur cadre rouge
+        errPseudo
+            .html("<ul><li>Le pseudo doit avoir une longueur comprise entre " + minSize + " et " + maxSize + " caractère</li></ul>")
+            .addClass("text-danger");
+        pseudo.addClass("is-invalid");
+    } else if (isInvalidFormat) {
+        // erreur cadre rouge
+        errPseudo.html("<ul><li>Le pseudo doit commencer par une lettre et ne contenir que des caractères alphanumériques.</li></ul>").addClass("text-danger");
+        pseudo.addClass("is-invalid");
+    } else {
+        // si pas d'erreur, alors valide
+        // success : cadre vert
+        pseudo.addClass("is-valid");
+    }
+    checkFormValidity();
+}
 function checkFormValidity() {
     // 1. validation email
     const isEmailValid = email.hasClass("is-valid");
@@ -112,8 +171,11 @@ function checkFormValidity() {
     // 2. validation full name
     const isFullNameValid = fullName.hasClass("is-valid");
 
+    // 3. validation pseudo
+    const isPseudoValid = pseudo.hasClass("is-valid");
+
     // ?. validation finale du formulaire
-    const isFormValid = isEmailValid && isFullNameValid;
+    const isFormValid = isEmailValid && isFullNameValid && isPseudoValid;
 
     if (!isFormValid) {
         signupBtn.prop("disabled", true);
