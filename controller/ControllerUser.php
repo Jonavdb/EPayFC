@@ -267,8 +267,11 @@ class ControllerUser extends Controller {
             $full_name_in_db = User::get_user_by_full_name($full_name);
             $current_user = $this->get_user_or_false();
 
-            if ($full_name_in_db && $current_user && $full_name_in_db->get_id() !== $current_user->get_id()) {
-                $exists = true;
+            // If there is an email in the DB
+            if ($full_name_in_db) {
+                if (!$current_user || $full_name_in_db->get_id() !== $current_user->get_id()) {
+                    $exists = true;
+                }
             }
         }
 
@@ -323,6 +326,7 @@ class ControllerUser extends Controller {
             "max_duration_days" => Configuration::get("max_duration_days"),
             "min_description_length" => Configuration::get("min_description_length"),
             "max_description_length" => Configuration::get("max_description_length"),
+            "full_name_min_length" => Configuration::get("full_name_min_length")
         ]);
     }
 }

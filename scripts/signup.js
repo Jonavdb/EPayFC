@@ -10,8 +10,12 @@ $(function () {
     email = $("#email");
     errEmail = $("#errEmail");
 
+    fullName = $("#full_name");
+    errFullName = $("#errFullName");
+
     // bindings
     email.bind("blur", checkEmailValid);
+    fullName.bind("blur", checkFullNameValid);
 });
 
 async function checkEmailValid() {
@@ -57,12 +61,59 @@ async function checkEmailValid() {
     checkFormValidity();
 }
 
+async function checkFullNameValid() {
+    const fullNameSanitized = fullName.val().trim();
+    const length = fullNameSanitized.length;
+    const minSize = APP_CONFIG.full_name_min_length;
+    if (fullNameSanitized === "") {
+        // champ laissé vide : affichage texte par défaut et on masque l'erreur
+        errFullName.html("").removeClass("text-danger");
+        fullName.removeClass("is-invalid is-valid").addClass("border-secondary");
+        checkFormValidity();
+        return;
+    }
+
+    // erreur : full name existe déjà
+    let alreadyExists = false;
+    try {
+        const data = await $.getJSON(`user/full_name_exists_service`, { full_name: fullName.val().trim() });
+        alreadyExists = data.exists === true;
+    } catch (error) {
+        console.error("Erreur AJAX:", error);
+    }
+
+    // erreur : format invalide
+    const tooShort = length < minSize;
+
+    // on clear l'état du champ
+    fullName.removeClass("is-valid is-invalid border-secondary");
+    errFullName.html("").removeClass("text-danger");
+
+    if (alreadyExists) {
+        // erreur : cadre rouge
+        errFullName.html("<ul><li>Ce nom est déjà utilisé.</li></ul>").addClass("text-danger");
+        fullName.addClass("is-invalid");
+    } else if (tooShort) {
+        // erreur cadre rouge
+        errFullName.html("<ul><li>Le nom complet doit comporter au moins " + minSize + " caractères.</li></ul>").addClass("text-danger");
+        fullName.addClass("is-invalid");
+    } else {
+        // si pas d'erreur, alors valide
+        // success : cadre vert
+        fullName.addClass("is-valid");
+    }
+    checkFormValidity();
+}
+
 function checkFormValidity() {
     // 1. validation email
     const isEmailValid = email.hasClass("is-valid");
 
+    // 2. validation full name
+    const isFullNameValid = fullName.hasClass("is-valid");
+
     // ?. validation finale du formulaire
-    const isFormValid = isEmailValid;
+    const isFormValid = isEmailValid && isFullNameValid;
 
     if (!isFormValid) {
         signupBtn.prop("disabled", true);

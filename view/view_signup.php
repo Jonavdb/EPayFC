@@ -40,16 +40,20 @@ require_once "utils/GoBack.php";
                 <div id="errEmail" class="text-danger small mt-1 mb-0 ps-4">
                     <?php if (isset($errors['email_format']) || isset($errors['email_already_used'])): ?>
                         <?php if (isset($errors['email_format'])): ?>
-                            <li><?= $errors['email_format']; ?></li>
+                            <ul class="text-danger small mt-1 mb-0 ps-4">
+                                <li><?= $errors['email_format']; ?></li>
+                            </ul>
                         <?php endif; ?>
                         <?php if (isset($errors['email_already_used'])): ?>
-                            <li><?= $errors['email_already_used']; ?></li>
+                            <ul class="text-danger small mt-1 mb-0 ps-4">
+                                <li><?= $errors['email_already_used']; ?></li>
+                            </ul>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>
 
-            <div class="mb-3">
+            <div class=" mb-3">
                 <div class="input-group">
                     <span class="input-group-text bg-dark border-secondary text-light">
                         <i class="fa-solid fa-user"></i>
@@ -62,12 +66,13 @@ require_once "utils/GoBack.php";
                         value="<?= htmlspecialchars($full_name); ?>"
                         placeholder="Full name">
                 </div>
-
-                <?php if (isset($errors['full_name'])): ?>
-                    <ul class="text-danger small mt-1 mb-0 ps-4">
-                        <li><?= $errors['full_name']; ?></li>
-                    </ul>
-                <?php endif; ?>
+                <div id="errFullName" class="text-danger small mt-1 mb-0 ps-4">
+                    <?php if (isset($errors['full_name'])): ?>
+                        <ul class="text-danger small mt-1 mb-0 ps-4">
+                            <li><?= $errors['full_name']; ?></li>
+                        </ul>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <div class="mb-3">
