@@ -669,18 +669,6 @@ class ControllerItem extends Controller {
 
 
     // Services AJAX
-    public function get_constants_service(): void {
-        header('Content-Type: application/json');
-        echo json_encode([
-            "min_item_length" => Configuration::get("min_item_lenght"),
-            "max_item_length" => Configuration::get("max_item_lenght"),
-            "min_duration_days" => Configuration::get("min_duration_days"),
-            "max_duration_days" => Configuration::get("max_duration_days"),
-            "min_description_length" => Configuration::get("min_description_length"),
-            "max_description_length" => Configuration::get("max_description_length"),
-        ]);
-    }
-
     public function get_js_images(): void {
         $item_id = (int)$_GET['param1'];
         $pictures = ItemPicture::get_pictures_by_item($item_id); // récupère toutes les images d'un objet
