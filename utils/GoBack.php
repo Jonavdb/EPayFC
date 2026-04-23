@@ -33,7 +33,7 @@ class GoBack {
                 $encoded_search = ''; // attrape la recherche encodée si elle suit le paramètre contextuel
                 $param_index = array_search($param, $parts);
 
-                if ($param_index !== false && isset($parts[$param_index + 1])) {
+                if ($param_index !== false && isset($parts[$param_index + 1]) && !is_numeric($parts[$param_index + 1])) {
                     $encoded_search = "/" . $parts[$param_index + 1];
                 }
 

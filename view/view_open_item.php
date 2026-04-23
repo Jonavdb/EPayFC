@@ -105,7 +105,7 @@ if ($encoded_search !== '') {
                 $is_active = ($image === $image_to_display);
                 $border_class = $is_active ? 'border-primary' : 'border-secondary';
               ?>
-                <a href="<?= GoBack::smart_href("item/open/" . $item->get_id() . "/" . $index) ?>" class="d-block">
+                <a href="<?= GoBack::smart_href("item/open/" . $item->get_id()) . "/" . $index ?>" class="d-block">
                   <img src="<?= $image ?>"
                     class="rounded border border-2 <?= $border_class ?>"
                     alt="View <?= $index ?>"
