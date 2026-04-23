@@ -56,6 +56,7 @@ async function checkSearchFullTextBrowseItems() {
 
                 // badges, icons, etc
                 let contextBadge = '';
+
                 if (item.context === 'sold') {
                     contextBadge = `<span class="badge rounded-pill bg-success"><i class="fa-solid fa-check"></i> Sold</span>`;
                 } else if (item.context === 'unsold') {

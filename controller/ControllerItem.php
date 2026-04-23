@@ -141,17 +141,17 @@ class ControllerItem extends Controller {
             : null;
 
         return (object) [
-            'raw_item'            => $item,
-            'time_left'           => $time_left_str,
-            'time_color'          => $time_color,
+            'raw_item'             => $item,
+            'time_left'            => $time_left_str,
+            'time_color'           => $time_color,
             'img_src'              => $img_src,
             'extra_images'         => $extra_image_count,
-            'context'             => '',
-            'card_context'        => 'my-items',       // Indique à la carte qu'on est dans My Items
+            'context'              => '',
+            'card_context'         => $card_context,
             'href'                 => $href,
             'owner'                => htmlspecialchars($owner_name),
-            'price_color'         => $price_color,
-            'price_display'       => $price_display,
+            'price_color'          => $price_color,
+            'price_display'        => $price_display,
             'is_highest_bidder'    => $is_highest_bidder,
             'price_display'        => $price_display,
             'price_color'          => $price_color,

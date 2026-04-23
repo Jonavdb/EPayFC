@@ -12,7 +12,7 @@
                             <?php elseif ($element->context === 'unsold'): ?>
                                 <span class="badge rounded-pill bg-secondary"><i class="fa-solid fa-ban"></i> Unsold</span>
                             <?php endif; ?>
-                        <?php elseif ($element->card_context === 'browse-bidding'): ?>
+                        <?php elseif ($element->card_context === 'browse'): ?>
                             <?php if ($element->is_highest_bidder): ?>
                                 <span class="badge rounded-pill bg-success badge-bidder d-inline-flex align-items-center px-3 py-2">
                                     <i class="fa-solid fa-trophy me-2"></i> Highest Bidder
