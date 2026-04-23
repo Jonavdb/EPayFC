@@ -113,17 +113,18 @@ require_once "utils/GoBack.php";
                         value="<?= htmlspecialchars($password); ?>"
                         placeholder="******">
                 </div>
-
-                <?php if (isset($errors['password_length']) || isset($errors['password_retry'])): ?>
-                    <ul class="text-danger small mt-1 mb-0 ps-4">
-                        <?php if (isset($errors['password_length'])): ?>
-                            <li><?= $errors['password_length']; ?></li>
-                        <?php endif; ?>
-                        <?php if (isset($errors['password_retry'])): ?>
-                            <li><?= $errors['password_retry']; ?></li>
-                        <?php endif; ?>
-                    </ul>
-                <?php endif; ?>
+                <div id="errPassword" class="text-danger small mt-1 mb-0 ps-4">
+                    <?php if (isset($errors['password_length']) || isset($errors['password_retry'])): ?>
+                        <ul class="text-danger small mt-1 mb-0 ps-4">
+                            <?php if (isset($errors['password_length'])): ?>
+                                <li><?= $errors['password_length']; ?></li>
+                            <?php endif; ?>
+                            <?php if (isset($errors['password_retry'])): ?>
+                                <li><?= $errors['password_retry']; ?></li>
+                            <?php endif; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <div class="mb-3">

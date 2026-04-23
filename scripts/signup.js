@@ -16,10 +16,14 @@ $(function () {
     pseudo = $("#pseudo");
     errPseudo = $("#errPseudo");
 
+    password = $("#password");
+    errPassword = $("#errPassword");
+
     // bindings
     email.bind("blur", checkEmailValid);
     fullName.bind("blur", checkFullNameValid);
     pseudo.bind("blur", checkPseudoValid);
+    password.bind("blur", checkPasswordValid);
 });
 
 async function checkEmailValid() {
@@ -164,6 +168,54 @@ async function checkPseudoValid() {
     }
     checkFormValidity();
 }
+
+async function checkPasswordValid() {
+    const passwordSanitized = password.val().trim();
+    const length = passwordSanitized.length;
+    const minSize = APP_CONFIG.password_min_length;
+    const maxSize = APP_CONFIG.password_max_length;
+    if (passwordSanitized === "") {
+        // champ laissé vide : affichage texte par défaut et on masque l'erreur
+        errPassword.html("").removeClass("text-danger");
+        password.removeClass("is-invalid is-valid").addClass("border-secondary");
+        checkFormValidity();
+        return;
+    }
+
+    // erreur : longueur invalide
+    const isInvalidLength = length < minSize || length > maxSize;
+
+    // erreur : format invalid
+    const rawRegex = APP_CONFIG.password_regex.replace(/^\/|\/$/g, "");
+    const passwordRegex = new RegExp(rawRegex);
+    const isInvalidFormat = !passwordRegex.test(passwordSanitized);
+
+    // on clear l'état du champ
+    password.removeClass("is-valid is-invalid border-secondary");
+    errPassword.html("").removeClass("text-danger");
+
+    if (isInvalidLength) {
+        // erreur cadre rouge
+        errPassword
+            .html("<ul><li>Le mot de passe doit avoir une longueur comprise entre " + minSize + " et " + maxSize + " caractères.</li></ul>")
+            .addClass("text-danger");
+        password.addClass("is-invalid");
+    } else if (isInvalidFormat) {
+        // erreur cadre rouge
+        errPassword
+            .html("<ul><li>Le mot de passe doit contenir au moins une lettre majuscule, un chiffre et un signe de ponctuation.</li></ul>")
+            .addClass("text-danger");
+        password.addClass("is-invalid");
+    } else {
+        // si pas d'erreur, alors valide
+        // success : cadre vert
+        password.addClass("is-valid");
+    }
+    checkFormValidity();
+}
+// TODO checkPasswordValid
+// TODO checkConfirmPasswordValid
+
 function checkFormValidity() {
     // 1. validation email
     const isEmailValid = email.hasClass("is-valid");
@@ -174,8 +226,11 @@ function checkFormValidity() {
     // 3. validation pseudo
     const isPseudoValid = pseudo.hasClass("is-valid");
 
+    // 4. validation mot de passe
+    const isPasswordValid = pseudo.hasClass("is-valid");
+
     // ?. validation finale du formulaire
-    const isFormValid = isEmailValid && isFullNameValid && isPseudoValid;
+    const isFormValid = isEmailValid && isFullNameValid && isPseudoValid && isPasswordValid;
 
     if (!isFormValid) {
         signupBtn.prop("disabled", true);
