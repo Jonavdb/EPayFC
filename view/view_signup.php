@@ -151,7 +151,7 @@ require_once "utils/GoBack.php";
             </div>
 
             <div class="d-grid gap-3">
-                <input type="submit" name="btnSignUp" class="btn btn-primary" value="Sign Up" id="btnSignup" disabled="disabled">
+                <input type="submit" name="btnSignUp" class="btn btn-primary" value="Sign Up" id="btnSignup">
                 <a href="<?= GoBack::go_back() ?>" class="btn btn-danger w-100 text-decoration-none" role="button">
                     Cancel
                 </a>
