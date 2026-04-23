@@ -53,8 +53,10 @@ if ($encoded_search !== '') {
     <div class="row g-4">
       <div class="col-md-8">
         <div class="card text-bg-dark border-secondary mb-4">
-          <div id="no_js_main_image">
-            <img src="<?= $image_to_display ?>" class="card-img-top" alt="<?= $item->get_title() ?>" style="width:100%; object-fit:contain;">
+          <div id="no_js_main_image" class="mx-auto w-100" style="max-width: 1080px;">
+            <div class="ratio ratio-16x9 bg-white">
+              <img src="<?= $image_to_display ?>" class="card-img-top w-100" alt="<?= $item->get_title() ?>" style="object-fit: contain;">
+            </div>
           </div>
           <div id="js_carousel_1" style="display: none;" data-item-id="<?= $item->get_id() ?>">
             <div id="itemCarousel" class="carousel slide mb-3">
@@ -105,7 +107,7 @@ if ($encoded_search !== '') {
               ?>
                 <a href="<?= GoBack::smart_href("item/open/" . $item->get_id() . "/" . $index) ?>" class="d-block">
                   <img src="<?= $image ?>"
-                    class="rounded border <?= $border_class ?>"
+                    class="rounded border border-2 <?= $border_class ?>"
                     alt="View <?= $index ?>"
                     style="width: 100px; height: 70px; object-fit: cover;">
                 </a>

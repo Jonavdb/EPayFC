@@ -1,11 +1,17 @@
-let searchInput, activeItemsGrid, closedUnsoldItemsGrid, soldItemsGrid, defaultActiveHtml, defaultClosedUnsoldHtml, defaultSoldHtml;
-let initialSearchValue = '';
+let searchInput,
+    activeItemsGrid,
+    closedUnsoldItemsGrid,
+    soldItemsGrid,
+    defaultActiveHtml,
+    defaultClosedUnsoldHtml,
+    defaultSoldHtml;
+let initialSearchValue = "";
 
 $(function () {
-    searchInput = $('#search_fulltext');
-    activeItemsGrid = $('#active_items_grid');
-    closedUnsoldItemsGrid = $('#closed_unsold_items_grid');
-    soldItemsGrid = $('#sold_items_grid');
+    searchInput = $("#search_fulltext");
+    activeItemsGrid = $("#active_items_grid");
+    closedUnsoldItemsGrid = $("#closed_unsold_items_grid");
+    soldItemsGrid = $("#sold_items_grid");
 
     initialSearchValue = searchInput.val().trim(); // mémorise ce qu'il y a dans la barre au chargement
 
@@ -14,16 +20,16 @@ $(function () {
     defaultClosedUnsoldHtml = closedUnsoldItemsGrid.html();
     defaultSoldHtml = soldItemsGrid.html();
 
-    searchInput.on('input', checkSearchFullTextMyItems);
+    searchInput.on("input", checkSearchFullTextMyItems);
 });
 
 async function checkSearchFullTextMyItems() {
     const searchValue = searchInput.val().trim();
 
     // s'il n'a rien cherché, on affiche les listes par défaut
-    if (searchValue === '') {
-        if (initialSearchValue !== '') {
-            window.location.href = 'item/list';
+    if (searchValue === "") {
+        if (initialSearchValue !== "") {
+            window.location.href = "item/list";
             return;
         }
 
@@ -35,7 +41,11 @@ async function checkSearchFullTextMyItems() {
     }
 
     try {
-        const response = await $.get(`item/search_fulltext_my_items_service`, { search: searchValue }, 'json');
+        const response = await $.get(
+            `item/search_fulltext_my_items_service`,
+            { search: searchValue },
+            "json",
+        );
 
         // vidage des grilles pour y mettre les résultats de manière dynamique
         activeItemsGrid.empty();
@@ -44,41 +54,41 @@ async function checkSearchFullTextMyItems() {
 
         displayMyItems(response.items, response.encoded_search);
     } catch (error) {
-        console.error('Erreur AJAX Search My Items:', error);
+        console.error("Erreur AJAX Search My Items:", error);
     }
 
     // pur affichage : fonction utilitaire qui affiche les items en JS
-    function displayMyItems(items, encodedSearch = '') {
+    function displayMyItems(items, encodedSearch = "") {
         if (items.length > 0) {
             items.forEach((item) => {
                 let href = `item/open/${item.id}/from-items`;
 
-                if (encodedSearch !== '') {
+                if (encodedSearch !== "") {
                     href += `/${encodedSearch}`;
                 }
 
                 // badges, icons, etc
-                let contextBadge = '';
-                if (item.context === 'sold') {
+                let contextBadge = "";
+                if (item.context === "sold") {
                     contextBadge = `<span class="badge rounded-pill bg-success"><i class="fa-solid fa-check"></i> Sold</span>`;
-                } else if (item.context === 'unsold') {
+                } else if (item.context === "unsold") {
                     contextBadge = `<span class="badge rounded-pill bg-secondary"><i class="fa-solid fa-ban"></i> Unsold</span>`;
                 }
 
                 let auctionBadge = item.is_auction
                     ? `<span class="badge rounded-pill bg-warning text-dark"><i class="fa-solid fa-gavel fa-flip-horizontal"></i> Auction</span>`
-                    : '';
+                    : "";
 
                 let buyNowBadge =
                     item.has_buy_now && !item.buy_now_reached
                         ? `<span class="badge rounded-pill bg-primary d-inline-flex align-items-center px-3 py-2"><i class="fa-solid fa-bag-shopping me-2"></i> Buy now</span>`
-                        : '';
+                        : "";
 
-                let extraImagesBadge = '';
+                let extraImagesBadge = "";
                 let extraImagesCount = item.extra_images || 0;
                 if (extraImagesCount > 0) {
                     let totalImages = extraImagesCount + 1;
-                    let s = totalImages > 1 ? 's' : '';
+                    let s = totalImages > 1 ? "s" : "";
                     extraImagesBadge = `
                         <div class="d-flex justify-content-end">
                             <span class="badge rounded-pill text-bg-dark bg-opacity-75">
@@ -89,35 +99,40 @@ async function checkSearchFullTextMyItems() {
 
                 let safePrice = parseFloat(item.price || 0)
                     .toFixed(2)
-                    .replace('.', ',');
+                    .replace(".", ",");
                 let safeStartingBid = parseFloat(item.starting_bid || 0)
                     .toFixed(2)
-                    .replace('.', ',');
+                    .replace(".", ",");
                 let safeCurrentBid = parseFloat(item.current_bid || 0)
                     .toFixed(2)
-                    .replace('.', ',');
+                    .replace(".", ",");
 
                 let priceHtml = item.has_buy_now
                     ? `<div class="fs-4 fw-bold text-primary">€ ${safePrice}</div>`
                     : `<div class="fs-4 fw-bold text-warning">€ ${safeStartingBid}</div>`;
 
-                let timeColorClass = item.time_left === 'Closed' ? 'text-secondary' : 'text-success';
+                let timeColorClass =
+                    item.time_left === "Closed"
+                        ? "text-secondary"
+                        : "text-success";
 
                 let currentBidHtml =
-                    item.is_auction && item.context !== 'unsold'
+                    item.is_auction && item.context !== "unsold"
                         ? `
                     <div class="text-end">
                         <div class="text-secondary small fw-bold mb-0">Current bid</div>
                         <div class="fs-4 fw-bold text-success">€ ${safeCurrentBid}</div>
                     </div>`
-                        : '';
+                        : "";
 
-                let imgSrc = item.main_image_url ? item.main_image_url : 'css/images/default_item_image.png';
+                let imgSrc = item.main_image_url
+                    ? item.main_image_url
+                    : "css/images/default_item_image.png";
 
                 let cardHtml = `
                     <div class="col">
                         <a href="${href}" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary">
-                            <div class="position-relative ratio-4x3">
+                            <div class="ratio ratio-4x3">
                                 <img src="${imgSrc}" class="card-img-top" alt="${item.title}" style="object-fit: cover;">
 
                                 <div class="card-img-overlay d-flex flex-column justify-content-between p-2">
@@ -155,9 +170,9 @@ async function checkSearchFullTextMyItems() {
                         </a>
                     </div>`;
 
-                if (item.context === 'sold') {
+                if (item.context === "sold") {
                     soldItemsGrid.append(cardHtml);
-                } else if (item.context === 'unsold') {
+                } else if (item.context === "unsold") {
                     closedUnsoldItemsGrid.append(cardHtml);
                 } else {
                     activeItemsGrid.append(cardHtml);
@@ -166,13 +181,19 @@ async function checkSearchFullTextMyItems() {
         }
 
         if (activeItemsGrid.children().length === 0) {
-            activeItemsGrid.html('<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>');
+            activeItemsGrid.html(
+                '<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>',
+            );
         }
         if (closedUnsoldItemsGrid.children().length === 0) {
-            closedUnsoldItemsGrid.html('<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>');
+            closedUnsoldItemsGrid.html(
+                '<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>',
+            );
         }
         if (soldItemsGrid.children().length === 0) {
-            soldItemsGrid.html('<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>');
+            soldItemsGrid.html(
+                '<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>',
+            );
         }
     }
 }

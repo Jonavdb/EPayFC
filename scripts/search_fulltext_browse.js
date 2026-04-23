@@ -1,10 +1,14 @@
-let searchInput, participatingGrid, availableGrid, defaultParticipatingHtml, defaultAvailableHtml;
-let initialSearchValue = '';
+let searchInput,
+    participatingGrid,
+    availableGrid,
+    defaultParticipatingHtml,
+    defaultAvailableHtml;
+let initialSearchValue = "";
 
 $(function () {
-    searchInput = $('#search_fulltext');
-    participatingGrid = $('#participating_grid');
-    availableGrid = $('#available_grid');
+    searchInput = $("#search_fulltext");
+    participatingGrid = $("#participating_grid");
+    availableGrid = $("#available_grid");
 
     initialSearchValue = searchInput.val().trim(); // mémorise ce qu'il y a dans la barre au chargement
 
@@ -12,16 +16,16 @@ $(function () {
     defaultParticipatingHtml = participatingGrid.html();
     defaultAvailableHtml = availableGrid.html();
 
-    searchInput.on('input', checkSearchFullTextBrowseItems);
+    searchInput.on("input", checkSearchFullTextBrowseItems);
 });
 
 async function checkSearchFullTextBrowseItems() {
     const searchValue = searchInput.val().trim();
 
     // s'il n'a rien cherché, on affiche les listes par défaut
-    if (searchValue === '') {
-        if (initialSearchValue !== '') {
-            window.location.href = 'item/browse';
+    if (searchValue === "") {
+        if (initialSearchValue !== "") {
+            window.location.href = "item/browse";
             return;
         }
 
@@ -32,7 +36,11 @@ async function checkSearchFullTextBrowseItems() {
     }
 
     try {
-        const response = await $.get('item/search_fulltext_browse_service', { search: searchValue }, 'json');
+        const response = await $.get(
+            "item/search_fulltext_browse_service",
+            { search: searchValue },
+            "json",
+        );
 
         // vidage des grilles pour y mettre les résultats de manière dynamique
         participatingGrid.empty();
@@ -40,30 +48,30 @@ async function checkSearchFullTextBrowseItems() {
 
         displayBrowseItems(response.items, response.encoded_search);
     } catch (error) {
-        console.error('Erreur AJAX:', error);
+        console.error("Erreur AJAX:", error);
     }
 
     // pur affichage : fonction utilitaire qui affiche les items en JS
-    function displayBrowseItems(items, encodedSearch = '') {
+    function displayBrowseItems(items, encodedSearch = "") {
         console.log(items);
         if (items.length > 0) {
             items.forEach((item) => {
                 let href = `item/open/${item.id}/from-browse`;
 
-                if (encodedSearch !== '') {
+                if (encodedSearch !== "") {
                     href += `/${encodedSearch}`;
                 }
 
                 // badges, icons, etc
-                let contextBadge = '';
+                let contextBadge = "";
 
-                if (item.context === 'sold') {
+                if (item.context === "sold") {
                     contextBadge = `<span class="badge rounded-pill bg-success"><i class="fa-solid fa-check"></i> Sold</span>`;
-                } else if (item.context === 'unsold') {
+                } else if (item.context === "unsold") {
                     contextBadge = `<span class="badge rounded-pill bg-secondary"><i class="fa-solid fa-ban"></i> Unsold</span>`;
                 }
 
-                let bidderBadge = '';
+                let bidderBadge = "";
 
                 if (item.has_bids) {
                     bidderBadge = item.is_highest_bidder
@@ -77,18 +85,18 @@ async function checkSearchFullTextBrowseItems() {
 
                 let auctionBadge = item.is_auction
                     ? `<span class="badge rounded-pill bg-warning text-dark"><i class="fa-solid fa-gavel fa-flip-horizontal"></i> Auction</span>`
-                    : '';
+                    : "";
 
                 let buyNowBadge =
                     item.has_buy_now && !item.buy_now_reached
                         ? `<span class="badge rounded-pill bg-primary d-inline-flex align-items-center px-3 py-2"><i class="fa-solid fa-bag-shopping me-2"></i> Buy now</span>`
-                        : '';
+                        : "";
 
-                let extraImagesBadge = '';
+                let extraImagesBadge = "";
                 let extraImagesCount = item.extra_images || 0;
                 if (extraImagesCount > 0) {
                     let totalImages = extraImagesCount + 1;
-                    let s = totalImages > 1 ? 's' : '';
+                    let s = totalImages > 1 ? "s" : "";
                     extraImagesBadge = `
                         <div class="d-flex justify-content-end">
                             <span class="badge rounded-pill text-bg-dark bg-opacity-75">
@@ -99,35 +107,40 @@ async function checkSearchFullTextBrowseItems() {
 
                 let safePrice = parseFloat(item.price || 0)
                     .toFixed(2)
-                    .replace('.', ',');
+                    .replace(".", ",");
                 let safeStartingBid = parseFloat(item.starting_bid || 0)
                     .toFixed(2)
-                    .replace('.', ',');
+                    .replace(".", ",");
                 let safeCurrentBid = parseFloat(item.current_bid || 0)
                     .toFixed(2)
-                    .replace('.', ',');
+                    .replace(".", ",");
 
                 let priceHtml = item.has_buy_now
                     ? `<div class="fs-4 fw-bold text-primary">€ ${safePrice}</div>`
                     : `<div class="fs-4 fw-bold text-warning">€ ${safeStartingBid}</div>`;
 
-                let timeColorClass = item.time_left === 'Closed' ? 'text-secondary' : 'text-success';
+                let timeColorClass =
+                    item.time_left === "Closed"
+                        ? "text-secondary"
+                        : "text-success";
 
                 let currentBidHtml =
-                    item.is_auction && item.context !== 'unsold'
+                    item.is_auction && item.context !== "unsold"
                         ? `
                     <div class="text-end">
                         <div class="text-secondary small fw-bold mb-0">Current bid</div>
                         <div class="fs-4 fw-bold text-success">€ ${safeCurrentBid}</div>
                     </div>`
-                        : '';
+                        : "";
 
-                let imgSrc = item.main_image_url ? item.main_image_url : 'css/images/default_item_image.png';
+                let imgSrc = item.main_image_url
+                    ? item.main_image_url
+                    : "css/images/default_item_image.png";
 
                 let cardHtml = `
                     <div class="col">
                         <a href="${href}" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary bg-dark">
-                            <div class="position-relative ratio-4x3">
+                            <div class="ratio ratio-4x3">
                                 <img src="${imgSrc}" class="card-img-top" alt="${item.title}" style="object-fit: cover;">
 
                                 <div class="card-img-overlay d-flex flex-column justify-content-between p-2">
@@ -175,10 +188,14 @@ async function checkSearchFullTextBrowseItems() {
         }
 
         if (participatingGrid.children().length === 0) {
-            participatingGrid.html('<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>');
+            participatingGrid.html(
+                '<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>',
+            );
         }
         if (availableGrid.children().length === 0) {
-            availableGrid.html('<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>');
+            availableGrid.html(
+                '<p class="text-secondary mt-3 fs-3 col-12">No item found.</p>',
+            );
         }
     }
 }
