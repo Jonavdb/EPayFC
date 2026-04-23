@@ -1,4 +1,7 @@
 <?php
+
+use PSpell\Config;
+
 require_once 'framework/Controller.php';
 require_once 'model/User.php';
 require_once 'utils/ImageTool.php';
@@ -333,6 +336,9 @@ class ControllerUser extends Controller {
             "pseudo_min_length" => Configuration::get("pseudo_min_length"),
             "pseudo_max_length" => Configuration::get("pseudo_max_length"),
             "pseudo_regex" =>  Configuration::get("pseudo_regex"),
+            "password_min_length" => Configuration::get("password_min_length"),
+            "password_max_length" => Configuration::get("password_max_length"),
+            "password_regex" => Configuration::get("password_regex"),
         ]);
     }
 }
