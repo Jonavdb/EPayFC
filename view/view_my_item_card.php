@@ -1,12 +1,12 @@
 <div class="col">
     <a href="<?= $element->href ?>" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary bg-dark">
-        <div class="position-relative">
-            <img src="<?= $element->img_src ?>" class="card-img-top" alt="<?= htmlspecialchars($element->raw_item->get_title()) ?>" style="height: 200px; object-fit: cover;">
+        <div class="position-relative ratio-4x3">
+            <img src="<?= $element->img_src ?>" class="card-img-top" alt="<?= htmlspecialchars($element->raw_item->get_title()) ?>" style="object-fit: cover;">
 
             <div class="card-img-overlay d-flex flex-column justify-content-between p-2">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <?php if ($element->card_context === 'my-items'): ?>
+                        <?php if ($element->card_context === 'my-items-bidding'): ?>
                             <?php if ($element->context === 'sold'): ?>
                                 <span class="badge rounded-pill bg-success"><i class="fa-solid fa-check"></i> Sold</span>
                             <?php elseif ($element->context === 'unsold'): ?>

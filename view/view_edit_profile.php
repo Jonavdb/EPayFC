@@ -86,7 +86,7 @@
             </div>
 
             <div class="d-grid gap-2">
-                <button type="submit" id="submitBtn" class="btn btn-primary btn-lg fw-bold" disabled="disabled">
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-lg fw-bold">
                     <i class="fa-solid fa-floppy-disk me-2"></i> Save Changes
                 </button>
             </div>

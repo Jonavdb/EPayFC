@@ -112,8 +112,8 @@ class ControllerItem extends Controller {
             ? "item/open/" . $item->get_id() . "/from-items"
             : "item/open/" . $item->get_id() . "/from-browse";
 
-        $is_highest_bidder = ($card_context === 'browse')
-            ? ($item->get_user_bid_amount() == $item->get_current_bid())
+        $is_highest_bidder = ($card_context === 'browse-bidding')
+            ? ($item->get_user_bid_amount() == $item->get_current_bid() && $item->get_current_bid() > 0)
             : false;
 
         if ($encoded_search !== '') {
@@ -141,17 +141,17 @@ class ControllerItem extends Controller {
             : null;
 
         return (object) [
-            'raw_item'            => $item,
-            'time_left'           => $time_left_str,
-            'time_color'          => $time_color,
+            'raw_item'             => $item,
+            'time_left'            => $time_left_str,
+            'time_color'           => $time_color,
             'img_src'              => $img_src,
             'extra_images'         => $extra_image_count,
-            'context'             => '',
-            'card_context'        => 'my-items',       // Indique à la carte qu'on est dans My Items
+            'context'              => '',
+            'card_context'         => $card_context,
             'href'                 => $href,
             'owner'                => htmlspecialchars($owner_name),
-            'price_color'         => $price_color,
-            'price_display'       => $price_display,
+            'price_color'          => $price_color,
+            'price_display'        => $price_display,
             'is_highest_bidder'    => $is_highest_bidder,
             'price_display'        => $price_display,
             'price_color'          => $price_color,
@@ -610,7 +610,6 @@ class ControllerItem extends Controller {
         $is_guest = $user == false;
         $now = new DateTime(AppTime::get_current_datetime());
 
-        // on lit le paramètre d'URL et on le décode
         $encoded_search = isset($_GET['param1']) ? $_GET['param1'] : '';
         $search_query = "";
 
@@ -622,13 +621,9 @@ class ControllerItem extends Controller {
             }
         }
 
-        // we retrieve items the user placed a bid on
         $raw_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->get_id(), $search_query);
-        $user_bid_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search), $raw_bid_items);
+        $user_bid_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse-bidding', $item->get_owner_name(), $encoded_search), $raw_bid_items);
 
-        // we retrieve items available for him to purchase or place a bid 
-        $raw_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->get_id(), $search_query);
-        $user_available_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search), $raw_available_items);
         $raw_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->get_id(), $search_query);
         $user_available_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search), $raw_available_items);
 
@@ -706,7 +701,7 @@ class ControllerItem extends Controller {
 
             if (!$current_user) {
                 echo json_encode([]);
-                return;
+                exit; // Sécurité
             }
 
             $user_id = $current_user->get_id();
@@ -717,9 +712,9 @@ class ControllerItem extends Controller {
             $results = [];
             $now = new DateTime(AppTime::get_current_datetime());
 
-            // les items sur lesquels on a participé
+            // les items sur lesquels on participe (contexte 'browse-bidding')
             foreach ($bid_items as $item) {
-                $display_data = $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search);
+                $display_data = $this->prepare_item_data($item, $now, 'browse-bidding', $item->get_owner_name(), $encoded_search);
 
                 $results[] = [
                     'id'              => $item->get_id(),
@@ -733,7 +728,7 @@ class ControllerItem extends Controller {
                     'is_auction'      => $item->get_is_auction(),
                     'has_buy_now'     => $item->get_has_buy_now(),
                     'has_bids'        => true,
-                    'is_highest_bidder' => ($item->get_user_bid_amount() == $item->get_current_bid() && $item->get_current_bid() > 0),
+                    'is_highest_bidder' => $display_data->is_highest_bidder, // Calcul sécurisé du helper
                     'buy_now_reached' => $item->get_buy_now_reached(),
                     'time_left'       => $display_data->time_left,
                     'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
@@ -742,7 +737,7 @@ class ControllerItem extends Controller {
                 ];
             }
 
-            // les autres items
+            // les autres items (contexte 'browse')
             foreach ($available_items as $item) {
                 $display_data = $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search);
 
@@ -758,7 +753,7 @@ class ControllerItem extends Controller {
                     'is_auction'      => $item->get_is_auction(),
                     'has_buy_now'     => $item->get_has_buy_now(),
                     'has_bids'        => false,
-                    'is_highest_bidder' => false,
+                    'is_highest_bidder' => false, // jamais de highest bidder ici
                     'buy_now_reached' => $item->get_buy_now_reached(),
                     'time_left'       => $display_data->time_left,
                     'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
@@ -771,8 +766,10 @@ class ControllerItem extends Controller {
                 'encoded_search' => $encoded_search,
                 'items' => $results
             ]);
+            exit;
         } else {
             echo json_encode(['encoded_search' => '', 'items' => []]);
+            exit; //force l'arrêt
         }
     }
 
@@ -797,7 +794,7 @@ class ControllerItem extends Controller {
             $now = new DateTime(AppTime::get_current_datetime());
 
             foreach ($my_items as $item) {
-                $display_data = $this->prepare_item_data($item, $now, 'my-items', $item->get_owner_name(), $encoded_search);
+                $display_data = $this->prepare_item_data($item, $now, 'my-items-bidding', $item->get_owner_name(), $encoded_search);
 
                 // sold, unsold ou active
                 $is_buy_now = $item->get_buy_now_reached();

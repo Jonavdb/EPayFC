@@ -26,9 +26,8 @@ async function checkSearchFullTextBrowseItems() {
         }
 
         // sinon, restauration du cache
-        activeItemsGrid.html(defaultActiveHtml);
-        closedUnsoldItemsGrid.html(defaultClosedUnsoldHtml);
-        soldItemsGrid.html(defaultSoldHtml);
+        participatingGrid.html(defaultParticipatingHtml);
+        availableGrid.html(defaultAvailableHtml);
         return;
     }
 
@@ -46,6 +45,7 @@ async function checkSearchFullTextBrowseItems() {
 
     // pur affichage : fonction utilitaire qui affiche les items en JS
     function displayBrowseItems(items, encodedSearch = '') {
+        console.log(items);
         if (items.length > 0) {
             items.forEach((item) => {
                 let href = `item/open/${item.id}/from-browse`;
@@ -56,10 +56,23 @@ async function checkSearchFullTextBrowseItems() {
 
                 // badges, icons, etc
                 let contextBadge = '';
+
                 if (item.context === 'sold') {
                     contextBadge = `<span class="badge rounded-pill bg-success"><i class="fa-solid fa-check"></i> Sold</span>`;
                 } else if (item.context === 'unsold') {
                     contextBadge = `<span class="badge rounded-pill bg-secondary"><i class="fa-solid fa-ban"></i> Unsold</span>`;
+                }
+
+                let bidderBadge = '';
+
+                if (item.has_bids) {
+                    bidderBadge = item.is_highest_bidder
+                        ? `<span class="badge rounded-pill bg-success badge-bidder d-inline-flex align-items-center px-3 py-2">
+                                <i class="fa-solid fa-trophy me-2"></i> Highest Bidder
+                            </span>`
+                        : `<span class="badge rounded-pill bg-dark badge-bidder d-inline-flex align-items-center px-3 py-2">
+                                <i class="fa-solid fa-gavel flipped-horizontal me-2"></i> Bidder
+                            </span>`;
                 }
 
                 let auctionBadge = item.is_auction
@@ -114,13 +127,14 @@ async function checkSearchFullTextBrowseItems() {
                 let cardHtml = `
                     <div class="col">
                         <a href="${href}" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary bg-dark">
-                            <div class="position-relative">
-                                <img src="${imgSrc}" class="card-img-top" alt="${item.title}" style="height: 200px; object-fit: cover;">
+                            <div class="position-relative ratio-4x3">
+                                <img src="${imgSrc}" class="card-img-top" alt="${item.title}" style="object-fit: cover;">
 
                                 <div class="card-img-overlay d-flex flex-column justify-content-between p-2">
                                     <div class="d-flex justify-content-between align-items-start">
-                                        <div>
+                                        <div class="d-flex flex-column align-items-start gap-1">
                                             ${contextBadge}
+                                            ${bidderBadge}
                                         </div>
                                         <div class="d-flex flex-column align-items-end gap-1">
                                             ${auctionBadge}

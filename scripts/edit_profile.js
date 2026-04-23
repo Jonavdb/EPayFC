@@ -2,6 +2,7 @@ let fullName, pseudo, email, iban, errFullName, errPseudo, errEmail, errIban, su
 
 $(function () {
     submitBtn = $('#submitBtn');
+    submitBtn.prop('disabled', true); // on force le disabled au démarrage, c'est JS qui l'activera
 
     pseudo = $('#pseudo');
     errPseudo = $('#errPseudo');
