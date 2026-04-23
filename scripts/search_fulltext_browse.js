@@ -1,4 +1,4 @@
-let searchInput, activeItemsGrid, participatingGrid, availableGrid, defaultParticipatingHtml, defaultAvailableHtml;
+let searchInput, participatingGrid, availableGrid, defaultParticipatingHtml, defaultAvailableHtml;
 let initialSearchValue = '';
 
 $(function () {
@@ -26,9 +26,8 @@ async function checkSearchFullTextBrowseItems() {
         }
 
         // sinon, restauration du cache
-        activeItemsGrid.html(defaultActiveHtml);
-        closedUnsoldItemsGrid.html(defaultClosedUnsoldHtml);
-        soldItemsGrid.html(defaultSoldHtml);
+        participatingGrid.html(defaultParticipatingHtml);
+        availableGrid.html(defaultAvailableHtml);
         return;
     }
 
