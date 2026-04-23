@@ -64,7 +64,7 @@
                          <div class="col">
                               <div class="p-3 d-flex flex-column justify-content-start bg-dark h-100">
                                    <div class="flex-grow-1 text-start fs-4 fw-bold text-secondary">AVERAGE TICKET</div>
-                                   <div class="flex-grow-1 text-start fs-1">€
+                                   <div class="flex-grow-1 text-start fs-1">
                                         <?php
                                         if (empty($sales)) {
                                              echo "€ 0,00";
