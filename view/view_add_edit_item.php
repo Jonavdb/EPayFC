@@ -61,15 +61,20 @@ require_once "utils/GoBack.php";
                     <div class=" mb-3">
                         <label for="title" class="form-label fw-bold">Item Title *</label>
                         <input type="text"
-                            class="form-control bg-black bg-opacity-25 text-white border-secondary"
+                            class="form-control bg-black bg-opacity-25 text-white 
+                            <?= isset($errors['title']) || isset($errors['empty']) ? 'is-invalid' : 'border-secondary' ?>"
+                            name="title"
+                            id="title"
                             id="title"
                             name="title"
                             placeholder="Ex: IPhone 13 Pro Max 256GB"
                             value="<?php echo html_entity_decode($item->get_title()) ?>">
                         <div id="errTitle" class="text-danger small mt-1">
-                            <?php if (isset($errors['title'])) { ?>
-                                <?php echo $errors['title'] ?>
-                            <?php } ?>
+                            <?php if (isset($errors['empty'])): ?>
+                                <?php echo ($errors['empty']); ?>
+                            <?php elseif (isset($errors['title'])): ?>
+                                <?php echo ($errors['title']); ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -84,7 +89,7 @@ require_once "utils/GoBack.php";
                     <div class="mb-3">
                         <label for="duration" class="form-label fw-bold">Sale Duration(days) * </label>
                         <input type="number"
-                            class="form-control bg-black bg-opacity-25 text-white border-secondary"
+                            class="form-control bg-black bg-opacity-25 text-white <?= isset($errors['duration']) ? 'is-invalid' : 'border-secondary' ?>"
                             id="duration"
                             name="duration"
                             placeholder="e.g, 1"
@@ -117,7 +122,7 @@ require_once "utils/GoBack.php";
                                 <label for="starting_bid" class="form-label fw-bold text-white">Starting Bid</label>
                                 <div class="input-group">
                                     <input type="number"
-                                        class="form-control bg-black bg-opacity-25 text-white border-secondary"
+                                        class="form-control bg-black bg-opacity-25 text-white <?php echo (isset($errors['starting_bid']) || isset($errors['sale']) || isset($errors['sale_price'])) ? 'is-invalid' : 'border-secondary' ?>"
                                         id="starting_bid"
                                         name="starting_bid"
                                         placeholder="e.g., 50.00"
@@ -128,21 +133,19 @@ require_once "utils/GoBack.php";
                                     <?php if (isset($errors['starting_bid'])) { ?>
                                         <?php echo $errors['starting_bid'] ?>
                                     <?php } ?>
-
                                     <?php if (isset($errors['sale'])) { ?>
                                         <?php echo $errors['sale'] ?>
                                     <?php } ?>
-
                                     <?php if (isset($errors['sale_price'])) { ?>
                                         <?php echo $errors['sale_price'] ?>
-                                    <?php }  ?>
+                                    <?php } ?>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="instant" class="form-label fw-bold text-white">Instant Purchase Price (optional)</label>
                                     <div class="input-group">
                                         <input type="number"
-                                            class="form-control bg-black bg-opacity-25 text-white border-secondary"
+                                            class="form-control bg-black bg-opacity-25 text-white <?php echo isset($errors['buy_now_price']) ? 'is-invalid' : 'border-secondary' ?>"
                                             id="instant"
                                             name="instant"
                                             placeholder="e.g., 200.00"
@@ -170,7 +173,7 @@ require_once "utils/GoBack.php";
                                     <label for="direct" class="form-label fw-bold text-white">Sale Price</label>
                                     <div class="input-group">
                                         <input type="number"
-                                            class="form-control bg-black bg-opacity-25 text-white border-secondary <?php echo isset($errors['sale_price']) ? 'is-invalid' : '' ?>"
+                                            class="form-control bg-black bg-opacity-25 text-white  <?php echo isset($errors['sale_price']) ? 'is-invalid' : 'border-secondary' ?>"
                                             id="direct"
                                             name="direct"
                                             placeholder="e.g., 400.00"
