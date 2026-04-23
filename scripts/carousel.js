@@ -19,7 +19,7 @@ $(document).ready(function () {
             $("#carousel-inner").append(
                 // dans le corps du carrousel, on ajoute celui qui est active
                 `<div class="carousel-item ${active}"> 
-                <img src="${url}" class="d-block w-100" style="max-height:500px; object-fit:cover;">
+                <img src="${url}" class="d-block w-100" style="width: 100%; object-fit: contain;">
                 </div>`,
             );
 

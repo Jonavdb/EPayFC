@@ -54,7 +54,7 @@ if ($encoded_search !== '') {
       <div class="col-md-8">
         <div class="card text-bg-dark border-secondary mb-4">
           <div id="no_js_main_image">
-            <img src="<?= $image_to_display ?>" class="card-img-top" alt="<?= $item->get_title() ?>" style="max-height: 500px; object-fit: cover;">
+            <img src="<?= $image_to_display ?>" class="card-img-top" alt="<?= $item->get_title() ?>" style="width:100%; object-fit:contain;">
           </div>
           <div id="js_carousel_1" style="display: none;" data-item-id="<?= $item->get_id() ?>">
             <div id="itemCarousel" class="carousel slide mb-3">
