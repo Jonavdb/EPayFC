@@ -6,13 +6,13 @@
             <div class="card-img-overlay d-flex flex-column justify-content-between p-2">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <?php if ($element->card_context === 'my-items'): ?>
+                        <?php if ($element->card_context === 'my-items-bidding'): ?>
                             <?php if ($element->context === 'sold'): ?>
                                 <span class="badge rounded-pill bg-success"><i class="fa-solid fa-check"></i> Sold</span>
                             <?php elseif ($element->context === 'unsold'): ?>
                                 <span class="badge rounded-pill bg-secondary"><i class="fa-solid fa-ban"></i> Unsold</span>
                             <?php endif; ?>
-                        <?php elseif ($element->card_context === 'browse'): ?>
+                        <?php elseif ($element->card_context === 'browse-bidding'): ?>
                             <?php if ($element->is_highest_bidder): ?>
                                 <span class="badge rounded-pill bg-success badge-bidder d-inline-flex align-items-center px-3 py-2">
                                     <i class="fa-solid fa-trophy me-2"></i> Highest Bidder

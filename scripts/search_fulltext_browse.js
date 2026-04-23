@@ -1,4 +1,4 @@
-let searchInput, participatingGrid, availableGrid, defaultParticipatingHtml, defaultAvailableHtml;
+let searchInput, activeItemsGrid, participatingGrid, availableGrid, defaultParticipatingHtml, defaultAvailableHtml;
 let initialSearchValue = '';
 
 $(function () {
@@ -46,6 +46,7 @@ async function checkSearchFullTextBrowseItems() {
 
     // pur affichage : fonction utilitaire qui affiche les items en JS
     function displayBrowseItems(items, encodedSearch = '') {
+        console.log(items);
         if (items.length > 0) {
             items.forEach((item) => {
                 let href = `item/open/${item.id}/from-browse`;
@@ -61,6 +62,18 @@ async function checkSearchFullTextBrowseItems() {
                     contextBadge = `<span class="badge rounded-pill bg-success"><i class="fa-solid fa-check"></i> Sold</span>`;
                 } else if (item.context === 'unsold') {
                     contextBadge = `<span class="badge rounded-pill bg-secondary"><i class="fa-solid fa-ban"></i> Unsold</span>`;
+                }
+
+                let bidderBadge = '';
+
+                if (item.has_bids) {
+                    bidderBadge = item.is_highest_bidder
+                        ? `<span class="badge rounded-pill bg-success badge-bidder d-inline-flex align-items-center px-3 py-2">
+                                <i class="fa-solid fa-trophy me-2"></i> Highest Bidder
+                            </span>`
+                        : `<span class="badge rounded-pill bg-dark badge-bidder d-inline-flex align-items-center px-3 py-2">
+                                <i class="fa-solid fa-gavel flipped-horizontal me-2"></i> Bidder
+                            </span>`;
                 }
 
                 let auctionBadge = item.is_auction
@@ -120,8 +133,9 @@ async function checkSearchFullTextBrowseItems() {
 
                                 <div class="card-img-overlay d-flex flex-column justify-content-between p-2">
                                     <div class="d-flex justify-content-between align-items-start">
-                                        <div>
+                                        <div class="d-flex flex-column align-items-start gap-1">
                                             ${contextBadge}
+                                            ${bidderBadge}
                                         </div>
                                         <div class="d-flex flex-column align-items-end gap-1">
                                             ${auctionBadge}
