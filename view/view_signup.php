@@ -139,12 +139,15 @@ require_once "utils/GoBack.php";
                         value="<?= htmlspecialchars($password_confirm); ?>"
                         placeholder="******">
                 </div>
+                <div id="errPasswordConfirm" class="text-danger small mt-1 mb-0 ps-4">
+                    <?php if (isset($errors['same_password'])): ?>
+                        <ul class="text-danger small mt-1 mb-0 ps-4">
+                            <li><?= $errors['same_password']; ?></li>
+                        </ul>
+                    <?php endif; ?>
+                </div>
 
-                <?php if (isset($errors['same_password'])): ?>
-                    <ul class="text-danger small mt-1 mb-0 ps-4">
-                        <li><?= $errors['same_password']; ?></li>
-                    </ul>
-                <?php endif; ?>
+
             </div>
 
             <div class="d-grid gap-3">

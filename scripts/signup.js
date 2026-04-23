@@ -19,11 +19,15 @@ $(function () {
     password = $("#password");
     errPassword = $("#errPassword");
 
+    passwordConfirm = $("#password_confirm");
+    errPasswordConfirm = $("#errPasswordConfirm");
+
     // bindings
     email.bind("blur", checkEmailValid);
     fullName.bind("blur", checkFullNameValid);
     pseudo.bind("blur", checkPseudoValid);
     password.bind("blur", checkPasswordValid);
+    passwordConfirm.bind("blur", checkPasswordConfirmValid);
 });
 
 async function checkEmailValid() {
@@ -213,8 +217,36 @@ async function checkPasswordValid() {
     }
     checkFormValidity();
 }
-// TODO checkPasswordValid
-// TODO checkConfirmPasswordValid
+
+async function checkPasswordConfirmValid() {
+    const passwordConfirmSanitized = passwordConfirm.val().trim();
+    if (passwordConfirmSanitized === "") {
+        // champ laissé vide : affichage texte par défaut et on masque l'erreur
+        errPasswordConfirm.html("").removeClass("text-danger");
+        passwordConfirm.removeClass("is-invalid is-valid").addClass("border-secondary");
+        checkFormValidity();
+        return;
+    }
+
+    // erreur : mot de passe différents
+    const passwordSanitized = password.val().trim();
+    const isNotSamePassword = passwordConfirmSanitized != passwordSanitized;
+
+    // on clear l'état du champ
+    passwordConfirm.removeClass("is-valid is-invalid border-secondary");
+    errPasswordConfirm.html("").removeClass("text-danger");
+
+    if (isNotSamePassword) {
+        // erreur cadre rouge
+        errPasswordConfirm.html("<ul><li>Les mots de passe ne sont pas identiques.</li></ul>").addClass("text-danger");
+        passwordConfirm.addClass("is-invalid");
+    } else {
+        // si pas d'erreur, alors valide
+        // success : cadre vert
+        passwordConfirm.addClass("is-valid");
+    }
+    checkFormValidity();
+}
 
 function checkFormValidity() {
     // 1. validation email
@@ -227,10 +259,13 @@ function checkFormValidity() {
     const isPseudoValid = pseudo.hasClass("is-valid");
 
     // 4. validation mot de passe
-    const isPasswordValid = pseudo.hasClass("is-valid");
+    const isPasswordValid = password.hasClass("is-valid");
 
-    // ?. validation finale du formulaire
-    const isFormValid = isEmailValid && isFullNameValid && isPseudoValid && isPasswordValid;
+    // 5. validation confirmation du mot de passe
+    const areSamePasswords = passwordConfirm.hasClass("is-valid");
+
+    // 6. validation finale du formulaire
+    const isFormValid = isEmailValid && isFullNameValid && isPseudoValid && isPasswordValid && areSamePasswords;
 
     if (!isFormValid) {
         signupBtn.prop("disabled", true);
