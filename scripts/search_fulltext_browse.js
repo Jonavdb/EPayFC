@@ -127,8 +127,8 @@ async function checkSearchFullTextBrowseItems() {
                 let cardHtml = `
                     <div class="col">
                         <a href="${href}" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary bg-dark">
-                            <div class="position-relative">
-                                <img src="${imgSrc}" class="card-img-top" alt="${item.title}" style="height: 200px; object-fit: cover;">
+                            <div class="position-relative ratio-4x3">
+                                <img src="${imgSrc}" class="card-img-top" alt="${item.title}" style="object-fit: cover;">
 
                                 <div class="card-img-overlay d-flex flex-column justify-content-between p-2">
                                     <div class="d-flex justify-content-between align-items-start">
