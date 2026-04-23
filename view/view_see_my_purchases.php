@@ -72,7 +72,7 @@
                                 <!-- Calculates average buy_now_price: (Sum / Count) or 0,00 if empty -->
                                 <?php
                                 if (empty($purchases)) {
-                                    echo "0,00";
+                                    echo "€ 0,00";
                                 } else {
                                     $average_ticket = array_sum(array_map(fn($p) => $p->get_user_bid_amount(), $purchases)) / count($purchases);
                                     echo number_format($average_ticket, 2, ',', '.');
