@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <script src="lib/jquery-4.0.0.min.js" type="text/javascript"></script>
-    <script src="scripts/edit_profile.js"></script>
+    <script src="scripts/edit_profile.js" type="module"></script>
 </head>
 
 <body>
@@ -35,7 +35,7 @@
             </div>
         <?php endif; ?>
 
-        <form action="user/edit_profile" method="post">
+        <form action="user/edit_profile" method="post" autocomplete="off">
             <div class="card mb-4 bg-dark border-secondary">
                 <div class="card-header border-secondary text-white fw-semibold bg-secondary bg-opacity-10">
                     Personal Information
@@ -68,7 +68,7 @@
                 <div class="card-body p-4">
                     <div class="mb-4">
                         <label for="email" class="form-label text-white fw-bold">Email Address *</label>
-                        <input type="email" class="form-control bg-dark text-white border-secondary" id="email" name="email"
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="email" name="email"
                             value="<?= htmlspecialchars($user->get_email()) ?>" required>
                         <div id="errEmail"></div>
                         <div class="form-text text-secondary">We'll use this email to send you notifications about your sales and purchases</div>
