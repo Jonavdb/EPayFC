@@ -1,6 +1,6 @@
 <div class="col">
     <a href="<?= $element->href ?>" class="card h-100 text-decoration-none shadow-sm card-hover border-secondary bg-dark">
-        <div class="position-relative ratio-4x3">
+        <div class="ratio ratio-4x3">
             <img src="<?= $element->img_src ?>" class="card-img-top" alt="<?= htmlspecialchars($element->raw_item->get_title()) ?>" style="object-fit: cover;">
 
             <div class="card-img-overlay d-flex flex-column justify-content-between p-2">

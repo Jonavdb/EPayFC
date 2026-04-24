@@ -202,9 +202,8 @@ class ControllerItem extends Controller {
 
     // Open item
     public function open(): void {
-        // On regarde si le premier argument (l'ID) existe
         if (isset($_GET['param1'])) {
-            $id = (int)$_GET['param1']; // On récupère le 8 de l'URL ".../index/8"
+            $id = (int)$_GET['param1'];
         } else {
             $this->redirect('item', 'browse');
             return;
@@ -214,7 +213,21 @@ class ControllerItem extends Controller {
             $this->redirect('item', 'browse');
             return;
         }
-        $image_index = isset($_GET['param2']) ? (int)$_GET['param2'] : 0;
+
+        $context = isset($_GET['param2']) ? $_GET['param2'] : 'from-browse';
+        $param3 = isset($_GET['param3']) ? $_GET['param3'] : '';
+        $param4 = isset($_GET['param4']) ? $_GET['param4'] : '';
+
+        // param3 numérique = index image (sans encoded_search)
+        // param3 string = encoded_search, param4 = index image
+        if (is_numeric($param3)) {
+            $image_index = (int)$param3;
+            $encoded_search = '';
+        } else {
+            $encoded_search = $param3;
+            $image_index = is_numeric($param4) ? (int)$param4 : 0;
+        }
+
         $image_urls = $item->get_image_urls();
         if (isset($image_urls[$image_index])) {
             $item->set_main_image_url($image_urls[$image_index]);
@@ -223,9 +236,6 @@ class ControllerItem extends Controller {
         $bids = Bid::get_bid_by_item_id($id);
         $user = $this->get_user_or_false();
         $current_user_pseudo = $user ? $user->get_pseudo() : null;
-
-        $context = isset($_GET['param2']) ? $_GET['param2'] : 'from-browse';
-        $encoded_search = isset($_GET['param3']) ? $_GET['param3'] : '';
 
         (new View("open_item"))->show([
             "item" => $item,
