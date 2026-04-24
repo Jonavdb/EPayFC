@@ -384,6 +384,19 @@ class ControllerItem extends Controller {
         $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
         $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
 
+        if (strlen($item->get_title()) == 0 || empty($item->get_title())) {
+            $errors['empty'] = "Title is required";
+        }
+
+        if (strlen($item->get_title()) < $min_lenght || strlen($item->get_title()) > $max_lenght) {
+
+            $errors['title'] = "Title length must be between $min_lenght and $max_lenght characters.";
+        }
+
+        if ($item->get_duration_days() < $min_duration || $item->get_duration_days() > $max_duration) {
+            $errors['duration'] = "Duration must be at least $min_duration day and at most $max_duration days";
+        }
+
         // ask if we keep
         if ($starting_bid !== null && $starting_bid > 0) {
             $item->set_starting_bid($starting_bid);
@@ -391,11 +404,17 @@ class ControllerItem extends Controller {
             $item->set_is_direct_sale(false);
 
             if ($buy_now_price !== null && $buy_now_price > 0) {
+                if ($buy_now_price < $starting_bid) {
+                    $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
+                }
                 $item->set_buy_now_price($buy_now_price);
                 $item->set_has_buy_now(true);
             } else {
                 $item->set_buy_now_price(null);
                 $item->set_has_buy_now(false);
+            }
+            if ($sale_price !== null && $sale_price > 0) {
+                $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
             }
         } elseif ($sale_price !== null && $sale_price > 0) {
             $item->set_buy_now_price($sale_price);
@@ -403,8 +422,9 @@ class ControllerItem extends Controller {
             $item->set_is_direct_sale(true);
             $item->set_has_buy_now(false);
             $item->set_starting_bid(0.0);
+        } else {
+            $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
         }
-
         return $errors;
     }
 

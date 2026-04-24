@@ -18,7 +18,7 @@ $context = $context ?? 'from-browse';
 $encoded_search = $encoded_search ?? '';
 
 // --- CALCUL DE L'URL DE RETOUR ---
-$back_url = ($context === 'from-items') ? "item/list" : "item/browse";
+$back_url = GoBack::go_back();
 if ($encoded_search !== '') {
   $back_url .= "/" . $encoded_search;
 }
@@ -93,13 +93,7 @@ if ($encoded_search !== '') {
           <?php if (count($item->get_image_urls()) >= 2) { ?><h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h3>
             <div class="d-flex gap-3 mb-5">
               <?php
-              $origin = 'from-browse';
-              $uri = $_SERVER['REQUEST_URI'];
-              if (strpos($uri, 'from-list') !== false) $origin = 'from-list';
-              elseif (strpos($uri, 'from-profile') !== false) $origin = 'from-profile';
-              elseif (strpos($uri, 'from-items') !== false) $origin = 'from-items';
-              elseif (strpos($uri, 'from-sales') !== false) $origin = 'from-sales';
-              elseif (strpos($uri, 'from-purchases') !== false) $origin = 'from-purchases';
+
 
               foreach ($item->get_image_urls() as $index => $image):
                 $is_active = ($image === $image_to_display);
