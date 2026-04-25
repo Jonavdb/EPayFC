@@ -31,8 +31,8 @@ En développement, donnez les permissions d'écriture aux dossiers uploads et da
 ### URLs deploiement
 
 - étudiant VANDERBIEST Jonathan :
-    - URL :
-    - Mot de passe :
+    - URL : http://infolab.epfc.eu:58352/prwb_2526_f03/
+    - Mot de passe : jovdb2026@web
 - étudiant YANGNI-ANGATE Emmanuel :
     - URL :
     - Mot de passe :
