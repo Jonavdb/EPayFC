@@ -37,8 +37,8 @@ En développement, donnez les permissions d'écriture aux dossiers uploads et da
     - URL :
     - Mot de passe :
 - étudiant HABOULA Ali :
-    - URL :
-    - Mot de passe :
+    - URL : http://infolab.epfc.eu:58351/epayfc/
+    - Mot de passe : alihbl2026@web
 
 ### Liste des fonctionnalités supplémentaires
 
