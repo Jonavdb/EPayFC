@@ -34,8 +34,8 @@ En développement, donnez les permissions d'écriture aux dossiers uploads et da
     - URL : http://infolab.epfc.eu:58352/prwb_2526_f03/
     - Mot de passe : jovdb2026@web
 - étudiant YANGNI-ANGATE Emmanuel :
-    - URL :
-    - Mot de passe :
+    - URL : http://infolab.epfc.eu:58353/prwb_2526_f03/
+    - Mot de passe : footballreve2014
 - étudiant HABOULA Ali :
     - URL : http://infolab.epfc.eu:58351/epayfc/
     - Mot de passe : alihbl2026@web
