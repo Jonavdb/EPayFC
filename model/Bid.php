@@ -3,16 +3,14 @@
 require_once "framework/Model.php";
 require_once "utils/AppTime.php";
 
-class Bid extends Model
-{
+class Bid extends Model {
     private int $owner;
     private int $item;
     private DateTime $created_at;
     private float $amount;
     private string $owner_pseudo;
 
-    public function __construct(int $owner, int $item, DateTime $created_at, float $amount, string $owner_pseudo)
-    {
+    public function __construct(int $owner, int $item, DateTime $created_at, float $amount, string $owner_pseudo) {
         $this->owner        = $owner;
         $this->item         = $item;
         $this->created_at   = $created_at;
@@ -21,14 +19,23 @@ class Bid extends Model
     }
 
 
-    public function get_owner(): int       { return $this->owner; }
-    public function get_item(): int        { return $this->item; }
-    public function get_created_at(): DateTime { return $this->created_at; }
-    public function get_amount(): float    { return $this->amount; }
-    public function get_owner_pseudo(): string { return $this->owner_pseudo; }
+    public function get_owner(): int {
+        return $this->owner;
+    }
+    public function get_item(): int {
+        return $this->item;
+    }
+    public function get_created_at(): DateTime {
+        return $this->created_at;
+    }
+    public function get_amount(): float {
+        return $this->amount;
+    }
+    public function get_owner_pseudo(): string {
+        return $this->owner_pseudo;
+    }
 
-    public function validate(): array
-    {
+    public function validate(): array {
         $errors = [];
 
         if ($this->amount <= 0) {
@@ -42,8 +49,7 @@ class Bid extends Model
         return $errors;
     }
 
-    public static function get_bid_by_item_id($id): array
-    {
+    public static function get_bid_by_item_id($id): array {
 
         $query = self::execute(
             "Select b.*, u.pseudo AS owner_pseudo
@@ -73,12 +79,11 @@ class Bid extends Model
         return $bids_array;
     }
 
-    public static function create_bid(string $user_pseudo, int $item_id, float $amount): bool
-    {
+    public static function create_bid(string $user_pseudo, int $item_id, float $amount): bool {
         $now = AppTime::get_current_datetime();
 
         $query = "Insert into bids (owner, item, created_at, amount)
-                  Values ((Select ID from Users where pseudo =:pseudo), :item, :created_at, :amount)";
+                  Values ((Select id from users where pseudo =:pseudo), :item, :created_at, :amount)";
         try {
             self::execute($query, [
                 "pseudo" => $user_pseudo,

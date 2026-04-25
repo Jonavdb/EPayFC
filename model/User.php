@@ -123,7 +123,7 @@ class User extends Model {
 
     // récupère le user par email
     public static function get_user_by_email(string $email): User|false {
-        $query = self::execute("SELECT * FROM Users where email = :email", ["email" => $email]);
+        $query = self::execute("SELECT * FROM users where email = :email", ["email" => $email]);
         $data = $query->fetch(); // un seul résultat au maximum
         if (!$data) {
             return false;

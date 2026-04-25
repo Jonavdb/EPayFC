@@ -10,7 +10,7 @@ $(document).ready(function () {
             });
 
             try {
-                await $.post('item/update_image_order', {
+                await $.post('item/update_image_order_service', {
                     // envoie une requête POST sur le controlleur item et la méthode update_image_order en lui passant 2 paramètres
                     item_id: item_id,
                     order: ordre,
