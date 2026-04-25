@@ -9,11 +9,16 @@ $(document).ready(function () {
                 attribute: 'data-image-url',
             });
 
-            await $.post('item/update_image_order', {
-                // envoie une requête POST sur le controlleur item et la méthode update_image_order en lui passant 2 paramètres
-                item_id: item_id,
-                order: ordre,
-            });
+            try {
+                await $.post('item/update_image_order', {
+                    // envoie une requête POST sur le controlleur item et la méthode update_image_order en lui passant 2 paramètres
+                    item_id: item_id,
+                    order: ordre,
+                });
+            } catch (error) {
+                console.error('Erreur AJAX:', error);
+            }
+
             update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après le déplacement
         },
     });
@@ -26,10 +31,15 @@ $(document).ready(function () {
         if (previousCard.length) {
             const imageIndex = card.data('image-index');
 
-            await $.post('item/move_image_left_service', {
-                item_id: item_id,
-                image_index: imageIndex,
-            });
+            try {
+                await $.post('item/move_image_left_service', {
+                    item_id: item_id,
+                    image_index: imageIndex,
+                });
+            } catch (error) {
+                console.error('Erreur AJAX:', error);
+            }
+
             previousCard.before(card); // on déplace la carte
             update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après le déplacement
         }
@@ -43,10 +53,15 @@ $(document).ready(function () {
         if (nextcard.length) {
             const imageIndex = card.data('image-index');
 
-            await $.post('item/move_image_right_service', {
-                item_id: item_id,
-                image_index: imageIndex,
-            });
+            try {
+                await $.post('item/move_image_right_service', {
+                    item_id: item_id,
+                    image_index: imageIndex,
+                });
+            } catch (error) {
+                console.error('Erreur AJAX:', error);
+            }
+
             nextcard.after(card); // on déplace la carte
             update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après le déplacement
         }

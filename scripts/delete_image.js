@@ -12,14 +12,20 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.btn_confirm_delete', async function (e) {
-        await $.post('item/delete_images_service', {
-            item_id: item_id,
-            image_filename: filenameToDelete,
-        }); // on ne supprime la carte qu'après le callback du Post
+        try {
+            await $.post('item/delete_images_service', {
+                item_id: item_id,
+                image_filename: filenameToDelete,
+            }); // on ne supprime la carte qu'après le callback du Post
+        } catch (error) {
+            console.error('Erreur AJAX:', error);
+        }
+
         cardToDelete.remove(); // on supprime la carte de l'interface après la suppression sur le serveur
         bootstrap.Modal.getInstance(document.getElementById('modal_confirmation_delete')).hide(); // on cache la modal de confirmation
         update_buttons(); // on met à jour l'état des boutons (enabled/disabled) après la suppression
     });
+
     function update_buttons() {
         const cards = $('#sortable-images .card');
         cards.find('.btn-left, .btn-right').prop('disabled', false);

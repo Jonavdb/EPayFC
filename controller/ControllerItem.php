@@ -691,8 +691,6 @@ class ControllerItem extends Controller {
         );
     }
 
-
-
     // Services AJAX
     public function get_js_images_service(): void {
         $item_id = (int)$_GET['param1'];
