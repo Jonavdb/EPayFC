@@ -8,37 +8,37 @@ Etudiant : Vanderbiest Jonathan
 
 En développement, donnez les permissions d'écriture aux dossiers uploads et database :
 
-* `sudo chmod -R 777 uploads`
-* `sudo chmod -R 777 database`
+- `sudo chmod -R 777 uploads`
+- `sudo chmod -R 777 database`
 
 ## Notes de version itération 1
 
 ### Liste des utilisateurs et mots de passes
 
-* boverhaegen@epfc.eu, password "Password1,", utilisateur
-* mamichel@epfc.eu, password "Password1,", utilisateur
-* quhouben@epfc.eu, password "Password1,", utilisateur
-* xapigeolet@epfc.eu, password "Password1,", utilisateur
-* admin@epfc.eu, password "Password1,", admin
-* A compléter...
+- boverhaegen@epfc.eu, password "Password1,", utilisateur
+- mamichel@epfc.eu, password "Password1,", utilisateur
+- quhouben@epfc.eu, password "Password1,", utilisateur
+- xapigeolet@epfc.eu, password "Password1,", utilisateur
+- admin@epfc.eu, password "Password1,", admin
+- A compléter...
 
 ### Liste des bugs connus
 
-* bug 1
-* bug 2
-* ...
+- bug 1
+- bug 2
+- ...
 
 ### URLs deploiement
 
-* étudiant Nom Prenom :
-  * URL :
-  * Mot de passe :
-* étudiant Nom Prenom :
-  * URL :
-  * Mot de passe :
-* étudiant Nom Prénom :
-  * URL :
-  * Mot de passe :
+- étudiant VANDERBIEST Jonathan :
+    - URL :
+    - Mot de passe :
+- étudiant YANGNI-ANGATE Emmanuel :
+    - URL :
+    - Mot de passe :
+- étudiant HABOULA Ali :
+    - URL :
+    - Mot de passe :
 
 ### Liste des fonctionnalités supplémentaires
 
@@ -46,12 +46,13 @@ En développement, donnez les permissions d'écriture aux dossiers uploads et da
 
 Choix d'implémentation
 
-Open_item : Lorsqu'on est propriétaire de l'objet et qu'il n'y a pas de bid, je décide de ne pas afficher la partie liste des bids en dessous. 
-
+Open_item : Lorsqu'on est propriétaire de l'objet et qu'il n'y a pas de bid, je décide de ne pas afficher la partie liste des bids en dessous.
 
 ## Notes de version itération 2
 
-...
+Choix d'implémentation :
+
+ADD_ITEM : pas de bouton GoBack car il s'agit d'un menu qu'on ne peut accéder que depuis la navbar.
 
 ## Notes de version itération 3
 
