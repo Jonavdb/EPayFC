@@ -7,11 +7,11 @@ require_once "utils/GoBack.php";
 
 <head>
     <meta charset="UTF-8">
-    <base href="<?= $web_root ?>" />
+    <base href="<?= $web_root ?>">
 
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
     <meta name="author" content="Jonathan_Vanderbiest">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -48,10 +48,10 @@ require_once "utils/GoBack.php";
     <div class="container-fluid mb-4 px-5">
         <div class="card text-bg-dark border-secondary">
             <div class="card-header border-secondary" style="background-color: #1e293b;">
-                <h5 class="mb-0 text-white text-start fs-3">Add new Images</h5>
+                <h4 class="mb-0 text-white text-start fs-3">Add new Images</h4>
             </div>
             <div class="card-body">
-                <h6 class="fw-bold text-white text-start fs-4">Select Images</h6>
+                <h5 class="fw-bold text-white text-start fs-4">Select Images</h5>
                 <form action="<?= GoBack::smart_href('item/add_images/' . $item->get_id()) ?>" method="POST" enctype="multipart/form-data" class="fs-5">
                     <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
 
@@ -139,7 +139,7 @@ require_once "utils/GoBack.php";
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark text-white border-secondary">
                 <div class="modal-header border-secondary mb-4">
-                    <h3 class="modal-title">Delete Image</h3>
+                    <h4 class="modal-title">Delete Image</h4>
                 </div>
                 <div class="modal-text modal-text text-center mb-4">
                     <h5>Are you sure you want to delete this image ?</h5>

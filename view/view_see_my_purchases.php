@@ -8,7 +8,7 @@
     <base href="<?= $web_root ?>">
     <title>My Purchases</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <link rel="stylesheet" type="text/css" href="css/see_my_purchases.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -71,8 +71,9 @@
                             <div class="flex-grow-1 text-start fs-1">
                                 <!-- Calculates average buy_now_price: (Sum / Count) or 0,00 if empty -->
                                 <?php
+                                echo "€ ";
                                 if (empty($purchases)) {
-                                    echo "€ 0,00";
+                                    echo "0,00";
                                 } else {
                                     $average_ticket = array_sum(array_map(fn($p) => $p->get_user_bid_amount(), $purchases)) / count($purchases);
                                     echo number_format($average_ticket, 2, ',', '.');

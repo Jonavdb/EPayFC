@@ -694,7 +694,7 @@ class ControllerItem extends Controller {
 
 
     // Services AJAX
-    public function get_js_images(): void {
+    public function get_js_images_service(): void {
         $item_id = (int)$_GET['param1'];
         $pictures = ItemPicture::get_pictures_by_item($item_id); // récupère toutes les images d'un objet
         $urls = array_map(fn($pic) => $pic->get_picture_path(), $pictures); // map les informations en spécifiant que pour chaque image de la variables pictures, on récupère uniquement son chemin
@@ -703,7 +703,7 @@ class ControllerItem extends Controller {
         exit;
     }
 
-    public function update_image_order(): void {
+    public function update_image_order_service(): void {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0; // on récupère l'ID de l'objet
         $order = isset($_POST['order']) ? (array)$_POST['order'] : []; // on récupère l'ordre des objets
 
@@ -719,7 +719,70 @@ class ControllerItem extends Controller {
         exit;
     }
 
-    // Services AJAX
+    public function move_image_right_service(): void {
+        header('Content-Type: application/json');
+
+        if (
+            isset($_GET['param1']) && trim($_GET['param1'] !== "")
+            && isset($_GET['param2']) && trim($_GET['param2'] !== "")
+        ) {
+            $image_id = (int)$_GET['param1'];
+            $item_id = (int)$_GET['param2'];
+
+            $current_user = $this->get_user_or_false();
+
+            if (!$current_user) {
+                echo json_encode([]);
+                exit;
+            }
+
+            $image_item = Item::change_pics_right($image_id, $item_id);
+            echo json_encode(["image_item" => $image_item]);
+        }
+    }
+
+    public function move_image_left_service(): void {
+        header('Content-Type: application/json');
+
+        if (
+            isset($_GET['param1']) && trim($_GET['param1'] !== "")
+            && isset($_GET['param2']) && trim($_GET['param2'] !== "")
+        ) {
+            $image_id = (int)$_GET['param1'];
+            $item_id = (int)$_GET['param2'];
+
+            $current_user = $this->get_user_or_false();
+
+            if (!$current_user) {
+                echo json_encode([]);
+                exit;
+            }
+
+            $image_item = Item::change_pics_left($image_id, $item_id);
+            echo json_encode(["image_item" => $image_item]);
+        }
+    }
+
+    public function delete_images_service() {
+        header('Content-Type: application/json');
+
+        $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
+        $filename = isset($_POST['image_filename']) ? $_POST['image_filename'] : '';
+
+        if ($item_id > 0 && !empty($filename)) {
+            $user = $this->get_user_or_redirect();
+            $item = Item::get_item_by_id($item_id);
+            if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
+                echo json_encode([]);
+                exit;
+            }
+            Item::delete_images($filename, $item_id);
+            echo json_encode(["image_delete" => $filename]);
+        } else {
+            echo json_encode([]);
+        }
+    }
+
     public function search_fulltext_browse_service(): void {
         header('Content-Type: application/json');
 

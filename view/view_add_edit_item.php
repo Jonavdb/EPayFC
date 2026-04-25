@@ -8,13 +8,13 @@ require_once "utils/GoBack.php";
 <head>
     <meta charset="UTF-8">
     <title>Add item</title>
-    <base href="<?= $web_root ?>" />
+    <base href="<?= $web_root ?>">
     <meta name="author" content="Jonathan_Vanderbiest">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="css/styles.css" rel="stylesheet" type="text/css" />
-    <script src="lib/jquery-4.0.0.min.js" type="text/javascript"></script>
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="lib/jquery-4.0.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="scripts/get_constants.js"></script>
     <script type="module" src="scripts/add_edit_item.js"></script>
@@ -65,8 +65,6 @@ require_once "utils/GoBack.php";
                             <?= isset($errors['title']) || isset($errors['empty']) ? 'is-invalid' : 'border-secondary' ?>"
                             name="title"
                             id="title"
-                            id="title"
-                            name="title"
                             placeholder="Ex: IPhone 13 Pro Max 256GB"
                             value="<?php echo html_entity_decode($item->get_title()) ?>">
                         <div id="errTitle" class="text-danger small mt-1">
@@ -192,6 +190,8 @@ require_once "utils/GoBack.php";
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
     </form>
 
     <footer class="fixed-bottom">

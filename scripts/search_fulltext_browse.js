@@ -45,7 +45,6 @@ async function checkSearchFullTextBrowseItems() {
 
     // pur affichage : fonction utilitaire qui affiche les items en JS
     function displayBrowseItems(items, encodedSearch = '') {
-        console.log(items);
         if (items.length > 0) {
             items.forEach((item) => {
                 let href = `item/open/${item.id}/from-browse`;

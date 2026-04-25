@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <link rel="stylesheet" type="text/css" href="css/item.css">
     <link rel="stylesheet" type="text/css" href="css/browse_items.css">
-    <script src="lib/jquery-4.0.0.min.js" type="text/javascript"></script>
+    <script src="lib/jquery-4.0.0.min.js"></script>
     <script src="scripts/search_fulltext_browse.js"></script>
 </head>
 
