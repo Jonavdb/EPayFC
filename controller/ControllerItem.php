@@ -6,36 +6,46 @@ require_once "model/Item.php";
 require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
+require_once "utils/UrlEncoder.php";
+require_once "utils/GoBack.php";
 
 
-
-class ControllerItem extends Controller
-{
-    public function index(): void
-    {
+class ControllerItem extends Controller {
+    public function index(): void {
         $this->redirect("item", "list");
     }
 
     // My items
-    public function list(): void
-    {
-
+    public function list(): void {
         $user = $this->get_user_or_redirect();
-        $items = Item::get_items_by_owner($user->id);
+
+        // on lit le paramètre d'URL et on le décode
+        $encoded_search = isset($_GET['param1']) ? $_GET['param1'] : '';
+        $search_query = "";
+
+        if ($encoded_search !== '') {
+            $decoded = UrlEncoder::url_safe_decode($encoded_search);
+
+            if (is_array($decoded) && isset($decoded['search'])) {
+                $search_query = $decoded['search'];
+            }
+        }
+
+        $items = Item::get_items_by_owner($user->get_id(), $search_query);
 
         $active_items = [];
         $sold_items = [];
         $unsold_items = [];
-        $now = new DateTime();
+        $now = new DateTime(AppTime::get_current_datetime());
 
         foreach ($items as $item) {
             // Préparation des données d'affichage (photos des items, etc...)
-            $display_data = $this->prepare_item_data($item, $now);
+            $display_data = $this->prepare_item_data($item, $now, 'my-items', $user->get_pseudo(), $encoded_search);
 
             // Tri dans les catégories
-            $is_buy_now = $item->buy_now_reached;
-            $is_expired = $item->end_at <= $now;
-            $has_bids   = $item->bid_count > 0;
+            $is_buy_now = $item->get_buy_now_reached();
+            $is_expired = $item->get_end_at() <= $now;
+            $has_bids   = $item->get_bid_count() > 0;
 
             // CAS 1 : VENDU (Achat immédiat OU Temps écoulé avec enchères)
             if ($is_buy_now || ($is_expired && $has_bids)) {
@@ -56,43 +66,103 @@ class ControllerItem extends Controller
             "user" => $user,
             "active_items" => $active_items,
             "sold_items" => $sold_items,
-            "unsold_items" => $unsold_items
+            "unsold_items" => $unsold_items,
+            "is_guest" => !$this->user_logged(),
+            "search_query" => $search_query
         ]);
     }
 
-    /* Helper pour My Items : Prépare les données pour l'affichage */
-    private function prepare_item_data(Item $item, DateTime $now): object
-    {
-        $is_closed = $item->end_at <= $now;
+    /* Helper partagé : Prépare les données d'affichage d'une carte item */
+    private function prepare_item_data(
+        Item $item,
+        DateTime $now,
+        string $card_context = 'my-items',
+        string $owner_name = '',
+        string $encoded_search = ''
+    ): object {
+        $is_closed = $item->get_end_at() <= $now;
 
-        // Calcul du texte temps
+        // Calcul du texte temps + couleur
         if ($is_closed) {
             $time_left_str = "Closed";
+            $time_color    = "text-secondary";
         } else {
-            $diff = $now->diff($item->end_at);
+            $diff = $now->diff($item->get_end_at());
             $time_left_str = ($diff->days > 0) ? $diff->days . " days left" : $diff->h . "h " . $diff->i . "m left";
+            $time_color    = ($diff->days < 1) ? "text-warning" : "text-secondary";
         }
 
+        // Couleurs pour le time_left
+        $time_color = $is_closed ? 'text-secondary' : 'text-success';
+        $price_color = $item->get_has_buy_now() ? 'text-primary' : 'text-warning';
+
+        $raw_price = $item->get_has_buy_now() ? $item->get_buy_now_price() : $item->get_starting_bid();
+        $price_display = $raw_price ? number_format((float)$raw_price, 2, ',', '.') : "0,00";
+        $current_bid_display = number_format((float)$item->get_current_bid(), 2, ',', '.');
+
         // Image
-        $img_src = !empty($item->main_image_url) ? $item->main_image_url : "uploads/items/item_placeholder.png";
+        $img_src = !empty($item->get_main_image_url()) ? $item->get_main_image_url() : "uploads/items/item_placeholder.png";
 
         // Compteur images
-        $total_image_count = is_array($item->image_urls) ? count($item->image_urls) : 0;
+        $total_image_count = is_array($item->get_image_urls()) ? count($item->get_image_urls()) : 0;
         $extra_image_count = max(0, $total_image_count - 1);
 
-        // On retourne un objet générique
+        // Lien et propriétaire selon le contexte
+        $href  = ($card_context === 'my-items')
+            ? "item/open/" . $item->get_id() . "/from-items"
+            : "item/open/" . $item->get_id() . "/from-browse";
+
+        $is_highest_bidder = ($card_context === 'browse-bidding')
+            ? ($item->get_user_bid_amount() == $item->get_current_bid() && $item->get_current_bid() > 0)
+            : false;
+
+        if ($encoded_search !== '') {
+            $href .= "/" . $encoded_search;
+        }
+
+        $has_buy_now = $item->get_has_buy_now();
+        $is_auction  = $item->get_is_auction() || $card_context === 'browse';
+        $is_direct   = $item->get_is_direct_sale();
+
+        if ($has_buy_now || $is_direct) {
+            $price_display = number_format($item->get_buy_now_price(), 2, ',', '.');
+            $price_color   = 'text-primary';
+        } elseif ($is_auction) {
+            $price_display = number_format($item->get_starting_bid(), 2, ',', '.');
+            $price_color   = 'text-warning';
+        } else {
+            $price_display = null;
+            $price_color   = '';
+        }
+
+        $show_current_bid = $is_auction;
+        $current_bid_display = ($item->get_current_bid() !== null)
+            ? number_format($item->get_current_bid(), 2, ',', '.')
+            : null;
+
         return (object) [
-            'raw_item' => $item,
-            'time_left' => $time_left_str,
-            'img_src' => $img_src,
-            'extra_images' => $extra_image_count,
-            'context' => ''               // Sera rempli dans la boucle list()
+            'raw_item'             => $item,
+            'time_left'            => $time_left_str,
+            'time_color'           => $time_color,
+            'img_src'              => $img_src,
+            'extra_images'         => $extra_image_count,
+            'context'              => '',
+            'card_context'         => $card_context,
+            'href'                 => $href,
+            'owner'                => htmlspecialchars($owner_name),
+            'price_color'          => $price_color,
+            'price_display'        => $price_display,
+            'is_highest_bidder'    => $is_highest_bidder,
+            'price_display'        => $price_display,
+            'price_color'          => $price_color,
+            'show_current_bid'     => $show_current_bid,
+            'current_bid_display'  => $current_bid_display,
+            'href' => $href
         ];
     }
 
     // Delete item
-    public function delete($id = null): void
-    {
+    public function delete($id = null): void {
         if ($id === null && isset($_GET['param1'])) {
             $id = $_GET['param1'];
         }
@@ -112,7 +182,7 @@ class ControllerItem extends Controller
         }
 
         // Vérification (seulement l'user connecté est le propriétaire)
-        if ($user->pseudo != $item->owner_name) {
+        if ($user->get_pseudo() != $item->get_owner_name()) {
             $this->redirect("item", "list");
             return;
         }
@@ -124,16 +194,16 @@ class ControllerItem extends Controller
         } else {
             (new View("delete_item"))->show([
                 "item" => $item,
-                "user" => $user
+                "user" => $user,
+                "is_guest" => !$this->user_logged()
             ]);
         }
     }
 
-    public function open(): void
-    {
-        // On regarde si le premier argument (l'ID) existe
+    // Open item
+    public function open(): void {
         if (isset($_GET['param1'])) {
-            $id = (int)$_GET['param1']; // On récupère le 8 de l'URL ".../index/8"
+            $id = (int)$_GET['param1'];
         } else {
             $this->redirect('item', 'browse');
             return;
@@ -143,32 +213,50 @@ class ControllerItem extends Controller
             $this->redirect('item', 'browse');
             return;
         }
-        $image_index = isset($_GET['param2']) ? (int)$_GET['param2'] : 0;
-        if (isset($item->image_urls[$image_index])) {
-            $item->main_image_url = $item->image_urls[$image_index];
+
+        $context = isset($_GET['param2']) ? $_GET['param2'] : 'from-browse';
+        $param3 = isset($_GET['param3']) ? $_GET['param3'] : '';
+        $param4 = isset($_GET['param4']) ? $_GET['param4'] : '';
+
+        // param3 numérique = index image (sans encoded_search)
+        // param3 string = encoded_search, param4 = index image
+        if (is_numeric($param3)) {
+            $image_index = (int)$param3;
+            $encoded_search = '';
+        } else {
+            $encoded_search = $param3;
+            $image_index = is_numeric($param4) ? (int)$param4 : 0;
+        }
+
+        $image_urls = $item->get_image_urls();
+        if (isset($image_urls[$image_index])) {
+            $item->set_main_image_url($image_urls[$image_index]);
         }
 
         $bids = Bid::get_bid_by_item_id($id);
         $user = $this->get_user_or_false();
-        $current_user_pseudo = $user ?  $user->pseudo : null;
-
+        $current_user_pseudo = $user ? $user->get_pseudo() : null;
 
         (new View("open_item"))->show([
             "item" => $item,
             "bids" => $bids,
             "current_user" => $current_user_pseudo,
-            'selected_image' => $image_index
+            'selected_image' => $image_index,
+            "is_guest" => !$this->user_logged(),
+            "context" => $context,
+            "encoded_search" => $encoded_search
         ]);
     }
 
-    public function new_bid()
-    {
-
+    public function new_bid() {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $amount = isset($_POST['amount']) ? (float)$_POST['amount'] : 0.0;
 
         $user = $this->get_user_or_redirect();
-        $current_user_pseudo = $user->pseudo;
+        $current_user_pseudo = $user->get_pseudo();
+
+        $encoded_search = isset($_POST['encoded_search']) ? $_POST['encoded_search'] : '';
+        $context = isset($_POST['context']) ? $_POST['context'] : 'from-browse';
 
         $item = Item::get_item_by_id($item_id);
         $now = AppTime::get_current_datetime();
@@ -178,13 +266,20 @@ class ControllerItem extends Controller
             return;
         }
 
-        if ($item->owner_name === $current_user_pseudo) {
+        if ($item->get_owner_name() === $current_user_pseudo) {
             $this->redirect('item', 'list');
             return;
         }
 
-        if ($item->end_at < $now) {
-            $this->redirect('item', 'open', $item_id);
+        $redirect_params = ['item', 'open', $item_id, $context];
+
+        if ($encoded_search !== '') {
+            $redirect_params[] = $encoded_search;
+        }
+
+
+        if ($item->get_end_at() < $now) {
+            $this->redirect(...$redirect_params);
             return;
         }
 
@@ -192,28 +287,40 @@ class ControllerItem extends Controller
             Bid::create_bid($current_user_pseudo, $item_id, $amount);
         }
 
-        $this->redirect("item", "open", $item_id);
+        $this->redirect(...$redirect_params);
     }
 
-    public function buy_now()
-    {
+    public function buy_now() {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
-        $user = $this->get_user_or_redirect();
-        $current_user_pseudo = $user->pseudo;
-        if ($item_id > 0) {
 
+        $user = $this->get_user_or_redirect();
+        $current_user_pseudo = $user->get_pseudo();
+
+        $encoded_search = isset($_POST['encoded_search']) ? $_POST['encoded_search'] : '';
+        $context = $_POST['context'] ?? $_GET['param2'] ?? 'from-browse';
+
+        if ($item_id > 0) {
             $item = Item::get_item_by_id($item_id);
 
-            if ($item && $item->owner_name !== $current_user_pseudo && $item->has_buy_now && !$item->buy_now_reached) {
-                Bid::create_bid($current_user_pseudo, $item_id, $item->buy_now_price);
+            if ($item && $item->get_owner_name() !== $current_user_pseudo && $item->get_has_buy_now() && !$item->get_buy_now_reached()) {
+                Bid::create_bid($current_user_pseudo, $item_id, $item->get_buy_now_price());
             }
         }
-        $this->redirect("item", "open", $item_id);
+
+        $redirect_params = ['item', 'open', $item_id, $context];
+
+        if ($encoded_search !== '') {
+            $redirect_params[] = $encoded_search;
+        }
+
+        $this->redirect(...$redirect_params);
+
+        // $redirect_url = GoBack::smart_href("item/open/" . $item->get_id());
+        // $url_parts = explode('/', $redirect_url);
+        // $this->redirect(...$url_parts);
     }
 
-
-    public function add()
-    {
+    public function add() {
         $user = $this->get_user_or_redirect();
         $now = new DateTime(AppTime::get_current_datetime());
         $end = (clone $now)->modify('+7 days');
@@ -225,7 +332,7 @@ class ControllerItem extends Controller
             0,
             "",
             "",
-            $user->pseudo,
+            $user->get_pseudo(),
             "",
             "",
             [],
@@ -250,84 +357,84 @@ class ControllerItem extends Controller
 
             if (empty($errors)) {
                 $item->save();
-                $this->redirect("item", "open", $item->id);
+                $this->redirect("item", "open", $item->get_id());
             }
         }
 
         (new View("add_edit_item"))->show([
             "item" => $item,
-            "errors" => $errors
+            "errors" => $errors,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
-    private function validate_and_fill(Item $item): array
-    {
-
+    private function validate_and_fill(Item $item): array {
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
         $min_lenght = (int)$config['min_item_lenght'];
         $max_lenght = (int)$config['max_item_lenght'];
         $min_duration = (int)$config['min_duration_days'];
         $max_duration = (int)$config['max_duration_days'];
-        $item->title = trim($_POST['title']);
-        $item->description = trim($_POST['description']);
-        $item->duration_days = (int)$_POST['duration'];
+        $item->set_title(trim($_POST['title']));
+        $item->set_description(trim($_POST['description']));
+        $item->set_duration_days((int)$_POST['duration']);
         $errors = [];
 
         $starting_bid = ($_POST['starting_bid'] !== '') ? $_POST['starting_bid'] : null;
         $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
         $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
 
-        if (strlen($item->title) === 0 || empty($item->title)) {
+        if (strlen($item->get_title()) == 0 || empty($item->get_title())) {
             $errors['empty'] = "Title is required";
         }
 
-        if (strlen($item->title) < $min_lenght || strlen($item->title) > $max_lenght) {
-            $errors['title'] = "Title lenght must be between $min_lenght and $max_lenght characters.";
+        if (strlen($item->get_title()) < $min_lenght || strlen($item->get_title()) > $max_lenght) {
+
+            $errors['title'] = "Title length must be between $min_lenght and $max_lenght characters.";
         }
 
-        if ($item->duration_days < $min_duration || $item->duration_days > $max_duration) {
+        if ($item->get_duration_days() < $min_duration || $item->get_duration_days() > $max_duration) {
             $errors['duration'] = "Duration must be at least $min_duration day and at most $max_duration days";
         }
 
+        // ask if we keep
         if ($starting_bid !== null && $starting_bid > 0) {
-            $item->starting_bid = $starting_bid;
-            $item->is_auction = true;
-            $item->is_direct_sale = false;
+            $item->set_starting_bid($starting_bid);
+            $item->set_is_auction(true);
+            $item->set_is_direct_sale(false);
 
             if ($buy_now_price !== null && $buy_now_price > 0) {
                 if ($buy_now_price < $starting_bid) {
                     $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
                 }
-                $item->buy_now_price = $buy_now_price;
-                $item->has_buy_now = true;
+                $item->set_buy_now_price($buy_now_price);
+                $item->set_has_buy_now(true);
             } else {
-                $item->buy_now_price = null;
-                $item->has_buy_now = false;
+                $item->set_buy_now_price(null);
+                $item->set_has_buy_now(false);
             }
-
             if ($sale_price !== null && $sale_price > 0) {
                 $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
             }
         } elseif ($sale_price !== null && $sale_price > 0) {
-            $item->buy_now_price = $sale_price;
-            $item->is_auction = false;
-            $item->is_direct_sale = true;
-            $item->has_buy_now = false;
-            $item->starting_bid = 0.0;
+            $item->set_buy_now_price($sale_price);
+            $item->set_is_auction(false);
+            $item->set_is_direct_sale(true);
+            $item->set_has_buy_now(false);
+            $item->set_starting_bid(0.0);
         } else {
             $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
         }
         return $errors;
     }
 
-    public function edit()
-    {
-
+    public function edit() {
         $user = $this->get_user_or_redirect();
         $id = $_GET['param1'] ?? $_POST['id'] ?? null;
         $errors = [];
 
+        $context = $_POST['context'] ?? $_GET['param2'] ?? 'from-browse';
+        $encoded_search = $_POST['encoded_search'] ?? $_GET['param3'] ?? '';
 
         if (!$id) {
             $this->redirect("item", "index");
@@ -337,8 +444,13 @@ class ControllerItem extends Controller
         $item = Item::get_item_by_id($id);
 
         if ($item) {
-            if ($item->owner_name !== $user->pseudo || ($item->is_auction && $item->has_bids)) {
-                $this->redirect("item", "open", $item->id);
+            if ($item->get_owner_name() !== $user->get_pseudo() || ($item->get_is_auction() && $item->get_has_bids())) {
+                // // Redirection sécurisée
+                if ($encoded_search !== '') {
+                    $this->redirect("item", "open", $item->get_id(), $context, $encoded_search);
+                } else {
+                    $this->redirect("item", "open", $item->get_id(), $context);
+                }
                 exit();
             }
         } else {
@@ -347,25 +459,29 @@ class ControllerItem extends Controller
         }
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
             $errors = $this->validate_and_fill($item);
 
             if (empty($errors)) {
                 $item->save();
-                $this->redirect("item", "open", $item->id);
+
+                if ($encoded_search !== '') {
+                    $this->redirect("item", "open", $item->get_id(), $context, $encoded_search);
+                } else {
+                    $this->redirect("item", "open", $item->get_id(), $context);
+                }
             }
         }
 
         (new View("add_edit_item"))->show([
             "item" => $item,
-            "errors" => $errors
+            "errors" => $errors,
+            "is_guest" => !$this->user_logged(),
+            "context" => $context,
+            "encoded_search" => $encoded_search
         ]);
     }
 
-
-
-    public function manage_images(): void
-    {
+    public function manage_images(): void {
 
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1'];
@@ -377,73 +493,76 @@ class ControllerItem extends Controller
         $item = Item::get_item_by_id($id);
 
         $user = $this->get_user_or_redirect();
-        $current_user = $user->pseudo;
+        $current_user = $user->get_pseudo();
 
         if (!$item) {
             $this->redirect("item", "browse");
             return;
         }
 
-        if ($item->owner_name !== $current_user || ($item->is_auction && $item->has_bids)) {
+        if ($item->get_owner_name() !== $current_user || ($item->get_is_auction() && $item->get_has_bids())) {
             $this->redirect("item", "open", $id);
             return;
         }
 
         (new View("manage_images"))->show([
-            "item" => $item
+            "item" => $item,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
-    public function move_image_left()
-    {
+    public function move_image_left() {
         $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
         $item = Item::get_item_by_id($item_id);
-        if (!$item || $item->owner_name !== $user->pseudo) {
+        if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
             $this->redirect('item', 'open', $item_id);
             return;
         }
         if ($item_id > 0) {
             Item::change_pics_left($image_index, $item_id);
         }
-        $this->redirect("item", "manage_images", $item_id);
+        $redirect_url = GoBack::smart_href("item/manage_images/" . $item_id);
+        $url_parts = explode('/', $redirect_url);
+        $this->redirect(...$url_parts);
     }
 
-    public function move_image_right()
-    {
+    public function move_image_right() {
         $image_index = isset($_POST['image_index']) ? (int)$_POST['image_index'] : 0;
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $user = $this->get_user_or_redirect();
         $item = Item::get_item_by_id($item_id);
-        if (!$item || $item->owner_name !== $user->pseudo) {
+        if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
             $this->redirect('item', 'open', $item_id);
             return;
         }
         if ($item_id > 0) {
             Item::change_pics_right($image_index, $item_id);
         }
-        $this->redirect("item", "manage_images", $item_id);
+        $redirect_url = GoBack::smart_href("item/manage_images/" . $item_id);
+        $url_parts = explode('/', $redirect_url);
+        $this->redirect(...$url_parts);
     }
 
-    public function delete_images()
-    {
+    public function delete_images() {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $filename = isset($_POST['image_filename']) ? $_POST['image_filename'] : '';
         $user = $this->get_user_or_redirect();
         $item = Item::get_item_by_id($item_id);
-        if (!$item || $item->owner_name !== $user->pseudo) {
+        if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
             $this->redirect('item', 'open', $item_id);
             return;
         }
         if ($item_id > 0 && !empty($filename)) {
             Item::delete_images($filename, $item_id);
         }
-        $this->redirect("item", "manage_images", $item_id);
+        $redirect_url = GoBack::smart_href("item/manage_images/" . $item_id);
+        $url_parts = explode('/', $redirect_url);
+        $this->redirect(...$url_parts);
     }
 
-    public function add_images()
-    {
+    public function add_images() {
         $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
@@ -452,7 +571,7 @@ class ControllerItem extends Controller
         $errors = [];
         $user = $this->get_user_or_redirect();
         $item = Item::get_item_by_id($item_id);
-        if (!$item || $item->owner_name !== $user->pseudo) {
+        if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
             $this->redirect('item', 'open', $item_id);
             return;
         }
@@ -506,57 +625,306 @@ class ControllerItem extends Controller
         if (count($errors) > 0) {
             (new View("manage_images"))->show([
                 "item" => $item,
-                "errors" => $errors
+                "errors" => $errors,
+                "is_guest" => !$this->user_logged()
             ]);
         } else {
-            $this->redirect("item", "manage_images", $item_id);
+            $redirect_url = GoBack::smart_href("item/manage_images/" . $item_id);
+            $url_parts = explode('/', $redirect_url);
+            $this->redirect(...$url_parts);
         }
     }
 
-    public function browse()
-    {
-        // we retrive the user session
+    public function browse() {
         $user = $this->get_user_or_false();
-
-        // we check whether it's an existing user or a guest
         $is_guest = $user == false;
+        $now = new DateTime(AppTime::get_current_datetime());
 
-        // we retrieve items the user placed a bid on
-        $user_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->id);
+        $encoded_search = isset($_GET['param1']) ? $_GET['param1'] : '';
+        $search_query = "";
 
-        // we retrieve items available for him to purchase or place a bid 
-        $user_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->id);
+        if ($encoded_search !== '') {
+            $decoded = UrlEncoder::url_safe_decode($encoded_search);
+
+            if (is_array($decoded) && isset($decoded['search'])) {
+                $search_query = $decoded['search'];
+            }
+        }
+
+        $raw_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->get_id(), $search_query);
+        $user_bid_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse-bidding', $item->get_owner_name(), $encoded_search), $raw_bid_items);
+
+        $raw_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->get_id(), $search_query);
+        $user_available_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search), $raw_available_items);
 
         (new View("browse_items"))->show(
             [
                 "user_bid_items" => $user_bid_items,
                 "user_available_items" => $user_available_items,
-                "is_guest" => $is_guest
+                "is_guest" => $is_guest,
+                "search_query" => $search_query
             ]
         );
     }
 
-    public function purchases(): void
-    {
+    public function purchases(): void {
         // we retrive the user session
         $user = $this->get_user_or_redirect();
 
-        $purchases = Item::get_purchases($user->id);
+        $purchases = Item::get_purchases($user->get_id());
         (new View("see_my_purchases"))->show([
-            "purchases" => $purchases
+            "purchases" => $purchases,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
-    public function sales(): void
-    {
+    public function sales(): void {
         // we retrive the user session
         $user = $this->get_user_or_redirect();
 
-        $sales = Item::get_sales($user->id);
+        $sales = Item::get_sales($user->get_id());
         (new View("see_my_sales"))->show(
             [
-                "sales" => $sales
+                "sales" => $sales,
+                "is_guest" => !$this->user_logged()
             ]
         );
+    }
+
+    // Services AJAX
+    public function get_js_images_service(): void {
+        $item_id = (int)$_GET['param1'];
+        $pictures = ItemPicture::get_pictures_by_item($item_id); // récupère toutes les images d'un objet
+        $urls = array_map(fn($pic) => $pic->get_picture_path(), $pictures); // map les informations en spécifiant que pour chaque image de la variables pictures, on récupère uniquement son chemin
+        header('Content-Type: application/json'); // précise au navigateur qu'il va recevoir du Json
+        echo json_encode($urls); // encode les infos du array en Json et l'affiche au navigateur
+        exit;
+    }
+
+    public function update_image_order_service(): void {
+        $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0; // on récupère l'ID de l'objet
+        $order = isset($_POST['order']) ? (array)$_POST['order'] : []; // on récupère l'ordre des objets
+
+        $user = $this->get_user_or_redirect(); // on récupère le user connecté
+        $item = Item::get_item_by_id($item_id); // on récupère l'objet lié à l'ID
+
+        if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
+            http_response_code(403); // si pas d'objet ou si on appelle la méthode en étant pas le owner, 403 accès forbidden
+            exit; // on stop
+        }
+        Item::update_image_priority($item_id, $order); // on update les priorités
+        http_response_code(200); // on renvoie un code 200 pour dire que c'est OK 
+        exit;
+    }
+
+    public function move_image_right_service(): void {
+        header('Content-Type: application/json');
+
+        if (
+            isset($_GET['param1']) && trim($_GET['param1'] !== "")
+            && isset($_GET['param2']) && trim($_GET['param2'] !== "")
+        ) {
+            $image_id = (int)$_GET['param1'];
+            $item_id = (int)$_GET['param2'];
+
+            $current_user = $this->get_user_or_false();
+
+            if (!$current_user) {
+                echo json_encode([]);
+                exit;
+            }
+
+            $image_item = Item::change_pics_right($image_id, $item_id);
+            echo json_encode(["image_item" => $image_item]);
+        }
+    }
+
+    public function move_image_left_service(): void {
+        header('Content-Type: application/json');
+
+        if (
+            isset($_GET['param1']) && trim($_GET['param1'] !== "")
+            && isset($_GET['param2']) && trim($_GET['param2'] !== "")
+        ) {
+            $image_id = (int)$_GET['param1'];
+            $item_id = (int)$_GET['param2'];
+
+            $current_user = $this->get_user_or_false();
+
+            if (!$current_user) {
+                echo json_encode([]);
+                exit;
+            }
+
+            $image_item = Item::change_pics_left($image_id, $item_id);
+            echo json_encode(["image_item" => $image_item]);
+        }
+    }
+
+    public function delete_images_service() {
+        header('Content-Type: application/json');
+
+        $item_id = isset($_POST['item_id']) ? (int)$_POST['item_id'] : 0;
+        $filename = isset($_POST['image_filename']) ? $_POST['image_filename'] : '';
+
+        if ($item_id > 0 && !empty($filename)) {
+            $user = $this->get_user_or_redirect();
+            $item = Item::get_item_by_id($item_id);
+            if (!$item || $item->get_owner_name() !== $user->get_pseudo()) {
+                echo json_encode([]);
+                exit;
+            }
+            Item::delete_images($filename, $item_id);
+            echo json_encode(["image_delete" => $filename]);
+        } else {
+            echo json_encode([]);
+        }
+    }
+
+    public function search_fulltext_browse_service(): void {
+        header('Content-Type: application/json');
+
+        if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {
+            $search = trim($_GET["search"]);
+            $current_user = $this->get_user_or_false();
+
+            $encoded_search = UrlEncoder::url_safe_encode(['search' => $search]);
+
+            if (!$current_user) {
+                echo json_encode([]);
+                exit; // Sécurité
+            }
+
+            $user_id = $current_user->get_id();
+
+            $bid_items = Item::get_user_bid_items($user_id, $search);
+            $available_items = Item::get_user_available_items($user_id, $search);
+
+            $results = [];
+            $now = new DateTime(AppTime::get_current_datetime());
+
+            // les items sur lesquels on participe (contexte 'browse-bidding')
+            foreach ($bid_items as $item) {
+                $display_data = $this->prepare_item_data($item, $now, 'browse-bidding', $item->get_owner_name(), $encoded_search);
+
+                $results[] = [
+                    'id'              => $item->get_id(),
+                    'title'           => $item->get_title(),
+                    'description'     => $item->get_description(),
+                    'owner_name'      => $item->get_owner_name(),
+                    'main_image_url'  => $item->get_main_image_url(),
+                    'price'           => $item->get_buy_now_price(),
+                    'starting_bid'    => $item->get_starting_bid(),
+                    'current_bid'     => $item->get_current_bid(),
+                    'is_auction'      => $item->get_is_auction(),
+                    'has_buy_now'     => $item->get_has_buy_now(),
+                    'has_bids'        => true,
+                    'is_highest_bidder' => $display_data->is_highest_bidder, // Calcul sécurisé du helper
+                    'buy_now_reached' => $item->get_buy_now_reached(),
+                    'time_left'       => $display_data->time_left,
+                    'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
+                    'created_at'      => $item->get_created_at()->format('Y-m-d H:i:s'),
+                    'extra_images'    => $display_data->extra_images,
+                ];
+            }
+
+            // les autres items (contexte 'browse')
+            foreach ($available_items as $item) {
+                $display_data = $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search);
+
+                $results[] = [
+                    'id'              => $item->get_id(),
+                    'title'           => $item->get_title(),
+                    'description'     => $item->get_description(),
+                    'owner_name'      => $item->get_owner_name(),
+                    'main_image_url'  => $item->get_main_image_url(),
+                    'price'           => $item->get_buy_now_price(),
+                    'starting_bid'    => $item->get_starting_bid(),
+                    'current_bid'     => $item->get_current_bid(),
+                    'is_auction'      => $item->get_is_auction(),
+                    'has_buy_now'     => $item->get_has_buy_now(),
+                    'has_bids'        => false,
+                    'is_highest_bidder' => false, // jamais de highest bidder ici
+                    'buy_now_reached' => $item->get_buy_now_reached(),
+                    'time_left'       => $display_data->time_left,
+                    'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
+                    'created_at'      => $item->get_created_at()->format('Y-m-d H:i:s'),
+                    'extra_images'    => $display_data->extra_images,
+                ];
+            }
+
+            echo json_encode([
+                'encoded_search' => $encoded_search,
+                'items' => $results
+            ]);
+            exit;
+        } else {
+            echo json_encode(['encoded_search' => '', 'items' => []]);
+            exit; //force l'arrêt
+        }
+    }
+
+    public function search_fulltext_my_items_service(): void {
+        header('Content-Type: application/json');
+
+        if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {
+            $search = trim($_GET["search"]);
+            $current_user = $this->get_user_or_false();
+
+            $encoded_search = UrlEncoder::url_safe_encode(['search' => $search]);
+
+            if (!$current_user) {
+                echo json_encode([]);
+                Tools::abort("User est false");
+            }
+
+            $user_id = $current_user->get_id();
+            $my_items = Item::get_items_by_owner($user_id, $search);
+
+            $results = [];
+            $now = new DateTime(AppTime::get_current_datetime());
+
+            foreach ($my_items as $item) {
+                $display_data = $this->prepare_item_data($item, $now, 'my-items-bidding', $item->get_owner_name(), $encoded_search);
+
+                // sold, unsold ou active
+                $is_buy_now = $item->get_buy_now_reached();
+                $is_expired = $item->get_end_at() <= $now;
+                $has_bids   = $item->get_bid_count() > 0;
+
+                if ($is_buy_now || ($is_expired && $has_bids)) {
+                    $context = 'sold';
+                } elseif ($is_expired && !$has_bids) {
+                    $context = 'unsold';
+                } else {
+                    $context = 'active';
+                }
+
+                $results[] = [
+                    'id'              => $item->get_id(),
+                    'title'           => $item->get_title(),
+                    'description'     => $item->get_description(),
+                    'owner_name'      => $current_user->get_pseudo(),
+                    'main_image_url'  => $display_data->img_src,
+                    'price'           => $item->get_buy_now_price(),
+                    'starting_bid'    => $item->get_starting_bid(),
+                    'current_bid'     => $item->get_current_bid(),
+                    'is_auction'      => $item->get_is_auction(),
+                    'has_buy_now'     => $item->get_has_buy_now(),
+                    'time_left'       => $display_data->time_left,
+                    'end_at'          => $item->get_end_at()->format('Y-m-d H:i:s'),
+                    'buy_now_reached' => $item->get_buy_now_reached(),
+                    'extra_images'    => $display_data->extra_images,
+                    'context'         => $context
+                ];
+            }
+
+            echo json_encode([
+                'encoded_search' => $encoded_search,
+                'items' => $results
+            ]);
+        } else {
+            echo json_encode(['encoded_search' => '', 'items' => []]);
+        }
     }
 }

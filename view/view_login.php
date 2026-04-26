@@ -56,7 +56,7 @@ require_once './framework/Configuration.php';
                 </div>
 
                 <div class="text-center mt-3">
-                    <span class="small">New here ? <a href="main/signup" class="text-info">Click here to subscribe !</a></span>
+                    <span class="small">New here ? <a href="user/signup" class="text-info">Click here to subscribe !</a></span>
                 </div>
 
                 <?php if (Configuration::is_dev()): ?>
@@ -68,8 +68,8 @@ require_once './framework/Configuration.php';
                         <div class="debug-emails small">
                             <?php foreach ($users ?? [] as $user): ?>
                                 <div class="text-light">
-                                    <a href="user/login?email=<?= urldecode($user->email); ?>" class="font-weight-bold">
-                                        Login as <?= $user->email ?>
+                                    <a href="user/login?email=<?= urldecode($user->get_email()); ?>" class="font-weight-bold">
+                                        Login as <?= $user->get_email() ?>
                                     </a>
                                 </div>
                             <?php endforeach; ?>

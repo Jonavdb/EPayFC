@@ -5,12 +5,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <base href="<?= $web_root ?>" />
+    <base href="<?= $web_root ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
     <meta name="author" content="Jonathan_Vanderbiest">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="css/styles.css" rel="stylesheet" type="text/css" />
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
     <title>Manage profile picture</title>
 </head>
 
@@ -37,12 +37,12 @@
             <div class="card-body">
                 <div class="text-center mb-4">
                     <div class="mx-auto" style="width: 120px; height: 120px">
-                        <img src="<?= !empty($user->picture_path) ? $user->picture_path : 'css/images/default_user_image.jpg' ?>"
+                        <img src="<?= !empty($user->get_picture_path()) ? $user->get_picture_path() : 'css/images/default_user_image.jpg' ?>"
                             alt="Profile Picture"
                             class="rounded-circle border-secondary p-1 img-thumbnail object-fit-cover w-100 h-100">
                     </div>
-                    <h5 class="mt-3 fs-2 mb-0 text-white"><?= htmlspecialchars($user->pseudo) ?></h5>
-                    <p class="text-secondary small"><?= htmlspecialchars($user->email) ?></p>
+                    <h5 class="mt-3 fs-2 mb-0 text-white"><?= htmlspecialchars($user->get_pseudo()) ?></h5>
+                    <p class="text-secondary small"><?= htmlspecialchars($user->get_email()) ?></p>
                 </div>
             </div>
         </div>
@@ -77,7 +77,7 @@
 
     <?php
 
-    if (!empty($user->picture_path)) { ?>
+    if (!empty($user->get_picture_path())) { ?>
 
         <div class="container-fluid mb-4 px-5">
             <div class="card text-bg-dark border-secondary">

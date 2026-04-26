@@ -1,12 +1,13 @@
 <?php
+
+use PSpell\Config;
+
 require_once 'framework/Controller.php';
 require_once 'model/User.php';
 require_once 'utils/ImageTool.php';
 
-class ControllerUser extends Controller
-{
-    public function index(): void
-    {
+class ControllerUser extends Controller {
+    public function index(): void {
         if ($this->user_logged()) {
             $this->redirect("item", "browse");
         } else {
@@ -15,24 +16,70 @@ class ControllerUser extends Controller
     }
 
     // Connexion en tant qu'invité
-    public function guest_login(): void
-    {
+    public function guest_login(): void {
         session_destroy(); // kill la session active
 
         $_SESSION['guest'] = true;
         $this->redirect("item", "browse");
     }
 
-    public function profile(): void
-    {
-        $user = $this->get_user_or_redirect();
-        $user = User::get_user_by_email($user->email);
-        (new View("profile"))->show(["user" => $user]);
+    public function profile(): void {
+        $loggedUser = $this->get_user_or_redirect();
+        $user = User::get_user_by_email($loggedUser->get_email());
+
+        // Sécurité : si pour une raison X le user n'est pas trouvé en DB
+        if (!$user) {
+            $this->redirect("main", "index"); // Ou une autre page d'erreur
+            return;
+        }
+
+        (new View("profile"))->show(["user" => $user, "is_guest" => !$this->user_logged()]);
+    }
+
+    //gestion de l'inscription d'un utilisateur
+    public function signup(): void {
+        $email = '';
+        $full_name = '';
+        $pseudo = '';
+        $password = '';
+        $password_confirm = '';
+        $errors = [];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+            $full_name = isset($_POST['full_name']) ? trim($_POST['full_name']) : '';
+            $pseudo = isset($_POST['pseudo']) ? trim($_POST['pseudo']) : '';
+            $password = isset($_POST['password']) ? $_POST['password'] : '';
+            $password_confirm = isset($_POST['password_confirm']) ? $_POST['password_confirm'] : '';
+
+            $user = new User($email, $full_name, $pseudo, password_hash($password, PASSWORD_BCRYPT));
+
+
+            $errors = $user->validate();
+            $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
+
+            if (empty($errors)) {
+                $user->persist();
+                $this->log_user($user);
+
+                $this->redirect("item", "browse");
+                return;
+            }
+        }
+
+        (new View("signup"))->show([
+            "email" => $email,
+            "full_name" => $full_name,
+            "pseudo" => $pseudo,
+            "password" => $password,
+            "password_confirm" => $password_confirm,
+            "errors" => $errors,
+            "is_guest" => !$this->user_logged()
+        ]);
     }
 
     // Gestion de la connexion d'un utilisateur
-    public function login(): void
-    {
+    public function login(): void {
         $email = '';
         $password = '';
         $errors = [];
@@ -63,12 +110,11 @@ class ControllerUser extends Controller
         // RÉCUPÉRATION DE LA LISTE DES "Debug Users"
         $users = User::get_debug_users();
 
-        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors, "users" => $users]);
+        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors, "users" => $users, "is_guest" => !$this->user_logged()]);
     }
 
     // Gestion du changement de mot de passe
-    public function change_password(): void
-    {
+    public function change_password(): void {
         $session_user = $this->get_user_or_false();
 
         if (!$session_user) {
@@ -76,7 +122,7 @@ class ControllerUser extends Controller
         }
 
         // Recharge depuis la DB pour avoir le hash à jour (évite des bugs)
-        $user = User::get_user_by_email($session_user->email);
+        $user = User::get_user_by_email($session_user->get_email());
 
         $current_password = $_POST['current_password'] ?? '';
         $new_password = $_POST['new_password'] ?? '';
@@ -85,15 +131,15 @@ class ControllerUser extends Controller
 
         if (isset($_POST['current_password']) && isset($_POST['new_password']) && isset($_POST['new_password_confirm'])) {
             // Vérification current password
-            if (!password_verify($current_password, $user->password)) {
-                $errors[] = "Current password is incorrect.";
+            if (!password_verify($current_password, $user->get_password())) {
+                $errors['current_password'] = "Current password is incorrect.";
             }
 
             // Validation new password
             $errors = array_merge($errors, User::validate_passwords($new_password, $confirm_password));
 
             if (empty($errors)) {
-                $user->password = password_hash($new_password, PASSWORD_BCRYPT);
+                $user->set_password(password_hash($new_password, PASSWORD_BCRYPT));
                 $user->update();
                 $this->redirect("user", "profile");
             }
@@ -103,67 +149,25 @@ class ControllerUser extends Controller
             "errors" => $errors,
             "current_password" => $current_password,
             "new_password" => $new_password,
-            "confirm_password" => $confirm_password
+            "confirm_password" => $confirm_password,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
     // Gère l'édition du profil
-    public function edit_profile(): void
-    {
+    public function edit_profile(): void {
         $user = $this->get_user_or_redirect();
         $errors = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $full_name = trim($_POST['full_name'] ?? '');
-            $pseudo = trim($_POST['pseudo'] ?? '');
-            $email = trim($_POST['email'] ?? '');
-            $iban = trim($_POST['iban'] ?? '');
+            $user->set_full_name(trim($_POST['full_name'] ?? ''));
+            $user->set_pseudo(trim($_POST['pseudo'] ?? ''));
+            $user->set_email(trim($_POST['email'] ?? ''));
+            $user->set_iban(trim($_POST['iban'] ?? ''));
 
-            // Validations depuis le dev.ini
-            $min_fullname_len = Configuration::get('full_name_min_length');
-            $min_pseudo_len   = Configuration::get('pseudo_min_length');
-            $max_pseudo_len   = Configuration::get('pseudo_max_length');
-            $iban_regex       = Configuration::get('iban_regex');
+            $errors = $user->validate();
 
-            // Full Name (Min 3 chars)
-            if (strlen($full_name) < $min_fullname_len) {
-                $errors[] = "Le nom complet doit comporter au moins $min_fullname_len caractères.";
-            }
-
-            // Email (Format + Unicité)
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors[] = "Le format de l'adresse email n'est pas valide.";
-            } else {
-                $existingUser = User::get_user_by_email($email);
-                if ($existingUser && $existingUser->id !== $user->id) {
-                    $errors[] = "Cette adresse email est déjà utilisée.";
-                }
-            }
-
-            // Pseudo (3-30 chars + Unicité)
-            if (strlen($pseudo) < $min_pseudo_len || strlen($pseudo) > $max_pseudo_len) {
-                $errors[] = "Le pseudo doit avoir une longueur comprise entre $min_pseudo_len et $max_pseudo_len caractères.";
-            } else {
-                $existingUser = User::get_user_by_pseudo($pseudo);
-                if ($existingUser && $existingUser->id !== $user->id) {
-                    $errors[] = "Ce pseudo est déjà utilisé.";
-                }
-            }
-
-            // IBAN
-            if (!empty($iban)) {
-                if (!preg_match($iban_regex, $iban)) {
-                    $errors[] = "L'IBAN doit respecter le format : BE99 9999 9999 9999.";
-                }
-            }
-
-            // Sauvegarde si aucune erreur
             if (empty($errors)) {
-                $user->full_name = $full_name;
-                $user->pseudo = $pseudo;
-                $user->email = $email;
-                $user->iban = $iban;
-
                 $user->update();
                 $this->redirect("user", "profile");
             }
@@ -171,20 +175,19 @@ class ControllerUser extends Controller
 
         (new View("edit_profile"))->show([
             "user" => $user,
-            "errors" => $errors
+            "errors" => $errors,
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
-    public function manage_profile_picture()
-    {
+    public function manage_profile_picture() {
 
         $user = $this->get_user_or_redirect();
 
-        (new View("profile_picture"))->show(["user" => $user]);
+        (new View("profile_picture"))->show(["user" => $user, "is_guest" => !$this->user_logged()]);
     }
 
-    public function update_profile_picture()
-    {
+    public function update_profile_picture() {
         $user = $this->get_user_or_redirect();
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
@@ -215,17 +218,17 @@ class ControllerUser extends Controller
 
                 if ($file_valid) {
 
-                    $path = ImageTools::upload_and_resize($file, "users", $user->id);
+                    $path = ImageTools::upload_and_resize($file, "users", $user->get_id());
                     if ($path) {
-                        if (!empty($user->picture_path) && file_exists($user->picture_path)) {
-                            unlink($user->picture_path);
-                            $old_thumb = str_replace(".jpg", "_thumbnail.jpg", $user->picture_path);
+                        if (!empty($user->get_picture_path()) && file_exists($user->get_picture_path())) {
+                            unlink($user->get_picture_path());
+                            $old_thumb = str_replace(".jpg", "_thumbnail.jpg", $user->get_picture_path());
                             if (file_exists($old_thumb)) {
                                 unlink($old_thumb);
                             }
                         }
 
-                        $user->picture_path = $path;
+                        $user->set_picture_path($path);
                         $user->update();
                     }
                 }
@@ -236,25 +239,109 @@ class ControllerUser extends Controller
         } else {
             (new View("profile_picture"))->show([
                 "user" => $user,
-                "errors" => $errors
+                "errors" => $errors,
+                "is_guest" => !$this->user_logged()
             ]);
         }
     }
 
-    public function delete_profile_picture()
-    {
+    public function delete_profile_picture() {
         $user = $this->get_user_or_redirect();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (!empty($user->picture_path) && file_exists($user->picture_path)) {
-                unlink($user->picture_path);
-                $old_thumb = str_replace(".jpg", "_thumbnail.jpg", $user->picture_path);
+            if (!empty($user->get_picture_path()) && file_exists($user->get_picture_path())) {
+                unlink($user->get_picture_path());
+                $old_thumb = str_replace(".jpg", "_thumbnail.jpg", $user->get_picture_path());
                 if (file_exists($old_thumb)) {
                     unlink($old_thumb);
                 }
             }
-            $user->picture_path = null;
+            $user->set_picture_path(null);
             $user->update();
             $this->redirect("user", "manage_profile_picture");
         }
+    }
+
+    // Services AJAX
+    public function full_name_exists_service(): void {
+        $exists = false;
+
+        if (isset($_GET["full_name"]) && trim($_GET["full_name"]) !== "") {
+            $full_name = trim($_GET["full_name"]);
+            $full_name_in_db = User::get_user_by_full_name($full_name);
+            $current_user = $this->get_user_or_false();
+
+            // If there is this full name in the DB
+            if ($full_name_in_db) {
+                if (!$current_user || $full_name_in_db->get_id() !== $current_user->get_id()) {
+                    $exists = true;
+                }
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(["exists" => $exists]);
+    }
+
+    public function pseudo_exists_service(): void {
+        $exists = false;
+
+        if (isset($_GET["pseudo"]) && trim($_GET["pseudo"]) !== "") {
+            $pseudo = trim($_GET["pseudo"]);
+            $pseudo_in_db = User::get_user_by_pseudo($pseudo);
+            $current_user = $this->get_user_or_false();
+
+            // If pseudo already exists in DB
+            if ($pseudo_in_db) {
+                if (!$current_user || $pseudo_in_db->get_id() !== $current_user->get_id()) {
+                    $exists = true;
+                }
+            }
+        }
+        header('Content-Type: application/json');
+        echo json_encode(["exists" => $exists]);
+    }
+
+    public function email_exists_service(): void {
+        $exists = false;
+
+        if (isset($_GET["email"]) && trim($_GET["email"]) !== "") {
+            $email = trim($_GET["email"]);
+            $email_in_db = User::get_user_by_email($email);
+            $current_user = $this->get_user_or_false();
+
+            // If there is an email in the DB
+            if ($email_in_db) {
+                if (!$current_user || $email_in_db->get_id() !== $current_user->get_id()) {
+                    $exists = true;
+                }
+            }
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(["exists" => $exists]);
+    }
+
+
+
+    public function get_constants_service(): void {
+        header('Content-Type: application/json');
+        echo json_encode([
+            "min_item_length" => Configuration::get("min_item_lenght"),
+            "max_item_length" => Configuration::get("max_item_lenght"),
+            "min_duration_days" => Configuration::get("min_duration_days"),
+            "max_duration_days" => Configuration::get("max_duration_days"),
+            "min_description_length" => Configuration::get("min_description_length"),
+            "max_description_length" => Configuration::get("max_description_length"),
+            "full_name_min_length" => Configuration::get("full_name_min_length"),
+            "pseudo_min_length" => Configuration::get("pseudo_min_length"),
+            "pseudo_max_length" => Configuration::get("pseudo_max_length"),
+            "pseudo_regex" =>  Configuration::get("pseudo_regex"),
+            "email_regex" => Configuration::get("email_regex"),
+            "iban_regex" => Configuration::get("iban_regex"),
+            "iban_format" => Configuration::get("iban_format"),
+            "password_min_length" => Configuration::get("password_min_length"),
+            "password_max_length" => Configuration::get("password_max_length"),
+            "password_regex" => Configuration::get("password_regex"),
+        ]);
     }
 }

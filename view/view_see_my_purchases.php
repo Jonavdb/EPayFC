@@ -8,7 +8,7 @@
     <base href="<?= $web_root ?>">
     <title>My Purchases</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <link rel="stylesheet" type="text/css" href="css/see_my_purchases.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,7 +60,7 @@
                             <div class="text-start fs-4 fw-bold text-secondary">TOTAL SPENT</div>
                             <div class="text-start fs-1">
                                 <!-- Sums 'buy_now_price' from the array, then formats as currency (e.g. 1.234,56) -->
-                                € <?= number_format(array_sum(array_column($purchases, 'user_bid')), 2, ',', '.') ?>
+                                € <?= number_format(array_sum(array_map(fn($p) => $p->get_user_bid_amount(), $purchases)), 2, ',', '.') ?>
                             </div>
                             <div class="flex-grow-1 text-start fs-5 fw-bold text-secondary">Across <?= count($purchases) ?> purchases</div>
                         </div>
@@ -71,11 +71,12 @@
                             <div class="flex-grow-1 text-start fs-1">
                                 <!-- Calculates average buy_now_price: (Sum / Count) or 0,00 if empty -->
                                 <?php
+                                echo "€ ";
                                 if (empty($purchases)) {
-                                    echo "€ 0,00";
+                                    echo "0,00";
                                 } else {
-                                    $average_ticket = array_sum(array_column($purchases, 'user_bid')) / count($purchases);
-                                    echo "€ " . number_format($average_ticket, 2, ',', '.');
+                                    $average_ticket = array_sum(array_map(fn($p) => $p->get_user_bid_amount(), $purchases)) / count($purchases);
+                                    echo number_format($average_ticket, 2, ',', '.');
                                 }
                                 ?>
                             </div>
@@ -90,9 +91,9 @@
                                 // 1. we map by owner name and sum user bids
                                 $sums = [];
                                 foreach ($purchases as $purchased_item) {
-                                    $name = $purchased_item->owner_name;
+                                    $name = $purchased_item->get_owner_name();
                                     // if name doesn't exist in sums yet, initialize it at 0, then add user bid
-                                    $sums[$name] = ($sums[$name] ?? 0) + $purchased_item->user_bid;
+                                    $sums[$name] = ($sums[$name] ?? 0) + $purchased_item->get_user_bid_amount();
                                 }
 
                                 // 2. we find the top seller
@@ -123,7 +124,7 @@
                     <div class="d-flex flex-column h-100 gap-3">
                         <!-- item card -->
                         <div class="col">
-                            <a href="item/open/<?= $purchased_item->id ?>/from-purchases" class="card bg-dark w-100 h-100 text-decoration-none">
+                            <a href="<?= GoBack::smart_href("item/open/" . $purchased_item->get_id() . "/from-purchases") ?>" class="card bg-dark w-100 h-100 text-decoration-none">
                                 <!-- we wrap the card inside a container to adjust height taken by top cell and bottom cell-->
                                 <div class="d-flex flex-column h-100">
 
@@ -132,7 +133,7 @@
 
                                         <!-- card image (above card body) -->
                                         <div class="col-sm h-100">
-                                            <img class="card-img-top h-100" src=<?= $purchased_item->main_image_url ?> alt="Auction Item Image">
+                                            <img class="card-img-top h-100" src=<?= $purchased_item->get_main_image_url() ?> alt="Auction Item Image">
 
                                             <!-- Everything that is on top of the item image -->
                                             <div class="card-img-overlay" style="height:58%;">
@@ -152,7 +153,7 @@
                                                         <!-- Top right -->
                                                         <div class="d-flex flex-column">
                                                             <?php
-                                                            $is_auction = $purchased_item->is_auction
+                                                            $is_auction = $purchased_item->get_is_auction()
                                                             ?>
 
                                                             <?php if ($is_auction): ?>
@@ -162,7 +163,7 @@
                                                             <?php endif; ?>
 
                                                             <?php
-                                                            $has_buy_now = $purchased_item->has_buy_now;
+                                                            $has_buy_now = $purchased_item->get_has_buy_now();
                                                             ?>
                                                             <?php if ($has_buy_now): ?>
                                                                 <span class="badge rounded-pill bg-primary d-inline-flex align-items-center justify-content-center px-3 py-2">
@@ -178,7 +179,7 @@
                                                     <!-- Row 2 : Bottom right -->
                                                     <?php
                                                     // Get the total number of images, to see whether or not it is necessary to display a badge
-                                                    $total_image_count = count($purchased_item->image_urls);
+                                                    $total_image_count = count($purchased_item->get_image_urls());
                                                     ?>
 
 
@@ -212,8 +213,8 @@
 
                                                     <!-- Row 1 : Top left (using bootstrap class "card title") -->
                                                     <div class="card-title">
-                                                        <b><?= $purchased_item->title ?></b>
-                                                        <div class="fs-5 fw-bold text-secondary">by <?= $purchased_item->owner_name ?></div>
+                                                        <b><?= $purchased_item->get_title() ?></b>
+                                                        <div class="fs-5 fw-bold text-secondary">by <?= $purchased_item->get_owner_name() ?></div>
                                                     </div>
 
                                                     <!-- Container center the remaining card info -->
@@ -223,17 +224,17 @@
                                                         <div class="card-text d-flex justify-content-between price-row mt-2 mb-2">
 
                                                             <!-- Mid left -->
-                                                            <div class="price-left d-flex align-items-center fs-3 text-primary fw-bold">€ <?= number_format($purchased_item->buy_now_price, 2, ',', '.') ?></div>
+                                                            <div class="price-left d-flex align-items-center fs-3 text-primary fw-bold">€ <?= number_format($purchased_item->get_buy_now_price(), 2, ',', '.') ?></div>
 
                                                             <!-- Mid right -->
                                                             <?php
-                                                            $is_auction = $purchased_item->is_auction;
+                                                            $is_auction = $purchased_item->get_is_auction();
                                                             ?>
                                                             <?php if ($is_auction): ?>
                                                                 <div class="d-flex flex-column text-end bid-info">
                                                                     <div class="fs-5 fw-bold text-secondary">Current bid</div>
                                                                     <div class="bid-price fs-4 text-success fw-bold">
-                                                                        € <?= number_format($purchased_item->user_bid, 2, ',', '.') ?>
+                                                                        € <?= number_format($purchased_item->get_user_bid_amount(), 2, ',', '.') ?>
                                                                     </div>
                                                                 </div>
                                                             <?php endif; ?>
@@ -262,7 +263,7 @@
                                     <i class="fa-solid fa-tag fs-5 text-secondary"></i>
                                 </div>
                                 <div class="ms-2">
-                                    Paid € <?= number_format($purchased_item->user_bid, 2, ',', '.'); ?>
+                                    Paid € <?= number_format($purchased_item->get_user_bid_amount(), 2, ',', '.'); ?>
                                 </div>
                             </div>
 
@@ -270,7 +271,7 @@
                                 <div style="width: 5%;" class="text-start">
                                     <i class="fa-solid fa-clock fs-5 text-secondary"></i>
                                 </div>
-                                <div class="ms-2">Closed on <?= $purchased_item->end_at->format('d/m/Y H:i:s'); ?></div>
+                                <div class="ms-2">Closed on <?= $purchased_item->get_end_at()->format('d/m/Y H:i:s'); ?></div>
                             </div>
                         </div>
                     </div>
