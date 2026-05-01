@@ -192,6 +192,32 @@ require_once "utils/GoBack.php";
                 </div>
             </div>
         </div>
+
+        <div class=" container mb-4">
+            <div class="card text-bg-dark border-secondary">
+                <div class="card-header border-secondary" style="background-color: #1e293b;">
+                    <h5 class="mb-0 text-white text-start">Categories</h5>
+                </div>
+
+                <div class="p-3 bg-dark">
+                    <p>You can select up to 3 categories.</p>
+
+                    <?php foreach ($categories as $category): ?>
+                        <div class="form-check">
+                            <input class="form-check-input bg-dark"
+                                type="checkbox"
+                                name="categories[]"
+                                id="category_<?= $category->getId(); ?>"
+                                value="<?= $category->getId(); ?>">
+
+                            <label class="form-check-label text-white fs-4" for="category_<?= $category->getId(); ?>">
+                                <?= htmlspecialchars($category->getName()); ?>
+                            </label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
     </form>
 
     <footer class="fixed-bottom">

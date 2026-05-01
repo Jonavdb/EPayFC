@@ -3,12 +3,12 @@
 require_once "framework/Controller.php";
 require_once "model/User.php";
 require_once "model/Item.php";
+require_once "model/Category.php";
 require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
 require_once "utils/UrlEncoder.php";
 require_once "utils/GoBack.php";
-
 
 class ControllerItem extends Controller {
     public function index(): void {
@@ -430,6 +430,7 @@ class ControllerItem extends Controller {
     public function edit() {
         $user = $this->get_user_or_redirect();
         $id = $_GET['param1'] ?? $_POST['id'] ?? null;
+        $categories = Category::get_all_categories();
         $errors = [];
 
         $context = $_POST['context'] ?? $_GET['param2'] ?? 'from-browse';
@@ -473,6 +474,7 @@ class ControllerItem extends Controller {
 
         (new View("add_edit_item"))->show([
             "item" => $item,
+            "categories" => $categories,
             "errors" => $errors,
             "is_guest" => !$this->user_logged(),
             "context" => $context,
