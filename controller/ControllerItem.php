@@ -153,11 +153,8 @@ class ControllerItem extends Controller {
             'price_color'          => $price_color,
             'price_display'        => $price_display,
             'is_highest_bidder'    => $is_highest_bidder,
-            'price_display'        => $price_display,
-            'price_color'          => $price_color,
             'show_current_bid'     => $show_current_bid,
             'current_bid_display'  => $current_bid_display,
-            'href' => $href
         ];
     }
 
@@ -324,6 +321,7 @@ class ControllerItem extends Controller {
         $user = $this->get_user_or_redirect();
         $now = new DateTime(AppTime::get_current_datetime());
         $end = (clone $now)->modify('+7 days');
+        $categories = Category::get_all_categories();
         $errors = [];
 
         $item = new Item(
@@ -363,6 +361,7 @@ class ControllerItem extends Controller {
 
         (new View("add_edit_item"))->show([
             "item" => $item,
+            "categories" => $categories,
             "errors" => $errors,
             "is_guest" => !$this->user_logged()
         ]);
@@ -721,8 +720,8 @@ class ControllerItem extends Controller {
         header('Content-Type: application/json');
 
         if (
-            isset($_GET['param1']) && trim($_GET['param1'] !== "")
-            && isset($_GET['param2']) && trim($_GET['param2'] !== "")
+            isset($_GET['param1']) && trim($_GET['param1']) !== '' &&
+            isset($_GET['param2']) && trim($_GET['param2']) !== ''
         ) {
             $image_id = (int)$_GET['param1'];
             $item_id = (int)$_GET['param2'];
@@ -743,8 +742,8 @@ class ControllerItem extends Controller {
         header('Content-Type: application/json');
 
         if (
-            isset($_GET['param1']) && trim($_GET['param1'] !== "")
-            && isset($_GET['param2']) && trim($_GET['param2'] !== "")
+            isset($_GET['param1']) && trim($_GET['param1']) !== '' &&
+            isset($_GET['param2']) && trim($_GET['param2']) !== ''
         ) {
             $image_id = (int)$_GET['param1'];
             $item_id = (int)$_GET['param2'];
