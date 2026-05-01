@@ -9,7 +9,10 @@ require_once "utils/AppTime.php";
 <head>
     <meta charset="UTF-8">
     <title>Category</title>
+
+    <?php /** @var bool $web_root */ ?>
     <base href="<?= $web_root ?>">
+
     <meta name="author" content="Manu_Angate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -30,7 +33,7 @@ require_once "utils/AppTime.php";
 
     <!-- FOOTER -->
     <footer class="fixed-bottom">
-        <?php $is_guest = false ?>
+        <?php $is_guest = false ?> <!-- debug -->
         <?php include 'view/view_timer.php'; ?>
         <?php include 'view/view_footer.php'; ?>
 
