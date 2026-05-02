@@ -28,8 +28,26 @@ require_once "utils/AppTime.php";
         $hide_back_button = true;
         include 'view/view_header.php';
         ?>
+        <div class="row justify-content-center mx-auto sticky-top">
+            <div class="col-11">
+                <div class="card shadow bg-dark">
+                    <div class="card-body px-4">
+                        <div class="row align-items-center mb-4">
+                            <div class="col-8">
+                                <input type="text" class="form-control form-control-lg bg-dark border-secondary text-white border-1 fs-4" placeholder="Category Name">
+                            </div>
+                            <div class="col-4 d-flex justify-content-center gap-2">
+                                <button type="button" class="btn btn-outline-success border border-success border-1 fs-4 flex-fill">Up</button>
+                                <button type="button" class="btn btn-outline-success border border-success border-1 fs-4 flex-fill">Down</button>
+                                <button type="button" class="btn btn-outline-success border border-success border-1 fs-4 flex-fill">Save</button>
+                                <button type="button" class="btn btn-outline-danger border border-danger border-1 fs-4 flex-fill">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
-
     <!-- FOOTER -->
     <footer class="fixed-bottom">
         <?php $is_guest = false ?> <!-- debug -->
