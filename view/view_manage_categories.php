@@ -10,7 +10,6 @@ require_once "utils/AppTime.php";
     <meta charset="UTF-8">
     <title>Category</title>
 
-    <?php /** @var bool $web_root */ ?>
     <base href="<?= $web_root ?>">
 
     <meta name="author" content="Manu_Angate">
