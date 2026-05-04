@@ -28,21 +28,56 @@ require_once "utils/AppTime.php";
         $hide_back_button = true;
         include 'view/view_header.php';
         ?>
-        <div class="row justify-content-center mx-auto sticky-top">
+        <div class="row justify-content-center sticky-top">
             <div class="col-11">
                 <div class="card shadow bg-dark">
                     <div class="card-body px-4">
+
                         <div class="row align-items-center mb-4">
                             <div class="col-8">
-                                <input type="text" class="form-control form-control-lg bg-dark border-secondary text-white border-1 fs-4" placeholder="Category Name">
+                                <input type="text" class="form-control form-control-lg bg-dark border-secondary text-white fs-4" value="Electronics" placeholder="Category Name">
                             </div>
-                            <div class="col-4 d-flex justify-content-center gap-2">
-                                <button type="button" class="btn btn-outline-success border border-success border-1 fs-4 flex-fill">Up</button>
-                                <button type="button" class="btn btn-outline-success border border-success border-1 fs-4 flex-fill">Down</button>
-                                <button type="button" class="btn btn-outline-success border border-success border-1 fs-4 flex-fill">Save</button>
-                                <button type="button" class="btn btn-outline-danger border border-danger border-1 fs-4 flex-fill">Delete</button>
+                            <div class="col-4 d-flex gap-3">
+                                <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Up</button>
+                                <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Down</button>
+                                <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Save</button>
+                                <button type="button" class="btn btn-lg border border-danger btn-outline-danger fs-4 flex-fill">Delete</button>
                             </div>
                         </div>
+
+                        <div class="row align-items-center mb-4">
+                            <div class="col-8">
+                                <input type="text" class="form-control form-control-lg bg-dark border-secondary text-white fs-4" value="Electronics" placeholder="Category Name">
+                            </div>
+                            <div class="col-4 d-flex gap-3">
+                                <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Up</button>
+                                <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Down</button>
+                                <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Save</button>
+                                <button type="button" class="btn btn-lg border border-danger btn-outline-danger fs-4 flex-fill">Delete</button>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center mb-4">
+                            <div class="col-8">
+                                <input type="text" class="form-control form-control-lg bg-dark border-secondary text-white fs-4" value="Electronics" placeholder="Category Name">
+                            </div>
+                            <div class="col-4 d-flex gap-3">
+                                <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Up</button>
+                                <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Down</button>
+                                <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Save</button>
+                                <button type="button" class="btn btn-lg border border-danger btn-outline-danger fs-4 flex-fill">Delete</button>
+                            </div>
+                        </div>
+
+                        <hr class="border-secondary opacity-25" />
+
+                        <div class="row align-items-center mt-4">
+                            <div class="col-12 d-flex gap-4">
+                                <input type="text" class="form-control form-control-lg bg-dark border-secondary text-white fs-4 flex-grow-1" placeholder="Category Name">
+                                <button type="button" class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3">+</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
