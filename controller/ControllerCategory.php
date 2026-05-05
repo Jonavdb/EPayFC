@@ -1,5 +1,6 @@
 <?php
 require_once "framework/Controller.php";
+require_once "Model/Category.php";
 
 
 class ControllerCategory extends Controller {
@@ -9,11 +10,15 @@ class ControllerCategory extends Controller {
 
     // Manage
     public function manage(): void {
-        // Récup la liste des categories
 
-        // Les transférer à la vue
-        // Debug : on affiche juste la vue pour l'instant
-        (new View("manage_categories"))->show([]);
+        // On récupère la liste des catégories actuelles
+        $categories = Category::get_categories();
+
+
+        // On les transfère à la vue
+        (new View("manage_categories"))->show([
+            "categories" => $categories
+        ]);
     }
 
     // Edit 
