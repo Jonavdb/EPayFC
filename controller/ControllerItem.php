@@ -321,7 +321,7 @@ class ControllerItem extends Controller {
         $user = $this->get_user_or_redirect();
         $now = new DateTime(AppTime::get_current_datetime());
         $end = (clone $now)->modify('+7 days');
-        $categories = Category::get_all_categories();
+        $categories = Category::get_categories();
         $errors = [];
 
         $item = new Item(
@@ -430,7 +430,7 @@ class ControllerItem extends Controller {
     public function edit() {
         $user = $this->get_user_or_redirect();
         $id = $_GET['param1'] ?? $_POST['id'] ?? null;
-        $categories = Category::get_all_categories();
+        $categories = Category::get_categories();
         $errors = [];
 
         $context = $_POST['context'] ?? $_GET['param2'] ?? 'from-browse';

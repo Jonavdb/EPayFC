@@ -207,11 +207,11 @@ require_once "utils/GoBack.php";
                             <input class="form-check-input bg-dark"
                                 type="checkbox"
                                 name="categories[]"
-                                id="category_<?= $category->getId(); ?>"
-                                value="<?= $category->getId(); ?>">
+                                id="category_<?= $category->get_id(); ?>"
+                                value="<?= $category->get_id(); ?>">
 
-                            <label class="form-check-label text-white fs-4" for="category_<?= $category->getId(); ?>">
-                                <?= htmlspecialchars($category->getName()); ?>
+                            <label class="form-check-label text-white fs-4" for="category_<?= $category->get_id(); ?>">
+                                <?= htmlspecialchars($category->get_name()); ?>
                             </label>
                         </div>
                     <?php endforeach; ?>
