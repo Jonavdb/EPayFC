@@ -17,6 +17,7 @@ let itemTitle,
     submitBtn,
     goBackBtn,
     checkedElements,
+    errCategories,
     footerElements;
 
 $(function () {
@@ -36,6 +37,7 @@ $(function () {
     direct = $('#direct');
     errDirect = $('#errDirect');
     checkedElements = $('[id^="checkboxContainer-"] .form-check-input'); // id récupéré dynamiquement avec cette syntaxe
+    errCategories = $('#errCategories');
 
     checkCheckboxValid();
 
@@ -133,6 +135,7 @@ function checkPricingValid() {
     setFieldState(startingBid, errStartingBid, null);
     setFieldState(instantOptional, errInstant, null);
     setFieldState(direct, errDirect, null);
+    setFieldState(checkedElements, errCategories, null);
 
     // si TOUT est vide (au chargement ou si l'utilisateur efface tout) on sort de la fonction
     // les champs restent gris/neutres et checkFormValidity bloquera le bouton Submit

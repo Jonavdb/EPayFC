@@ -325,7 +325,6 @@ class ControllerItem extends Controller {
 
         $categories = Category::get_categories();
         $checkedCategories = $_POST['categories'] ?? [];
-        $checkedCategories = array_slice(array_unique($checkedCategories), 0, 3);   // validation serveur: on garde max 3 catégories ici aussi
 
         $errors = [];
 
@@ -357,6 +356,11 @@ class ControllerItem extends Controller {
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errors = $this->validate_and_fill($item);
+
+            // validation côté serveur (quand JS est désactivé)
+            if (count($checkedCategories) > 3) {
+                $errors['categories'] = "You cannot select more than 3 categories.";
+            }
 
             if (empty($errors)) {
                 $item->save();
@@ -448,7 +452,6 @@ class ControllerItem extends Controller {
         $encoded_search = $_POST['encoded_search'] ?? $_GET['param3'] ?? '';
 
         $checkedCategories = $_POST['categories'] ?? [];
-        $checkedCategories = array_slice(array_unique($checkedCategories), 0, 3);   // validation serveur: on garde max 3 catégories ici aussi
 
         if (!$id) {
             $this->redirect("item", "index");
@@ -474,6 +477,11 @@ class ControllerItem extends Controller {
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errors = $this->validate_and_fill($item);
+
+            // validation côté serveur (quand JS est désactivé)
+            if (count($checkedCategories) > 3) {
+                $errors['categories'] = "You cannot select more than 3 categories.";
+            }
 
             if (empty($errors)) {
                 $item->save();

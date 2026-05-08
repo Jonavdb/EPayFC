@@ -25,7 +25,6 @@ require_once "utils/GoBack.php";
     $page_title = ($item->get_id() > 0) ? 'Edit Item' : 'Add Item';
     $hide_back_button = ($item->get_id() > 0) ? false : true;
 
-
     // On cache l'icône "panier" pour cette page
     $hide_default_icon = true;
 
@@ -193,7 +192,7 @@ require_once "utils/GoBack.php";
             </div>
         </div>
 
-        <div class=" container mb-4">
+        <div class="container mb-4">
             <div class="card text-bg-dark border-secondary">
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
                     <h5 class="mb-0 text-white text-start">Categories</h5>
@@ -215,6 +214,12 @@ require_once "utils/GoBack.php";
                             </label>
                         </div>
                     <?php endforeach; ?>
+
+                    <div id="errCategories" class="text-danger small mt-1">
+                        <?php if (isset($errors['categories'])) : ?>
+                            <?php echo $errors['categories'] ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -259,7 +264,7 @@ require_once "utils/GoBack.php";
                 </div>
 
                 <div class="modal-body py-4">
-                    <p class="m-0 text-white">You cannot select more than 3 categories at a time.</p>
+                    <p class="m-0 text-white">You cannot select more than 3 categories.</p>
                 </div>
 
                 <div class="modal-footer border-top d-flex justify-content-end gap-2" style="border-top-color: #444 !important;">
