@@ -203,7 +203,7 @@ require_once "utils/GoBack.php";
                     <p>You can select up to 3 categories.</p>
 
                     <?php foreach ($categories as $category): ?>
-                        <div id="checkboxContainer-<?= $category->get_id(); ?> class=" form-check">
+                        <div id="checkboxContainer-<?= $category->get_id(); ?>" class="form-check">
                             <input class="form-check-input bg-dark"
                                 type="checkbox"
                                 name="categories[]"

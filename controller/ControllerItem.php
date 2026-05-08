@@ -319,9 +319,14 @@ class ControllerItem extends Controller {
 
     public function add() {
         $user = $this->get_user_or_redirect();
+
         $now = new DateTime(AppTime::get_current_datetime());
         $end = (clone $now)->modify('+7 days');
+
         $categories = Category::get_categories();
+        $checkedCategories = $_POST['categories'] ?? [];
+        $checkedCategories = array_slice(array_unique($checkedCategories), 0, 3);   // validation serveur: on garde max 3 catégories ici aussi
+
         $errors = [];
 
         $item = new Item(
@@ -355,6 +360,12 @@ class ControllerItem extends Controller {
 
             if (empty($errors)) {
                 $item->save();
+
+                // boucle sur les catégories checkées pour les rajouter
+                foreach ($checkedCategories as $categoryId) {
+                    $item->add_categories($item->get_id(), (int)$categoryId);
+                }
+
                 $this->redirect("item", "open", $item->get_id());
             }
         }
@@ -430,11 +441,14 @@ class ControllerItem extends Controller {
     public function edit() {
         $user = $this->get_user_or_redirect();
         $id = $_GET['param1'] ?? $_POST['id'] ?? null;
-        $categories = Category::get_categories();
         $errors = [];
+        $categories = Category::get_categories();
 
         $context = $_POST['context'] ?? $_GET['param2'] ?? 'from-browse';
         $encoded_search = $_POST['encoded_search'] ?? $_GET['param3'] ?? '';
+
+        $checkedCategories = $_POST['categories'] ?? [];
+        $checkedCategories = array_slice(array_unique($checkedCategories), 0, 3);   // validation serveur: on garde max 3 catégories ici aussi
 
         if (!$id) {
             $this->redirect("item", "index");
@@ -463,6 +477,12 @@ class ControllerItem extends Controller {
 
             if (empty($errors)) {
                 $item->save();
+                $item->remove_categories($id);  // supprime les catégories existantes
+
+                // boucle sur les catégories checkées pour les rajouter
+                foreach ($checkedCategories as $categoryId) {
+                    $item->add_categories($id, (int)$categoryId);
+                }
 
                 if ($encoded_search !== '') {
                     $this->redirect("item", "open", $item->get_id(), $context, $encoded_search);
@@ -483,7 +503,6 @@ class ControllerItem extends Controller {
     }
 
     public function manage_images(): void {
-
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1'];
         } else {
