@@ -16,13 +16,13 @@ let itemTitle,
     errDirect,
     submitBtn,
     goBackBtn,
+    checkedElements,
     footerElements;
 
 $(function () {
     submitBtn = $('#submitBtn');
     goBackBtn = $('#goBack');
     footerElements = $('footer a.nav-link');
-
     itemTitle = $('#title');
     errTitle = $('#errTitle');
     description = $('#description');
@@ -35,6 +35,9 @@ $(function () {
     errInstant = $('#errInstant');
     direct = $('#direct');
     errDirect = $('#errDirect');
+    checkedElements = $('[id^="checkboxContainer-"] .form-check-input'); // id récupéré dynamiquement avec cette syntaxe
+
+    checkCheckboxValid();
 
     // bindings
     itemTitle.bind('blur', checkTitleValid);
@@ -101,6 +104,19 @@ function checkDurationValid() {
 
     setFieldState(duration, errDuration, isValid, 'Duration must be at least 1 day and at most 365 days.');
     checkFormValidity();
+}
+
+function checkCheckboxValid() {
+    const MAX_CATEGORIES = 3;
+
+    checkedElements.on('change', function (event) {
+        const checkedCount = $('.form-check-input:checked'); // toutes les cochées
+
+        if (checkedCount.length > MAX_CATEGORIES) {
+            $(this).prop('checked', false); // dé-check celle de trop
+            $('#checkboxModal').modal('show');
+        }
+    });
 }
 
 /* LOGIQUE DE PRIX UNIFIÉE */
