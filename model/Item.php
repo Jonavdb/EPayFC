@@ -773,7 +773,6 @@ class Item extends Model {
     }
 
     public static function add_picture(int $item_id, string $path): void {
-
         $query = self::execute(
             "SELECT MAX(priority) as max_p FROM item_pictures WHERE item = :item_id",
             ["item_id" => $item_id]
@@ -791,53 +790,22 @@ class Item extends Model {
         );
     }
 
+    public static function add_categories(int $item_id, int $category_id): void {
+        self::execute(
+            "INSERT INTO item_categories (item, category) VALUES (:item_id, :category_id)",
+            ["item_id" => $item_id, "category_id" => $category_id]
+        );
+    }
+
+    public function remove_categories(int $item_id): void {
+        self::execute(
+            "DELETE FROM item_categories WHERE item = :item_id",
+            ["item_id" => $item_id]
+        );
+    }
+
     public static function get_purchases(int $id): array {
         $purchases = [];
-
-        // BACKUP
-        // $query = self::execute(
-        //     // query to get the items where the specified user got the winning 
-        //     // OR the items that he purchased directly
-        //     "SELECT 
-        //     /* Item Data */
-        //     vis.id AS item_id,
-        //     vis.title,
-        //     vis.buy_now_price,
-        //     vis.is_auction,
-        //     vis.has_buy_now,
-        //     vis.buy_now_reached,
-        //     vis.end_at,
-        //     vis.max_bid,
-
-        //     /* Seller Data (The person who owns the item) */
-        //     seller.id AS seller_id,         -- id of the person who owns the item (seller is the custom name of users table ie check next query lines)
-        //     seller.pseudo AS seller_name,   -- name of the person who owns the item
-
-        //     /* Bidder Data (The person who placed the winning bid) */
-        //     u.id AS bidder_id,
-        //     u.pseudo AS bidder_name,        -- name of the person of placed the bid 
-        //     b.amount AS winning_bid_amount  -- bid placed by the person 
-
-        //     FROM v_items_status vis
-        //     /* Join for the bid details */
-        //     JOIN bids b ON b.item = vis.id
-
-        //     /* Join for the person who placed the bid (Bidder / Buyer) */
-        //     JOIN users u ON u.id = b.owner
-
-        //     /* Join for the person who created the item (Seller) */
-        //     JOIN users seller ON seller.id = vis.owner 
-
-        //     WHERE u.id = :id             -- buyer / bidder
-        //     AND b.amount = vis.max_bid   -- with the highest bid    
-        //     AND (vis.buy_now_reached = 1 OR :today >= vis.end_at)  -- who bought the item or date expired
-
-        //     ORDER BY vis.end_at",
-        //     [
-        //         "today" => AppTime::get_current_datetime(),
-        //         "id" => $id
-        //     ]
-        // );
 
         $query = self::execute(
             "SELECT vis.*
@@ -954,51 +922,7 @@ class Item extends Model {
     }
 
     public static function get_sales(int $user_id): array {
-
         $sales = [];
-
-        // BACKUP
-        // $query = self::execute(
-        // // query to get the sales of the specified user
-        // "SELECT 
-        // /* Item Data */
-        // vis.id AS item_id,
-        // vis.title,
-        // vis.buy_now_price,
-        // vis.is_auction,
-        // vis.has_buy_now,
-        // vis.buy_now_reached,
-        // vis.end_at,
-        // vis.max_bid,
-
-        // /* Seller Data (The person who owns the item) */
-        // seller.id AS seller_id,         -- id of the person who owns the item (seller is the custom name of users table ie check next query lines)
-        // seller.pseudo AS seller_name,   -- name of the person who owns the item
-
-        // /* Bidder Data (The person who placed the winning bid) */
-        // u.id AS bidder_id,
-        // u.pseudo AS bidder_name,        -- name of the person of placed the bid 
-        // b.amount AS winning_bid_amount  -- bid placed by the person 
-
-        // FROM v_items_status vis
-        // /* Join for the bid details */
-        // JOIN bids b ON b.item = vis.id
-
-        // /* Join for the person who placed the bid (Bidder / Buyer) */
-        // JOIN users u ON u.id = b.owner
-
-        // /* Join for the person who created the item (Seller) */
-        // JOIN users seller ON seller.id = vis.owner 
-
-        // WHERE seller.id = :user_id        -- seller 
-        // AND b.amount = vis.max_bid       -- with the highest bid instance on the item    
-        // AND (vis.buy_now_reached = 1 OR :today >= vis.end_at)  -- who bought the item or date expired
-        // ORDER BY vis.end_at",
-        // [
-        //     "today" => AppTime::get_current_datetime(),
-        //     "user_id" => $user_id
-        // ]
-        //);
 
         $query = self::execute(
             "SELECT vis.*, u.pseudo as bidder_name

@@ -25,7 +25,6 @@ require_once "utils/GoBack.php";
     $page_title = ($item->get_id() > 0) ? 'Edit Item' : 'Add Item';
     $hide_back_button = ($item->get_id() > 0) ? false : true;
 
-
     // On cache l'icône "panier" pour cette page
     $hide_default_icon = true;
 
@@ -192,6 +191,38 @@ require_once "utils/GoBack.php";
                 </div>
             </div>
         </div>
+
+        <div class="container mb-4">
+            <div class="card text-bg-dark border-secondary">
+                <div class="card-header border-secondary" style="background-color: #1e293b;">
+                    <h5 class="mb-0 text-white text-start">Categories</h5>
+                </div>
+
+                <div class="p-3 bg-dark">
+                    <p>You can select up to 3 categories.</p>
+
+                    <?php foreach ($categories as $category): ?>
+                        <div id="checkboxContainer-<?= $category->get_id(); ?>" class="form-check">
+                            <input class="form-check-input bg-dark"
+                                type="checkbox"
+                                name="categories[]"
+                                id="category_<?= $category->get_id(); ?>"
+                                value="<?= $category->get_id(); ?>">
+
+                            <label class="form-check-label text-white fs-4" for="category_<?= $category->get_id(); ?>">
+                                <?= htmlspecialchars($category->get_name()); ?>
+                            </label>
+                        </div>
+                    <?php endforeach; ?>
+
+                    <div id="errCategories" class="text-danger small mt-1">
+                        <?php if (isset($errors['categories'])) : ?>
+                            <?php echo $errors['categories'] ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 
     <footer class="fixed-bottom">
@@ -199,6 +230,7 @@ require_once "utils/GoBack.php";
         <?php include 'view/view_footer.php'; ?>
     </footer>
 
+    <!-- Modale Unsave -->
     <div class="modal fade" id="unsavedModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark text-white shadow-lg" style="border: 1px solid #444;">
@@ -217,6 +249,27 @@ require_once "utils/GoBack.php";
                     <button type="button" class="btn btn-primary px-4" id="confirmLeaveBtn">Leave</button>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Checkbox -->
+    <div class="modal fade" id="checkboxModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white shadow-lg" style="border: 1px solid #444;">
+
+                <div class="modal-header border-bottom align-items-center" style="border-bottom-color: #444 !important;">
+                    <h5 class=" modal-title fs-2 fw-semibold">Category Limit</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body py-4">
+                    <p class="m-0 text-white">You cannot select more than 3 categories.</p>
+                </div>
+
+                <div class="modal-footer border-top d-flex justify-content-end gap-2" style="border-top-color: #444 !important;">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">OK</button>
+                </div>
             </div>
         </div>
     </div>

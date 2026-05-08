@@ -24,21 +24,17 @@ class Category extends Model {
     }
 
     public static function get_categories(): array {
-        $query = self::execute(
-            "SELECT *
-            FROM categories
-            ORDER BY priority ASC",
-            []
-        );
-
+        $query = self::execute("SELECT * FROM categories ORDER BY priority ASC", []);
+        $data = $query->fetchAll();
         $categories = [];
-        foreach ($query->fetchAll() as $row) {
+
+        foreach ($data as $row) {
             $categories[] = new self(
                 (int)$row['id'],
                 $row['name'],
                 (int)$row['priority']
             );
-        }
+        };
         return $categories;
     }
 }

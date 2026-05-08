@@ -3,12 +3,12 @@
 require_once "framework/Controller.php";
 require_once "model/User.php";
 require_once "model/Item.php";
+require_once "model/Category.php";
 require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
 require_once "utils/UrlEncoder.php";
 require_once "utils/GoBack.php";
-
 
 class ControllerItem extends Controller {
     public function index(): void {
@@ -153,11 +153,8 @@ class ControllerItem extends Controller {
             'price_color'          => $price_color,
             'price_display'        => $price_display,
             'is_highest_bidder'    => $is_highest_bidder,
-            'price_display'        => $price_display,
-            'price_color'          => $price_color,
             'show_current_bid'     => $show_current_bid,
             'current_bid_display'  => $current_bid_display,
-            'href' => $href
         ];
     }
 
@@ -322,8 +319,13 @@ class ControllerItem extends Controller {
 
     public function add() {
         $user = $this->get_user_or_redirect();
+
         $now = new DateTime(AppTime::get_current_datetime());
         $end = (clone $now)->modify('+7 days');
+
+        $categories = Category::get_categories();
+        $checkedCategories = $_POST['categories'] ?? [];
+
         $errors = [];
 
         $item = new Item(
@@ -355,14 +357,26 @@ class ControllerItem extends Controller {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errors = $this->validate_and_fill($item);
 
+            // validation côté serveur (quand JS est désactivé)
+            if (count($checkedCategories) > 3) {
+                $errors['categories'] = "You cannot select more than 3 categories.";
+            }
+
             if (empty($errors)) {
                 $item->save();
+
+                // boucle sur les catégories checkées pour les rajouter
+                foreach ($checkedCategories as $categoryId) {
+                    $item->add_categories($item->get_id(), (int)$categoryId);
+                }
+
                 $this->redirect("item", "open", $item->get_id());
             }
         }
 
         (new View("add_edit_item"))->show([
             "item" => $item,
+            "categories" => $categories,
             "errors" => $errors,
             "is_guest" => !$this->user_logged()
         ]);
@@ -432,9 +446,12 @@ class ControllerItem extends Controller {
         $user = $this->get_user_or_redirect();
         $id = $_GET['param1'] ?? $_POST['id'] ?? null;
         $errors = [];
+        $categories = Category::get_categories();
 
         $context = $_POST['context'] ?? $_GET['param2'] ?? 'from-browse';
         $encoded_search = $_POST['encoded_search'] ?? $_GET['param3'] ?? '';
+
+        $checkedCategories = $_POST['categories'] ?? [];
 
         if (!$id) {
             $this->redirect("item", "index");
@@ -461,8 +478,19 @@ class ControllerItem extends Controller {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errors = $this->validate_and_fill($item);
 
+            // validation côté serveur (quand JS est désactivé)
+            if (count($checkedCategories) > 3) {
+                $errors['categories'] = "You cannot select more than 3 categories.";
+            }
+
             if (empty($errors)) {
                 $item->save();
+                $item->remove_categories($id);  // supprime les catégories existantes
+
+                // boucle sur les catégories checkées pour les rajouter
+                foreach ($checkedCategories as $categoryId) {
+                    $item->add_categories($id, (int)$categoryId);
+                }
 
                 if ($encoded_search !== '') {
                     $this->redirect("item", "open", $item->get_id(), $context, $encoded_search);
@@ -474,6 +502,7 @@ class ControllerItem extends Controller {
 
         (new View("add_edit_item"))->show([
             "item" => $item,
+            "categories" => $categories,
             "errors" => $errors,
             "is_guest" => !$this->user_logged(),
             "context" => $context,
@@ -482,7 +511,6 @@ class ControllerItem extends Controller {
     }
 
     public function manage_images(): void {
-
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1'];
         } else {
@@ -721,8 +749,8 @@ class ControllerItem extends Controller {
         header('Content-Type: application/json');
 
         if (
-            isset($_GET['param1']) && trim($_GET['param1'] !== "")
-            && isset($_GET['param2']) && trim($_GET['param2'] !== "")
+            isset($_GET['param1']) && trim($_GET['param1']) !== '' &&
+            isset($_GET['param2']) && trim($_GET['param2']) !== ''
         ) {
             $image_id = (int)$_GET['param1'];
             $item_id = (int)$_GET['param2'];
@@ -743,8 +771,8 @@ class ControllerItem extends Controller {
         header('Content-Type: application/json');
 
         if (
-            isset($_GET['param1']) && trim($_GET['param1'] !== "")
-            && isset($_GET['param2']) && trim($_GET['param2'] !== "")
+            isset($_GET['param1']) && trim($_GET['param1']) !== '' &&
+            isset($_GET['param2']) && trim($_GET['param2']) !== ''
         ) {
             $image_id = (int)$_GET['param1'];
             $item_id = (int)$_GET['param2'];
