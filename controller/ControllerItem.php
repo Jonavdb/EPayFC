@@ -205,7 +205,9 @@ class ControllerItem extends Controller {
             $this->redirect('item', 'browse');
             return;
         }
+
         $item = Item::get_item_by_id($id);
+
         if (empty($item)) {
             $this->redirect('item', 'browse');
             return;
@@ -214,6 +216,9 @@ class ControllerItem extends Controller {
         $context = isset($_GET['param2']) ? $_GET['param2'] : 'from-browse';
         $param3 = isset($_GET['param3']) ? $_GET['param3'] : '';
         $param4 = isset($_GET['param4']) ? $_GET['param4'] : '';
+        $item_categories = Category::get_item_categories($id);
+
+        var_dump("ici ==================>", $item_categories);
 
         // param3 numérique = index image (sans encoded_search)
         // param3 string = encoded_search, param4 = index image
@@ -241,6 +246,7 @@ class ControllerItem extends Controller {
             'selected_image' => $image_index,
             "is_guest" => !$this->user_logged(),
             "context" => $context,
+            "item_categories" => $item_categories,
             "encoded_search" => $encoded_search
         ]);
     }

@@ -27,6 +27,7 @@ class Category extends Model {
         $query = self::execute("SELECT * FROM categories ORDER BY priority ASC", []);
         $data = $query->fetchAll();
         $categories = [];
+
         foreach ($data as $row) {
             $categories[] = new self(
                 (int)$row['id'],
@@ -35,5 +36,32 @@ class Category extends Model {
             );
         };
         return $categories;
+    }
+
+    public static function get_item_categories(int $item_id): array {
+        $item_categories = [];
+
+        $query = self::execute(
+            "SELECT name
+            FROM categories, items, item_categories
+            WHERE categories.id = item_categories.category
+            AND items.id = item_categories.item
+            AND items.id = :item_id;",
+            ["item_id" => $item_id]
+        );
+
+        $data = $query->fetchAll();
+
+        if (!$data) {
+            return [];
+        } else {
+            sort($data);    // trie alphabétiquement
+
+            foreach ($data as $row) {
+                array_push($item_categories, $row['name']);
+            };
+        }
+
+        return $item_categories;
     }
 }
