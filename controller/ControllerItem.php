@@ -216,9 +216,7 @@ class ControllerItem extends Controller {
         $context = isset($_GET['param2']) ? $_GET['param2'] : 'from-browse';
         $param3 = isset($_GET['param3']) ? $_GET['param3'] : '';
         $param4 = isset($_GET['param4']) ? $_GET['param4'] : '';
-        $item_categories = Category::get_item_categories($id);
-
-        var_dump("ici ==================>", $item_categories);
+        $item_categories = Category::get_categories_names($id);
 
         // param3 numérique = index image (sans encoded_search)
         // param3 string = encoded_search, param4 = index image
@@ -330,7 +328,7 @@ class ControllerItem extends Controller {
         $end = (clone $now)->modify('+7 days');
 
         $categories = Category::get_categories();
-        $checkedCategories = $_POST['categories'] ?? [];
+        $checked_categories = [];
 
         $errors = [];
 
@@ -362,9 +360,10 @@ class ControllerItem extends Controller {
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errors = $this->validate_and_fill($item);
+            $checked_categories = $_POST['categories'] ?? [];
 
             // validation côté serveur (quand JS est désactivé)
-            if (count($checkedCategories) > 3) {
+            if (count($checked_categories) > 3) {
                 $errors['categories'] = "You cannot select more than 3 categories.";
             }
 
@@ -372,8 +371,8 @@ class ControllerItem extends Controller {
                 $item->save();
 
                 // boucle sur les catégories checkées pour les rajouter
-                foreach ($checkedCategories as $categoryId) {
-                    $item->add_categories($item->get_id(), (int)$categoryId);
+                foreach ($checked_categories as $category_id) {
+                    $item->add_categories($item->get_id(), (int)$category_id);
                 }
 
                 $this->redirect("item", "open", $item->get_id());
@@ -383,6 +382,7 @@ class ControllerItem extends Controller {
         (new View("add_edit_item"))->show([
             "item" => $item,
             "categories" => $categories,
+            "checked_categories" => $checked_categories,
             "errors" => $errors,
             "is_guest" => !$this->user_logged()
         ]);
@@ -452,12 +452,9 @@ class ControllerItem extends Controller {
         $user = $this->get_user_or_redirect();
         $id = $_GET['param1'] ?? $_POST['id'] ?? null;
         $errors = [];
-        $categories = Category::get_categories();
 
         $context = $_POST['context'] ?? $_GET['param2'] ?? 'from-browse';
         $encoded_search = $_POST['encoded_search'] ?? $_GET['param3'] ?? '';
-
-        $checkedCategories = $_POST['categories'] ?? [];
 
         if (!$id) {
             $this->redirect("item", "index");
@@ -465,6 +462,10 @@ class ControllerItem extends Controller {
         }
 
         $item = Item::get_item_by_id($id);
+
+        $categories = Category::get_categories();
+        $item_categories = Category::get_item_categories_by_id($id);
+        $checked_categories = [];
 
         if ($item) {
             if ($item->get_owner_name() !== $user->get_pseudo() || ($item->get_is_auction() && $item->get_has_bids())) {
@@ -484,8 +485,10 @@ class ControllerItem extends Controller {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errors = $this->validate_and_fill($item);
 
+            $checked_categories = $_POST['categories'] ?? [];   // catégories : si c'est envoyé en post on les réaffecte
+
             // validation côté serveur (quand JS est désactivé)
-            if (count($checkedCategories) > 3) {
+            if (count($checked_categories) > 3) {
                 $errors['categories'] = "You cannot select more than 3 categories.";
             }
 
@@ -494,7 +497,7 @@ class ControllerItem extends Controller {
                 $item->remove_categories($id);  // supprime les catégories existantes
 
                 // boucle sur les catégories checkées pour les rajouter
-                foreach ($checkedCategories as $categoryId) {
+                foreach ($checked_categories as $categoryId) {
                     $item->add_categories($id, (int)$categoryId);
                 }
 
@@ -504,11 +507,14 @@ class ControllerItem extends Controller {
                     $this->redirect("item", "open", $item->get_id(), $context);
                 }
             }
+        } else {
+            $checked_categories = $item_categories; // catégories: sinon, on affiches les current checked
         }
 
         (new View("add_edit_item"))->show([
             "item" => $item,
             "categories" => $categories,
+            "checked_categories" => $checked_categories,
             "errors" => $errors,
             "is_guest" => !$this->user_logged(),
             "context" => $context,
