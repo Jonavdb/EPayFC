@@ -71,8 +71,11 @@ if ($encoded_search !== '') {
               </button>
             </div>
           </div>
+
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-start mb-2">
+
+              <!-- Titre -->
               <h2 class="card-title fw-bold text-white mb-0"><?= $item->get_title() ?></h2>
               <?php if ($item->get_is_direct_sale()): ?>
                 <span class="badge bg-secondary">Direct sale</span>
@@ -81,8 +84,18 @@ if ($encoded_search !== '') {
               <?php endif; ?>
             </div>
 
+            <!-- Description -->
             <p class="card-text text-secondary mb-4"><?= $item->get_description() ?></p>
 
+            <!-- Catégories -->
+            <p class="fw-bold fs-4">Categories:</p>
+            <ul>
+              <?php foreach ($item_categories as $category) : ?>
+                <li class="small text-secondary"><?= $category; ?></li>
+              <?php endforeach; ?>
+            </ul>
+
+            <!-- Start et End -->
             <div class="small text-secondary">
               <p class="mb-1">Start: <span class="fw-bold"><?= $item->get_created_at()->format('d/m/Y H:i:s') ?></span></p>
               <p class="mb-1">Ends: <span class="fw-bold"><?= $item->get_end_at()->format('d/m/Y H:i:s') ?></span> </p>
@@ -93,8 +106,6 @@ if ($encoded_search !== '') {
           <?php if (count($item->get_image_urls()) >= 2) { ?><h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h3>
             <div class="d-flex gap-3 mb-5">
               <?php
-
-
               foreach ($item->get_image_urls() as $index => $image):
                 $is_active = ($image === $image_to_display);
                 $border_class = $is_active ? 'border-primary' : 'border-secondary';
