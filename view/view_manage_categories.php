@@ -54,13 +54,26 @@ require_once "utils/AppTime.php";
 
                         <hr class="border-secondary opacity-25" />
 
-                        <div class="row align-items-center mt-4">
-                            <div class="col-12 d-flex gap-4">
-                                <input type="text" class="form-control form-control-lg bg-dark border-secondary text-white fs-4 flex-grow-1" placeholder="Category Name">
-                                <button type="button" class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3">+</button>
+                        <form action="category/add_category" method="POST" class="border-0 m-0 p-0">
+                            <div class="row align-items-center mt-2">
+                                <div class="col-12 d-flex gap-4">
+                                    <input type="text" name="name"
+                                        class="form-control form-control-lg bg-dark border-secondary text-white fs-4 flex-grow-1"
+                                        placeholder="Category Name">
+                                    <button type="submit"
+                                        class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3">+</button>
+                                </div>
                             </div>
+                        </form>
+                        <div id="errName" class="text-danger small mt-1">
+                            <ul>
+                                <?php if (isset($errors) && !empty($errors)): ?>
+                                    <?php foreach ($errors as $error): ?>
+                                        <li> <?= $error ?></li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </ul>
                         </div>
-
                     </div>
                 </div>
             </div>
