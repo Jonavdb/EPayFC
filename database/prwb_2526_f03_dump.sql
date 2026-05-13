@@ -53,6 +53,44 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES (1,'Quentin Houben','quhouben@epfc.eu','Quentin','$2y$10$s63N0AZ.LA5/3O05jNANZ.AAyYPKJH7IityYwOzehXKOqXWAW84xi','user',NULL,NULL),(2,'Marc Michel','mamichel@epfc.eu','Marc','$2y$10$s63N0AZ.LA5/3O05jNANZ.AAyYPKJH7IityYwOzehXKOqXWAW84xi','user',NULL,NULL),(3,'Xavier Pigeolet','xapigeolet@epfc.eu','Xavier','$2y$10$s63N0AZ.LA5/3O05jNANZ.AAyYPKJH7IityYwOzehXKOqXWAW84xi','user',NULL,NULL),(4,'Boris Verhaegen','boverhaegen@epfc.eu','Boris','$2y$10$s63N0AZ.LA5/3O05jNANZ.AAyYPKJH7IityYwOzehXKOqXWAW84xi','user','uploads/users/4/profile.jpg',NULL),(5,'Administrator','admin@epfc.eu','Admin','$2y$10$s63N0AZ.LA5/3O05jNANZ.AAyYPKJH7IityYwOzehXKOqXWAW84xi','admin',NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+--
+-- Dumping data for table `categories`
+--
+
+LOCK TABLES `categories` WRITE;
+/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+INSERT INTO `categories` VALUES
+(1,'Electronics',1),
+(2,'Phones',2),
+(3,'Laptops',3),
+(4,'Audio',4),
+(5,'Gaming',5),
+(6,'Home',6),
+(7,'Kitchen',7),
+(8,'Sports',8),
+(9,'Books',9),
+(10,'Components',10);
+/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `item_categories`
+--
+
+LOCK TABLES `item_categories` WRITE;
+/*!40000 ALTER TABLE `item_categories` DISABLE KEYS */;
+INSERT INTO `item_categories` VALUES
+(1,2),(2,2),(3,3),(4,3),(5,4),(6,4),(7,1),(8,1),(9,1),(10,2),
+(11,5),(12,5),(13,5),(14,1),(15,6),(16,6),(17,6),(18,7),(19,7),(20,4),
+(21,1),(22,4),(23,1),(24,1),(25,6),(26,6),(27,6),(28,6),(29,6),(30,4),
+(31,4),(32,1),(33,1),(34,1),(35,6),(36,6),(37,6),(38,6),(39,6),(40,5),
+(41,6),(42,6),(43,7),(44,1),(45,1),(46,1),(47,1),(48,6),(49,4),(50,6),
+(1,1),(3,1),(11,1),(48,1);
+/*!40000 ALTER TABLE `item_categories` ENABLE KEYS */;
+UNLOCK TABLES;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
