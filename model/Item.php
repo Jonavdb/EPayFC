@@ -1198,4 +1198,42 @@ class Item extends Model {
             );
         }
     }
+
+    public function validate_before_fill(array $config): array {
+        $errors = [];
+        $min_lenght = (int)$config['min_item_lenght'];
+        $max_lenght = (int)$config['max_item_lenght'];
+        $min_duration = (int)$config['min_duration_days'];
+        $max_duration = (int)$config['max_duration_days'];
+
+        if (strlen($this->get_title()) == 0 || empty($this->get_title())) {
+            $errors['empty'] = "Title is required";
+        }
+
+        if (strlen($this->get_title()) < $min_lenght || strlen($this->get_title()) > $max_lenght) {
+
+            $errors['title'] = "Title length must be between $min_lenght and $max_lenght characters.";
+        }
+
+        if ($this->get_duration_days() < $min_duration || $this->get_duration_days() > $max_duration) {
+            $errors['duration'] = "Duration must be at least $min_duration day and at most $max_duration days";
+        }
+
+        $starting_bid = $this->get_starting_bid();
+        $buy_now_price = $this->get_buy_now_price();
+        $is_direct_sale = $this->get_is_direct_sale();
+
+        if ($starting_bid !== null && $starting_bid > 0) {
+            if ($buy_now_price !== null && $buy_now_price > 0 && $buy_now_price < $starting_bid) {
+                $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
+            }
+            if ($is_direct_sale) {
+                $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
+            }
+        } elseif (!($is_direct_sale && $buy_now_price !== null && $buy_now_price > 0)) {
+            $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
+        }
+
+        return $errors;
+    }
 }
