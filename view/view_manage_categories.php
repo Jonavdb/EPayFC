@@ -33,21 +33,26 @@ require_once "utils/AppTime.php";
                 <div class="card shadow bg-dark">
                     <div class="card-body px-4">
 
-                        <?php foreach ($categories as $category): ?>
-                            <div class="row align-items-center mb-4">
-                                <div class="col-8">
-                                    <input type="text"
-                                        class="form-control form-control-lg bg-dark border-secondary text-white fs-4"
-                                        value="<?= $category->get_name() ?>"
-                                        placeholder="Category Name">
+                        <?php foreach ($categories as $index => $category): ?>
+                            <form action="category/handleAction" method="POST" class="border-0 shadow-none m-0 p-0">
+                                <input type="hidden" name="id" value="<?= $category->get_id() ?>">
+
+                                <div class="row align-items-center mb-4">
+                                    <div class="col-8">
+                                        <input type="text"
+                                            class="form-control form-control-lg bg-dark border-secondary text-white fs-4"
+                                            name="name"
+                                            value="<?= $category->get_name() ?>"
+                                            placeholder="Category Name">
+                                    </div>
+                                    <div class="col-4 d-flex gap-3">
+                                        <button type="submit" name="action" value="up" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill" <?= ($index === 0) ? 'disabled' : '' ?>>Up</button>
+                                        <button type="submit" name="action" value="down" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill" <?= ($index === count($categories) - 1) ? 'disabled' : '' ?>>Down</button>
+                                        <button type="submit" name="action" value="save" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Save</button>
+                                        <button type="submit" name="action" value="delete" class="btn btn-lg border border-danger btn-outline-danger fs-4 flex-fill" <?= !($categories[$index]->is_empty()) ? 'disabled' : ''  ?>>Delete</button>
+                                    </div>
                                 </div>
-                                <div class="col-4 d-flex gap-3">
-                                    <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Up</button>
-                                    <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Down</button>
-                                    <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Save</button>
-                                    <button type="button" class="btn btn-lg border border-danger btn-outline-danger fs-4 flex-fill">Delete</button>
-                                </div>
-                            </div>
+                            </form>
                         <?php endforeach; ?>
 
 

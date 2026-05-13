@@ -6,11 +6,13 @@ class Category extends Model {
     private int $id;
     private string $name;
     private int $priority;
+    private bool $is_empty;
 
-    public function __construct(int $id, string $name, int $priority) {
+    public function __construct(int $id, string $name, int $priority, bool $is_empty) {
         $this->id       = $id;
         $this->name     = $name;
         $this->priority = $priority;
+        $this->is_empty = $is_empty;
     }
 
     public function get_id(): int {
@@ -23,19 +25,46 @@ class Category extends Model {
         return $this->priority;
     }
 
+    public function is_empty(): bool {
+        return $this->is_empty;
+    }
+
     public static function get_categories(): array {
         $query = self::execute("SELECT * FROM categories ORDER BY priority ASC", []);
         $data = $query->fetchAll();
         $categories = [];
-
         foreach ($data as $row) {
+            $id = (int)$row['id'];
+            $name =  $row['name'];
+            $priority = (int)$row['priority'];
+            $is_empty = self::get_items_count_from_category($id) <= 0;
+
             $categories[] = new self(
-                (int)$row['id'],
-                $row['name'],
-                (int)$row['priority']
+                $id,
+                $name,
+                $priority,
+                $is_empty
             );
         };
         return $categories;
+    }
+
+    public static function get_items_count_from_category(int $categ_id): int {
+        $res = -1;
+
+        $query = self::execute(
+            "SELECT distinct * FROM item_categories ic
+            WHERE category = :categ_id",
+            ["categ_id" => $categ_id]
+        );
+
+        $data = $query->fetchAll();
+
+        if ($data) {
+            $res = count($data);
+        }
+
+        return $res;
     }
 
     public static function get_item_categories(int $item_id): array {
