@@ -436,7 +436,7 @@ class Item extends Model {
         }
 
         if ($category_id !== null) {
-            $sql .= " AND id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $sql .= " AND vis.id in (SELECT item FROM item_categories WHERE category = :category_id)";
             $params['category_id'] = $category_id;
         }
 
@@ -544,7 +544,7 @@ class Item extends Model {
         }
 
         if ($category_id !== null) {
-            $sql .= " AND id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $sql .= " AND vis.id in (SELECT item FROM item_categories WHERE category = :category_id)";
             $params['category_id'] = $category_id;
         }
 

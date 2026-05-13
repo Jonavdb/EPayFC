@@ -833,11 +833,13 @@ class ControllerItem extends Controller {
 
     public function search_fulltext_browse_service(): void {
         header('Content-Type: application/json');
+        $search = isset($_GET["search"]) ? trim($_GET["search"]) : '';
+        $category_id = isset($_GET["category_id"]) ? (int)$_GET["category_id"] : null;
 
-        if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {
+        if ($search !== '' || $category_id !== null) {
             $search = trim($_GET["search"]);
             $current_user = $this->get_user_or_false();
-            $category_id = isset($_GET["category_id"]) ? (int)$_GET["category_id"] : null;
+            $category_id = isset($_GET["category_id"]) && $_GET["category_id"] !== '' ? (int)$_GET["category_id"] : null;
 
             $encoded_search = UrlEncoder::url_safe_encode(['search' => $search, 'category_id' => $category_id]);
 
@@ -917,11 +919,12 @@ class ControllerItem extends Controller {
 
     public function search_fulltext_my_items_service(): void {
         header('Content-Type: application/json');
+        $search = isset($_GET["search"]) ? trim($_GET["search"]) : '';
+        $category_id = isset($_GET["category_id"]) && $_GET["category_id"] !== '' ? (int)$_GET["category_id"] : null;
 
-        if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {
+        if ($search !== '' || $category_id !== null) {
             $search = trim($_GET["search"]);
             $current_user = $this->get_user_or_false();
-            $category_id = isset($_GET["category_id"]) ? (int)$_GET["category_id"] : null;
 
             $encoded_search = UrlEncoder::url_safe_encode(['search' => $search, 'category_id' => $category_id]);
 
