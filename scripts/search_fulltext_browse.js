@@ -13,13 +13,15 @@ $(function () {
     defaultAvailableHtml = availableGrid.html();
 
     searchInput.on('input', checkSearchFullTextBrowseItems);
+    $('#category_filter').on('change', checkSearchFullTextBrowseItems);
 });
 
 async function checkSearchFullTextBrowseItems() {
     const searchValue = searchInput.val().trim();
+    const categoryId = $('#category_filter').val();
 
     // s'il n'a rien cherché, on affiche les listes par défaut
-    if (searchValue === '') {
+    if (searchValue === '' && categoryId === '') {
         if (initialSearchValue !== '') {
             window.location.href = 'item/browse';
             return;
@@ -32,7 +34,7 @@ async function checkSearchFullTextBrowseItems() {
     }
 
     try {
-        const response = await $.get('item/search_fulltext_browse_service', { search: searchValue }, 'json');
+        const response = await $.get('item/search_fulltext_browse_service', { search: searchValue, category_id: categoryId }, 'json');
 
         // vidage des grilles pour y mettre les résultats de manière dynamique
         participatingGrid.empty();

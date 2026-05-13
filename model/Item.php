@@ -217,7 +217,7 @@ class Item extends Model {
 
 
     // paramètre optionnel rajouté pour le champ de recherche de l'itération 2
-    public static function get_items_by_owner(int $owner_id, ?string $search = null): array {
+    public static function get_items_by_owner(int $owner_id, ?string $search = null, ?int $category_id = null): array {
         // Récupère les items du propriétaire, triés par date de fin calculée
         $sql = "SELECT * FROM v_items_status WHERE owner = :owner";
         $params = ["owner" => $owner_id];
@@ -227,6 +227,11 @@ class Item extends Model {
             $sql .= " AND (title LIKE :search OR description LIKE :search)";
 
             $params['search'] = '%' . trim($search) . '%';
+        }
+
+        if ($category_id !== null) {
+            $sql .= " AND id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
         }
 
         $sql .= " ORDER BY end_at ASC";
@@ -403,7 +408,7 @@ class Item extends Model {
         return true;
     }
 
-    public static function get_user_bid_items(int $id, ?string $search = null): array {
+    public static function get_user_bid_items(int $id, ?string $search = null, ?int $category_id = null): array {
         $user_bid_items = [];
 
         $sql = "SELECT DISTINCT vis.*
@@ -428,6 +433,11 @@ class Item extends Model {
                       )";
 
             $params['search'] = '%' . trim($search) . '%';
+        }
+
+        if ($category_id !== null) {
+            $sql .= " AND vis.id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
         }
 
         $sql .= " ORDER BY vis.end_at";
@@ -506,7 +516,7 @@ class Item extends Model {
         return $data['bid'];
     }
 
-    public static function get_user_available_items(int $id, ?string $search = null): array {
+    public static function get_user_available_items(int $id, ?string $search = null, ?int $category_id = null): array {
         $user_available_items = [];
 
         $sql = "SELECT vis.*
@@ -531,6 +541,11 @@ class Item extends Model {
                         OR vis.description LIKE :search
                       )";
             $params['search'] = '%' . trim($search) . '%';
+        }
+
+        if ($category_id !== null) {
+            $sql .= " AND vis.id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
         }
 
         $sql .= " ORDER BY vis.end_at";
@@ -1042,18 +1057,21 @@ class Item extends Model {
         return $sales;
     }
 
-    public static function get_all_available_items(): array {
+    public static function get_all_available_items(?int $category_id = null): array {
         $items = [];
-        $query = self::execute(
-            "SELECT * from v_items_status vis
-            WHERE :today BETWEEN vis.created_at AND vis.end_at -- Not expired yet
-            AND vis.buy_now_reached = 0 -- Not sold yet
-            ORDER by vis.end_at",
-            [
-                "today" => AppTime::get_current_datetime(),
-            ]
-        );
+        $sql = "SELECT * from v_items_status vis
+                WHERE :today BETWEEN vis.created_at AND vis.end_at -- Not expired yet
+                AND vis.buy_now_reached = 0 -- Not sold yet";
+        $params = [
+            "today" => AppTime::get_current_datetime()
+        ];
 
+        if ($category_id !== null) {
+            $sql .= " AND id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
+        }
+        $sql .= " ORDER by vis.end_at";
+        $query = self::execute($sql, $params);
         $data = $query->fetchAll();
         if (!$data) {
             return [];
