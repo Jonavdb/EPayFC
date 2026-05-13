@@ -20,15 +20,52 @@ class ControllerCategory extends Controller {
         ]);
     }
 
-    // Edit 
+    public function handleAction(): void {
+        /*$is_empty_input = (isset($_POST['name']) || empty(trim($_POST['name'])));
+
+        if ($is_input_empty) {
+            // erreur : champ vide
+            $error_empty_input = "Champ vide.";
+            $category_name = $_POST['id'];
+
+            (new View("manage_categories"))->show([
+                "categories" => Category::get_categories(),
+                "error_empty_field" => $error_empty_input,
+                "target" => $category_name
+            ]);
+        }*/
+
+        // on récupère l'action déclenchée, et on transfère la categorie cible à cette action
+    }
+
 
     // Up
+    public function Up(): void {
+        // on récupère la priorité de la categorie (up) et on la stock dans une variable temp
+
+        // on récupère la priorité de la categorie qui a la priorité la plus basse après la categorie (up)..
+        // on la stock dans une variable temp
+
+        // on met la priorité de la categorie qui a la priorité la plus basse après la categorie (up) à -1
+
+        // on met la priorité de la categorie (up) a la priorité de l'autre avec son temp
+
+        // on met la priorité de l'autre a la priorité de la categorie (up) avec son temp (up)
+
+        // on reload la page
+    }
 
     // Down
+    public function Down(): void {
+    }
 
     // Save
+    public function Save(): void {
+    }
 
     // Delete
+    public function Delete(): void {
+    }
 
     // Add Category
     public function add_category(): void {
