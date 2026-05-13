@@ -226,7 +226,6 @@ class ControllerItem extends Controller {
         $param4 = isset($_GET['param4']) ? $_GET['param4'] : '';
         $item_categories = Category::get_item_categories($id);
 
-        var_dump("ici ==================>", $item_categories);
 
         // param3 numérique = index image (sans encoded_search)
         // param3 string = encoded_search, param4 = index image
@@ -768,7 +767,14 @@ class ControllerItem extends Controller {
     }
 
     public function move_image_right_service(): void {
+
         header('Content-Type: application/json');
+        $current_user = $this->get_user_or_false();
+
+        if (!$current_user) {
+            echo json_encode([]);
+            exit;
+        }
 
         if (
             isset($_GET['param1']) && trim($_GET['param1']) !== '' &&
@@ -776,13 +782,6 @@ class ControllerItem extends Controller {
         ) {
             $image_id = (int)$_GET['param1'];
             $item_id = (int)$_GET['param2'];
-
-            $current_user = $this->get_user_or_false();
-
-            if (!$current_user) {
-                echo json_encode([]);
-                exit;
-            }
 
             $image_item = Item::change_pics_right($image_id, $item_id);
             echo json_encode(["image_item" => $image_item]);
@@ -791,6 +790,12 @@ class ControllerItem extends Controller {
 
     public function move_image_left_service(): void {
         header('Content-Type: application/json');
+        $current_user = $this->get_user_or_false();
+
+        if (!$current_user) {
+            echo json_encode([]);
+            exit;
+        }
 
         if (
             isset($_GET['param1']) && trim($_GET['param1']) !== '' &&
@@ -798,13 +803,6 @@ class ControllerItem extends Controller {
         ) {
             $image_id = (int)$_GET['param1'];
             $item_id = (int)$_GET['param2'];
-
-            $current_user = $this->get_user_or_false();
-
-            if (!$current_user) {
-                echo json_encode([]);
-                exit;
-            }
 
             $image_item = Item::change_pics_left($image_id, $item_id);
             echo json_encode(["image_item" => $image_item]);
