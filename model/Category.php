@@ -2,11 +2,19 @@
 
 require_once "framework/Model.php";
 
+enum SwapType: string {
+    case UP = 'up';
+    case DOWN = 'down';
+}
+
+
 class Category extends Model {
     private int $id;
     private string $name;
     private int $priority;
     private bool $is_empty;
+
+    // enum swap type (UP,Down)
 
     public function __construct(int $id, string $name, int $priority, bool $is_empty) {
         $this->id       = $id;
@@ -24,9 +32,33 @@ class Category extends Model {
     public function get_priority(): int {
         return $this->priority;
     }
-
     public function is_empty(): bool {
         return $this->is_empty;
+    }
+
+    public function set_id(int $id): void {
+        $this->id = $id;
+        // update database
+    }
+
+    public function set_name(string $name): void {
+        $this->name = $name;
+        // update database
+    }
+
+    public function set_priority(int $priority): void {
+        $this->priority = $priority;
+        self::execute(
+            "UPDATE categories set priority = :priority where id = :id",
+            [
+                "priority" => $priority,
+                "id" => $this->get_id()
+            ]
+        );
+    }
+
+    public function set_is_empty(bool $is_empty): void {
+        $this->is_empty = $is_empty;
     }
 
     public static function get_categories(): array {
@@ -93,6 +125,92 @@ class Category extends Model {
 
         return $item_categories;
     }
+
+    public static function get_category_from_id(int $categ_id): Category {
+        $res = null;
+        $query = self::execute(
+            "SELECT * FROM categories c where c.id = :categ_id",
+            ["categ_id"  => $categ_id]
+        );
+
+        $data = $query->fetch();
+
+        $id = (int)$data['id'];
+        $name =  $data['name'];
+        $priority = (int)$data['priority'];
+        $is_empty = self::get_items_count_from_category($id) <= 0;
+
+        if ($data) {
+            $res = new self(
+                $id,
+                $name,
+                $priority,
+                $is_empty
+            );
+        }
+
+        return $res;
+    }
+
+    public static function get_category_with_next_lower_priority(int $priority): Category {
+        $res = null;
+        $query = self::execute(
+            "SELECT * FROM categories c 
+                where c.priority < :priority
+                order by c.priority DESC
+                LIMIT 1",
+            ["priority"  => $priority]
+        );
+
+        $data = $query->fetch();
+
+        $id = (int)$data['id'];
+        $name =  $data['name'];
+        $priority = (int)$data['priority'];
+        $is_empty = self::get_items_count_from_category($id) <= 0;
+
+        if ($data) {
+            $res = new self(
+                $id,
+                $name,
+                $priority,
+                $is_empty
+            );
+        }
+
+        return $res;
+    }
+
+    public static function get_category_with_next_higher_priority(int $priority): Category {
+        $res = null;
+        $query = self::execute(
+            "SELECT * FROM categories c 
+                where c.priority > :priority
+                order by c.priority ASC
+                LIMIT 1",
+            ["priority"  => $priority]
+        );
+
+        $data = $query->fetch();
+
+        $id = (int)$data['id'];
+        $name =  $data['name'];
+        $priority = (int)$data['priority'];
+        $is_empty = self::get_items_count_from_category($id) <= 0;
+
+        if ($data) {
+            $res = new self(
+                $id,
+                $name,
+                $priority,
+                $is_empty
+            );
+        }
+
+        return $res;
+    }
+
+    // Category::swap(int $id1, int $id2, SwapType type); 
 
     public static function add(string $name): void {
         $sql = "INSERT INTO categories (name, priority) VALUES (:name, :priority)";

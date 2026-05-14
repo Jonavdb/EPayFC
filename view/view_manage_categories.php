@@ -34,7 +34,7 @@ require_once "utils/AppTime.php";
                     <div class="card-body px-4">
 
                         <?php foreach ($categories as $index => $category): ?>
-                            <form action="category/handleAction" method="POST" class="border-0 shadow-none m-0 p-0">
+                            <form action="category/handle_action" method="POST" class="border-0 shadow-none m-0 p-0">
                                 <input type="hidden" name="id" value="<?= $category->get_id() ?>">
 
                                 <div class="row align-items-center mb-4">

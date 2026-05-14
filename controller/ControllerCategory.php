@@ -20,54 +20,72 @@ class ControllerCategory extends Controller {
         ]);
     }
 
-    public function handleAction(): void {
-        /*$is_empty_input = (isset($_POST['name']) || empty(trim($_POST['name'])));
-
-        if ($is_input_empty) {
-            // erreur : champ vide
-            $error_empty_input = "Champ vide.";
-            $category_name = $_POST['id'];
-
-            (new View("manage_categories"))->show([
-                "categories" => Category::get_categories(),
-                "error_empty_field" => $error_empty_input,
-                "target" => $category_name
-            ]);
-        }*/
-
-        // on récupère l'action déclenchée, et on transfère la categorie cible à cette action
+    public function handle_action(): void {
+        $action_type = $_POST['action'];
+        $category_id = $_POST['id'];
+        switch ($action_type) {
+            case "up":
+                self::move_up($category_id);
+                break;
+            case "down":
+                self::move_down($category_id);
+                break;
+            case "save":
+                self::save($category_id);
+                break;
+            case "delete":
+                self::delete($category_id);
+                break;
+            case null:
+                break;
+        }
     }
 
+    public function move_up(int $id): void {
+        echo "UP!";
 
-    // Up
-    public function Up(): void {
-        // on récupère la priorité de la categorie (up) et on la stock dans une variable temp
+        $from = Category::get_category_from_id($id);
+        $priority_from = $from->get_priority();
 
-        // on récupère la priorité de la categorie qui a la priorité la plus basse après la categorie (up)..
-        // on la stock dans une variable temp
+        $to = Category::get_category_with_next_lower_priority($from->get_priority());
+        $priority_to = $to->get_priority();
 
-        // on met la priorité de la categorie qui a la priorité la plus basse après la categorie (up) à -1
+        // self::swap(from->get_id(), to->get_id(), SwapType::UP);
 
-        // on met la priorité de la categorie (up) a la priorité de l'autre avec son temp
-
-        // on met la priorité de l'autre a la priorité de la categorie (up) avec son temp (up)
+        $to->set_priority(-1);
+        $from->set_priority($priority_to);
+        $to->set_priority($priority_from);
 
         // on reload la page
+        $this->redirect("category", "index");
     }
 
-    // Down
-    public function Down(): void {
+    public function move_down(int $id): void {
+        echo "DOWN!";
+        $from = Category::get_category_from_id($id);
+        $priority_from = $from->get_priority();
+
+        $to = Category::get_category_with_next_higher_priority($from->get_priority());
+        $priority_to = $to->get_priority();
+
+        // self::swap(from->get_id(), to->get_id(), SwapType::UP);
+
+        $to->set_priority(-1);
+        $from->set_priority($priority_to);
+        $to->set_priority($priority_from);
+
+        // on reload la page
+        $this->redirect("category", "index");
     }
 
-    // Save
-    public function Save(): void {
+    public function save(int $id): void {
+        echo "SAVE!";
     }
 
-    // Delete
-    public function Delete(): void {
+    public function delete(int $id): void {
+        echo "DELETE!";
     }
 
-    // Add Category
     public function add_category(): void {
 
         // on vérifie si l'utilisateur ecrit quelque chose
