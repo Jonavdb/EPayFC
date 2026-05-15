@@ -83,7 +83,6 @@ class Category extends Model {
 
     public static function get_items_count_from_category(int $categ_id): int {
         $res = -1;
-
         $query = self::execute(
             "SELECT distinct * FROM item_categories ic
             WHERE category = :categ_id",
@@ -99,31 +98,29 @@ class Category extends Model {
         return $res;
     }
 
-    public static function get_item_categories(int $item_id): array {
-        $item_categories = [];
-
+    public static function get_item_categories_by_id(int $item_id): array {
         $query = self::execute(
-            "SELECT name
-            FROM categories, items, item_categories
-            WHERE categories.id = item_categories.category
-            AND items.id = item_categories.item
-            AND items.id = :item_id;",
+            "SELECT categories.id
+                FROM categories, items, item_categories
+                WHERE categories.id = item_categories.category
+                AND items.id = item_categories.item
+                AND items.id = :item_id;",
             ["item_id" => $item_id]
         );
 
+
         $data = $query->fetchAll();
+        $item_categories = [];
 
         if (!$data) {
             return [];
         } else {
-            sort($data);    // trie alphabétiquement
-
             foreach ($data as $row) {
-                array_push($item_categories, $row['name']);
+                $item_categories[] = (int)$row['id'];
             };
-        }
 
-        return $item_categories;
+            return $item_categories;
+        }
     }
 
     public static function get_category_from_id(int $categ_id): Category {
@@ -250,5 +247,30 @@ class Category extends Model {
         }
 
         return $errors;
+    }
+
+    public static function get_categories_names(int $item_id): array {
+        $query = self::execute(
+            "SELECT categories.name
+                FROM categories, items, item_categories
+                WHERE categories.id = item_categories.category
+                AND items.id = item_categories.item
+                AND items.id = :item_id
+                ORDER BY categories.name ASC;",
+            ["item_id" => $item_id]
+        );
+
+        $data = $query->fetchAll();
+        $item_categories = [];
+
+        if (!$data) {
+            return [];
+        } else {
+            foreach ($data as $row) {
+                $item_categories[] = $row['name'];
+            };
+
+            return $item_categories;
+        }
     }
 }

@@ -208,8 +208,14 @@ function handleLeaveConfirmation(e) {
 }
 
 function hasUnsavedChanges() {
-    const fields = $('#title, #description, #duration, #starting_bid, #instant, #direct').get();
-    return fields.some((field) => field.value !== field.defaultValue);
+    const fields = $('#title, #description, #duration, #starting_bid, #instant, #direct, input[name="categories[]"]').get();
+
+    return fields.some((field) => {
+        if (field.type === 'checkbox') {
+            return field.checked !== field.defaultChecked;
+        }
+        return field.value !== field.defaultValue;
+    });
 }
 
 function askConfirm(redirectUrl) {
