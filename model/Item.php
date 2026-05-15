@@ -217,7 +217,7 @@ class Item extends Model {
 
 
     // paramètre optionnel rajouté pour le champ de recherche de l'itération 2
-    public static function get_items_by_owner(int $owner_id, ?string $search = null): array {
+    public static function get_items_by_owner(int $owner_id, ?string $search = null, ?int $category_id = null): array {
         // Récupère les items du propriétaire, triés par date de fin calculée
         $sql = "SELECT * FROM v_items_status WHERE owner = :owner";
         $params = ["owner" => $owner_id];
@@ -227,6 +227,11 @@ class Item extends Model {
             $sql .= " AND (title LIKE :search OR description LIKE :search)";
 
             $params['search'] = '%' . trim($search) . '%';
+        }
+
+        if ($category_id !== null) {
+            $sql .= " AND id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
         }
 
         $sql .= " ORDER BY end_at ASC";
@@ -403,7 +408,7 @@ class Item extends Model {
         return true;
     }
 
-    public static function get_user_bid_items(int $id, ?string $search = null): array {
+    public static function get_user_bid_items(int $id, ?string $search = null, ?int $category_id = null): array {
         $user_bid_items = [];
 
         $sql = "SELECT DISTINCT vis.*
@@ -428,6 +433,11 @@ class Item extends Model {
                       )";
 
             $params['search'] = '%' . trim($search) . '%';
+        }
+
+        if ($category_id !== null) {
+            $sql .= " AND vis.id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
         }
 
         $sql .= " ORDER BY vis.end_at";
@@ -506,7 +516,7 @@ class Item extends Model {
         return $data['bid'];
     }
 
-    public static function get_user_available_items(int $id, ?string $search = null): array {
+    public static function get_user_available_items(int $id, ?string $search = null, ?int $category_id = null): array {
         $user_available_items = [];
 
         $sql = "SELECT vis.*
@@ -531,6 +541,11 @@ class Item extends Model {
                         OR vis.description LIKE :search
                       )";
             $params['search'] = '%' . trim($search) . '%';
+        }
+
+        if ($category_id !== null) {
+            $sql .= " AND vis.id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
         }
 
         $sql .= " ORDER BY vis.end_at";
@@ -1042,18 +1057,21 @@ class Item extends Model {
         return $sales;
     }
 
-    public static function get_all_available_items(): array {
+    public static function get_all_available_items(?int $category_id = null): array {
         $items = [];
-        $query = self::execute(
-            "SELECT * from v_items_status vis
-            WHERE :today BETWEEN vis.created_at AND vis.end_at -- Not expired yet
-            AND vis.buy_now_reached = 0 -- Not sold yet
-            ORDER by vis.end_at",
-            [
-                "today" => AppTime::get_current_datetime(),
-            ]
-        );
+        $sql = "SELECT * from v_items_status vis
+                WHERE :today BETWEEN vis.created_at AND vis.end_at -- Not expired yet
+                AND vis.buy_now_reached = 0 -- Not sold yet";
+        $params = [
+            "today" => AppTime::get_current_datetime()
+        ];
 
+        if ($category_id !== null) {
+            $sql .= " AND id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
+        }
+        $sql .= " ORDER by vis.end_at";
+        $query = self::execute($sql, $params);
         $data = $query->fetchAll();
         if (!$data) {
             return [];
@@ -1179,5 +1197,43 @@ class Item extends Model {
                 ]
             );
         }
+    }
+
+    public function validate_before_fill(array $config): array {
+        $errors = [];
+        $min_lenght = (int)$config['min_item_lenght'];
+        $max_lenght = (int)$config['max_item_lenght'];
+        $min_duration = (int)$config['min_duration_days'];
+        $max_duration = (int)$config['max_duration_days'];
+
+        if (strlen($this->get_title()) == 0 || empty($this->get_title())) {
+            $errors['empty'] = "Title is required";
+        }
+
+        if (strlen($this->get_title()) < $min_lenght || strlen($this->get_title()) > $max_lenght) {
+
+            $errors['title'] = "Title length must be between $min_lenght and $max_lenght characters.";
+        }
+
+        if ($this->get_duration_days() < $min_duration || $this->get_duration_days() > $max_duration) {
+            $errors['duration'] = "Duration must be at least $min_duration day and at most $max_duration days";
+        }
+
+        $starting_bid = $this->get_starting_bid();
+        $buy_now_price = $this->get_buy_now_price();
+        $is_direct_sale = $this->get_is_direct_sale();
+
+        if ($starting_bid !== null && $starting_bid > 0) {
+            if ($buy_now_price !== null && $buy_now_price > 0 && $buy_now_price < $starting_bid) {
+                $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
+            }
+            if ($is_direct_sale) {
+                $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
+            }
+        } elseif (!($is_direct_sale && $buy_now_price !== null && $buy_now_price > 0)) {
+            $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
+        }
+
+        return $errors;
     }
 }

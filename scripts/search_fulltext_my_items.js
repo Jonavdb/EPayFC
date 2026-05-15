@@ -15,13 +15,15 @@ $(function () {
     defaultSoldHtml = soldItemsGrid.html();
 
     searchInput.on('input', checkSearchFullTextMyItems);
+    $('#category_filter').on('change', checkSearchFullTextMyItems);
 });
 
 async function checkSearchFullTextMyItems() {
     const searchValue = searchInput.val().trim();
+    const categoryId = $('#category_filter').val();
 
     // s'il n'a rien cherché, on affiche les listes par défaut
-    if (searchValue === '') {
+    if (searchValue === '' && categoryId === '') {
         if (initialSearchValue !== '') {
             window.location.href = 'item/list';
             return;
@@ -35,7 +37,7 @@ async function checkSearchFullTextMyItems() {
     }
 
     try {
-        const response = await $.get(`item/search_fulltext_my_items_service`, { search: searchValue }, 'json');
+        const response = await $.get(`item/search_fulltext_my_items_service`, { search: searchValue, category_id: categoryId }, 'json');
 
         // vidage des grilles pour y mettre les résultats de manière dynamique
         activeItemsGrid.empty();

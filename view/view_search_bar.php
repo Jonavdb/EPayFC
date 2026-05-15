@@ -9,5 +9,18 @@
             id="search_fulltext"
             placeholder="Search items..."
             value="<?= isset($search_query) ? htmlspecialchars($search_query) : '' ?>">
+
+        <select id="category_filter" class="form-select bg-dark border-secondary text-light" style="max-width: 200px;">
+            <option value=""> All Categories</option>
+            <?php if (isset($categories)): ?>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= $category->get_id() ?>"
+                        <?= isset($selected_category_id) && $selected_category_id == $category->get_id() ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($category->get_name()) ?>
+                    </option>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </select>
+
     </div>
 </div>
