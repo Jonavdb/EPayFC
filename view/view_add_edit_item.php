@@ -192,6 +192,7 @@ require_once "utils/GoBack.php";
             </div>
         </div>
 
+        <!-- Checkbox -->
         <div class="container mb-4">
             <div class="card text-bg-dark border-secondary">
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
@@ -207,7 +208,8 @@ require_once "utils/GoBack.php";
                                 type="checkbox"
                                 name="categories[]"
                                 id="category_<?= $category->get_id(); ?>"
-                                value="<?= $category->get_id(); ?>">
+                                value="<?= $category->get_id(); ?>"
+                                <?php if (in_array($category->get_id(), $checked_categories)) echo 'checked="checked"'; ?>>
 
                             <label class="form-check-label text-white fs-4" for="category_<?= $category->get_id(); ?>">
                                 <?= htmlspecialchars($category->get_name()); ?>
