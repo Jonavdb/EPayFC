@@ -2,7 +2,7 @@
 
 require_once "framework/Model.php";
 
-enum SwapType: string {
+enum MoveDirection: string {
     case UP = 'up';
     case DOWN = 'down';
 }
@@ -14,7 +14,6 @@ class Category extends Model {
     private int $priority;
     private bool $is_empty;
 
-    // enum swap type (UP,Down)
 
     public function __construct(int $id, string $name, int $priority, bool $is_empty) {
         $this->id       = $id;
@@ -42,8 +41,15 @@ class Category extends Model {
     }
 
     public function set_name(string $name): void {
-        $this->name = $name;
-        // update database
+        $name_sanitized = trim($name);
+        $this->name = $name_sanitized;
+        self::execute(
+            "UPDATE categories set name = :name where id = :id",
+            [
+                "name" => $this->name,
+                "id" => $this->get_id()
+            ]
+        );
     }
 
     public function set_priority(int $priority): void {
@@ -123,6 +129,7 @@ class Category extends Model {
         }
     }
 
+
     public static function get_category_from_id(int $categ_id): Category {
         $res = null;
         $query = self::execute(
@@ -149,7 +156,35 @@ class Category extends Model {
         return $res;
     }
 
-    public static function get_category_with_next_lower_priority(int $priority): Category {
+    public static function get_category_from_name(string $name): ?Category {
+        $query = self::execute(
+            "SELECT * FROM categories c where c.name = :name",
+            ["name"  => $name]
+        );
+
+        $data = $query->fetch();
+
+        // 1. If no database record is found, safely return null immediately
+        if (!$data) {
+            return null;
+        }
+
+        // 2. Since we know $data exists, safely extract the fields
+        $id = (int)$data['id'];
+        $name =  $data['name'];
+        $priority = (int)$data['priority'];
+        $is_empty = self::get_items_count_from_category($id) <= 0;
+
+        // 3. Return the constructed object
+        return new self(
+            $id,
+            $name,
+            $priority,
+            $is_empty
+        );
+    }
+
+    public static function get_next_category_above(int $priority): Category {
         $res = null;
         $query = self::execute(
             "SELECT * FROM categories c 
@@ -178,7 +213,7 @@ class Category extends Model {
         return $res;
     }
 
-    public static function get_category_with_next_higher_priority(int $priority): Category {
+    public static function get_next_category_below(int $priority): Category {
         $res = null;
         $query = self::execute(
             "SELECT * FROM categories c 
@@ -207,8 +242,6 @@ class Category extends Model {
         return $res;
     }
 
-    // Category::swap(int $id1, int $id2, SwapType type); 
-
     public static function add(string $name): void {
         $sql = "INSERT INTO categories (name, priority) VALUES (:name, :priority)";
         self::execute($sql, [
@@ -217,10 +250,51 @@ class Category extends Model {
         ]);
     }
 
+    public static function delete(string $id): void {
+        // on verifie s'il y a des items dans la categorie
+        $query = self::execute(
+            "SELECT distinct * FROM item_categories ic
+            WHERE category = :categ_id",
+            ["categ_id" => $id]
+        );
+
+        // on fait rien si la categorie n'est pas vide
+        $data = $query->fetchAll();
+        if ($data)
+            return;
+
+        // supprime la categorie si elle est vide
+        self::execute(
+            "DELETE FROM categories WHERE id = :id",
+            ["id" => $id]
+        );
+    }
+
+    public static function move(int $from_id, MoveDirection $direction) {
+        // on détermine la direction du mouvement
+        if (in_array($direction, [MoveDirection::UP, MoveDirection::DOWN])) {
+            $from = Category::get_category_from_id($from_id);
+            $to   = $direction === MoveDirection::UP
+                ? Category::get_next_category_above($from->get_priority())  // vers la categorie juste au dessus  dans la liste
+                : Category::get_next_category_below($from->get_priority()); // vers la categorie juste en dessous dans la liste
+
+            // on récupère les priorités
+            $priority_from = $from->get_priority();
+            $priority_to   = $to->get_priority();
+
+            // on échange les priorités
+            $to->set_priority(-1);
+            $from->set_priority($priority_to);
+            $to->set_priority($priority_from);
+        }
+    }
+
     public static function validate(string $name): array {
 
         $name_sanitized = trim($name);
         $errors = [];
+
+        $is_empty = empty($name_sanitized);
 
         $is_valid_format = preg_match('/^[A-Z][a-zA-Z]*$/', $name_sanitized);
 
@@ -233,6 +307,10 @@ class Category extends Model {
         );
         $is_name_unique = !$query->fetch();
 
+
+        if ($is_empty) {
+            $errors['empty'] = "Champ vide.";
+        }
 
         if (!$is_valid_format) {
             $errors['bad_format'] = "Format invalide : commencez par une majuscule, sans espaces ni chiffres.";
@@ -248,6 +326,7 @@ class Category extends Model {
 
         return $errors;
     }
+
 
     public static function get_categories_names(int $item_id): array {
         $query = self::execute(
