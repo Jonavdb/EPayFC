@@ -42,37 +42,16 @@ class ControllerCategory extends Controller {
     }
 
     public function move_up(int $id): void {
-        echo "UP!";
-
         $from = Category::get_category_from_id($id);
-        $priority_from = $from->get_priority();
-
-        $to = Category::get_category_with_next_lower_priority($from->get_priority());
-        $priority_to = $to->get_priority();
-
-        // self::swap(from->get_id(), to->get_id(), SwapType::UP);
-
-        $to->set_priority(-1);
-        $from->set_priority($priority_to);
-        $to->set_priority($priority_from);
+        Category::move($from->get_id(), MoveDirection::UP);
 
         // on reload la page
         $this->redirect("category", "index");
     }
 
     public function move_down(int $id): void {
-        echo "DOWN!";
         $from = Category::get_category_from_id($id);
-        $priority_from = $from->get_priority();
-
-        $to = Category::get_category_with_next_higher_priority($from->get_priority());
-        $priority_to = $to->get_priority();
-
-        // self::swap(from->get_id(), to->get_id(), SwapType::UP);
-
-        $to->set_priority(-1);
-        $from->set_priority($priority_to);
-        $to->set_priority($priority_from);
+        Category::move($from->get_id(), MoveDirection::DOWN);
 
         // on reload la page
         $this->redirect("category", "index");
@@ -82,12 +61,15 @@ class ControllerCategory extends Controller {
         // on récupère l'input
         $raw_name = $_POST['name'];
 
-        // rien si c'est le même nom
         $category_from_name = Category::get_category_from_name(trim($raw_name));
         $category_from_id   = Category::get_category_from_id($id);
-        if ($category_from_name->get_name() === $category_from_id->get_name()) {
-            $this->redirect("category", "index");
-            return;
+
+        // on ne fait rien si l'input est le même que le nom de la categorie qui était déjà là
+        if ($category_from_name) {
+            if ($category_from_name->get_name() === $category_from_id->get_name()) {
+                $this->redirect("category", "index");
+                return;
+            }
         }
 
         // on check si l'input est valide
