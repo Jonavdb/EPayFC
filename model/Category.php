@@ -42,8 +42,15 @@ class Category extends Model {
     }
 
     public function set_name(string $name): void {
-        $this->name = $name;
-        // update database
+        $name_sanitized = trim($name);
+        $this->name = $name_sanitized;
+        self::execute(
+            "UPDATE categories set name = :name where id = :id",
+            [
+                "name" => $this->name,
+                "id" => $this->get_id()
+            ]
+        );
     }
 
     public function set_priority(int $priority): void {
@@ -123,11 +130,39 @@ class Category extends Model {
         }
     }
 
+
+
     public static function get_category_from_id(int $categ_id): Category {
         $res = null;
         $query = self::execute(
             "SELECT * FROM categories c where c.id = :categ_id",
             ["categ_id"  => $categ_id]
+        );
+
+        $data = $query->fetch();
+
+        $id = (int)$data['id'];
+        $name =  $data['name'];
+        $priority = (int)$data['priority'];
+        $is_empty = self::get_items_count_from_category($id) <= 0;
+
+        if ($data) {
+            $res = new self(
+                $id,
+                $name,
+                $priority,
+                $is_empty
+            );
+        }
+
+        return $res;
+    }
+
+    public static function get_category_from_name(string $name): Category {
+        $res = null;
+        $query = self::execute(
+            "SELECT * FROM categories c where c.name = :name",
+            ["name"  => $name]
         );
 
         $data = $query->fetch();
@@ -217,10 +252,32 @@ class Category extends Model {
         ]);
     }
 
+    public static function delete(string $id): void {
+        // on verifie s'il y a des items dans la categorie
+        $query = self::execute(
+            "SELECT distinct * FROM item_categories ic
+            WHERE category = :categ_id",
+            ["categ_id" => $id]
+        );
+
+        // on fait rien si la categorie n'est pas vide
+        $data = $query->fetchAll();
+        if ($data)
+            return;
+
+        // supprime la categorie si elle est vide
+        self::execute(
+            "DELETE FROM categories WHERE id = :id",
+            ["id" => $id]
+        );
+    }
+
     public static function validate(string $name): array {
 
         $name_sanitized = trim($name);
         $errors = [];
+
+        $is_empty = empty($name_sanitized);
 
         $is_valid_format = preg_match('/^[A-Z][a-zA-Z]*$/', $name_sanitized);
 
@@ -233,6 +290,10 @@ class Category extends Model {
         );
         $is_name_unique = !$query->fetch();
 
+
+        if ($is_empty) {
+            $errors['empty'] = "Champ vide.";
+        }
 
         if (!$is_valid_format) {
             $errors['bad_format'] = "Format invalide : commencez par une majuscule, sans espaces ni chiffres.";
@@ -248,6 +309,7 @@ class Category extends Model {
 
         return $errors;
     }
+
 
     public static function get_categories_names(int $item_id): array {
         $query = self::execute(

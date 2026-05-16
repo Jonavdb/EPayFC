@@ -79,21 +79,47 @@ class ControllerCategory extends Controller {
     }
 
     public function save(int $id): void {
-        echo "SAVE!";
+        // on récupère l'input
+        $raw_name = $_POST['name'];
+
+        // rien si c'est le même nom
+        $category_from_name = Category::get_category_from_name(trim($raw_name));
+        $category_from_id   = Category::get_category_from_id($id);
+        if ($category_from_name->get_name() === $category_from_id->get_name()) {
+            $this->redirect("category", "index");
+            return;
+        }
+
+        // on check si l'input est valide
+        $errors = Category::validate($raw_name);
+
+        $to_save = null;
+
+        // si pas d'erreurs..
+        if (empty($errors)) {
+            // success..
+            // on sauvegarde les changements dans la db
+            $to_save = Category::get_category_from_id($id);
+            $to_save->set_name($raw_name);     // puis on refresh la page..      
+            $this->redirect("category", "index");
+        } else {
+            // echec.. affiche la page avec les erreurs
+            (new View("manage_categories"))->show([
+                "categories" => Category::get_categories(),
+                "save_errors" => $errors,
+                "target_id" => $id
+            ]);
+        }
     }
 
     public function delete(int $id): void {
-        echo "DELETE!";
+        Category::delete($id);
+
+        // on reload la page
+        $this->redirect("category", "index");
     }
 
     public function add_category(): void {
-
-        // on vérifie si l'utilisateur ecrit quelque chose
-        if (!isset($_POST['name']) || empty(trim($_POST['name']))) {
-            header("Location: index");
-            exit(); // Stop script execution
-        }
-
         // on récupère l'input
         $raw_name = $_POST['name'];
 
@@ -105,13 +131,13 @@ class ControllerCategory extends Controller {
             // success..
             // on ajoute la catégorie dans la db..
             Category::add(trim($raw_name));     // puis on refresh la page..      
-            header("Location: index");       // puis on arrête la fonction
+            $this->redirect("category", "index");  // puis on arrête la fonction
             exit();
         } else {
             // echec.. affiche la page avec les erreurs
             (new View("manage_categories"))->show([
                 "categories" => Category::get_categories(),
-                "errors" => $errors
+                "insert_errors" => $errors
             ]);
         }
     }

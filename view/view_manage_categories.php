@@ -37,20 +37,40 @@ require_once "utils/AppTime.php";
                             <form action="category/handle_action" method="POST" class="border-0 shadow-none m-0 p-0">
                                 <input type="hidden" name="id" value="<?= $category->get_id() ?>">
 
-                                <div class="row align-items-center mb-4">
-                                    <div class="col-8">
-                                        <input type="text"
-                                            class="form-control form-control-lg bg-dark border-secondary text-white fs-4"
-                                            name="name"
-                                            value="<?= $category->get_name() ?>"
-                                            placeholder="Category Name">
+                                <div class="mb-4">
+
+                                    <div class="row align-items-center">
+                                        <div class="col-8">
+                                            <input type="text"
+                                                class="form-control form-control-lg bg-dark border-secondary text-white fs-4"
+                                                name="name"
+                                                value="<?= $category->get_name() ?>"
+                                                placeholder="Category Name">
+                                        </div>
+
+                                        <div class="col-4 d-flex gap-3">
+                                            <button type="submit" name="action" value="up" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill" <?= ($index === 0) ? 'disabled' : '' ?>>Up</button>
+                                            <button type="submit" name="action" value="down" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill" <?= ($index === count($categories) - 1) ? 'disabled' : '' ?>>Down</button>
+                                            <button type="submit" name="action" value="save" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Save</button>
+                                            <button type="submit" name="action" value="delete" class="btn btn-lg border border-danger btn-outline-danger fs-4 flex-fill" <?= !($categories[$index]->is_empty()) ? 'disabled' : '' ?>>Delete</button>
+                                        </div>
                                     </div>
-                                    <div class="col-4 d-flex gap-3">
-                                        <button type="submit" name="action" value="up" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill" <?= ($index === 0) ? 'disabled' : '' ?>>Up</button>
-                                        <button type="submit" name="action" value="down" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill" <?= ($index === count($categories) - 1) ? 'disabled' : '' ?>>Down</button>
-                                        <button type="submit" name="action" value="save" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Save</button>
-                                        <button type="submit" name="action" value="delete" class="btn btn-lg border border-danger btn-outline-danger fs-4 flex-fill" <?= !($categories[$index]->is_empty()) ? 'disabled' : ''  ?>>Delete</button>
-                                    </div>
+
+                                    <?php if (isset($save_errors) && !empty($save_errors) && $category->get_id() === $target_id): ?>
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <div class="errSave w-100">
+                                                    <ul>
+                                                        <?php foreach ($save_errors as $error): ?>
+                                                            <li class="text-danger small mt-1"><?= $error ?></li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-4"></div>
+                                        </div>
+                                    <?php endif; ?>
+
                                 </div>
                             </form>
                         <?php endforeach; ?>
@@ -70,10 +90,10 @@ require_once "utils/AppTime.php";
                                 </div>
                             </div>
                         </form>
-                        <div id="errName" class="text-danger small mt-1">
+                        <div id="errInsert" class="text-danger small mt-1">
                             <ul>
-                                <?php if (isset($errors) && !empty($errors)): ?>
-                                    <?php foreach ($errors as $error): ?>
+                                <?php if (isset($insert_errors) && !empty($insert_errors)): ?>
+                                    <?php foreach ($insert_errors as $error): ?>
                                         <li> <?= $error ?></li>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
