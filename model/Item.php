@@ -379,6 +379,72 @@ class Item extends Model {
         );
     }
 
+    public static function get_item_by_title_and_owner(string $title, int $owner_id) {
+        // 1. Scope the query by BOTH title AND owner ID
+        $query = self::execute(
+            "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
+        FROM v_items_status v 
+        JOIN users u on v.owner = u.id
+        WHERE v.title = :title AND v.owner = :owner_id",
+            [
+                "title" => $title,
+                "owner_id" => $owner_id
+            ]
+        );
+        $data = $query->fetch();
+
+        if (!$data) {
+            return false;
+        }
+
+        if (empty($data['owner_picture'])) {
+            $owner_picture = 'css/images/default_user_image.jpg';
+        } else {
+            $owner_picture = $data['owner_picture'];
+        }
+
+        $query_pics = self::execute(
+            "SELECT picture_path
+        FROM item_pictures p
+        WHERE p.item = :item_id
+        ORDER BY priority ASC",
+            ["item_id" => (int)$data['id']]
+        );
+
+        $pictures = $query_pics->fetchAll(PDO::FETCH_COLUMN);
+        $main_image_url = $pictures[0] ?? 'css/images/default_item_image.png';
+
+        $created_at_object = new DateTime($data['created_at']);
+        $end_date_object = new DateTime($data['end_at']);
+        $current_price = ($data['max_bid'] !== null) ? (float)$data['max_bid'] : (float)$data['starting_bid'];
+
+        return new Item(
+            0,
+            null,
+            (int)$data['id'],
+            $data['title'],
+            $data['description'],
+            $data['owner_pseudo'],
+            $data['owner_role'],
+            $main_image_url,
+            $pictures,
+            $data['buy_now_price'] ?? 0.0,
+            $data['starting_bid'],
+            $created_at_object,
+            $end_date_object,
+            $data['duration_days'],
+            $current_price,
+            $data['bid_count'],
+            $data['has_bids'],
+            $data['is_auction'],
+            $data['is_direct_sale'],
+            $data['has_buy_now'],
+            $data['buy_now_reached'],
+            '',
+            $owner_picture
+        );
+    }
+
     // Delete item
     public static function delete(int $id): bool {
         // cible directement le dossier de l'item
@@ -494,6 +560,25 @@ class Item extends Model {
         }
 
         return $user_bid_items;
+    }
+
+    public static function has_title_duplicate(int $owner_id, string $title, ?int $exclude_item_id = null): bool {
+        // Retrieve all items belonging to this owner
+        $owner_items = self::get_items_by_owner($owner_id);
+
+        foreach ($owner_items as $item) {
+            // 1. Skip checking if it's the exact same item we are currently editing
+            if ($exclude_item_id !== null && $item->get_id() === $exclude_item_id) {
+                continue;
+            }
+
+            // 2. Compare the trimmed titles
+            if (trim($item->get_title()) === trim($title)) {
+                return true; // Duplicate found!
+            }
+        }
+
+        return false; // No duplicates found
     }
 
     public static function get_user_bid(int $item_id, int $user_id): float|null {
@@ -1206,6 +1291,8 @@ class Item extends Model {
         $min_duration = (int)$config['min_duration_days'];
         $max_duration = (int)$config['max_duration_days'];
 
+
+
         if (strlen($this->get_title()) == 0 || empty($this->get_title())) {
             $errors['empty'] = "Title is required";
         }
@@ -1217,6 +1304,21 @@ class Item extends Model {
 
         if ($this->get_duration_days() < $min_duration || $this->get_duration_days() > $max_duration) {
             $errors['duration'] = "Duration must be at least $min_duration day and at most $max_duration days";
+        }
+
+        // vérification si l'utilisateur n'a pas un autre item du même nom dans ses items
+        // on récupère l'id du propriétaire de l'item
+        $query_owner_id = self::execute(
+            "SELECT u.id FROM users u WHERE u.pseudo = :pseudo",
+            ["pseudo" => $this->get_owner_name()]
+        );
+        $data = $query_owner_id->fetch();
+        $owner_id = $data ? (int)$data['id'] : null;
+
+        // on verifie si le propriétaire a un item avec le même titre
+        $is_duplicate = $this->has_title_duplicate($owner_id, $this->get_title(), $this->get_id());
+        if ($is_duplicate) {
+            $errors['duplicate_title'] = "Title should be unique among user items.";
         }
 
         $starting_bid = $this->get_starting_bid();
