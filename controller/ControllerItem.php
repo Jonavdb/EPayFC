@@ -748,7 +748,6 @@ class ControllerItem extends Controller {
     }
 
     public function move_image_right_service(): void {
-
         header('Content-Type: application/json');
         $current_user = $this->get_user_or_false();
 
@@ -960,5 +959,33 @@ class ControllerItem extends Controller {
         } else {
             echo json_encode(['encoded_search' => '', 'items' => []]);
         }
+    }
+
+    public function find_title_duplicate(): void {
+        header('Content-Type: application/json');
+
+        $title = trim($_POST['title'] ?? '');
+
+        // Check if the frontend sent an ID (meaning we are editing an existing item)
+        $exclude_item_id = !empty($_POST['id']) ? (int)$_POST['id'] : null;
+
+        if ($title !== '') {
+            $current_user = $this->get_user_or_false();
+
+            if (!$current_user) {
+                echo json_encode(["is_unique" => false, "error" => "User session lost"]);
+                return;
+            }
+
+            // Run the check directly using the explicitly provided ID
+            $has_duplicate = Item::has_title_duplicate($current_user->get_id(), $title, $exclude_item_id);
+
+            echo json_encode([
+                "is_unique" => !$has_duplicate
+            ]);
+            return;
+        }
+
+        echo json_encode(["is_unique" => true]);
     }
 }

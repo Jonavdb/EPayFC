@@ -71,6 +71,8 @@ require_once "utils/GoBack.php";
                                 <?php echo ($errors['empty']); ?>
                             <?php elseif (isset($errors['title'])): ?>
                                 <?php echo ($errors['title']); ?>
+                            <?php elseif (isset($errors['duplicate_title'])): ?>
+                                <?php echo ($errors['duplicate_title']); ?>
                             <?php endif; ?>
                         </div>
                     </div>
