@@ -107,7 +107,7 @@ require_once "utils/AppTime.php";
                             <div class="row align-items-center mt-2">
                                 <div class="col-12 d-flex gap-4">
                                     <input type="text" name="name" id="categoryInput"
-                                        class="form-control form-control-lg bg-dark border-secondary text-white fs-4 flex-grow-1"
+                                        class="form-control form-control-lg bg-dark border-secondary text-white fs-4 flex-grow-1 d-none"
                                         placeholder="Category Name">
 
                                     <button type="submit"
