@@ -104,6 +104,24 @@ class Category extends Model {
         return $res;
     }
 
+    public function get_items_count(): int {
+        $res = -1;
+        $query = self::execute(
+            "SELECT distinct * FROM item_categories ic
+            WHERE category = :categ_id",
+            ["categ_id" => $this->get_id()]
+        );
+
+        $data = $query->fetchAll();
+
+        if ($data) {
+            $res = count($data);
+        }
+
+        return $res <= 0 ? 0 : $res;
+    }
+
+
     public static function get_item_categories_by_id(int $item_id): array {
         $query = self::execute(
             "SELECT categories.id

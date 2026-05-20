@@ -37,10 +37,11 @@ require_once "utils/AppTime.php";
                             <form action="category/handle_action" method="POST" class="border-0 shadow-none m-0 p-0">
                                 <input type="hidden" name="id" value="<?= $category->get_id() ?>">
 
-                                <div class="mb-4">
+                                <div class="mb-4 category-row">
 
                                     <div class="row align-items-center">
-                                        <div class="col-8">
+                                        <!-- ========== NO JS ========== -->
+                                        <div class="col-8 d-none">
                                             <input type="text"
                                                 class="form-control form-control-lg bg-dark border-secondary text-white fs-4"
                                                 name="name"
@@ -48,12 +49,35 @@ require_once "utils/AppTime.php";
                                                 placeholder="Category Name">
                                         </div>
 
-                                        <div class="col-4 d-flex gap-3">
+                                        <div class="col-4 d-flex gap-3 d-none">
                                             <button type="submit" name="action" value="up" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill" <?= ($index === 0) ? 'disabled' : '' ?>>Up</button>
                                             <button type="submit" name="action" value="down" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill" <?= ($index === count($categories) - 1) ? 'disabled' : '' ?>>Down</button>
                                             <button type="submit" name="action" value="save" class="btn btn-lg border border-success btn-outline-success fs-4 flex-fill">Save</button>
                                             <button type="submit" name="action" value="delete" class="btn btn-lg border border-danger btn-outline-danger fs-4 flex-fill" <?= !($categories[$index]->is_empty()) ? 'disabled' : '' ?>>Delete</button>
                                         </div>
+                                        <!-- ========== NO JS ========== -->
+
+                                        <!-- ========== JS ========== -->
+                                        <div class="col-10 d-none">
+                                            <input type="text"
+                                                class="form-control form-control-lg bg-dark border-secondary text-white fs-4"
+                                                name="name"
+                                                value="<?= $category->get_name() ?>"
+                                                placeholder="Category Name">
+                                        </div>
+
+                                        <div class="col-10 d-flex flex-row gap-3">
+                                            <div>
+                                                <i class="fa-solid fa-grip-vertical text-secondary text-opacity-50"></i>
+                                            </div>
+                                            <div><?= $category->get_name() . " " . "(" . $category->get_items_count() . ")" ?></div>
+                                        </div>
+
+                                        <div class="col-2 d-flex gap-3">
+                                            <button type="submit" name="action" value="edit" class="btn btn-lg border border-success btn-outline-success fs-4">Edit</button>
+                                            <button type="submit" name="action" value="delete" class="btn btn-lg border border-danger btn-outline-danger fs-4" <?= !($categories[$index]->is_empty()) ? 'disabled' : '' ?>>Delete</button>
+                                        </div>
+                                        <!-- ========== JS ========== -->
                                     </div>
 
                                     <?php if (isset($save_errors) && !empty($save_errors) && $category->get_id() === $target_id): ?>
@@ -76,20 +100,22 @@ require_once "utils/AppTime.php";
                         <?php endforeach; ?>
 
 
-
-                        <hr class="border-secondary opacity-25" />
+                        <!-- ========== JS ========== -->
+                        <hr class="border-secondary opacity-25 d-none" />
 
                         <form action="category/add_category" method="POST" class="border-0 m-0 p-0">
                             <div class="row align-items-center mt-2">
                                 <div class="col-12 d-flex gap-4">
-                                    <input type="text" name="name"
+                                    <input type="text" name="name" id="categoryInput"
                                         class="form-control form-control-lg bg-dark border-secondary text-white fs-4 flex-grow-1"
                                         placeholder="Category Name">
+
                                     <button type="submit"
-                                        class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3">+</button>
+                                        class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto">+</button>
                                 </div>
                             </div>
                         </form>
+                        <!-- ========== JS ========== -->
                         <div id="errInsert" class="text-danger small mt-1">
                             <ul>
                                 <?php if (isset($insert_errors) && !empty($insert_errors)): ?>
