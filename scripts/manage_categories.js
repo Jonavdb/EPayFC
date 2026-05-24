@@ -16,6 +16,24 @@ $(function () {
     // on recup la liste de tous les boutons delete
     const deleteBtns = $(".delete-btn");
 
+    // drag and drop logique
+    // 1. Find the container we just built
+    const sortableList = document.getElementById("sortable-category-list");
+
+    // 2. Turn on the physics engine
+    if (sortableList) {
+        Sortable.create(sortableList, {
+            handle: ".drag-handle", // Only allow dragging from the specific icon
+            animation: 150, // Smooth sliding animation (ms)
+
+            // This fires the exact moment the user drops the row
+            onEnd: function (evt) {
+                console.log("Drag ended! Time to save the new order.");
+                // We will write the Phase 2 logic here next!
+            },
+        });
+    }
+
     // on attache a chacun un évènement onClick
     deleteBtns.on("click", handleDeleteConfirmation);
 });
