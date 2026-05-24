@@ -17,7 +17,9 @@ require_once "utils/AppTime.php";
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="lib/jquery-4.0.0.min.js"></script>
+    <script type="module" src="scripts/manage_categories.js"></script>
     <title>Category</title>
 </head>
 
@@ -73,7 +75,7 @@ require_once "utils/AppTime.php";
 
                                         <div class="col-2 d-flex gap-3 js-element d-none js-read-display">
                                             <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 edit-btn">Edit</button>
-                                            <button type="button" class="btn btn-lg border border-danger btn-outline-danger fs-4 delete-btn" <?= !($categories[$index]->is_empty()) ? 'disabled' : '' ?>>Delete</button>
+                                            <button type="button" data-id="<?= $category->get_id() ?>" class="btn btn-lg border border-danger btn-outline-danger fs-4 delete-btn" <?= !($categories[$index]->is_empty()) ? 'disabled' : '' ?>>Delete</button>
                                         </div>
 
                                     </div>
@@ -134,20 +136,28 @@ require_once "utils/AppTime.php";
 
     </footer>
 
-    <script>
-        // Transition no js -> js 
-        // TODO : mettre la logique dans manage_categories.js
-        $(function() {
+    <!-- Modale Unsave -->
+    <div class="modal fade" id="unsavedModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white shadow-lg" style="border: 1px solid #444;">
 
-            // on cache la version sans javascript
-            $(".no-js-element").addClass("d-none");
+                <div class="modal-header border-bottom align-items-center" style="border-bottom-color: #444 !important;">
+                    <h5 class=" modal-title fs-2 fw-semibold">Confirm Delete</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
-            // on affiche la version avec javascript
-            $(".js-read-display").removeClass("d-none");
-            $(".js-edit-input").addClass("d-none");
-            $(".js-hide-on-load").addClass("d-none");
-        });
-    </script>
+                <div class="modal-body py-4">
+                    <p class="m-0 text-white">Confirm category deletion ?</p>
+                </div>
+
+                <div class="modal-footer border-top d-flex justify-content-end gap-2" style="border-top-color: #444 !important;">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary px-4" id="confirmLeaveBtn">Yes</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

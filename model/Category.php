@@ -268,7 +268,7 @@ class Category extends Model {
         ]);
     }
 
-    public static function delete(string $id): void {
+    public static function delete(int $id): bool {
         // on verifie s'il y a des items dans la categorie
         $query = self::execute(
             "SELECT distinct * FROM item_categories ic
@@ -279,13 +279,15 @@ class Category extends Model {
         // on fait rien si la categorie n'est pas vide
         $data = $query->fetchAll();
         if ($data)
-            return;
+            return false;
 
         // supprime la categorie si elle est vide
         self::execute(
             "DELETE FROM categories WHERE id = :id",
             ["id" => $id]
         );
+
+        return true;
     }
 
     public static function move(int $from_id, MoveDirection $direction) {
