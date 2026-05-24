@@ -164,4 +164,48 @@ class ControllerCategory extends Controller {
             "response" => 'ID categorie ' . $id . 'invalide',
         ]);
     }
+
+    public function update_order_categories_service() {
+        header('Content-Type: application/json');
+
+        // on extrait la liste et on force chaque élément à devenir un entier (int) pour la comparaison stricte
+        $newOrder = !empty($_POST['newOrder']) ? array_map('intval', (array)$_POST['newOrder']) : null;
+
+        if ($newOrder !== null) {
+            $current_user = $this->get_user_or_false();
+
+            // erreur : utilisateur non connecté
+            if (!$current_user) {
+                echo json_encode(["success" => false, "response" => "User session lost"]);
+                return;
+            }
+
+
+            // Vu que la fonction retourne maintenant directement la liste des IDs fraîchement triés, 
+            // on l'exécute et on stocke directement le résultat dans $savedOrder
+            $savedOrder = Category::update_order($newOrder);
+
+            // comparaison stricte : est-ce que l'ordre demandé === l'ordre réellement sauvegardé ?
+            $is_sync_ok = ($newOrder === $savedOrder);
+
+            if ($is_sync_ok) {   // success 
+                $response = "Succès !";
+            } else {            // fail
+                $response = "Erreur. Synchronisation base de données échouée";
+            }
+
+            // on envoie la réponse de la requête 
+            echo json_encode([
+                "success" => $is_sync_ok,
+                "response" => $response
+            ]);
+            return;
+        }
+
+        // erreur : tableau vide ou inexistant
+        echo json_encode([
+            "success" => false,
+            "response" => 'Liste ID categories invalide',
+        ]);
+    }
 }

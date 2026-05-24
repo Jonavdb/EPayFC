@@ -16,26 +16,59 @@ $(function () {
     // on recup la liste de tous les boutons delete
     const deleteBtns = $(".delete-btn");
 
-    // drag and drop logique
-    // 1. Find the container we just built
-    const sortableList = document.getElementById("sortable-category-list");
+    // on attache a chacun un évènement onClick
+    deleteBtns.on("click", handleDeleteConfirmation);
 
-    // 2. Turn on the physics engine
+    // on setup l'effet drag and drop
+    const sortableList = document.getElementById("sortable-category-list");
     if (sortableList) {
         Sortable.create(sortableList, {
-            handle: ".drag-handle", // Only allow dragging from the specific icon
-            animation: 150, // Smooth sliding animation (ms)
+            handle: ".drag-handle", // on autorise uniquement le drag pour éléments de cette classe
+            animation: 150, // vitesse animation de swap
 
-            // This fires the exact moment the user drops the row
+            // trigger au moment ou on drop l'élément
             onEnd: function (evt) {
                 console.log("Drag ended! Time to save the new order.");
-                // We will write the Phase 2 logic here next!
+
+                // on récupère TOUTES les rangées
+                const categoryRows = $(".category-row");
+
+                // on crée une nouvelle liste d'id après le drop pour mettre à jour l'ordre
+                const newOrder = [];
+                categoryRows.each((index, row) => {
+                    // on récupère l'id de la rangée
+                    const id = $(row).data("id");
+                    // on ajoute l'id à la nouvelle liste
+                    newOrder.push(id);
+                });
+
+                console.log("Nouvel ordre envoyé :", newOrder);
+
+                $.post(
+                    "category/update_order_categories_service",
+                    { newOrder: newOrder },
+                    // si pas d'erreur reçue du serveur
+                    function (data) {
+                        if (data.success) {
+                            console.log(data.response);
+                        } else {
+                            // Échec de la synchronisation (les listes ne correspondaient pas)
+                            console.error(data.response);
+                            alert("Erreur de sauvegarde : " + data.response);
+
+                            // Le filet de sécurité : on annule l'illusion visuelle en rechargeant la page
+                            window.location.reload();
+                        }
+                    },
+                    "json",
+                ).fail(function () {
+                    // Si le serveur plante (Erreur 500) ou si la connexion internet coupe
+                    alert("Erreur critique de communication avec le serveur.");
+                    window.location.reload();
+                });
             },
         });
     }
-
-    // on attache a chacun un évènement onClick
-    deleteBtns.on("click", handleDeleteConfirmation);
 });
 
 function handleDeleteConfirmation(e) {

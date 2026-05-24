@@ -41,7 +41,7 @@ require_once "utils/AppTime.php";
                         <div id="sortable-category-list">
                             <?php foreach ($categories as $index => $category): ?>
 
-                                <form action="category/handle_action" method="POST" class="border-0 shadow-none m-0 p-0 category-row">
+                                <form action="category/handle_action" method="POST" data-id="<?= $category->get_id() ?>" class="border-0 shadow-none m-0 p-0 category-row">
                                     <input type="hidden" name="id" value="<?= $category->get_id() ?>">
 
                                     <div class="mb-4">

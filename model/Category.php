@@ -290,6 +290,7 @@ class Category extends Model {
         return true;
     }
 
+    // Fonction qui echange de priorité avec une categorie plus haut/plus bas (NO NS)
     public static function move(int $from_id, MoveDirection $direction) {
         // on détermine la direction du mouvement
         if (in_array($direction, [MoveDirection::UP, MoveDirection::DOWN])) {
@@ -307,6 +308,23 @@ class Category extends Model {
             $from->set_priority($priority_to);
             $to->set_priority($priority_from);
         }
+    }
+
+    // Fonction qui réorganise les priorités dans la db après un drag (JS)
+    public static function update_order(array $new_order): array {
+        // on met toutes les priorité de de la base de données à leur valeur négative temporairement
+        foreach (Category::get_categories() as $category) {
+            $category->set_priority(-$category->get_priority());
+        }
+
+        // on assigne à chaque categorie de l'id associé sa nouvelle priorité (index + 1 parce que les priorités commence à 1, pas à 0)
+        foreach ($new_order as $index => $id) {
+            $categ = Category::get_category_from_id($id);
+            $categ->set_priority($index + 1);
+        }
+
+        // on retourne la nouvelle liste de categories reordonnées (uniquement l'id)
+        return array_map(fn($category) => $category->get_id(), Category::get_categories());
     }
 
     public static function validate(string $name): array {
