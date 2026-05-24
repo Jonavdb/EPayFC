@@ -95,7 +95,7 @@ class ControllerCategory extends Controller {
     }
 
     public function delete(int $id): void {
-        Category::delete($id);
+        $success = Category::delete($id);
 
         // on reload la page
         $this->redirect("category", "index");
@@ -122,5 +122,46 @@ class ControllerCategory extends Controller {
                 "insert_errors" => $errors
             ]);
         }
+    }
+
+    // FONCTIONS AJAX
+    public function delete_category_service() {
+        header('Content-Type: application/json');
+
+        // on extrait l'id
+        $id = !empty($_POST['id']) ? (int)$_POST['id'] : null;
+
+        if ($id !== null) {
+            $current_user = $this->get_user_or_false();
+
+            // erreur : utilisateur non connecté
+            if (!$current_user) {
+                echo json_encode(["success" => false, "response" => "User session lost"]);
+                return;
+            }
+
+            // on essaie de supprimer la categorie
+            $delete_ok = Category::delete($id); // true : success / false : categorie non vide, impossible de supprimer
+            $response = "";
+
+            if ($delete_ok) {   // success 
+                $response = "Succès !";
+            } else {            // fail
+                $response = "Erreur. Impossible de supprimer une catégorie non vide. Categorie ID: " . $id;
+            }
+
+            // on envoie la réponse de la requête 
+            echo json_encode([
+                "success" => $delete_ok,
+                "response" => $response
+            ]);
+            return;
+        }
+
+        // on envoie la réponse de la requête 
+        echo json_encode([
+            "success" => false,
+            "response" => 'ID categorie ' . $id . 'invalide',
+        ]);
     }
 }
