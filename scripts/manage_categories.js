@@ -11,6 +11,7 @@ $(function () {
     // on affiche la version avec javascript
     $(".js-read-display").removeClass("d-none");
     $(".js-edit-input").addClass("d-none");
+    $(".js-edit-input").prop("disabled", false);
     $(".js-hide-on-load").addClass("d-none");
 
     // on recup la liste de tous les boutons delete

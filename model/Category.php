@@ -341,7 +341,7 @@ class Category extends Model {
 
         $query = self::execute(
             "SELECT * from categories where name = :name_sanitized",
-            ["name_sanitized" => $name]
+            ["name_sanitized" => $name_sanitized]
         );
         $is_name_unique = !$query->fetch();
 
