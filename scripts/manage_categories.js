@@ -19,6 +19,12 @@ $(function () {
     // on attache a chacun un évènement onClick
     deleteBtns.on("click", handleDeleteConfirmation);
 
+    // on recup la liste de tous les boutons edit
+    const editBtns = $(".edit-btn");
+
+    // on attache a chacun un évènement onClick
+    editBtns.on("click", handleEditCategory);
+
     // on setup l'effet drag and drop
     const sortableList = document.getElementById("sortable-category-list");
     if (sortableList) {
@@ -109,4 +115,22 @@ function askConfirm(catId) {
             // on cache la box de confirmation
             $("#unsavedModal").modal("hide");
         });
+}
+
+function handleEditCategory(e) {
+    e.preventDefault();
+
+    // on récupère le bouton sur lequel on a cliqu"
+    const clickedBtn = $(e.currentTarget);
+
+    // on récupère le parent 'category-row' ie la rangée entière
+    const parentRow = clickedBtn.closest(".category-row");
+
+    // on met toutes les autres rangées en mode read
+    $(".js-edit-input").addClass("d-none");
+    $(".js-read-display").removeClass("d-none");
+
+    // on met la rangée selectionnée en mode ecriture
+    parentRow.find(".js-read-display").addClass("d-none");
+    parentRow.find(".js-edit-input").removeClass("d-none");
 }
