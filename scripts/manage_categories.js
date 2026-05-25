@@ -29,6 +29,10 @@ $(function () {
     const addBtn = $(".add-btn");
     addBtn.on("click", handleAddCategory);
 
+    // on récupère le bouton cancel d'un ajout d'une categorie
+    const cancelBtn = $(".cancel-btn");
+    cancelBtn.on("click", handleCancelAddCategory);
+
     // on setup l'effet drag and drop
     const sortableList = document.getElementById("sortable-category-list");
     if (sortableList) {
@@ -143,11 +147,25 @@ function handleAddCategory(e) {
     e.preventDefault();
 
     // on récupère le bouton sur lequel on a cliqué
-    const clickedBtn = $(e.currentTarget);
+    const addBtn = $(e.currentTarget);
 
     // on récupère l'input associé
-    const input = clickedBtn.siblings(".js-hide-on-load");
+    const input = addBtn.siblings(".js-hide-on-load");
 
     // on met la rangée selectionnée en mode ecriture
     input.removeClass("d-none");
+}
+
+function handleCancelAddCategory(e) {
+    e.preventDefault();
+
+    // on récupère le bouton sur lequel on a cliqué
+    const cancelBtn = $(e.currentTarget);
+
+    // on récupère l'input associé
+    const input = cancelBtn.siblings(".js-hide-on-load");
+
+    // on remet la rangée selectionnée en mode lecture
+    input.addClass("d-none");
+    cancelBtn.addClass("d-none");
 }
