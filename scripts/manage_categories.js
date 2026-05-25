@@ -1,8 +1,4 @@
-//import { fetchConstants } from "./get_constants.js";
-
-//const APP_CONFIG = await fetchConstants();
-
-let deleteBtn;
+let errSave;
 
 $(function () {
     // on cache la version sans javascript
@@ -11,7 +7,7 @@ $(function () {
     // on affiche la version avec javascript
     $(".js-read-display").removeClass("d-none");
     $(".js-edit-input").addClass("d-none");
-    $(".js-edit-input").prop("disabled", false);
+    $(".js-edit-input input").prop("disabled", false);
     $(".js-hide-on-load").addClass("d-none");
 
     // on recup la liste de tous les boutons delete
@@ -33,6 +29,13 @@ $(function () {
     // on récupère le bouton cancel d'un ajout d'une categorie
     const cancelBtn = $(".cancel-btn");
     cancelBtn.on("click", handleCancelAddCategory);
+
+    // on recup la liste de tous les input de categorie
+    const inputs = $(".js-edit-input input");
+    //errSave = $("#errSave");
+
+    // ..
+    inputs.bind("blur", checkNameValid);
 
     // on setup l'effet drag and drop
     const sortableList = document.getElementById("sortable-category-list");
@@ -127,23 +130,29 @@ function askConfirm(catId) {
 }
 
 function handleEditCategory(e) {
-    e.preventDefault();
+    // --- 1. RÈGLE DU HIGHLANDER : Fermer et réinitialiser les autres ---
 
-    // on récupère le bouton sur lequel on a cliqu"
-    const clickedBtn = $(e.currentTarget);
+    // Restaurer le nom d'origine dans tous les inputs
+    $(".category-row").each(function () {
+        const row = $(this);
+        const safeName = row.find(".name-only").text().trim();
+        row.find(".js-edit-input input").val(safeName);
+    });
 
-    // on récupère le parent 'category-row' ie la rangée entière
-    const parentRow = clickedBtn.closest(".category-row");
+    // Nettoyer l'UI globalement (on enchaîne les méthodes jQuery pour la performance)
+    $(".js-edit-input input").prop("disabled", true).removeClass("is-invalid is-valid").addClass("border-secondary");
 
-    // on met toutes les autres rangées en mode read
-    $(".js-edit-input").addClass("d-none");
+    // Grouper les sélecteurs pour cacher/afficher en une seule ligne
+    $(".js-edit-input, .js-edit-btns").addClass("d-none");
     $(".js-read-display").removeClass("d-none");
+    $(".err-save-container").text("");
 
-    // on met la rangée selectionnée en mode ecriture
+    // --- 2. OUVRIR LA RANGÉE CIBLÉE ---
+    const parentRow = $(e.currentTarget).closest(".category-row");
     parentRow.find(".js-read-display").addClass("d-none");
     parentRow.find(".js-edit-input").removeClass("d-none");
+    parentRow.find(".js-edit-input input").prop("disabled", false).focus();
 }
-
 function handleAddCategory(e) {
     e.preventDefault();
 
@@ -169,4 +178,76 @@ function handleCancelAddCategory(e) {
     // on remet la rangée selectionnée en mode lecture
     input.addClass("d-none");
     cancelBtn.addClass("d-none");
+}
+
+// 1. MUST declare 'async' to use 'await' inside
+async function checkNameValid(e) {
+    // --- 1. INITIALISATION ---
+    const targetInput = $(e.currentTarget);
+    const val = targetInput.val().trim();
+    const id = targetInput.data("id");
+
+    // Astuce : Cibler la rangée parente une seule fois simplifie tout le reste !
+    const row = targetInput.closest(".category-row");
+    const errSave = row.find(".err-save-container");
+    const oldName = row.find(".name-only").text().trim();
+
+    // Fonction utilitaire pour refermer la ligne
+    const closeEditMode = () => {
+        targetInput.prop("disabled", true);
+        row.find(".js-edit-input, .js-edit-btns").addClass("d-none");
+        row.find(".js-read-display").removeClass("d-none");
+    };
+
+    // --- 2. SORTIE SILENCIEUSE ---
+    if (val === oldName) {
+        setFieldState(targetInput, errSave, null);
+        return closeEditMode();
+    }
+
+    // --- 3. VALIDATION FRONT-END (Early returns = code plus court) ---
+    if (val === "") return setFieldState(targetInput, errSave, false, "Champ vide.");
+
+    if (val.length < 3 || val.length > 25) return setFieldState(targetInput, errSave, false, "Le nom doit contenir entre 3 et 25 caractères.");
+
+    if (!/^[A-Z][a-zA-Z]*$/.test(val))
+        return setFieldState(targetInput, errSave, false, "Format invalide : commencez par une majuscule, sans espaces ni chiffres.");
+
+    // --- 4. REQUÊTES SERVEUR (Un seul bloc Try/Catch) ---
+    try {
+        // A. Vérification de l'unicité
+        const uniqueCheck = await $.post("category/check_unique_service", { name: val }, null, "json");
+
+        if (!uniqueCheck?.success) {
+            return setFieldState(targetInput, errSave, false, uniqueCheck.response);
+        }
+
+        // B. Si unique, on sauvegarde
+        const saveResult = await $.post("category/save_name_service", { name: val, id: id }, null, "json");
+        setFieldState(targetInput, errSave, saveResult.success, saveResult.response);
+
+        // C. Succès : mise à jour visuelle
+        if (saveResult.success) {
+            row.find(".name-only").text(val);
+            closeEditMode();
+        }
+    } catch (error) {
+        console.error("Erreur AJAX :", error);
+        setFieldState(targetInput, errSave, false, "Erreur de communication avec le serveur.");
+    }
+}
+
+/* FONCTION UTILITAIRE : gère l'affichage visuel des erreurs */
+function setFieldState(field, errField, isValid, errMsg = "") {
+    field.removeClass("is-valid is-invalid border-secondary");
+    errField.removeClass("text-danger").html("");
+
+    if (isValid === true) {
+        field.addClass("is-valid");
+    } else if (isValid === false) {
+        field.addClass("is-invalid");
+        errField.html(`<ul><li>${errMsg}</li></ul>`).addClass("text-danger small mt-1");
+    } else {
+        field.addClass("border-secondary"); // État neutre
+    }
 }

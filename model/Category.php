@@ -174,26 +174,32 @@ class Category extends Model {
         return $res;
     }
 
-    public static function get_category_from_name(string $name): ?Category {
-        $query = self::execute(
-            "SELECT * FROM categories c where c.name = :name",
-            ["name"  => $name]
-        );
+    public static function get_category_from_name(string $name, ?int $exclude_id = null): ?Category {
+
+        // 2. Start with your base query and parameters
+        $sql = "SELECT * FROM categories c WHERE c.name = :name";
+        $params = ["name" => $name];
+
+        // 3. Dynamically inject the exclusion condition ONLY if an ID was passed
+        if ($exclude_id !== null) {
+            $sql .= " AND c.id != :exclude_id";
+            $params["exclude_id"] = $exclude_id;
+        }
+
+        // 4. Execute using the dynamic strings/arrays
+        $query = self::execute($sql, $params);
 
         $data = $query->fetch();
 
-        // 1. If no database record is found, safely return null immediately
         if (!$data) {
             return null;
         }
 
-        // 2. Since we know $data exists, safely extract the fields
         $id = (int)$data['id'];
         $name =  $data['name'];
         $priority = (int)$data['priority'];
         $is_empty = self::get_items_count_from_category($id) <= 0;
 
-        // 3. Return the constructed object
         return new self(
             $id,
             $name,

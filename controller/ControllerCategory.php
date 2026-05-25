@@ -124,7 +124,7 @@ class ControllerCategory extends Controller {
         }
     }
 
-    // FONCTIONS AJAX
+    // SERVICE AJAX
     public function delete_category_service() {
         header('Content-Type: application/json');
 
@@ -206,6 +206,97 @@ class ControllerCategory extends Controller {
         echo json_encode([
             "success" => false,
             "response" => 'Liste ID categories invalide',
+        ]);
+    }
+
+    public function check_unique_service() {
+        header('Content-Type: application/json');
+
+        // 1. THE WHITESPACE FIX: Use isset, cast to string, and immediately trim() spaces
+        $name = isset($_POST['name']) ? trim((string)$_POST['name']) : '';
+
+        // 2. Check if the string is still not empty AFTER trimming
+        if ($name !== '') {
+            $current_user = $this->get_user_or_false();
+
+            // erreur : utilisateur non connecté
+            if (!$current_user) {
+                echo json_encode(["success" => false, "response" => "User session lost"]);
+                return;
+            }
+
+            // On cherche un duplicata
+            $duplicate = Category::get_category_from_name($name);
+
+            // 3. THE SAFE CHECK: Ensure it works whether your DB returns null OR false when empty
+            $is_unique = $duplicate === null;
+
+            if ($is_unique) {   // success 
+                $response = "Succès !";
+            } else {            // fail
+                $response = "Cette catégorie existe déjà";
+            }
+
+            // on envoie la réponse de la requête 
+            echo json_encode([
+                "success" => $is_unique,
+                "response" => $response
+            ]);
+            return;
+        }
+
+        // erreur : pas de nom reçu, ou l'utilisateur n'a tapé que des espaces
+        echo json_encode([
+            "success" => false,
+            "response" => 'Nom vide ou invalide',
+        ]);
+    }
+
+    public function save_name_service() {
+        header('Content-Type: application/json');
+
+        // 1. FIXED: Two separate variables!
+        $new_name = isset($_POST['name']) ? trim((string)$_POST['name']) : '';
+        $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
+
+        // 2. CHECK BOTH: Ensure name is not empty AND id is valid
+        if ($new_name !== '' && $id !== null) {
+            $current_user = $this->get_user_or_false();
+
+            if (!$current_user) {
+                echo json_encode(["success" => false, "response" => "User session lost"]);
+                return;
+            }
+
+            $category = Category::get_category_from_id($id);
+
+            // Sécurité : si la catégorie n'existe pas avec cet ID
+            if (!$category) {
+                echo json_encode(["success" => false, "response" => "Catégorie introuvable"]);
+                return;
+            }
+
+            $category->set_name($new_name);
+
+            $save_ok = ($category->get_name() === $new_name);
+
+            if ($save_ok) {   // success 
+                $response = "Sauvegarde effectuée !";
+            } else {          // fail
+                $response = "Sauvegarde non effectuée";
+            }
+
+            echo json_encode([
+                "success" => $save_ok,
+                "response" => $response
+            ]);
+            return;
+        }
+
+        // erreur globale
+        echo json_encode([
+            "success" => false,
+            "response" => 'Données invalides ou manquantes',
         ]);
     }
 }
