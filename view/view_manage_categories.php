@@ -62,15 +62,16 @@ require_once "utils/AppTime.php";
                                                 <button type="submit" name="action" value="delete" class="btn btn-lg border border-danger btn-outline-danger fs-4 flex-fill" <?= !($categories[$index]->is_empty()) ? 'disabled' : '' ?>>Delete</button>
                                             </div>
 
-                                            <div class="col-10 js-element d-none js-edit-input">
+                                            <div class="col-10 js-element d-none js-edit-input disabled">
                                                 <input type="text"
+                                                    data-id="<?= $category->get_id() ?>"
                                                     class="form-control form-control-lg bg-dark border-secondary text-white fs-4"
                                                     name="name"
                                                     value="<?= $category->get_name() ?>"
-                                                    placeholder="Category Name">
+                                                    placeholder="<?= $category->get_name() ?>">
                                             </div>
 
-                                            <div class="col-2 d-flex gap-3 js-element d-none js-edit-input">
+                                            <div class="col-2 d-flex gap-3 js-element d-none js-edit-input js-edit-btns">
                                                 <button type="button" data-id="<?= $category->get_id() ?>" class="btn btn-lg border border-success btn-outline-success fs-4 edit-btn">Edit</button>
                                                 <button type="button" data-id="<?= $category->get_id() ?>" class="btn btn-lg border border-danger btn-outline-danger fs-4 delete-btn" <?= !($categories[$index]->is_empty()) ? 'disabled' : '' ?>>Delete</button>
                                             </div>
@@ -79,7 +80,10 @@ require_once "utils/AppTime.php";
                                                 <div class="drag-handle" style="cursor: grab;">
                                                     <i class="fa-solid fa-grip-vertical text-secondary text-opacity-50"></i>
                                                 </div>
-                                                <div class="fs-4 text-white"><?= $category->get_name() . " (" . $category->get_items_count() . ")" ?></div>
+                                                <div class="fs-4 text-white read-display-text">
+                                                    <span class="name-only"><?= $category->get_name() ?></span>
+                                                    <span class="count-only">(<?= $category->get_items_count() ?>)</span>
+                                                </div>
                                             </div>
 
                                             <div class="col-2 d-flex gap-3 js-element d-none js-read-display">
@@ -87,19 +91,20 @@ require_once "utils/AppTime.php";
                                                 <button type="button" data-id="<?= $category->get_id() ?>" class="btn btn-lg border border-danger btn-outline-danger fs-4 delete-btn" <?= !($categories[$index]->is_empty()) ? 'disabled' : '' ?>>Delete</button>
                                             </div>
 
+
                                         </div>
+                                        <div class="err-save-container text-danger"></div>
 
                                         <?php if (isset($save_errors) && !empty($save_errors) && $category->get_id() === $target_id): ?>
-                                            <div class="row">
+                                            <div class=" row">
                                                 <div class="col-8">
-                                                    <div class="errSave w-100">
-                                                        <ul>
-                                                            <?php foreach ($save_errors as $error): ?>
-                                                                <li class="text-danger small mt-1"><?= $error ?></li>
-                                                            <?php endforeach; ?>
-                                                        </ul>
-                                                    </div>
+                                                    <ul>
+                                                        <?php foreach ($save_errors as $error): ?>
+                                                            <li class="text-danger small mt-1"><?= $error ?></li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
                                                 </div>
+
                                                 <div class="col-4"></div>
                                             </div>
                                         <?php endif; ?>
@@ -110,10 +115,10 @@ require_once "utils/AppTime.php";
 
                             <hr class="border-secondary opacity-25" />
 
-                            <form action="category/add_category" method="POST" class="border-0 m-0 p-0">
+                            <form action="category/add_category" method="POST" class="border-0 m-0 p-0 add-category-row">
                                 <div class="row align-items-center mt-2">
                                     <div class="col-12 d-flex gap-4">
-                                        <input type="text" name="name" id="categoryInput"
+                                        <input type="text" name="name" id="addCategoryInput"
                                             class="form-control form-control-lg bg-dark border-secondary text-white fs-4 flex-grow-1 js-hide-on-load"
                                             placeholder="Category Name">
 
@@ -121,17 +126,18 @@ require_once "utils/AppTime.php";
                                             class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto no-js-element">+</button>
 
                                         <button type="button" id="cancelAddBtn"
-                                            class="btn btn-lg btn-danger px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto cancel-btn js-hide-on-load">Cancel</button>
+                                            class="btn btn-lg btn-danger px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto cancel-btn js-element js-hide-on-load">Cancel</button>
 
                                         <button type="button" id="addCategoryBtn"
-                                            class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto add-btn js-element">+</button>
+                                            class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto add-btn js-element js-read-display d-none">+</button>
 
 
                                     </div>
                                 </div>
+                                <div id="errInsert" class="text-danger small mt-1"></div>
                             </form>
 
-                            <div id="errInsert" class="text-danger small mt-1">
+                            <div class="text-danger small mt-1">
                                 <ul>
                                     <?php if (isset($insert_errors) && !empty($insert_errors)): ?>
                                         <?php foreach ($insert_errors as $error): ?>

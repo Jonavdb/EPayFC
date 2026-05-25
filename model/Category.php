@@ -174,26 +174,32 @@ class Category extends Model {
         return $res;
     }
 
-    public static function get_category_from_name(string $name): ?Category {
-        $query = self::execute(
-            "SELECT * FROM categories c where c.name = :name",
-            ["name"  => $name]
-        );
+    public static function get_category_from_name(string $name, ?int $exclude_id = null): ?Category {
+
+        // 2. Start with your base query and parameters
+        $sql = "SELECT * FROM categories c WHERE c.name = :name";
+        $params = ["name" => $name];
+
+        // 3. Dynamically inject the exclusion condition ONLY if an ID was passed
+        if ($exclude_id !== null) {
+            $sql .= " AND c.id != :exclude_id";
+            $params["exclude_id"] = $exclude_id;
+        }
+
+        // 4. Execute using the dynamic strings/arrays
+        $query = self::execute($sql, $params);
 
         $data = $query->fetch();
 
-        // 1. If no database record is found, safely return null immediately
         if (!$data) {
             return null;
         }
 
-        // 2. Since we know $data exists, safely extract the fields
         $id = (int)$data['id'];
         $name =  $data['name'];
         $priority = (int)$data['priority'];
         $is_empty = self::get_items_count_from_category($id) <= 0;
 
-        // 3. Return the constructed object
         return new self(
             $id,
             $name,
@@ -260,12 +266,25 @@ class Category extends Model {
         return $res;
     }
 
-    public static function add(string $name): void {
-        $sql = "INSERT INTO categories (name, priority) VALUES (:name, :priority)";
-        self::execute($sql, [
-            "name"     => $name,
-            "priority" => count(Category::get_categories()) + 1
-        ]);
+    public static function add(string $name): Category {
+        // COALESCE ensures that if the table is totally empty, it returns 0 instead of null.
+        $query = self::execute(
+            "SELECT COALESCE(MAX(priority), 0) as max_priority FROM categories",
+            []
+        );
+        $data = $query->fetch();
+        $next_priority = (int)$data['max_priority'] + 1;
+
+        // Execute the insert
+        self::execute(
+            "INSERT INTO categories (name, priority) VALUES (:name, :priority)",
+            [
+                "name"     => $name,
+                "priority" => $next_priority
+            ]
+        );
+
+        return self::get_category_from_name($name);
     }
 
     public static function delete(int $id): bool {
@@ -341,7 +360,7 @@ class Category extends Model {
 
         $query = self::execute(
             "SELECT * from categories where name = :name_sanitized",
-            ["name_sanitized" => $name]
+            ["name_sanitized" => $name_sanitized]
         );
         $is_name_unique = !$query->fetch();
 
