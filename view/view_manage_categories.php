@@ -70,6 +70,11 @@ require_once "utils/AppTime.php";
                                                     placeholder="Category Name">
                                             </div>
 
+                                            <div class="col-2 d-flex gap-3 js-element d-none js-edit-input">
+                                                <button type="button" data-id="<?= $category->get_id() ?>" class="btn btn-lg border border-success btn-outline-success fs-4 edit-btn">Edit</button>
+                                                <button type="button" data-id="<?= $category->get_id() ?>" class="btn btn-lg border border-danger btn-outline-danger fs-4 delete-btn" <?= !($categories[$index]->is_empty()) ? 'disabled' : '' ?>>Delete</button>
+                                            </div>
+
                                             <div class="col-10 d-flex flex-row gap-3 js-element d-none js-read-display">
                                                 <div class="drag-handle" style="cursor: grab;">
                                                     <i class="fa-solid fa-grip-vertical text-secondary text-opacity-50"></i>
@@ -78,7 +83,7 @@ require_once "utils/AppTime.php";
                                             </div>
 
                                             <div class="col-2 d-flex gap-3 js-element d-none js-read-display">
-                                                <button type="button" class="btn btn-lg border border-success btn-outline-success fs-4 edit-btn">Edit</button>
+                                                <button type="button" data-id="<?= $category->get_id() ?>" class="btn btn-lg border border-success btn-outline-success fs-4 edit-btn">Edit</button>
                                                 <button type="button" data-id="<?= $category->get_id() ?>" class="btn btn-lg border border-danger btn-outline-danger fs-4 delete-btn" <?= !($categories[$index]->is_empty()) ? 'disabled' : '' ?>>Delete</button>
                                             </div>
 
@@ -113,7 +118,15 @@ require_once "utils/AppTime.php";
                                             placeholder="Category Name">
 
                                         <button type="submit" id="addCategoryBtn"
-                                            class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto">+</button>
+                                            class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto no-js-element">+</button>
+
+                                        <button type="button" id="cancelAddBtn"
+                                            class="btn btn-lg btn-danger px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto cancel-btn js-hide-on-load">Cancel</button>
+
+                                        <button type="button" id="addCategoryBtn"
+                                            class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto add-btn js-element">+</button>
+
+
                                     </div>
                                 </div>
                             </form>

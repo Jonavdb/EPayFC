@@ -19,6 +19,20 @@ $(function () {
     // on attache a chacun un évènement onClick
     deleteBtns.on("click", handleDeleteConfirmation);
 
+    // on recup la liste de tous les boutons edit
+    const editBtns = $(".edit-btn");
+
+    // on attache a chacun un évènement onClick
+    editBtns.on("click", handleEditCategory);
+
+    // on récupère le bouton d'ajout d'une nouvelle categorie
+    const addBtn = $(".add-btn");
+    addBtn.on("click", handleAddCategory);
+
+    // on récupère le bouton cancel d'un ajout d'une categorie
+    const cancelBtn = $(".cancel-btn");
+    cancelBtn.on("click", handleCancelAddCategory);
+
     // on setup l'effet drag and drop
     const sortableList = document.getElementById("sortable-category-list");
     if (sortableList) {
@@ -109,4 +123,49 @@ function askConfirm(catId) {
             // on cache la box de confirmation
             $("#unsavedModal").modal("hide");
         });
+}
+
+function handleEditCategory(e) {
+    e.preventDefault();
+
+    // on récupère le bouton sur lequel on a cliqu"
+    const clickedBtn = $(e.currentTarget);
+
+    // on récupère le parent 'category-row' ie la rangée entière
+    const parentRow = clickedBtn.closest(".category-row");
+
+    // on met toutes les autres rangées en mode read
+    $(".js-edit-input").addClass("d-none");
+    $(".js-read-display").removeClass("d-none");
+
+    // on met la rangée selectionnée en mode ecriture
+    parentRow.find(".js-read-display").addClass("d-none");
+    parentRow.find(".js-edit-input").removeClass("d-none");
+}
+
+function handleAddCategory(e) {
+    e.preventDefault();
+
+    // on récupère le bouton sur lequel on a cliqué
+    const addBtn = $(e.currentTarget);
+
+    // on récupère l'input associé
+    const input = addBtn.siblings(".js-hide-on-load");
+
+    // on met la rangée selectionnée en mode ecriture
+    input.removeClass("d-none");
+}
+
+function handleCancelAddCategory(e) {
+    e.preventDefault();
+
+    // on récupère le bouton sur lequel on a cliqué
+    const cancelBtn = $(e.currentTarget);
+
+    // on récupère l'input associé
+    const input = cancelBtn.siblings(".js-hide-on-load");
+
+    // on remet la rangée selectionnée en mode lecture
+    input.addClass("d-none");
+    cancelBtn.addClass("d-none");
 }
