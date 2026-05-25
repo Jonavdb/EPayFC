@@ -126,7 +126,7 @@ require_once "utils/AppTime.php";
                                             class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto no-js-element">+</button>
 
                                         <button type="button" id="cancelAddBtn"
-                                            class="btn btn-lg btn-danger px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto cancel-btn js-element js-hide-on-load">Cancel</button>
+                                            class="btn btn-lg btn-danger px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto cancel-btn js-element d-none">Cancel</button>
 
                                         <button type="button" id="addCategoryBtn"
                                             class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto add-btn js-element js-read-display d-none">+</button>

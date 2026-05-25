@@ -6,9 +6,9 @@ $(function () {
 
     // on affiche la version avec javascript
     $(".js-read-display").removeClass("d-none");
+    $(".cancel-btn").removeClass("d-none");
     $(".js-edit-input").addClass("d-none");
     $(".js-edit-input input").prop("disabled", false);
-    //$(".js-hide-on-load").addClass("d-none");
 
     // on recup la liste de tous les boutons delete
     const deleteBtns = $(".delete-btn");
@@ -167,6 +167,7 @@ function handleAddCategory(e) {
 
     // on met la rangée selectionnée en mode ecriture
     input.removeClass("d-none");
+    addBtn.siblings(".cancel-btn").removeClass("d-none");
 }
 
 function handleCancelAddCategory(e) {
