@@ -115,10 +115,10 @@ require_once "utils/AppTime.php";
 
                             <hr class="border-secondary opacity-25" />
 
-                            <form action="category/add_category" method="POST" class="border-0 m-0 p-0">
+                            <form action="category/add_category" method="POST" class="border-0 m-0 p-0 add-category-row">
                                 <div class="row align-items-center mt-2">
                                     <div class="col-12 d-flex gap-4">
-                                        <input type="text" name="name" id="categoryInput"
+                                        <input type="text" name="name" id="addCategoryInput"
                                             class="form-control form-control-lg bg-dark border-secondary text-white fs-4 flex-grow-1 js-hide-on-load"
                                             placeholder="Category Name">
 
@@ -126,7 +126,7 @@ require_once "utils/AppTime.php";
                                             class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto no-js-element">+</button>
 
                                         <button type="button" id="cancelAddBtn"
-                                            class="btn btn-lg btn-danger px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto cancel-btn js-element js-hide-on-load d-none">Cancel</button>
+                                            class="btn btn-lg btn-danger px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto cancel-btn js-element js-hide-on-load">Cancel</button>
 
                                         <button type="button" id="addCategoryBtn"
                                             class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto add-btn js-element js-read-display d-none">+</button>
@@ -134,9 +134,10 @@ require_once "utils/AppTime.php";
 
                                     </div>
                                 </div>
+                                <div id="errInsert" class="text-danger small mt-1"></div>
                             </form>
 
-                            <div id="errInsert" class="text-danger small mt-1">
+                            <div class="text-danger small mt-1">
                                 <ul>
                                     <?php if (isset($insert_errors) && !empty($insert_errors)): ?>
                                         <?php foreach ($insert_errors as $error): ?>

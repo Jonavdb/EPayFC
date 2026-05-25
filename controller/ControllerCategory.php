@@ -299,4 +299,51 @@ class ControllerCategory extends Controller {
             "response" => 'Données invalides ou manquantes',
         ]);
     }
+
+    public function add_category_service() {
+        header('Content-Type: application/json');
+
+        // 1. FIXED: Two separate variables!
+        $new_name = isset($_POST['name']) ? trim((string)$_POST['name']) : '';
+
+        // 2. CHECK BOTH: Ensure name is not empty AND id is valid
+        if ($new_name !== '') {
+            $current_user = $this->get_user_or_false();
+
+            if (!$current_user) {
+                echo json_encode(["success" => false, "response" => "User session lost"]);
+                return;
+            }
+
+            $category = Category::get_category_from_name($new_name);
+
+            // Sécurité : si la catégorie existe avec ce nom
+            if ($category) {
+                echo json_encode(["success" => false, "response" => "Cette catégorie existe déjà."]);
+                return;
+            }
+
+            $new_category = Category::add($new_name);
+
+            if ($new_category) {
+                echo json_encode([
+                    "success" => true,
+                    "response" => "Catégorie ajoutée avec succès !",
+                    "new_id" => $new_category->get_id() // optionnel : on envoie l'id de la nouvelle categorie pour créer une nouvelle rangée dynamiquement
+                ]);
+            } else {
+                echo json_encode([
+                    "success" => false,
+                    "response" => "Erreur lors de la sauvegarde en base de données."
+                ]);
+            }
+            return;
+        }
+
+        // erreur globale
+        echo json_encode([
+            "success" => false,
+            "response" => 'Données invalides ou manquantes',
+        ]);
+    }
 }

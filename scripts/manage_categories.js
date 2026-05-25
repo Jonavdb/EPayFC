@@ -8,7 +8,7 @@ $(function () {
     $(".js-read-display").removeClass("d-none");
     $(".js-edit-input").addClass("d-none");
     $(".js-edit-input input").prop("disabled", false);
-    $(".js-hide-on-load").addClass("d-none");
+    //$(".js-hide-on-load").addClass("d-none");
 
     // on recup la liste de tous les boutons delete
     const deleteBtns = $(".delete-btn");
@@ -31,11 +31,14 @@ $(function () {
     cancelBtn.on("click", handleCancelAddCategory);
 
     // on recup la liste de tous les input de categorie
-    const inputs = $(".js-edit-input input");
-    //errSave = $("#errSave");
+    const editInput = $(".js-edit-input input");
 
-    // ..
-    inputs.bind("blur", checkNameValid);
+    // on bind chaque input à la fonction checkName pour verifier si nom valide dès que l'utilisateur sort du champ
+    editInput.bind("blur", checkEditNameValid);
+
+    // on récup l'input de création d'une nouvelle categorie
+    const addInput = $("#addCategoryInput");
+    addInput.bind("blur", checkAddNameValid);
 
     // on setup l'effet drag and drop
     const sortableList = document.getElementById("sortable-category-list");
@@ -175,13 +178,20 @@ function handleCancelAddCategory(e) {
     // on récupère l'input associé
     const input = cancelBtn.siblings(".js-hide-on-load");
 
+    const row = input.closest(".add-category-row");
+    const errInsert = row.find("#errInsert");
+
+    // on nettoie l'input
+    input.val("");
+    setFieldState(input, errInsert, null);
+
     // on remet la rangée selectionnée en mode lecture
     input.addClass("d-none");
     cancelBtn.addClass("d-none");
 }
 
 // 1. MUST declare 'async' to use 'await' inside
-async function checkNameValid(e) {
+async function checkEditNameValid(e) {
     // --- 1. INITIALISATION ---
     const targetInput = $(e.currentTarget);
     const val = targetInput.val().trim();
@@ -234,6 +244,59 @@ async function checkNameValid(e) {
     } catch (error) {
         console.error("Erreur AJAX :", error);
         setFieldState(targetInput, errSave, false, "Erreur de communication avec le serveur.");
+    }
+}
+
+async function checkAddNameValid() {
+    // on récupère l'espace input
+    const inputField = $("#addCategoryInput");
+
+    // on récupère la valeur entrée
+    const val = inputField.val().trim();
+
+    // Astuce : Cibler la rangée parente une seule fois simplifie tout le reste !
+    const row = inputField.closest(".add-category-row");
+    const errInsert = row.find("#errInsert");
+
+    // validations front-end
+    if (val === "") {
+        return setFieldState(inputField, errInsert, null);
+    }
+
+    if (val.length < 3 || val.length > 25) {
+        return setFieldState(inputField, errInsert, false, "Le nom doit contenir entre 3 et 25 caractères.");
+    }
+
+    if (!/^[A-Z][a-zA-Z]*$/.test(val)) {
+        return setFieldState(inputField, errInsert, false, "Format invalide : commencez par une majuscule, sans espaces ni chiffres.");
+    }
+
+    // --- BACKEND VALIDATIONS & SAVING ---
+    try {
+        // A. Check Uniqueness
+        const uniqueCheck = await $.post("category/check_unique_service", { name: val }, null, "json");
+
+        if (!uniqueCheck?.success) {
+            return setFieldState(inputField, errInsert, false, uniqueCheck.response);
+        }
+
+        // B. Save the new category
+        const insertResult = await $.post("category/add_category_service", { name: val }, null, "json");
+
+        // THE FIX: Use insertResult instead of the phantom saveResult variable
+        setFieldState(inputField, errInsert, insertResult.success, insertResult.response);
+
+        // C. Visual Update on Success
+        if (insertResult.success) {
+            // Clear the input field so the user can type another category
+            inputField.val("");
+            setFieldState(inputField, errInsert, null);
+
+            window.location.reload();
+        }
+    } catch (error) {
+        console.error("AJAX Error:", error);
+        setFieldState(inputField, errInsert, false, "Erreur de communication avec le serveur.");
     }
 }
 

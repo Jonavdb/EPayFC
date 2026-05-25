@@ -266,12 +266,25 @@ class Category extends Model {
         return $res;
     }
 
-    public static function add(string $name): void {
-        $sql = "INSERT INTO categories (name, priority) VALUES (:name, :priority)";
-        self::execute($sql, [
-            "name"     => $name,
-            "priority" => count(Category::get_categories()) + 1
-        ]);
+    public static function add(string $name): Category {
+        // COALESCE ensures that if the table is totally empty, it returns 0 instead of null.
+        $query = self::execute(
+            "SELECT COALESCE(MAX(priority), 0) as max_priority FROM categories",
+            []
+        );
+        $data = $query->fetch();
+        $next_priority = (int)$data['max_priority'] + 1;
+
+        // Execute the insert
+        self::execute(
+            "INSERT INTO categories (name, priority) VALUES (:name, :priority)",
+            [
+                "name"     => $name,
+                "priority" => $next_priority
+            ]
+        );
+
+        return self::get_category_from_name($name);
     }
 
     public static function delete(int $id): bool {
