@@ -25,6 +25,10 @@ $(function () {
     // on attache a chacun un évènement onClick
     editBtns.on("click", handleEditCategory);
 
+    // on récupère le bouton d'ajout d'une nouvelle categorie
+    const addBtn = $(".add-btn");
+    addBtn.on("click", handleAddCategory);
+
     // on setup l'effet drag and drop
     const sortableList = document.getElementById("sortable-category-list");
     if (sortableList) {
@@ -133,4 +137,17 @@ function handleEditCategory(e) {
     // on met la rangée selectionnée en mode ecriture
     parentRow.find(".js-read-display").addClass("d-none");
     parentRow.find(".js-edit-input").removeClass("d-none");
+}
+
+function handleAddCategory(e) {
+    e.preventDefault();
+
+    // on récupère le bouton sur lequel on a cliqué
+    const clickedBtn = $(e.currentTarget);
+
+    // on récupère l'input associé
+    const input = clickedBtn.siblings(".js-hide-on-load");
+
+    // on met la rangée selectionnée en mode ecriture
+    input.removeClass("d-none");
 }

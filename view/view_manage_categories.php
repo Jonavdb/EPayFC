@@ -118,7 +118,10 @@ require_once "utils/AppTime.php";
                                             placeholder="Category Name">
 
                                         <button type="submit" id="addCategoryBtn"
-                                            class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto">+</button>
+                                            class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto no-js-element">+</button>
+
+                                        <button type="button" id="addCategoryBtn"
+                                            class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto add-btn js-element">+</button>
                                     </div>
                                 </div>
                             </form>
