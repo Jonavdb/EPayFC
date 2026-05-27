@@ -71,9 +71,12 @@ if ($encoded_search !== '') {
               </button>
             </div>
           </div>
+
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-start mb-2">
-              <h2 class="card-title fw-bold text-white mb-0"><?= $item->get_title() ?></h2>
+
+              <!-- Titre -->
+              <h1 class="card-title fw-bold text-white mb-0 fs-2"><?= $item->get_title() ?></h1>
               <?php if ($item->get_is_direct_sale()): ?>
                 <span class="badge bg-secondary">Direct sale</span>
               <?php else: ?>
@@ -81,8 +84,18 @@ if ($encoded_search !== '') {
               <?php endif; ?>
             </div>
 
+            <!-- Description -->
             <p class="card-text text-secondary mb-4"><?= $item->get_description() ?></p>
 
+            <!-- Catégories -->
+            <p class="fw-bold fs-4">Categories:</p>
+            <ul>
+              <?php foreach ($item_categories as $category) : ?>
+                <li class="small text-secondary"><?= $category; ?></li>
+              <?php endforeach; ?>
+            </ul>
+
+            <!-- Start et End -->
             <div class="small text-secondary">
               <p class="mb-1">Start: <span class="fw-bold"><?= $item->get_created_at()->format('d/m/Y H:i:s') ?></span></p>
               <p class="mb-1">Ends: <span class="fw-bold"><?= $item->get_end_at()->format('d/m/Y H:i:s') ?></span> </p>
@@ -90,11 +103,9 @@ if ($encoded_search !== '') {
           </div>
         </div>
         <div id="no_js_thumbnails">
-          <?php if (count($item->get_image_urls()) >= 2) { ?><h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional Images</h3>
+          <?php if (count($item->get_image_urls()) >= 2) { ?><h1 class="text-light mt-4 mb-4 fs-4 fw-bold text-start fs-3">Additional Images</h1>
             <div class="d-flex gap-3 mb-5">
               <?php
-
-
               foreach ($item->get_image_urls() as $index => $image):
                 $is_active = ($image === $image_to_display);
                 $border_class = $is_active ? 'border-primary' : 'border-secondary';
@@ -110,7 +121,7 @@ if ($encoded_search !== '') {
           <?php } ?>
         </div>
         <div id="js_carousel_2" style="display: none;">
-          <h3 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional images</h3>
+          <h1 class="text-light mt-4 mb-4 fs-4 fw-bold text-start">Additional images</h1>
           <div id="js_thumbnails" class="d-flex gap-4 mb-5">
 
           </div>
@@ -141,12 +152,12 @@ if ($encoded_search !== '') {
           <div class="card text-bg-dark border-secondary">
             <div class="text-center mt-3 mb-3">
               <?php if ($item->get_is_direct_sale()) { ?>
-                <h4 class="card-title mb-3">Buy this item for just : <span class="fw-bold text-success"><?= $item->get_buy_now_price() ?>€</h4>
+                <h1 class="card-title mb-3 fs-4">Buy this item for just : <span class="fw-bold text-success"><?= $item->get_buy_now_price() ?>€</h1>
               <?php } else { ?>
-                <h4 class="card-title mb-3">Be the first to bet on this item !</h4>
-                <h4 class="card-text fs-5">
+                <h1 class="card-title mb-3 fs-4">Be the first to bet on this item !</h1>
+                <h1 class="card-text fs-5">
                   Starting price : <span class="fw-bold text-success">€ <?= $item->get_starting_bid() ?></span>
-                </h4>
+                </h1>
               <?php } ?>
             </div>
           </div>
@@ -156,7 +167,7 @@ if ($encoded_search !== '') {
       <div class="col-md-4">
         <div class="card text-bg-dark border-secondary mb-4">
           <div class="card-body p-4">
-            <h4 class="fw-bold text-secondary mb-3 text-start fs-4">Pricing</h4>
+            <h1 class="fw-bold text-secondary mb-3 text-start fs-4">Pricing</h1>
 
             <?php if (!$item->get_is_direct_sale() && $item->get_has_bids()): ?>
               <div class="d-flex justify-content-between align-items-center mb-2">
@@ -178,6 +189,8 @@ if ($encoded_search !== '') {
                 <span class="text-white fw-bold">€ <?= number_format($item->get_buy_now_price(), 2, ',', ' ') ?></span>
               </div>
             <?php endif; ?>
+
+
 
             <?php if ($auction_finished): ?>
               <?php if ($winner): ?>
@@ -225,6 +238,7 @@ if ($encoded_search !== '') {
                 }
 
                 ?>
+
                 <form action="<?= $buy_now_url; ?>" method="POST" class="p-1 border-0">
                   <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
                   <input type="hidden" name="encoded_search" value="<?= $encoded_search ?>">
@@ -248,7 +262,7 @@ if ($encoded_search !== '') {
 
         <div class="card text-bg-dark border-secondary mb-4">
           <div class="card-body p-4">
-            <h4 class="fw-bold text-secondary mb-3 text-start fs-4">Seller Information</h4>
+            <h1 class="fw-bold text-secondary mb-3 text-start fs-4">Seller Information</h1>
             <div class="d-flex align-items-center">
               <img src="<?= $item->get_owner_picture() ?>" alt="User" class="rounded-circle me-3 bg-secondary" style="width: 48px; height: 48px; object-fit: cover;">
               <div>
@@ -269,7 +283,7 @@ if ($encoded_search !== '') {
           ?>
           <div class="card text-bg-dark border-secondary">
             <div class="card-body p-4">
-              <h4 class="fw-bold text-secondary mb-3 fs-4 text-start">Manage Your Item</h4>
+              <h1 class="fw-bold text-secondary mb-3 fs-4 text-start">Manage Your Item</h1>
               <div class="d-grid gap-2">
                 <?php
                 $edit_url = GoBack::smart_href("item/edit/" . $item->get_id());

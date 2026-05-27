@@ -1,28 +1,42 @@
-let searchInput, activeItemsGrid, closedUnsoldItemsGrid, soldItemsGrid, defaultActiveHtml, defaultClosedUnsoldHtml, defaultSoldHtml;
+let searchInput,
+    activeItemsGrid,
+    closedUnsoldItemsGrid,
+    soldItemsGrid,
+    defaultActiveHtml,
+    defaultClosedUnsoldHtml,
+    defaultSoldHtml,
+    initialCategory,
+    categoryValue;
+let searchBar;
 let initialSearchValue = '';
 
 $(function () {
+    searchBar = $('#search-bar');
+    searchBar.show();
+    categoryValue = $('#category_filter');
     searchInput = $('#search_fulltext');
     activeItemsGrid = $('#active_items_grid');
     closedUnsoldItemsGrid = $('#closed_unsold_items_grid');
     soldItemsGrid = $('#sold_items_grid');
 
     initialSearchValue = searchInput.val().trim(); // mémorise ce qu'il y a dans la barre au chargement
-
+    initialCategory = categoryValue.val();
     // page par défaut sauvergardée (les listes d'items de l'utilisateur courrant)
     defaultActiveHtml = activeItemsGrid.html();
     defaultClosedUnsoldHtml = closedUnsoldItemsGrid.html();
     defaultSoldHtml = soldItemsGrid.html();
 
     searchInput.on('input', checkSearchFullTextMyItems);
+    categoryValue.on('change', checkSearchFullTextMyItems);
 });
 
 async function checkSearchFullTextMyItems() {
     const searchValue = searchInput.val().trim();
+    const categoryId = categoryValue.val();
 
     // s'il n'a rien cherché, on affiche les listes par défaut
-    if (searchValue === '') {
-        if (initialSearchValue !== '') {
+    if (searchValue === '' && categoryId === '') {
+        if (initialSearchValue !== '' || categoryId !== 0) {
             window.location.href = 'item/list';
             return;
         }
@@ -35,7 +49,7 @@ async function checkSearchFullTextMyItems() {
     }
 
     try {
-        const response = await $.get(`item/search_fulltext_my_items_service`, { search: searchValue }, 'json');
+        const response = await $.get(`item/search_fulltext_my_items_service`, { search: searchValue, category_id: categoryId }, 'json');
 
         // vidage des grilles pour y mettre les résultats de manière dynamique
         activeItemsGrid.empty();

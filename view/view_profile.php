@@ -48,9 +48,9 @@
                     </div>
                 </div>
 
-                <h2 class="text-white mb-1">
+                <h1 class="text-white mb-1 fs-2">
                     <?= $user->get_full_name() ?>
-                </h2>
+                </h1>
 
                 <p class="card-profile-header-text fs-4 mb-1">
                     @<?= $user->get_pseudo() ?>

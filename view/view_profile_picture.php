@@ -32,7 +32,7 @@
         <?php endif; ?>
         <div class="card text-bg-dark border-secondary">
             <div class="card-header border-secondary" style="background-color: #1e293b;">
-                <h5 class="mb-0 text-white text-start">Current Profile Picture</h5>
+                <h1 class="mb-0 text-white text-start fs-5">Current Profile Picture</h1>
             </div>
             <div class="card-body">
                 <div class="text-center mb-4">
@@ -41,7 +41,7 @@
                             alt="Profile Picture"
                             class="rounded-circle border-secondary p-1 img-thumbnail object-fit-cover w-100 h-100">
                     </div>
-                    <h5 class="mt-3 fs-2 mb-0 text-white"><?= htmlspecialchars($user->get_pseudo()) ?></h5>
+                    <h1 class="mt-3 fs-2 mb-0 text-white fs-5"><?= htmlspecialchars($user->get_pseudo()) ?></h1>
                     <p class="text-secondary small"><?= htmlspecialchars($user->get_email()) ?></p>
                 </div>
             </div>
@@ -52,10 +52,10 @@
     <div class="container-fluid mb-4 px-5">
         <div class="card text-bg-dark border-secondary">
             <div class="card-header border-secondary" style="background-color: #1e293b;">
-                <h5 class="mb-0 text-white text-start">Upload New Picture</h5>
+                <h1 class="mb-0 text-white text-start fs-5">Upload New Picture</h1>
             </div>
             <div class="card-body">
-                <h6 class="fw-bold text-white text-start">Select Image</h6>
+                <h1 class="fw-bold text-white text-start fs-5">Select Image</h1>
                 <form action="user/update_profile_picture" method="POST" enctype="multipart/form-data">
                     <input class="form-control bg-dark text-secondary border-secondary"
                         type="file"
@@ -82,7 +82,7 @@
         <div class="container-fluid mb-4 px-5">
             <div class="card text-bg-dark border-secondary">
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
-                    <h5 class="mb-0 text-white text-start">Remove Current Picture </h5>
+                    <h1 class="mb-0 text-white text-start fs-5">Remove Current Picture </h1>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-warning border-secondary text-start">

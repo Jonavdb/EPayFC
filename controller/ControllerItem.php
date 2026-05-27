@@ -3,12 +3,12 @@
 require_once "framework/Controller.php";
 require_once "model/User.php";
 require_once "model/Item.php";
+require_once "model/Category.php";
 require_once "model/Bid.php";
 require_once "utils/AppTime.php";
 require_once "utils/ImageTool.php";
 require_once "utils/UrlEncoder.php";
 require_once "utils/GoBack.php";
-
 
 class ControllerItem extends Controller {
     public function index(): void {
@@ -18,20 +18,27 @@ class ControllerItem extends Controller {
     // My items
     public function list(): void {
         $user = $this->get_user_or_redirect();
+        $user_role = $user->get_role();
 
         // on lit le paramètre d'URL et on le décode
         $encoded_search = isset($_GET['param1']) ? $_GET['param1'] : '';
         $search_query = "";
+        $category_id = null;
 
         if ($encoded_search !== '') {
             $decoded = UrlEncoder::url_safe_decode($encoded_search);
 
-            if (is_array($decoded) && isset($decoded['search'])) {
-                $search_query = $decoded['search'];
+            if (is_array($decoded)) {
+                if (isset($decoded['search'])) {
+                    $search_query = $decoded['search'];
+                }
+                if (isset($decoded['category_id'])) {
+                    $category_id = (int)$decoded['category_id'];
+                }
             }
         }
 
-        $items = Item::get_items_by_owner($user->get_id(), $search_query);
+        $items = Item::get_items_by_owner($user->get_id(), $search_query, $category_id);
 
         $active_items = [];
         $sold_items = [];
@@ -68,7 +75,10 @@ class ControllerItem extends Controller {
             "sold_items" => $sold_items,
             "unsold_items" => $unsold_items,
             "is_guest" => !$this->user_logged(),
-            "search_query" => $search_query
+            "user_role" => $user_role,
+            "search_query" => $search_query,
+            "categories" => Category::get_categories(),
+            "selected_category_id" => $category_id
         ]);
     }
 
@@ -153,11 +163,8 @@ class ControllerItem extends Controller {
             'price_color'          => $price_color,
             'price_display'        => $price_display,
             'is_highest_bidder'    => $is_highest_bidder,
-            'price_display'        => $price_display,
-            'price_color'          => $price_color,
             'show_current_bid'     => $show_current_bid,
             'current_bid_display'  => $current_bid_display,
-            'href' => $href
         ];
     }
 
@@ -192,10 +199,12 @@ class ControllerItem extends Controller {
             Item::delete($id);
             $this->redirect("item", "list");
         } else {
+            $user_role = $user->get_role();
             (new View("delete_item"))->show([
                 "item" => $item,
                 "user" => $user,
-                "is_guest" => !$this->user_logged()
+                "is_guest" => !$this->user_logged(),
+                "user_role" => $user_role
             ]);
         }
     }
@@ -208,7 +217,9 @@ class ControllerItem extends Controller {
             $this->redirect('item', 'browse');
             return;
         }
+
         $item = Item::get_item_by_id($id);
+
         if (empty($item)) {
             $this->redirect('item', 'browse');
             return;
@@ -217,6 +228,7 @@ class ControllerItem extends Controller {
         $context = isset($_GET['param2']) ? $_GET['param2'] : 'from-browse';
         $param3 = isset($_GET['param3']) ? $_GET['param3'] : '';
         $param4 = isset($_GET['param4']) ? $_GET['param4'] : '';
+        $item_categories = Category::get_categories_names($id);
 
         // param3 numérique = index image (sans encoded_search)
         // param3 string = encoded_search, param4 = index image
@@ -236,6 +248,7 @@ class ControllerItem extends Controller {
         $bids = Bid::get_bid_by_item_id($id);
         $user = $this->get_user_or_false();
         $current_user_pseudo = $user ? $user->get_pseudo() : null;
+        $user_role = $user ? $user->get_role() : null;
 
         (new View("open_item"))->show([
             "item" => $item,
@@ -243,7 +256,9 @@ class ControllerItem extends Controller {
             "current_user" => $current_user_pseudo,
             'selected_image' => $image_index,
             "is_guest" => !$this->user_logged(),
+            "user_role" => $user_role,
             "context" => $context,
+            "item_categories" => $item_categories,
             "encoded_search" => $encoded_search
         ]);
     }
@@ -322,8 +337,13 @@ class ControllerItem extends Controller {
 
     public function add() {
         $user = $this->get_user_or_redirect();
+
         $now = new DateTime(AppTime::get_current_datetime());
         $end = (clone $now)->modify('+7 days');
+
+        $categories = Category::get_categories();
+        $checked_categories = [];
+
         $errors = [];
 
         $item = new Item(
@@ -354,67 +374,58 @@ class ControllerItem extends Controller {
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errors = $this->validate_and_fill($item);
+            $checked_categories = $_POST['categories'] ?? [];
+
+            // validation côté serveur (quand JS est désactivé)
+            if (count($checked_categories) > 3) {
+                $errors['categories'] = "You cannot select more than 3 categories.";
+            }
 
             if (empty($errors)) {
                 $item->save();
+
+                // boucle sur les catégories checkées pour les rajouter
+                foreach ($checked_categories as $category_id) {
+                    $item->add_categories($item->get_id(), (int)$category_id);
+                }
+
                 $this->redirect("item", "open", $item->get_id());
             }
         }
 
         (new View("add_edit_item"))->show([
             "item" => $item,
+            "categories" => $categories,
+            "checked_categories" => $checked_categories,
             "errors" => $errors,
-            "is_guest" => !$this->user_logged()
+            "is_guest" => !$this->user_logged(),
+            "user_role" => $user->get_role()
         ]);
     }
 
     private function validate_and_fill(Item $item): array {
         $config_path = "config/dev.ini";
         $config = parse_ini_file($config_path);
-        $min_lenght = (int)$config['min_item_lenght'];
-        $max_lenght = (int)$config['max_item_lenght'];
-        $min_duration = (int)$config['min_duration_days'];
-        $max_duration = (int)$config['max_duration_days'];
+
         $item->set_title(trim($_POST['title']));
         $item->set_description(trim($_POST['description']));
         $item->set_duration_days((int)$_POST['duration']);
-        $errors = [];
 
         $starting_bid = ($_POST['starting_bid'] !== '') ? $_POST['starting_bid'] : null;
         $buy_now_price = ($_POST['instant'] !== '') ? $_POST['instant'] : null;
         $sale_price = ($_POST['direct'] !== '') ? $_POST['direct'] : null;
 
-        if (strlen($item->get_title()) == 0 || empty($item->get_title())) {
-            $errors['empty'] = "Title is required";
-        }
-
-        if (strlen($item->get_title()) < $min_lenght || strlen($item->get_title()) > $max_lenght) {
-
-            $errors['title'] = "Title length must be between $min_lenght and $max_lenght characters.";
-        }
-
-        if ($item->get_duration_days() < $min_duration || $item->get_duration_days() > $max_duration) {
-            $errors['duration'] = "Duration must be at least $min_duration day and at most $max_duration days";
-        }
-
-        // ask if we keep
         if ($starting_bid !== null && $starting_bid > 0) {
             $item->set_starting_bid($starting_bid);
             $item->set_is_auction(true);
             $item->set_is_direct_sale(false);
 
             if ($buy_now_price !== null && $buy_now_price > 0) {
-                if ($buy_now_price < $starting_bid) {
-                    $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
-                }
                 $item->set_buy_now_price($buy_now_price);
                 $item->set_has_buy_now(true);
             } else {
                 $item->set_buy_now_price(null);
                 $item->set_has_buy_now(false);
-            }
-            if ($sale_price !== null && $sale_price > 0) {
-                $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
             }
         } elseif ($sale_price !== null && $sale_price > 0) {
             $item->set_buy_now_price($sale_price);
@@ -422,10 +433,8 @@ class ControllerItem extends Controller {
             $item->set_is_direct_sale(true);
             $item->set_has_buy_now(false);
             $item->set_starting_bid(0.0);
-        } else {
-            $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
         }
-        return $errors;
+        return $item->validate_before_fill($config);
     }
 
     public function edit() {
@@ -442,6 +451,10 @@ class ControllerItem extends Controller {
         }
 
         $item = Item::get_item_by_id($id);
+
+        $categories = Category::get_categories();
+        $item_categories = Category::get_item_categories_by_id($id);
+        $checked_categories = [];
 
         if ($item) {
             if ($item->get_owner_name() !== $user->get_pseudo() || ($item->get_is_auction() && $item->get_has_bids())) {
@@ -461,8 +474,21 @@ class ControllerItem extends Controller {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errors = $this->validate_and_fill($item);
 
+            $checked_categories = $_POST['categories'] ?? [];   // catégories : si c'est envoyé en post on les réaffecte
+
+            // validation côté serveur (quand JS est désactivé)
+            if (count($checked_categories) > 3) {
+                $errors['categories'] = "You cannot select more than 3 categories.";
+            }
+
             if (empty($errors)) {
                 $item->save();
+                $item->remove_categories($id);  // supprime les catégories existantes
+
+                // boucle sur les catégories checkées pour les rajouter
+                foreach ($checked_categories as $categoryId) {
+                    $item->add_categories($id, (int)$categoryId);
+                }
 
                 if ($encoded_search !== '') {
                     $this->redirect("item", "open", $item->get_id(), $context, $encoded_search);
@@ -470,19 +496,23 @@ class ControllerItem extends Controller {
                     $this->redirect("item", "open", $item->get_id(), $context);
                 }
             }
+        } else {
+            $checked_categories = $item_categories; // catégories: sinon, on affiches les current checked
         }
 
         (new View("add_edit_item"))->show([
             "item" => $item,
+            "categories" => $categories,
+            "checked_categories" => $checked_categories,
             "errors" => $errors,
             "is_guest" => !$this->user_logged(),
+            "user_role" => $user->get_role(),
             "context" => $context,
             "encoded_search" => $encoded_search
         ]);
     }
 
     public function manage_images(): void {
-
         if (isset($_GET['param1'])) {
             $id = (int)$_GET['param1'];
         } else {
@@ -507,7 +537,8 @@ class ControllerItem extends Controller {
 
         (new View("manage_images"))->show([
             "item" => $item,
-            "is_guest" => !$this->user_logged()
+            "is_guest" => !$this->user_logged(),
+            "user_role" => $user->get_role()
         ]);
     }
 
@@ -626,7 +657,8 @@ class ControllerItem extends Controller {
             (new View("manage_images"))->show([
                 "item" => $item,
                 "errors" => $errors,
-                "is_guest" => !$this->user_logged()
+                "is_guest" => !$this->user_logged(),
+                "user_role" => $user->get_role()
             ]);
         } else {
             $redirect_url = GoBack::smart_href("item/manage_images/" . $item_id);
@@ -638,23 +670,30 @@ class ControllerItem extends Controller {
     public function browse() {
         $user = $this->get_user_or_false();
         $is_guest = $user == false;
+        $user_role = $user ? $user->get_role() : null;
         $now = new DateTime(AppTime::get_current_datetime());
 
         $encoded_search = isset($_GET['param1']) ? $_GET['param1'] : '';
         $search_query = "";
+        $category_id = null;
 
         if ($encoded_search !== '') {
             $decoded = UrlEncoder::url_safe_decode($encoded_search);
 
-            if (is_array($decoded) && isset($decoded['search'])) {
-                $search_query = $decoded['search'];
+            if (is_array($decoded)) {
+                if (isset($decoded['search'])) {
+                    $search_query = $decoded['search'];
+                }
+                if (isset($decoded['category_id'])) {
+                    $category_id = (int)$decoded['category_id'];
+                }
             }
         }
 
-        $raw_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->get_id(), $search_query);
+        $raw_bid_items = $is_guest ? [] : Item::get_user_bid_items($user->get_id(), $search_query, $category_id);
         $user_bid_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse-bidding', $item->get_owner_name(), $encoded_search), $raw_bid_items);
 
-        $raw_available_items = $is_guest ? Item::get_all_available_items() : Item::get_user_available_items($user->get_id(), $search_query);
+        $raw_available_items = $is_guest ? Item::get_all_available_items($category_id) : Item::get_user_available_items($user->get_id(), $search_query, $category_id);
         $user_available_items = array_map(fn($item) => $this->prepare_item_data($item, $now, 'browse', $item->get_owner_name(), $encoded_search), $raw_available_items);
 
         (new View("browse_items"))->show(
@@ -662,7 +701,10 @@ class ControllerItem extends Controller {
                 "user_bid_items" => $user_bid_items,
                 "user_available_items" => $user_available_items,
                 "is_guest" => $is_guest,
-                "search_query" => $search_query
+                "user_role" => $user_role,
+                "search_query" => $search_query,
+                "categories" => Category::get_categories(),
+                "selected_category_id" => $category_id
             ]
         );
     }
@@ -674,7 +716,8 @@ class ControllerItem extends Controller {
         $purchases = Item::get_purchases($user->get_id());
         (new View("see_my_purchases"))->show([
             "purchases" => $purchases,
-            "is_guest" => !$this->user_logged()
+            "is_guest" => !$this->user_logged(),
+            "user_role" => $user->get_role()
         ]);
     }
 
@@ -686,7 +729,8 @@ class ControllerItem extends Controller {
         (new View("see_my_sales"))->show(
             [
                 "sales" => $sales,
-                "is_guest" => !$this->user_logged()
+                "is_guest" => !$this->user_logged(),
+                "user_role" => $user->get_role()
             ]
         );
     }
@@ -719,20 +763,19 @@ class ControllerItem extends Controller {
 
     public function move_image_right_service(): void {
         header('Content-Type: application/json');
+        $current_user = $this->get_user_or_false();
+
+        if (!$current_user) {
+            echo json_encode([]);
+            exit;
+        }
 
         if (
-            isset($_GET['param1']) && trim($_GET['param1'] !== "")
-            && isset($_GET['param2']) && trim($_GET['param2'] !== "")
+            isset($_GET['param1']) && trim($_GET['param1']) !== '' &&
+            isset($_GET['param2']) && trim($_GET['param2']) !== ''
         ) {
             $image_id = (int)$_GET['param1'];
             $item_id = (int)$_GET['param2'];
-
-            $current_user = $this->get_user_or_false();
-
-            if (!$current_user) {
-                echo json_encode([]);
-                exit;
-            }
 
             $image_item = Item::change_pics_right($image_id, $item_id);
             echo json_encode(["image_item" => $image_item]);
@@ -741,20 +784,19 @@ class ControllerItem extends Controller {
 
     public function move_image_left_service(): void {
         header('Content-Type: application/json');
+        $current_user = $this->get_user_or_false();
+
+        if (!$current_user) {
+            echo json_encode([]);
+            exit;
+        }
 
         if (
-            isset($_GET['param1']) && trim($_GET['param1'] !== "")
-            && isset($_GET['param2']) && trim($_GET['param2'] !== "")
+            isset($_GET['param1']) && trim($_GET['param1']) !== '' &&
+            isset($_GET['param2']) && trim($_GET['param2']) !== ''
         ) {
             $image_id = (int)$_GET['param1'];
             $item_id = (int)$_GET['param2'];
-
-            $current_user = $this->get_user_or_false();
-
-            if (!$current_user) {
-                echo json_encode([]);
-                exit;
-            }
 
             $image_item = Item::change_pics_left($image_id, $item_id);
             echo json_encode(["image_item" => $image_item]);
@@ -783,12 +825,15 @@ class ControllerItem extends Controller {
 
     public function search_fulltext_browse_service(): void {
         header('Content-Type: application/json');
+        $search = isset($_GET["search"]) ? trim($_GET["search"]) : '';
+        $category_id = isset($_GET["category_id"]) ? (int)$_GET["category_id"] : null;
 
-        if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {
+        if ($search !== '' || $category_id !== null) {
             $search = trim($_GET["search"]);
             $current_user = $this->get_user_or_false();
+            $category_id = isset($_GET["category_id"]) && $_GET["category_id"] !== '' ? (int)$_GET["category_id"] : null;
 
-            $encoded_search = UrlEncoder::url_safe_encode(['search' => $search]);
+            $encoded_search = UrlEncoder::url_safe_encode(['search' => $search, 'category_id' => $category_id]);
 
             if (!$current_user) {
                 echo json_encode([]);
@@ -797,8 +842,8 @@ class ControllerItem extends Controller {
 
             $user_id = $current_user->get_id();
 
-            $bid_items = Item::get_user_bid_items($user_id, $search);
-            $available_items = Item::get_user_available_items($user_id, $search);
+            $bid_items = Item::get_user_bid_items($user_id, $search, $category_id);
+            $available_items = Item::get_user_available_items($user_id, $search, $category_id);
 
             $results = [];
             $now = new DateTime(AppTime::get_current_datetime());
@@ -866,12 +911,14 @@ class ControllerItem extends Controller {
 
     public function search_fulltext_my_items_service(): void {
         header('Content-Type: application/json');
+        $search = isset($_GET["search"]) ? trim($_GET["search"]) : '';
+        $category_id = isset($_GET["category_id"]) && $_GET["category_id"] !== '' ? (int)$_GET["category_id"] : null;
 
-        if (isset($_GET["search"]) && trim($_GET["search"]) !== "") {
+        if ($search !== '' || $category_id !== null) {
             $search = trim($_GET["search"]);
             $current_user = $this->get_user_or_false();
 
-            $encoded_search = UrlEncoder::url_safe_encode(['search' => $search]);
+            $encoded_search = UrlEncoder::url_safe_encode(['search' => $search, 'category_id' => $category_id]);
 
             if (!$current_user) {
                 echo json_encode([]);
@@ -879,7 +926,7 @@ class ControllerItem extends Controller {
             }
 
             $user_id = $current_user->get_id();
-            $my_items = Item::get_items_by_owner($user_id, $search);
+            $my_items = Item::get_items_by_owner($user_id, $search, $category_id);
 
             $results = [];
             $now = new DateTime(AppTime::get_current_datetime());
@@ -926,5 +973,33 @@ class ControllerItem extends Controller {
         } else {
             echo json_encode(['encoded_search' => '', 'items' => []]);
         }
+    }
+
+    public function find_title_duplicate(): void {
+        header('Content-Type: application/json');
+
+        $title = trim($_POST['title'] ?? '');
+
+        // Check if the frontend sent an ID (meaning we are editing an existing item)
+        $exclude_item_id = !empty($_POST['id']) ? (int)$_POST['id'] : null;
+
+        if ($title !== '') {
+            $current_user = $this->get_user_or_false();
+
+            if (!$current_user) {
+                echo json_encode(["is_unique" => false, "error" => "User session lost"]);
+                return;
+            }
+
+            // Run the check directly using the explicitly provided ID
+            $has_duplicate = Item::has_title_duplicate($current_user->get_id(), $title, $exclude_item_id);
+
+            echo json_encode([
+                "is_unique" => !$has_duplicate
+            ]);
+            return;
+        }
+
+        echo json_encode(["is_unique" => true]);
     }
 }

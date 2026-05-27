@@ -26,6 +26,7 @@ class GoBack {
         ];
 
         $from = null;
+
         foreach ($params_map as $param => $target_url) {
             if (strpos($uri, $param) !== false) {
                 $from = $param;
@@ -44,6 +45,11 @@ class GoBack {
                 return $target_url . $encoded_search;
             }
         }
+
+        if (isset($parts[3]) && is_numeric($parts[3]) && !strpos($uri, 'item/open')) {
+            return "item/open/" . $parts[3];
+        }
+
         return 'item/browse';
     }
 

@@ -217,7 +217,7 @@ class Item extends Model {
 
 
     // paramètre optionnel rajouté pour le champ de recherche de l'itération 2
-    public static function get_items_by_owner(int $owner_id, ?string $search = null): array {
+    public static function get_items_by_owner(int $owner_id, ?string $search = null, ?int $category_id = null): array {
         // Récupère les items du propriétaire, triés par date de fin calculée
         $sql = "SELECT * FROM v_items_status WHERE owner = :owner";
         $params = ["owner" => $owner_id];
@@ -227,6 +227,11 @@ class Item extends Model {
             $sql .= " AND (title LIKE :search OR description LIKE :search)";
 
             $params['search'] = '%' . trim($search) . '%';
+        }
+
+        if ($category_id !== null) {
+            $sql .= " AND id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
         }
 
         $sql .= " ORDER BY end_at ASC";
@@ -374,6 +379,72 @@ class Item extends Model {
         );
     }
 
+    public static function get_item_by_title_and_owner(string $title, int $owner_id) {
+        // 1. Scope the query by BOTH title AND owner ID
+        $query = self::execute(
+            "SELECT v.*, u.pseudo AS owner_pseudo, u.role AS owner_role, u.picture_path as owner_picture
+        FROM v_items_status v 
+        JOIN users u on v.owner = u.id
+        WHERE v.title = :title AND v.owner = :owner_id",
+            [
+                "title" => $title,
+                "owner_id" => $owner_id
+            ]
+        );
+        $data = $query->fetch();
+
+        if (!$data) {
+            return false;
+        }
+
+        if (empty($data['owner_picture'])) {
+            $owner_picture = 'css/images/default_user_image.jpg';
+        } else {
+            $owner_picture = $data['owner_picture'];
+        }
+
+        $query_pics = self::execute(
+            "SELECT picture_path
+        FROM item_pictures p
+        WHERE p.item = :item_id
+        ORDER BY priority ASC",
+            ["item_id" => (int)$data['id']]
+        );
+
+        $pictures = $query_pics->fetchAll(PDO::FETCH_COLUMN);
+        $main_image_url = $pictures[0] ?? 'css/images/default_item_image.png';
+
+        $created_at_object = new DateTime($data['created_at']);
+        $end_date_object = new DateTime($data['end_at']);
+        $current_price = ($data['max_bid'] !== null) ? (float)$data['max_bid'] : (float)$data['starting_bid'];
+
+        return new Item(
+            0,
+            null,
+            (int)$data['id'],
+            $data['title'],
+            $data['description'],
+            $data['owner_pseudo'],
+            $data['owner_role'],
+            $main_image_url,
+            $pictures,
+            $data['buy_now_price'] ?? 0.0,
+            $data['starting_bid'],
+            $created_at_object,
+            $end_date_object,
+            $data['duration_days'],
+            $current_price,
+            $data['bid_count'],
+            $data['has_bids'],
+            $data['is_auction'],
+            $data['is_direct_sale'],
+            $data['has_buy_now'],
+            $data['buy_now_reached'],
+            '',
+            $owner_picture
+        );
+    }
+
     // Delete item
     public static function delete(int $id): bool {
         // cible directement le dossier de l'item
@@ -403,7 +474,7 @@ class Item extends Model {
         return true;
     }
 
-    public static function get_user_bid_items(int $id, ?string $search = null): array {
+    public static function get_user_bid_items(int $id, ?string $search = null, ?int $category_id = null): array {
         $user_bid_items = [];
 
         $sql = "SELECT DISTINCT vis.*
@@ -428,6 +499,11 @@ class Item extends Model {
                       )";
 
             $params['search'] = '%' . trim($search) . '%';
+        }
+
+        if ($category_id !== null) {
+            $sql .= " AND vis.id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
         }
 
         $sql .= " ORDER BY vis.end_at";
@@ -486,6 +562,25 @@ class Item extends Model {
         return $user_bid_items;
     }
 
+    public static function has_title_duplicate(int $owner_id, string $title, ?int $exclude_item_id = null): bool {
+        // Retrieve all items belonging to this owner
+        $owner_items = self::get_items_by_owner($owner_id);
+
+        foreach ($owner_items as $item) {
+            // 1. Skip checking if it's the exact same item we are currently editing
+            if ($exclude_item_id !== null && $item->get_id() === $exclude_item_id) {
+                continue;
+            }
+
+            // 2. Compare the trimmed titles
+            if (trim($item->get_title()) === trim($title)) {
+                return true; // Duplicate found!
+            }
+        }
+
+        return false; // No duplicates found
+    }
+
     public static function get_user_bid(int $item_id, int $user_id): float|null {
         $query = self::execute(
             "SELECT MAX(amount) as bid
@@ -506,7 +601,7 @@ class Item extends Model {
         return $data['bid'];
     }
 
-    public static function get_user_available_items(int $id, ?string $search = null): array {
+    public static function get_user_available_items(int $id, ?string $search = null, ?int $category_id = null): array {
         $user_available_items = [];
 
         $sql = "SELECT vis.*
@@ -531,6 +626,11 @@ class Item extends Model {
                         OR vis.description LIKE :search
                       )";
             $params['search'] = '%' . trim($search) . '%';
+        }
+
+        if ($category_id !== null) {
+            $sql .= " AND vis.id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
         }
 
         $sql .= " ORDER BY vis.end_at";
@@ -773,7 +873,6 @@ class Item extends Model {
     }
 
     public static function add_picture(int $item_id, string $path): void {
-
         $query = self::execute(
             "SELECT MAX(priority) as max_p FROM item_pictures WHERE item = :item_id",
             ["item_id" => $item_id]
@@ -791,53 +890,22 @@ class Item extends Model {
         );
     }
 
+    public static function add_categories(int $item_id, int $category_id): void {
+        self::execute(
+            "INSERT INTO item_categories (item, category) VALUES (:item_id, :category_id)",
+            ["item_id" => $item_id, "category_id" => $category_id]
+        );
+    }
+
+    public function remove_categories(int $item_id): void {
+        self::execute(
+            "DELETE FROM item_categories WHERE item = :item_id",
+            ["item_id" => $item_id]
+        );
+    }
+
     public static function get_purchases(int $id): array {
         $purchases = [];
-
-        // BACKUP
-        // $query = self::execute(
-        //     // query to get the items where the specified user got the winning 
-        //     // OR the items that he purchased directly
-        //     "SELECT 
-        //     /* Item Data */
-        //     vis.id AS item_id,
-        //     vis.title,
-        //     vis.buy_now_price,
-        //     vis.is_auction,
-        //     vis.has_buy_now,
-        //     vis.buy_now_reached,
-        //     vis.end_at,
-        //     vis.max_bid,
-
-        //     /* Seller Data (The person who owns the item) */
-        //     seller.id AS seller_id,         -- id of the person who owns the item (seller is the custom name of users table ie check next query lines)
-        //     seller.pseudo AS seller_name,   -- name of the person who owns the item
-
-        //     /* Bidder Data (The person who placed the winning bid) */
-        //     u.id AS bidder_id,
-        //     u.pseudo AS bidder_name,        -- name of the person of placed the bid 
-        //     b.amount AS winning_bid_amount  -- bid placed by the person 
-
-        //     FROM v_items_status vis
-        //     /* Join for the bid details */
-        //     JOIN bids b ON b.item = vis.id
-
-        //     /* Join for the person who placed the bid (Bidder / Buyer) */
-        //     JOIN users u ON u.id = b.owner
-
-        //     /* Join for the person who created the item (Seller) */
-        //     JOIN users seller ON seller.id = vis.owner 
-
-        //     WHERE u.id = :id             -- buyer / bidder
-        //     AND b.amount = vis.max_bid   -- with the highest bid    
-        //     AND (vis.buy_now_reached = 1 OR :today >= vis.end_at)  -- who bought the item or date expired
-
-        //     ORDER BY vis.end_at",
-        //     [
-        //         "today" => AppTime::get_current_datetime(),
-        //         "id" => $id
-        //     ]
-        // );
 
         $query = self::execute(
             "SELECT vis.*
@@ -954,51 +1022,7 @@ class Item extends Model {
     }
 
     public static function get_sales(int $user_id): array {
-
         $sales = [];
-
-        // BACKUP
-        // $query = self::execute(
-        // // query to get the sales of the specified user
-        // "SELECT 
-        // /* Item Data */
-        // vis.id AS item_id,
-        // vis.title,
-        // vis.buy_now_price,
-        // vis.is_auction,
-        // vis.has_buy_now,
-        // vis.buy_now_reached,
-        // vis.end_at,
-        // vis.max_bid,
-
-        // /* Seller Data (The person who owns the item) */
-        // seller.id AS seller_id,         -- id of the person who owns the item (seller is the custom name of users table ie check next query lines)
-        // seller.pseudo AS seller_name,   -- name of the person who owns the item
-
-        // /* Bidder Data (The person who placed the winning bid) */
-        // u.id AS bidder_id,
-        // u.pseudo AS bidder_name,        -- name of the person of placed the bid 
-        // b.amount AS winning_bid_amount  -- bid placed by the person 
-
-        // FROM v_items_status vis
-        // /* Join for the bid details */
-        // JOIN bids b ON b.item = vis.id
-
-        // /* Join for the person who placed the bid (Bidder / Buyer) */
-        // JOIN users u ON u.id = b.owner
-
-        // /* Join for the person who created the item (Seller) */
-        // JOIN users seller ON seller.id = vis.owner 
-
-        // WHERE seller.id = :user_id        -- seller 
-        // AND b.amount = vis.max_bid       -- with the highest bid instance on the item    
-        // AND (vis.buy_now_reached = 1 OR :today >= vis.end_at)  -- who bought the item or date expired
-        // ORDER BY vis.end_at",
-        // [
-        //     "today" => AppTime::get_current_datetime(),
-        //     "user_id" => $user_id
-        // ]
-        //);
 
         $query = self::execute(
             "SELECT vis.*, u.pseudo as bidder_name
@@ -1118,18 +1142,21 @@ class Item extends Model {
         return $sales;
     }
 
-    public static function get_all_available_items(): array {
+    public static function get_all_available_items(?int $category_id = null): array {
         $items = [];
-        $query = self::execute(
-            "SELECT * from v_items_status vis
-            WHERE :today BETWEEN vis.created_at AND vis.end_at -- Not expired yet
-            AND vis.buy_now_reached = 0 -- Not sold yet
-            ORDER by vis.end_at",
-            [
-                "today" => AppTime::get_current_datetime(),
-            ]
-        );
+        $sql = "SELECT * from v_items_status vis
+                WHERE :today BETWEEN vis.created_at AND vis.end_at -- Not expired yet
+                AND vis.buy_now_reached = 0 -- Not sold yet";
+        $params = [
+            "today" => AppTime::get_current_datetime()
+        ];
 
+        if ($category_id !== null) {
+            $sql .= " AND id in (SELECT item FROM item_categories WHERE category = :category_id)";
+            $params['category_id'] = $category_id;
+        }
+        $sql .= " ORDER by vis.end_at";
+        $query = self::execute($sql, $params);
         $data = $query->fetchAll();
         if (!$data) {
             return [];
@@ -1255,5 +1282,60 @@ class Item extends Model {
                 ]
             );
         }
+    }
+
+    public function validate_before_fill(array $config): array {
+        $errors = [];
+        $min_lenght = (int)$config['min_item_lenght'];
+        $max_lenght = (int)$config['max_item_lenght'];
+        $min_duration = (int)$config['min_duration_days'];
+        $max_duration = (int)$config['max_duration_days'];
+
+
+
+        if (strlen($this->get_title()) == 0 || empty($this->get_title())) {
+            $errors['empty'] = "Title is required";
+        }
+
+        if (strlen($this->get_title()) < $min_lenght || strlen($this->get_title()) > $max_lenght) {
+
+            $errors['title'] = "Title length must be between $min_lenght and $max_lenght characters.";
+        }
+
+        if ($this->get_duration_days() < $min_duration || $this->get_duration_days() > $max_duration) {
+            $errors['duration'] = "Duration must be at least $min_duration day and at most $max_duration days";
+        }
+
+        // vérification si l'utilisateur n'a pas un autre item du même nom dans ses items
+        // on récupère l'id du propriétaire de l'item
+        $query_owner_id = self::execute(
+            "SELECT u.id FROM users u WHERE u.pseudo = :pseudo",
+            ["pseudo" => $this->get_owner_name()]
+        );
+        $data = $query_owner_id->fetch();
+        $owner_id = $data ? (int)$data['id'] : null;
+
+        // on verifie si le propriétaire a un item avec le même titre
+        $is_duplicate = $this->has_title_duplicate($owner_id, $this->get_title(), $this->get_id());
+        if ($is_duplicate) {
+            $errors['duplicate_title'] = "Title should be unique among user items.";
+        }
+
+        $starting_bid = $this->get_starting_bid();
+        $buy_now_price = $this->get_buy_now_price();
+        $is_direct_sale = $this->get_is_direct_sale();
+
+        if ($starting_bid !== null && $starting_bid > 0) {
+            if ($buy_now_price !== null && $buy_now_price > 0 && $buy_now_price < $starting_bid) {
+                $errors['buy_now_price'] = "Instant purchase price must be higher than starting bid price";
+            }
+            if ($is_direct_sale) {
+                $errors['sale_price'] = "You can't put a direct sale price and a starting bid.";
+            }
+        } elseif (!($is_direct_sale && $buy_now_price !== null && $buy_now_price > 0)) {
+            $errors['sale'] = "You must either fill a starting bid or a direct sale price.";
+        }
+
+        return $errors;
     }
 }
