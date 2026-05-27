@@ -74,8 +74,7 @@ class ControllerUser extends Controller {
             "password" => $password,
             "password_confirm" => $password_confirm,
             "errors" => $errors,
-            "is_guest" => !$this->user_logged(),
-            "user_role" => null
+            "is_guest" => !$this->user_logged()
         ]);
     }
 
@@ -111,7 +110,7 @@ class ControllerUser extends Controller {
         // RÉCUPÉRATION DE LA LISTE DES "Debug Users"
         $users = User::get_debug_users();
 
-        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors, "users" => $users, "is_guest" => !$this->user_logged(), "user_role" => null]);
+        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors, "users" => $users, "is_guest" => !$this->user_logged()]);
     }
 
     // Gestion du changement de mot de passe
