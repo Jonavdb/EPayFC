@@ -1,8 +1,9 @@
-let searchInput, participatingGrid, availableGrid, defaultParticipatingHtml, defaultAvailableHtml;
+let searchInput, participatingGrid, availableGrid, defaultParticipatingHtml, defaultAvailableHtml, searchBar;
 let initialSearchValue = '';
 
 $(function () {
-    $('#search-bar').show();
+    searchBar = $('#search-bar');
+    searchBar.show();
     searchInput = $('#search_fulltext');
     participatingGrid = $('#participating_grid');
     availableGrid = $('#available_grid');

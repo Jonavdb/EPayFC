@@ -1,8 +1,10 @@
 let searchInput, activeItemsGrid, closedUnsoldItemsGrid, soldItemsGrid, defaultActiveHtml, defaultClosedUnsoldHtml, defaultSoldHtml;
+let serachBar;
 let initialSearchValue = '';
 
 $(function () {
-    $('#search-bar').show();
+    searchBar = $('#search-bar');
+    searchBar.show();
     searchInput = $('#search_fulltext');
     activeItemsGrid = $('#active_items_grid');
     closedUnsoldItemsGrid = $('#closed_unsold_items_grid');
