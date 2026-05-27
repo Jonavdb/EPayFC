@@ -1,6 +1,7 @@
 <?php
 require_once "framework/Controller.php";
 require_once "Model/Category.php";
+require_once "Model/User.php";
 
 
 class ControllerCategory extends Controller {
@@ -13,10 +14,12 @@ class ControllerCategory extends Controller {
 
         // On récupère la liste des catégories actuelles
         $categories = Category::get_categories();
-
+        $user = $this->get_user_or_false();
+        $user_role = $user->get_role();
         // On les transfère à la vue
         (new View("manage_categories"))->show([
-            "categories" => $categories
+            "categories" => $categories,
+            "user_role" => $user_role
         ]);
     }
 
@@ -59,7 +62,7 @@ class ControllerCategory extends Controller {
 
     public function save(int $id): void {
         // on récupère l'input
-        $raw_name = $_POST['name'];
+        $raw_name = $_POST['category_name'];
 
         $category_from_name = Category::get_category_from_name(trim($raw_name));
         $category_from_id   = Category::get_category_from_id($id);
@@ -74,7 +77,8 @@ class ControllerCategory extends Controller {
 
         // on check si l'input est valide
         $errors = Category::validate($raw_name);
-
+        $user = $this->get_user_or_false();
+        $user_role = $user->get_role();
         $to_save = null;
 
         // si pas d'erreurs..
@@ -89,7 +93,8 @@ class ControllerCategory extends Controller {
             (new View("manage_categories"))->show([
                 "categories" => Category::get_categories(),
                 "save_errors" => $errors,
-                "target_id" => $id
+                "target_id" => $id,
+                "user_role" => $user_role
             ]);
         }
     }
@@ -104,6 +109,8 @@ class ControllerCategory extends Controller {
     public function add_category(): void {
         // on récupère l'input
         $raw_name = $_POST['name'];
+        $user = $this->get_user_or_false();
+        $user_role = $user->get_role();
 
         // on check si l'input est valide
         $errors = Category::validate($raw_name);
@@ -119,7 +126,8 @@ class ControllerCategory extends Controller {
             // echec.. affiche la page avec les erreurs
             (new View("manage_categories"))->show([
                 "categories" => Category::get_categories(),
-                "insert_errors" => $errors
+                "insert_errors" => $errors,
+                "user_role" => $user_role
             ]);
         }
     }

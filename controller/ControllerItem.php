@@ -18,6 +18,7 @@ class ControllerItem extends Controller {
     // My items
     public function list(): void {
         $user = $this->get_user_or_redirect();
+        $user_role = $user->get_role();
 
         // on lit le paramètre d'URL et on le décode
         $encoded_search = isset($_GET['param1']) ? $_GET['param1'] : '';
@@ -74,6 +75,7 @@ class ControllerItem extends Controller {
             "sold_items" => $sold_items,
             "unsold_items" => $unsold_items,
             "is_guest" => !$this->user_logged(),
+            "user_role" => $user_role,
             "search_query" => $search_query,
             "categories" => Category::get_categories(),
             "selected_category_id" => $category_id
@@ -197,10 +199,12 @@ class ControllerItem extends Controller {
             Item::delete($id);
             $this->redirect("item", "list");
         } else {
+            $user_role = $user->get_role();
             (new View("delete_item"))->show([
                 "item" => $item,
                 "user" => $user,
-                "is_guest" => !$this->user_logged()
+                "is_guest" => !$this->user_logged(),
+                "user_role" => $user_role
             ]);
         }
     }
@@ -244,6 +248,7 @@ class ControllerItem extends Controller {
         $bids = Bid::get_bid_by_item_id($id);
         $user = $this->get_user_or_false();
         $current_user_pseudo = $user ? $user->get_pseudo() : null;
+        $user_role = $user ? $user->get_role() : null;
 
         (new View("open_item"))->show([
             "item" => $item,
@@ -251,6 +256,7 @@ class ControllerItem extends Controller {
             "current_user" => $current_user_pseudo,
             'selected_image' => $image_index,
             "is_guest" => !$this->user_logged(),
+            "user_role" => $user_role,
             "context" => $context,
             "item_categories" => $item_categories,
             "encoded_search" => $encoded_search
@@ -392,7 +398,8 @@ class ControllerItem extends Controller {
             "categories" => $categories,
             "checked_categories" => $checked_categories,
             "errors" => $errors,
-            "is_guest" => !$this->user_logged()
+            "is_guest" => !$this->user_logged(),
+            "user_role" => $user->get_role()
         ]);
     }
 
@@ -499,6 +506,7 @@ class ControllerItem extends Controller {
             "checked_categories" => $checked_categories,
             "errors" => $errors,
             "is_guest" => !$this->user_logged(),
+            "user_role" => $user->get_role(),
             "context" => $context,
             "encoded_search" => $encoded_search
         ]);
@@ -529,7 +537,8 @@ class ControllerItem extends Controller {
 
         (new View("manage_images"))->show([
             "item" => $item,
-            "is_guest" => !$this->user_logged()
+            "is_guest" => !$this->user_logged(),
+            "user_role" => $user->get_role()
         ]);
     }
 
@@ -648,7 +657,8 @@ class ControllerItem extends Controller {
             (new View("manage_images"))->show([
                 "item" => $item,
                 "errors" => $errors,
-                "is_guest" => !$this->user_logged()
+                "is_guest" => !$this->user_logged(),
+                "user_role" => $user->get_role()
             ]);
         } else {
             $redirect_url = GoBack::smart_href("item/manage_images/" . $item_id);
@@ -660,6 +670,7 @@ class ControllerItem extends Controller {
     public function browse() {
         $user = $this->get_user_or_false();
         $is_guest = $user == false;
+        $user_role = $user ? $user->get_role() : null;
         $now = new DateTime(AppTime::get_current_datetime());
 
         $encoded_search = isset($_GET['param1']) ? $_GET['param1'] : '';
@@ -690,6 +701,7 @@ class ControllerItem extends Controller {
                 "user_bid_items" => $user_bid_items,
                 "user_available_items" => $user_available_items,
                 "is_guest" => $is_guest,
+                "user_role" => $user_role,
                 "search_query" => $search_query,
                 "categories" => Category::get_categories(),
                 "selected_category_id" => $category_id
@@ -704,7 +716,8 @@ class ControllerItem extends Controller {
         $purchases = Item::get_purchases($user->get_id());
         (new View("see_my_purchases"))->show([
             "purchases" => $purchases,
-            "is_guest" => !$this->user_logged()
+            "is_guest" => !$this->user_logged(),
+            "user_role" => $user->get_role()
         ]);
     }
 
@@ -716,7 +729,8 @@ class ControllerItem extends Controller {
         (new View("see_my_sales"))->show(
             [
                 "sales" => $sales,
-                "is_guest" => !$this->user_logged()
+                "is_guest" => !$this->user_logged(),
+                "user_role" => $user->get_role()
             ]
         );
     }

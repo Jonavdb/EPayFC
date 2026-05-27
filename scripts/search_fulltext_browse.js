@@ -1,30 +1,39 @@
-let searchInput, participatingGrid, availableGrid, defaultParticipatingHtml, defaultAvailableHtml, searchBar;
+let searchInput,
+    participatingGrid,
+    availableGrid,
+    defaultParticipatingHtml,
+    defaultAvailableHtml,
+    searchBar,
+    categoryValue,
+    initialCategory;
 let initialSearchValue = '';
 
 $(function () {
     searchBar = $('#search-bar');
     searchBar.show();
     searchInput = $('#search_fulltext');
+    categoryValue = $('#category_filter');
     participatingGrid = $('#participating_grid');
     availableGrid = $('#available_grid');
 
     initialSearchValue = searchInput.val().trim(); // mémorise ce qu'il y a dans la barre au chargement
+    initialCategory = categoryValue.val();
 
     // pages par défaut sauvergardées (les listes d'items de l'utilisateur courrant)
     defaultParticipatingHtml = participatingGrid.html();
     defaultAvailableHtml = availableGrid.html();
 
     searchInput.on('input', checkSearchFullTextBrowseItems);
-    $('#category_filter').on('change', checkSearchFullTextBrowseItems);
+    categoryValue.on('change', checkSearchFullTextBrowseItems);
 });
 
 async function checkSearchFullTextBrowseItems() {
     const searchValue = searchInput.val().trim();
-    const categoryId = $('#category_filter').val();
+    const categoryId = categoryValue.val();
 
     // s'il n'a rien cherché, on affiche les listes par défaut
     if (searchValue === '' && categoryId === '') {
-        if (initialSearchValue !== '') {
+        if (initialSearchValue !== '' || initialCategory !== 0) {
             window.location.href = 'item/browse';
             return;
         }

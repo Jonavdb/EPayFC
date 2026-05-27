@@ -32,9 +32,9 @@ require_once "utils/GoBack.php";
     ?>
 
     <div class="container-fluid mb-4 px-5" style="margin-top: 80px;">
-        <h4 class="text-white text-start">
+        <h1 class="text-white text-start fs-4">
             Manage Images for "<?= $item->get_title() ?>"
-        </h4>
+        </h1>
         <?php if (isset($errors)): ?>
             <div class="alert alert-danger mt-3">
                 <ul class="mb-0">
@@ -48,10 +48,10 @@ require_once "utils/GoBack.php";
     <div class="container-fluid mb-4 px-5">
         <div class="card text-bg-dark border-secondary">
             <div class="card-header border-secondary" style="background-color: #1e293b;">
-                <h4 class="mb-0 text-white text-start fs-3">Add new Images</h4>
+                <h1 class="mb-0 text-white text-start fs-4">Add new Images</h1>
             </div>
             <div class="card-body">
-                <h5 class="fw-bold text-white text-start fs-4">Select Images</h5>
+                <h1 class="fw-bold text-white text-start fs-5">Select Images</h1>
                 <form action="<?= GoBack::smart_href('item/add_images/' . $item->get_id()) ?>" method="POST" enctype="multipart/form-data" class="fs-5">
                     <input type="hidden" name="item_id" value="<?= $item->get_id() ?>">
 
@@ -76,7 +76,7 @@ require_once "utils/GoBack.php";
     <div class="container-fluid mb-4 px-5">
         <div class="card text-bg-dark border-secondary">
             <div class="card-header border-secondary" style="background-color: #1e293b;">
-                <h5 class="mb-0 text-white text-start fs-4">Current Images</h5>
+                <h1 class="mb-0 text-white text-start fs-4">Current Images</h1>
             </div>
             <div class="card-body">
                 <?php if (empty($item->get_image_urls())) { ?>
@@ -139,10 +139,10 @@ require_once "utils/GoBack.php";
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark text-white border-secondary">
                 <div class="modal-header border-secondary mb-4">
-                    <h4 class="modal-title">Delete Image</h4>
+                    <h1 class="modal-title fs-5">Delete Image</h1>
                 </div>
-                <div class="modal-text modal-text text-center mb-4">
-                    <h5>Are you sure you want to delete this image ?</h5>
+                <div class="modal-text modal-text text-center mb-4 fs-5">
+                    <h1>Are you sure you want to delete this image ?</h1>
                     <div class="modal-body d-flex justify-content-center gap-4">
                         <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
                         <button type="button" class="btn btn-danger btn_confirm_delete">Delete</button>

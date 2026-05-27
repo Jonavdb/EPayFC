@@ -54,7 +54,7 @@ require_once "utils/GoBack.php";
         <div class="container mb-4" style="margin-top: 30px;">
             <div class="card text-bg-dark border-secondary">
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
-                    <h5 class="mb-0 text-white text-start">Basic Informations</h5>
+                    <h1 class="mb-0 text-white text-start fs-5">Basic Informations</h1>
                 </div>
                 <div class="card-body">
                     <div class=" mb-3">
@@ -106,7 +106,7 @@ require_once "utils/GoBack.php";
         <div class=" container mb-4">
             <div class="card text-bg-dark border-secondary">
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
-                    <h5 class="mb-0 text-white text-start">Sale Type</h5>
+                    <h1 class="mb-0 text-white text-start fs-5">Sale Type</h1>
                 </div>
 
                 <div class="card-body">
@@ -198,7 +198,7 @@ require_once "utils/GoBack.php";
         <div class="container mb-4">
             <div class="card text-bg-dark border-secondary">
                 <div class="card-header border-secondary" style="background-color: #1e293b;">
-                    <h5 class="mb-0 text-white text-start">Categories</h5>
+                    <h1 class="mb-0 text-white text-start fs-5">Categories</h1>
                 </div>
 
                 <div class="p-3 bg-dark">
@@ -240,7 +240,7 @@ require_once "utils/GoBack.php";
             <div class="modal-content bg-dark text-white shadow-lg" style="border: 1px solid #444;">
 
                 <div class="modal-header border-bottom align-items-center" style="border-bottom-color: #444 !important;">
-                    <h5 class=" modal-title fs-2 fw-semibold">Unsaved changes</h5>
+                    <h1 class=" modal-title fs-2 fw-semibold fs-5">Unsaved changes</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -263,7 +263,7 @@ require_once "utils/GoBack.php";
             <div class="modal-content bg-dark text-white shadow-lg" style="border: 1px solid #444;">
 
                 <div class="modal-header border-bottom align-items-center" style="border-bottom-color: #444 !important;">
-                    <h5 class=" modal-title fs-2 fw-semibold">Category Limit</h5>
+                    <h1 class=" modal-title fs-2 fw-semibold fs-5">Category Limit</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 

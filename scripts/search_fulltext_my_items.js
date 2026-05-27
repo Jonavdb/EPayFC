@@ -1,33 +1,42 @@
-let searchInput, activeItemsGrid, closedUnsoldItemsGrid, soldItemsGrid, defaultActiveHtml, defaultClosedUnsoldHtml, defaultSoldHtml;
-let serachBar;
+let searchInput,
+    activeItemsGrid,
+    closedUnsoldItemsGrid,
+    soldItemsGrid,
+    defaultActiveHtml,
+    defaultClosedUnsoldHtml,
+    defaultSoldHtml,
+    initialCategory,
+    categoryValue;
+let searchBar;
 let initialSearchValue = '';
 
 $(function () {
     searchBar = $('#search-bar');
     searchBar.show();
+    categoryValue = $('#category_filter');
     searchInput = $('#search_fulltext');
     activeItemsGrid = $('#active_items_grid');
     closedUnsoldItemsGrid = $('#closed_unsold_items_grid');
     soldItemsGrid = $('#sold_items_grid');
 
     initialSearchValue = searchInput.val().trim(); // mémorise ce qu'il y a dans la barre au chargement
-
+    initialCategory = categoryValue.val();
     // page par défaut sauvergardée (les listes d'items de l'utilisateur courrant)
     defaultActiveHtml = activeItemsGrid.html();
     defaultClosedUnsoldHtml = closedUnsoldItemsGrid.html();
     defaultSoldHtml = soldItemsGrid.html();
 
     searchInput.on('input', checkSearchFullTextMyItems);
-    $('#category_filter').on('change', checkSearchFullTextMyItems);
+    categoryValue.on('change', checkSearchFullTextMyItems);
 });
 
 async function checkSearchFullTextMyItems() {
     const searchValue = searchInput.val().trim();
-    const categoryId = $('#category_filter').val();
+    const categoryId = categoryValue.val();
 
     // s'il n'a rien cherché, on affiche les listes par défaut
     if (searchValue === '' && categoryId === '') {
-        if (initialSearchValue !== '') {
+        if (initialSearchValue !== '' || categoryId !== 0) {
             window.location.href = 'item/list';
             return;
         }

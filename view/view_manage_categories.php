@@ -8,8 +8,6 @@ require_once "utils/AppTime.php";
 
 <head>
     <meta charset="UTF-8">
-    <title>Category</title>
-
     <base href="<?= $web_root ?>">
 
     <meta name="author" content="Manu_Angate">
@@ -50,7 +48,7 @@ require_once "utils/AppTime.php";
                                             <div class="col-8 no-js-element">
                                                 <input type="text"
                                                     class="form-control form-control-lg bg-dark border-secondary text-white fs-4"
-                                                    name="name"
+                                                    name="category_name"
                                                     value="<?= $category->get_name() ?>"
                                                     placeholder="Category Name">
                                             </div>
@@ -113,7 +111,7 @@ require_once "utils/AppTime.php";
                                 </form>
                             <?php endforeach; ?>
 
-                            <hr class="border-secondary opacity-25" />
+                            <hr class="border-secondary opacity-25">
 
                             <form action="category/add_category" method="POST" class="border-0 m-0 p-0 add-category-row">
                                 <div class="row align-items-center mt-2">
@@ -122,7 +120,7 @@ require_once "utils/AppTime.php";
                                             class="form-control form-control-lg bg-dark border-secondary text-white fs-4 flex-grow-1 js-hide-on-load"
                                             placeholder="Category Name">
 
-                                        <button type="submit" id="addCategoryBtn"
+                                        <button type="submit" id="addCategoryBtnNoJs"
                                             class="btn btn-lg btn-primary px-4 d-flex align-items-center justify-content-center fw-bold fs-3 ms-auto no-js-element">+</button>
 
                                         <button type="button" id="cancelAddBtn"
@@ -150,6 +148,7 @@ require_once "utils/AppTime.php";
                     </div>
                 </div>
             </div>
+        </div>
     </main>
     <!-- FOOTER -->
     <footer class="fixed-bottom">
@@ -165,7 +164,7 @@ require_once "utils/AppTime.php";
             <div class="modal-content bg-dark text-white shadow-lg" style="border: 1px solid #444;">
 
                 <div class="modal-header border-bottom align-items-center" style="border-bottom-color: #444 !important;">
-                    <h5 class=" modal-title fs-2 fw-semibold">Confirm Delete</h5>
+                    <h1 class=" modal-title fs-2 fw-semibold">Confirm Delete</h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 

@@ -24,20 +24,18 @@
                     <i class="fa-solid fa-plus fs-4 mb-1"></i>
                     <span>Add Offer</span>
                 </a>
-
-                <a class="nav-link d-flex flex-column align-items-center text-secondary" href="category/manage">
-                    <i class="fa-solid fa-sitemap fs-4 mb-1"></i>
-                    <span>Categories</span>
-                </a>
+                <?php if ($user_role === 'admin'): ?>
+                    <a class="nav-link d-flex flex-column align-items-center text-secondary" href="category/manage">
+                        <i class="fa-solid fa-sitemap fs-4 mb-1"></i>
+                        <span>Categories</span>
+                    </a>
+                <?php endif; ?>
 
                 <a class="nav-link d-flex flex-column align-items-center text-secondary" href="user/profile">
                     <i class="fa-solid fa-gear fs-4 mb-1"></i>
                     <span>Profile</span>
                 </a>
             <?php endif; ?>
-
-
-
         </div>
     </div>
 </nav>

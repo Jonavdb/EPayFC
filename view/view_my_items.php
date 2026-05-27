@@ -35,7 +35,7 @@ $encoded_search = $encoded_search ?? '';
         <?php include 'view/view_search_bar.php'; ?>
 
         <!-- ACTIVE ITEMS -->
-        <h2 class="text-start fw-bold text-primary mb-3 mt-4">Active Items</h2>
+        <h1 class="text-start fw-bold text-primary mb-3 mt-4 fs-2">Active Items</h1>
         <div id="active_items_grid" class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 mb-6">
             <?php if (!empty($active_items)): ?>
                 <?php foreach ($active_items as $element): ?>
@@ -59,7 +59,7 @@ $encoded_search = $encoded_search ?? '';
         </div>
 
         <!-- SOLD ITEMS -->
-        <h2 class="text-start fw-bold text-primary mb-3 mt-5">Sold Items</h2>
+        <h1 class="text-start fw-bold text-primary mb-3 mt-5 fs-2">Sold Items</h1>
         <div id="sold_items_grid" class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 mb-6">
             <?php if (!empty($sold_items)): ?>
                 <?php foreach ($sold_items as $element): ?>

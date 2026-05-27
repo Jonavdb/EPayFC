@@ -8,6 +8,6 @@ class ControllerProfile extends Controller
     {
         $user = $this->get_user_or_redirect();
         $user = User::get_user_by_email($user->get_email());
-        (new View("profile"))->show(["user" => $user, "is_guest" => !$this->user_logged()]);
+        (new View("profile"))->show(["user" => $user, "is_guest" => !$this->user_logged(), "user_role" => $user->get_role()]);
     }
 }

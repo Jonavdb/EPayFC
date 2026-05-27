@@ -33,7 +33,7 @@ class ControllerUser extends Controller {
             return;
         }
 
-        (new View("profile"))->show(["user" => $user, "is_guest" => !$this->user_logged()]);
+        (new View("profile"))->show(["user" => $user, "is_guest" => !$this->user_logged(), "user_role" => $user->get_role()]);
     }
 
     //gestion de l'inscription d'un utilisateur
@@ -74,7 +74,8 @@ class ControllerUser extends Controller {
             "password" => $password,
             "password_confirm" => $password_confirm,
             "errors" => $errors,
-            "is_guest" => !$this->user_logged()
+            "is_guest" => !$this->user_logged(),
+            "user_role" => null
         ]);
     }
 
@@ -110,7 +111,7 @@ class ControllerUser extends Controller {
         // RÉCUPÉRATION DE LA LISTE DES "Debug Users"
         $users = User::get_debug_users();
 
-        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors, "users" => $users, "is_guest" => !$this->user_logged()]);
+        (new View("login"))->show(["email" => $email, "password" => $password, "errors" => $errors, "users" => $users, "is_guest" => !$this->user_logged(), "user_role" => null]);
     }
 
     // Gestion du changement de mot de passe
@@ -150,7 +151,8 @@ class ControllerUser extends Controller {
             "current_password" => $current_password,
             "new_password" => $new_password,
             "confirm_password" => $confirm_password,
-            "is_guest" => !$this->user_logged()
+            "is_guest" => !$this->user_logged(),
+            "user_role" => $user->get_role()
         ]);
     }
 
@@ -176,7 +178,8 @@ class ControllerUser extends Controller {
         (new View("edit_profile"))->show([
             "user" => $user,
             "errors" => $errors,
-            "is_guest" => !$this->user_logged()
+            "is_guest" => !$this->user_logged(),
+            "user_role" => $user->get_role()
         ]);
     }
 
@@ -184,7 +187,7 @@ class ControllerUser extends Controller {
 
         $user = $this->get_user_or_redirect();
 
-        (new View("profile_picture"))->show(["user" => $user, "is_guest" => !$this->user_logged()]);
+        (new View("profile_picture"))->show(["user" => $user, "is_guest" => !$this->user_logged(), "user_role" => $user->get_role()]);
     }
 
     public function update_profile_picture() {
@@ -240,7 +243,8 @@ class ControllerUser extends Controller {
             (new View("profile_picture"))->show([
                 "user" => $user,
                 "errors" => $errors,
-                "is_guest" => !$this->user_logged()
+                "is_guest" => !$this->user_logged(),
+                "user_role" => $user->get_role()
             ]);
         }
     }

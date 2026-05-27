@@ -1,4 +1,4 @@
-<div class="row justify-content-center h-100" id="search-bar" style="display: none" ;>
+<div class="row justify-content-center h-100" id="search-bar" style="display: none">
     <div class="input-group mb-2 shadow">
         <span class="input-group-text bg-dark border-secondary text-light">
             <i class="fa fa-search"></i>
