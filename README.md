@@ -81,4 +81,27 @@ ADD_ITEM : pas de bouton GoBack car il s'agit d'un menu qu'on ne peut accéder q
 
 ## Notes de version itération 3
 
-...
+
+### Liste des utilisateurs et mots de passes
+
+- boverhaegen@epfc.eu, password "Password1,", utilisateur
+- mamichel@epfc.eu, password "Password1,", utilisateur
+- quhouben@epfc.eu, password "Password1,", utilisateur
+- xapigeolet@epfc.eu, password "Password1,", utilisateur
+- admin@epfc.eu, password "Password1,", admin
+
+### Liste des bugs connus
+
+- En cas d'utilisation d'un écran avec des résolutions spéciales (exemple 2560 X 1440), les images de open-item peuvent être un peu étirées et donc laisser des bandes noires assez conséquentes. 
+
+### URLs deploiement
+
+- étudiant VANDERBIEST Jonathan :
+    - URL : http://infolab.epfc.eu:58352/prwb_2526_f03/
+    - Mot de passe : jovdb2026@web
+- étudiant YANGNI-ANGATE Emmanuel :
+    - URL : http://infolab.epfc.eu:58353/prwb_2526_f03/
+    - Mot de passe : footballreve2014
+- étudiant HABOULA Ali :
+    - URL : http://infolab.epfc.eu:58351/epayfc/
+    - Mot de passe : alihbl2026@web
