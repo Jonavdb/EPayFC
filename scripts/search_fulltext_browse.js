@@ -2,6 +2,7 @@ let searchInput, participatingGrid, availableGrid, defaultParticipatingHtml, def
 let initialSearchValue = '';
 
 $(function () {
+    $('#search-bar').show();
     searchInput = $('#search_fulltext');
     participatingGrid = $('#participating_grid');
     availableGrid = $('#available_grid');

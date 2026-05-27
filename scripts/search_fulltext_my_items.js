@@ -2,6 +2,7 @@ let searchInput, activeItemsGrid, closedUnsoldItemsGrid, soldItemsGrid, defaultA
 let initialSearchValue = '';
 
 $(function () {
+    $('#search-bar').show();
     searchInput = $('#search_fulltext');
     activeItemsGrid = $('#active_items_grid');
     closedUnsoldItemsGrid = $('#closed_unsold_items_grid');
