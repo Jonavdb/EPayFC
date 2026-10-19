@@ -36,5 +36,5 @@ The application allows users to put items up for auction, browse available listi
 
 Bachelor's student in Application Development at EPFC, Brussels.
 Currently looking for a development internship starting in February 2027. 
-Professionnal email : jonathan.vanderbiest@outlook.com
+Professional email : jonathan.vanderbiest@outlook.com
 
