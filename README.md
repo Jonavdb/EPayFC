@@ -19,6 +19,17 @@ The application allows users to put items up for auction, browse available listi
 - Database operations and data management
 - MVC architecture to separate application logic from the interface
 
+## Screenshots
+
+### Login Screen
+![Login Screen](Screenshots/login-screen.png)
+
+### Item List
+![Item list](Screenshots/item-list.png)
+
+### Item Details
+![Item details](Screenshots/item-details.png)
+
 ## Author
 
 **Jonathan Vanderbiest**
